@@ -167,6 +167,11 @@
       .process-intro > p:not(.eyebrow) { max-width: 420px; color: var(--muted); }
       .steps { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
       .steps li { display: grid; grid-template-columns: 70px 1fr; gap: 1rem; padding: 2rem 0; border-bottom: 1px solid var(--ink); }
+      .steps li.step-yellow, .steps li.step-green {
+        border-bottom: 0; border-radius: 18px; padding: 2rem 1.75rem; margin-bottom: 1.25rem;
+      }
+      .steps li.step-yellow { background: linear-gradient(160deg, #f7dd8a 0%, #fdf6e4 65%); }
+      .steps li.step-green { background: linear-gradient(160deg, #c9ddb9 0%, #eef4e8 65%); }
       .steps li > span { font-family: var(--display); font-size: 2.2rem; color: var(--terracotta); }
       .steps h3 { margin-bottom: 0.2rem; font-family: var(--display); font-size: 1.7rem; font-weight: 400; }
       .steps .co { margin-bottom: 0.8rem; color: var(--muted); font-size: 0.95rem; }
@@ -366,7 +371,7 @@
           <p>Steady growth from front-of-house cash handling into full MIS and ERP ownership.</p>
         </div>
         <ol class="steps">
-          <li>
+          <li class="step-yellow">
             <span>1</span>
             <div>
               <div class="job-header">
@@ -387,7 +392,7 @@
               </ul>
             </div>
           </li>
-          <li>
+          <li class="step-green">
             <span>2</span>
             <div>
               <div class="job-header">
