@@ -173,13 +173,17 @@
 
       .job-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
       .company-logo {
-        display: grid; place-items: center; width: 56px; height: 56px; flex-shrink: 0;
-        border-radius: 50% 50% 46% 54% / 55% 43% 57% 45%;
-        background: var(--paper-light); border: 1px solid var(--line);
-        overflow: hidden; transform: rotate(-4deg);
+        display: grid; place-items: center; width: 68px; height: 68px; flex-shrink: 0;
+        border-radius: 14px; background: #ffffff; border: 1px solid var(--line);
+        overflow: hidden; padding: 8px;
       }
-      .company-logo img { width: 78%; height: 78%; object-fit: contain; }
-      .steps h3.company-name { margin: 0 0 3px; font-family: var(--display); font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 1.9rem); }
+      .company-logo img { width: 100%; height: 100%; object-fit: contain; }
+      .steps a.company-name {
+        display: inline-block; margin: 0 0 3px; font-family: var(--display); font-weight: 400;
+        font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--ink); text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+      .steps a.company-name:hover { color: var(--terracotta); border-bottom-color: var(--terracotta); }
       .role-line { margin: 0; color: var(--muted); font-size: 0.95rem; }
       .role-line b { color: var(--ink); font-weight: 700; }
       .steps ul { margin: 0; padding-left: 1.15rem; color: var(--muted); }
@@ -361,9 +365,9 @@
             <span>1</span>
             <div>
               <div class="job-header">
-                <div class="company-logo"><img src="https://www.thevisionhouse.in/data_files/theme/images/the-vision-house-logo-wide.png" alt="The Vision House logo" /></div>
+                <a class="company-logo" href="https://www.thevisionhouse.in/" target="_blank" rel="noopener noreferrer"><img src="https://www.thevisionhouse.in/data_files/theme/images/the-vision-house-logo-wide.png" alt="The Vision House logo" /></a>
                 <div>
-                  <h3 class="company-name">The Vision House</h3>
+                  <a class="company-name" href="https://www.thevisionhouse.in/" target="_blank" rel="noopener noreferrer">The Vision House</a>
                   <p class="role-line"><b>MIS Executive</b> · Jaipur — Telecom Consultancy &amp; Project Management (Civil &amp; Electrical) · April 2019 – Present</p>
                 </div>
               </div>
@@ -382,9 +386,9 @@
             <span>2</span>
             <div>
               <div class="job-header">
-                <div class="company-logo"><img src="https://apsaraicecreams.com/wp-content/uploads/2025/03/logooooo.webp" alt="Apsara Ice Creams logo" /></div>
+                <a class="company-logo" href="https://apsaraicecreams.com/" target="_blank" rel="noopener noreferrer"><img src="https://apsaraicecreams.com/wp-content/uploads/2025/03/logooooo.webp" alt="Apsara Ice Creams logo" /></a>
                 <div>
-                  <h3 class="company-name">Apsara Ice Cream Parlour</h3>
+                  <a class="company-name" href="https://apsaraicecreams.com/" target="_blank" rel="noopener noreferrer">Apsara Ice Cream Parlour</a>
                   <p class="role-line"><b>Cashier</b> · Jaipur · October 2018 – March 2019</p>
                 </div>
               </div>
