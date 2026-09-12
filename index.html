@@ -188,6 +188,11 @@
       .role-line b { color: var(--ink); font-weight: 700; }
       .steps ul { margin: 0; padding-left: 1.15rem; color: var(--muted); }
       .steps ul li { display: list-item; grid-template-columns: none; padding: 0; border: 0; margin-bottom: 0.4rem; font-size: 0.98rem; }
+      .steps ul li.cat {
+        list-style: none; margin: 16px 0 6px -1.15rem; padding: 0; font-weight: 700;
+        color: var(--ink); font-family: var(--body); font-size: 1rem;
+      }
+      .steps ul li.cat:first-child { margin-top: 0; }
 
       .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
       .cards-grid .service-card { min-height: auto; }
@@ -393,9 +398,32 @@
                 </div>
               </div>
               <ul>
-                <li>Collected cash, cheque and card payments; issued receipts</li>
-                <li>Managed returns/refunds and reconciled the cash drawer</li>
-                <li>Handled billing and supported inventory and shelf upkeep</li>
+                <li class="cat">Transaction Management</li>
+                <li>Operated the cash register, processing sales transactions efficiently and accurately</li>
+                <li>Handled cash, credit and debit card payments while adhering to company policies</li>
+                <li>Issued receipts, refunds, credits or change due to customers</li>
+
+                <li class="cat">Customer Engagement</li>
+                <li>Greeted customers warmly and provided friendly, attentive service during their visit</li>
+                <li>Addressed customer inquiries and resolved issues promptly and professionally</li>
+                <li>Promoted loyalty programs and ongoing promotions to enhance customer engagement</li>
+
+                <li class="cat">Cash Handling &amp; Reconciliation</li>
+                <li>Maintained an accurate cash drawer, ensuring all transactions were entered correctly</li>
+                <li>Conducted cash drops as needed, following all cash handling procedures</li>
+                <li>Performed cash register reconciliations at the start and end of each shift to minimize discrepancies</li>
+
+                <li class="cat">Inventory &amp; Stock Management</li>
+                <li>Assisted with restocking shelves and organizing merchandise as needed</li>
+                <li>Reported low inventory levels to the supervisor and assisted in inventory counts</li>
+
+                <li class="cat">Store Maintenance</li>
+                <li>Kept the checkout area clean, organized and free of clutter for a pleasant customer experience</li>
+                <li>Ensured promotional materials and signage were displayed correctly at the register</li>
+
+                <li class="cat">Compliance &amp; Procedures</li>
+                <li>Followed all safety and security protocols to ensure a safe shopping environment</li>
+                <li>Adhered to company policies and procedures, including cash handling and customer transactions</li>
               </ul>
             </div>
           </li>
