@@ -242,6 +242,13 @@
         background: rgba(80, 24, 14, 0.12); color: white; padding: 0.7rem 0.75rem 0.55rem;
       }
       .button-dark { grid-column: 1 / -1; justify-self: start; margin-top: 0.8rem; background: var(--ink); color: white; box-shadow: 6px 6px 0 var(--saffron); }
+      .download-group { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 0.9rem; }
+      .download-label { font-size: 0.86rem; font-weight: 700; color: var(--paper-light); }
+      .button-outline-light {
+        background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.75);
+        min-height: 2.6rem; padding: 0.55rem 1.15rem 0.45rem;
+      }
+      .button-outline-light:hover { background: rgba(255,255,255,0.15); }
 
       .site-footer {
         display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 2rem;
@@ -553,6 +560,11 @@
             <input type="text" value="Jaipur, Rajasthan, IN" readonly />
           </label>
           <a class="button button-dark" href="mailto:tarunprajapat814@gmail.com">Send an Email</a>
+          <div class="download-group">
+            <span class="download-label">Download CV:</span>
+            <a class="button button-outline-light" href="Tarun_Prajapat_Resume.pdf" download>PDF</a>
+            <a class="button button-outline-light" href="Tarun_Prajapat_Resume.docx" download>Word</a>
+          </div>
         </div>
       </section>
     </main>
