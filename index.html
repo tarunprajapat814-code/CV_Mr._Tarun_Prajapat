@@ -327,7 +327,8 @@
         .site-nav.open { display: flex; }
         .site-nav a { padding: 0.8rem; }
         .hero, .process, .contact { grid-template-columns: 1fr; }
-        .hero { width: min(100% - 2rem, 1180px); padding-top: 4.5rem; }
+        .hero { width: min(100% - 2rem, 1180px); padding-top: 4.5rem; min-height: auto; }
+        .hero-bg-image { object-fit: contain !important; object-position: center 30%; opacity: 0.22; }
         .hero-art { min-height: 390px; margin-top: 1rem; }
         .sun-disc { width: min(64vw, 280px); }
         .hero-stamp { right: auto; bottom: 1rem; left: 0; }
@@ -383,7 +384,7 @@
 
     <main id="main-content">
       <section class="hero" id="top">
-        <img class="hero-bg-image" src="krishna-flute-bg1.png" alt="" aria-hidden="true" />
+        <img class="hero-bg-image" src="krishna-flute-bg.jpg" alt="" aria-hidden="true" />
         <div class="hero-copy">
           <p class="eyebrow reveal">MIS Executive &bull; Accounts &bull; GST &bull; Commercial &bull; ERP</p>
           <h1 class="reveal delay-1">Numbers you<br /><em>can trust.</em></h1>
