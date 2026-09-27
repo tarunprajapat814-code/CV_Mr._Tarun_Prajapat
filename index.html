@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tarun Prajapat | MIS Executive | Accounts & GST Professional</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23b95337'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='24' font-weight='bold' fill='%23fbf6ec' text-anchor='middle'%3EMr.%3C/text%3E%3C/svg%3E" />
     <meta name="description" content="Tarun Prajapat – MIS Executive specializing in Accounts, GST Filing, Commercial Operations, MIS Reporting and ERP. 7+ years experience, based in Jaipur, Rajasthan." />
     <link rel="canonical" href="https://tarunprajapat814-code.github.io/CV_Mr_Tarun_Prajapat/" />
     <meta property="og:type" content="profile" />
@@ -299,6 +300,9 @@
         min-height: 2.6rem; padding: 0.55rem 1.15rem 0.45rem;
       }
       .button-outline-light:hover { background: rgba(255,255,255,0.15); }
+      .qr-block { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; margin-top: 1.4rem; }
+      .qr-block img { background: white; padding: 6px; border-radius: 6px; flex-shrink: 0; }
+      .qr-block span { font-size: 0.82rem; color: var(--paper); opacity: 0.85; }
 
       .site-footer {
         display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 2rem;
@@ -347,9 +351,34 @@
         .hero-art { min-height: 330px; }
         .contact-form { grid-template-columns: 1fr; }
       }
+      .back-to-top {
+        position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 40;
+        width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--ink);
+        background: var(--terracotta); color: white; font-size: 1.2rem; line-height: 1; cursor: pointer;
+        box-shadow: 3px 3px 0 var(--ink); opacity: 0; pointer-events: none;
+        transform: translateY(10px); transition: opacity 200ms ease, transform 200ms ease;
+      }
+      .back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+      .back-to-top:hover { transform: translateY(-3px); }
+
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
         *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      }
+
+      @media print {
+        body::before, .top-banner, .site-header, .hero-bg-image, .hero-art, .hero-stamp,
+        .ticker, .career-doodle, .experience-icon, .back-to-top, .qr-block,
+        .hero-actions, .download-group, .contact-form a.button, .site-footer,
+        .project-card .view-details { display: none !important; }
+        body { background: white !important; font-size: 12pt; }
+        .section, .hero { width: 100% !important; padding: 0.4in 0 !important; }
+        .contact { background: white !important; color: var(--ink) !important; padding: 0.4in 0 !important; }
+        .contact .eyebrow, .contact-id span, .small-note { color: var(--muted) !important; }
+        .project-card { break-inside: avoid; }
+        .project-card > *:not(summary) { display: block !important; }
+        a { text-decoration: none; color: var(--ink) !important; }
+        .steps li.step-yellow, .steps li.step-green { background: none !important; border: 1px solid var(--line) !important; }
       }
     </style>
   </head>
@@ -752,6 +781,10 @@
             <a class="button button-outline-light" href="Tarun_Prajapat_Resume.pdf" download>PDF</a>
             <a class="button button-outline-light" href="Tarun_Prajapat_Resume.docx" download>Word</a>
           </div>
+          <div class="qr-block">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=8&data=https://tarunprajapat814-code.github.io/CV_Mr_Tarun_Prajapat/" alt="QR code linking to this resume website" width="120" height="120" />
+            <span>Scan to open this site<br />— handy for business cards</span>
+          </div>
         </div>
       </section>
     </main>
@@ -761,6 +794,8 @@
       <p>Clear numbers. Reliable reporting.</p>
       <p>&copy; <span id="year">2026</span> Tarun Prajapat</p>
     </footer>
+
+    <button id="backToTop" class="back-to-top" aria-label="Back to top" type="button">↑</button>
 
     <script>
       const menuBtn = document.getElementById('menuBtn');
@@ -788,6 +823,14 @@
       }
       updateClock();
       setInterval(updateClock, 1000);
+
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('visible', window.scrollY > 500);
+      });
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     </script>
   </body>
 </html>
