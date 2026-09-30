@@ -401,6 +401,9 @@
       .itr-span2 { grid-column: 1 / -1; }
       .itr-bank-grid { padding-top: 1.2rem; margin-top: 0.5rem; border-top: 1px dashed var(--line); }
       .itr-footnote { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); font-style: italic; }
+      .itr-topline { display: flex; justify-content: flex-end; gap: 1.6rem; flex-wrap: wrap; margin-bottom: 1.5rem; font-size: 0.82rem; color: var(--muted); }
+      .itr-topline b { color: var(--ink); font-weight: 700; }
+      @media (max-width: 600px) { .itr-topline { justify-content: flex-start; } }
       @media (max-width: 600px) { .itr-doc-head { grid-template-columns: 1fr; } }
 
 
@@ -509,6 +512,11 @@
         </div>
 
         <div class="itr-doc">
+          <div class="itr-topline">
+            <span>Financial Year: <b id="disp_fy">20XX&ndash;20XX</b></span>
+            <span>Assessment Year: <b id="disp_ay">20XX&ndash;20XX</b></span>
+            <span>Document ID: <b id="disp_docid">XXXXXXXXXX/20XX-20XX</b></span>
+          </div>
           <h3 class="itr-h3" style="margin-top:0;">Personal Information</h3>
           <div class="itr-doc-head">
             <div><span>Name</span><b><input type="text" class="itr-input" id="p_name" value="" placeholder="[Client Name]"></b></div>
@@ -663,6 +671,43 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
 
+      // ---- Auto-derive Financial Year + Document ID from PAN / Assessment Year ----
+      function deriveFinancialYear(ayValue) {
+        const m = String(ayValue || '').match(/(\d{4})\s*-\s*(\d{2,4})/);
+        if (!m) return '';
+        const startYear = parseInt(m[1], 10);
+        const fyStart = startYear - 1;
+        const fyEnd = startYear;
+        return `${fyStart}-${fyEnd}`;
+      }
+
+      function updateItrDerivedFields() {
+        const ayEl = document.getElementById('p_ay');
+        const panEl = document.getElementById('p_pan');
+        const fyInputEl = document.getElementById('p_fy');
+        const ayVal = (ayEl && ayEl.value.trim()) || '20XX-20XX';
+        const panVal = (panEl && panEl.value.trim()) || 'XXXXXXXXXX';
+        const fy = deriveFinancialYear(ayVal) || '20XX-20XX';
+
+        const dispFy = document.getElementById('disp_fy');
+        const dispAy = document.getElementById('disp_ay');
+        const dispDocId = document.getElementById('disp_docid');
+        if (dispFy) dispFy.textContent = fy;
+        if (dispAy) dispAy.textContent = ayVal;
+        if (dispDocId) dispDocId.textContent = `${panVal}/${ayVal}`;
+
+        // Keep the Financial Year field in Filing Details in sync automatically
+        if (fyInputEl && deriveFinancialYear(ayVal)) fyInputEl.value = fy;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const ayEl = document.getElementById('p_ay');
+        const panEl = document.getElementById('p_pan');
+        if (ayEl) ayEl.addEventListener('input', updateItrDerivedFields);
+        if (panEl) panEl.addEventListener('input', updateItrDerivedFields);
+        updateItrDerivedFields();
+      });
+
       // ---- ITR JSON auto-fill (client-side only, nothing is uploaded anywhere) ----
       // NOTE: the official ITR JSON schema's exact field names vary by ITR form (1/2/3/4)
       // and by assessment year. Rather than hardcoding one fixed path, this does a
@@ -792,6 +837,7 @@
           const text = await file.text();
           const data = JSON.parse(text);
           const found = parseAndFillItrJson(data);
+          updateItrDerivedFields();
           if (found > 0) {
             itrStatus.textContent = `Auto-filled ${found} field(s). Please review before using.`;
             itrStatus.className = 'itr-upload-status ok';
