@@ -398,6 +398,9 @@
       .itr-table thead th { color: var(--terracotta); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1.5px solid var(--ink); }
       .itr-sig { margin-top: 2.5rem; font-size: 0.88rem; color: var(--muted); }
       .itr-sig b { display: block; margin-top: 1.8rem; font-family: var(--display); font-weight: 400; font-size: 1.1rem; color: var(--ink); }
+      .itr-span2 { grid-column: 1 / -1; }
+      .itr-bank-grid { padding-top: 1.2rem; margin-top: 0.5rem; border-top: 1px dashed var(--line); }
+      .itr-footnote { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); font-style: italic; }
       @media (max-width: 600px) { .itr-doc-head { grid-template-columns: 1fr; } }
 
 
@@ -415,12 +418,30 @@
       .itr-pct, .itr-sec { max-width: 50px; text-align: center !important; }
       @media (max-width: 600px) { .itr-heading-row { flex-direction: column; } }
 
+
+      .itr-upload {
+        border: 1.5px dashed var(--ink); background: var(--paper-light);
+        padding: 1.8rem clamp(1.2rem, 4vw, 2.2rem); margin-bottom: 2rem; text-align: center;
+      }
+      .itr-upload-title { font-family: var(--display); font-weight: 400; font-size: 1.3rem; margin-bottom: 0.4rem; }
+      .itr-upload-sub { font-size: 0.85rem; color: var(--muted); max-width: 56ch; margin: 0 auto 1.2rem; }
+      .itr-drop { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; cursor: pointer; padding: 1rem; }
+      .itr-drop-icon { width: 42px; height: 42px; border-radius: 50%; background: var(--saffron); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+      .itr-drop-text { font-weight: 600; }
+      .itr-drop-hint { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.6rem; }
+      .itr-browse-btn { margin-top: 0.3rem; pointer-events: none; }
+      .itr-upload.dragover { background: rgba(214,154,50,0.15); }
+      .itr-upload-status { font-size: 0.85rem; margin: 1rem 0 0; min-height: 1.2em; font-weight: 600; }
+      .itr-upload-status.ok { color: var(--leaf); }
+      .itr-upload-status.err { color: var(--terracotta); }
+
       @media print {
         body::before, .top-banner, .site-header, .hero-bg-image, .hero-art, .hero-stamp,
         .ticker, .career-doodle, .experience-icon, .back-to-top, .qr-block,
         .hero-actions, .download-group, .contact-form a.button, .site-footer,
         .project-card .view-details { display: none !important; }
         .itr-pdf-btn, a[href="index.html"] { display: none !important; }
+        .itr-upload { display: none !important; }
         .itr-input { border-bottom: none !important; background: transparent !important; }
         body { background: white !important; font-size: 12pt; }
         .section, .hero { width: 100% !important; padding: 0.4in 0 !important; }
@@ -474,67 +495,124 @@
         </div>
         <p class="itr-note">Sample format only &mdash; illustrative computation sheet showing the structure I prepare for clients. Names, PAN, and figures below are placeholders, not real client data.</p>
 
+        <div class="itr-upload" id="itrUpload">
+          <p class="itr-upload-title">Auto-fill from your ITR JSON</p>
+          <p class="itr-upload-sub">Upload the JSON file downloaded from the Income Tax e-Filing portal ("View Filed Returns" &rarr; Download JSON) &mdash; it's read entirely in your browser, nothing is uploaded anywhere. Matching fields below are auto-filled; field names vary slightly by ITR form/year, so always review before using "Download as PDF".</p>
+          <label class="itr-drop" for="itrFileInput">
+            <span class="itr-drop-icon">&#8593;</span>
+            <span class="itr-drop-text">Choose a JSON file or drag &amp; drop it here</span>
+            <span class="itr-drop-hint">.JSON format &middot; fields not found are left blank</span>
+            <span class="button button-outline-ink itr-browse-btn">Browse File</span>
+            <input type="file" id="itrFileInput" accept=".json,application/json" hidden />
+          </label>
+          <p class="itr-upload-status" id="itrUploadStatus"></p>
+        </div>
+
         <div class="itr-doc">
+          <h3 class="itr-h3" style="margin-top:0;">Personal Information</h3>
           <div class="itr-doc-head">
-            <div><span>Name of Assessee</span><b><input type="text" class="itr-input" value="Client Name" ></b></div>
-            <div><span>Status</span><b><input type="text" class="itr-input" value="Individual" ></b></div>
-            <div><span>Assessment Year</span><b><input type="text" class="itr-input" value="20XX-20XX" ></b></div>
-            <div><span>PAN</span><b><input type="text" class="itr-input" value="XXXXXXXXXX" ></b></div>
-            <div><span>Ward</span><b><input type="text" class="itr-input" value="" ></b></div>
-            <div><span>Year Ended</span><b><input type="text" class="itr-input" value="31.3.20XX" ></b></div>
-            <div><span>Residential Status</span><b><input type="text" class="itr-input" value="Resident" ></b></div>
-            <div><span>Filing Status</span><b><input type="text" class="itr-input" value="Original" ></b></div>
+            <div><span>Name</span><b><input type="text" class="itr-input" id="p_name" value="" placeholder="[Client Name]"></b></div>
+            <div><span>PAN</span><b><input type="text" class="itr-input" id="p_pan" value="" placeholder="XXXXXXXXXX"></b></div>
+            <div class="itr-span2"><span>Address</span><b><input type="text" class="itr-input" id="p_address" value="" placeholder="[Client Address]"></b></div>
+            <div><span>Aadhaar</span><b><input type="text" class="itr-input" id="p_aadhaar" value="" placeholder="XXXX XXXX XXXX"></b></div>
+            <div><span>Mobile</span><b><input type="text" class="itr-input" id="p_mobile" value="" placeholder="+91 __________"></b></div>
+            <div><span>Email</span><b><input type="text" class="itr-input" id="p_email" value="" placeholder="client@email.com"></b></div>
+            <div><span>Gender</span><b><input type="text" class="itr-input" id="p_gender" value=""></b></div>
+            <div><span>Father's Name</span><b><input type="text" class="itr-input" id="p_father" value=""></b></div>
+            <div><span>Date of Birth</span><b><input type="text" class="itr-input" id="p_dob" value="" placeholder="YYYY-MM-DD"></b></div>
           </div>
 
-          <h3 class="itr-h3">Computation of Total Income <span>(New Tax Regime &mdash; Section 115BAC)</span></h3>
+          <h3 class="itr-h3">Filing Details</h3>
+          <div class="itr-doc-head">
+            <div><span>Financial Year</span><b><input type="text" class="itr-input" id="p_fy" value="" placeholder="20XX-20XX"></b></div>
+            <div><span>Assessment Year</span><b><input type="text" class="itr-input" id="p_ay" value="" placeholder="20XX-20XX"></b></div>
+            <div><span>Status</span><b><input type="text" class="itr-input" id="p_status" value="Individual"></b></div>
+            <div><span>Residential Status</span><b><input type="text" class="itr-input" id="p_resstatus" value="Resident"></b></div>
+            <div><span>ITR Form Type</span><b><input type="text" class="itr-input" id="p_itrform" value="" placeholder="ITR-4"></b></div>
+            <div><span>Tax Regime</span><b><input type="text" class="itr-input" id="p_regime" value="New"></b></div>
+            <div><span>Return Type</span><b><input type="text" class="itr-input" id="p_rettype" value="Original"></b></div>
+            <div><span>Return Date</span><b><input type="text" class="itr-input" id="p_retdate" value="" placeholder="YYYY-MM-DD"></b></div>
+            <div><span>Employer Category</span><b><input type="text" class="itr-input" id="p_empcat" value=""></b></div>
+          </div>
+
+          <h3 class="itr-h3">Calculation of Taxable Income <span>&mdash; Business Income</span></h3>
           <table class="itr-table">
-            <tr><td>Income from Business or Profession (Chapter IV D)</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr class="sub"><td>Income u/s 44AD</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr><td>Income from Other Sources (Chapter IV F)</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr class="sub"><td>Interest from Savings Bank A/c</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr class="total"><td>Gross Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr><td>Less: Deductions (Chapter VI-A)</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr class="total"><td>Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr><td>Tax Due</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr><td>T.D.S. / T.C.S.</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr class="total"><td>Refundable / Payable</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
+            <tr><td>Gross Total Turnover (44AD)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_turnover44ad" value=""></td></tr>
+            <tr><td>Presumptive Income u/s 44AD</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_presump44ad" value=""></td></tr>
+            <tr><td>Presumptive Income u/s 44AE</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_presump44ae" value=""></td></tr>
+            <tr class="total"><td>Total Business Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_totalbusiness" value=""></td></tr>
           </table>
 
-          <h3 class="itr-h3">Income Declared u/s 44AD <span>&mdash; sample business</span></h3>
+          <h3 class="itr-h3">Income from Other Sources</h3>
           <table class="itr-table">
-            <tr><td>Gross Receipts/Turnover (ECS/Cheque/DD Mode)</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            <tr><td>Book Profit</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" > &nbsp;(<input type="text" class="itr-input itr-pct" value="" > %)</td></tr>
-            <tr><td>Net Profit Declared</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" > &nbsp;(<input type="text" class="itr-input itr-pct" value="" > %)</td></tr>
+            <tr><td>Other Income (Savings Interest)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_sav" value=""></td></tr>
+            <tr><td>Other Income (Taxable)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_tax" value=""></td></tr>
+            <tr><td>Rental Income from machinery, plants, building, etc.</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_rental" value=""></td></tr>
+            <tr><td>Income under section 56(2)(x)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_56" value=""></td></tr>
+            <tr><td>Any other income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_any" value=""></td></tr>
+            <tr class="total"><td>Total Other Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_total" value=""></td></tr>
+            <tr class="total"><td>Gross Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_gti" value=""></td></tr>
           </table>
 
-          <h3 class="itr-h3">Details of T.D.S. on Non-Salary <span>(sample rows)</span></h3>
-          <div class="itr-scroll">
-          <table class="itr-table itr-tds">
-            <thead>
-              <tr><th>S.No</th><th>Name of Deductor</th><th>Section</th><th>Amount Paid/Credited</th><th>Tax Deducted</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>1</td><td><input type="text" class="itr-input" value="Deductor Name" ></td><td><input type="text" class="itr-input itr-sec" value="194C" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-              <tr><td>2</td><td><input type="text" class="itr-input" value="Deductor Name" ></td><td><input type="text" class="itr-input itr-sec" value="194C" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-              <tr><td>3</td><td><input type="text" class="itr-input" value="Deductor Name" ></td><td><input type="text" class="itr-input itr-sec" value="194C" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-              <tr class="total"><td colspan="4">Total</td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            </tbody>
+          <h3 class="itr-h3">Deductions under Chapter VI-A</h3>
+          <table class="itr-table">
+            <tr class="total"><td>Total Deductions under Chapter VI-A</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="d_total" value=""></td></tr>
+            <tr class="total"><td>Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="d_totalincome" value=""></td></tr>
           </table>
+
+          <h3 class="itr-h3">Tax Payable on Total Income</h3>
+          <table class="itr-table">
+            <tr><td>Tax on Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_taxontotal" value=""></td></tr>
+            <tr><td>Rebate under Section 87A</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_rebate87a" value=""></td></tr>
+            <tr><td>Education / Health Cess</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_cess" value=""></td></tr>
+            <tr class="total"><td>Gross Tax Liability</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_grosstax" value=""></td></tr>
+            <tr><td>Interest under Section 234A</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_234a" value=""></td></tr>
+            <tr><td>Interest under Section 234B</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_234b" value=""></td></tr>
+            <tr><td>Interest under Section 234C</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_234c" value=""></td></tr>
+            <tr class="total"><td>Total Interest Payable</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_totalinterest" value=""></td></tr>
+            <tr class="total"><td>Total Tax and Interest Payable</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_totaltaxinterest" value=""></td></tr>
+          </table>
+
+          <h3 class="itr-h3">Tax Payments</h3>
+          <table class="itr-table">
+            <tr><td>Advance Tax</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_advance" value=""></td></tr>
+            <tr><td>T.D.S.</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_tds" value=""></td></tr>
+            <tr><td>Self Assessment Tax</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_selfassessment" value=""></td></tr>
+            <tr class="total"><td>Total Taxes Paid</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_total" value=""></td></tr>
+            <tr class="total"><td>Balance Tax Payable / (Refund Due)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bal_refund" value=""></td></tr>
+          </table>
+
+          <h3 class="itr-h3">Business Details</h3>
+          <div class="itr-doc-head">
+            <div><span>Business Name</span><b><input type="text" class="itr-input" id="bd_name" value=""></b></div>
+            <div><span>Nature of Business</span><b><input type="text" class="itr-input" id="bd_nature" value=""></b></div>
+          </div>
+          <table class="itr-table">
+            <tr><td>Total Turnover</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bd_totalturnover" value=""></td></tr>
+            <tr><td>Turnover through Bank</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bd_turnoverbank" value=""></td></tr>
+            <tr><td>Turnover in Cash</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bd_turnovercash" value=""></td></tr>
+          </table>
+
+          <h3 class="itr-h3">Bank Details for Refund</h3>
+          <div class="itr-doc-head itr-bank-grid">
+            <div><span>Bank Name</span><b><input type="text" class="itr-input" id="bk1_name" value=""></b></div>
+            <div><span>Account Number</span><b><input type="text" class="itr-input" id="bk1_acc" value=""></b></div>
+            <div><span>IFSC Code</span><b><input type="text" class="itr-input" id="bk1_ifsc" value=""></b></div>
+            <div><span>Bank Name (2)</span><b><input type="text" class="itr-input" id="bk2_name" value=""></b></div>
+            <div><span>Account Number (2)</span><b><input type="text" class="itr-input" id="bk2_acc" value=""></b></div>
+            <div><span>IFSC Code (2)</span><b><input type="text" class="itr-input" id="bk2_ifsc" value=""></b></div>
           </div>
 
-          <h3 class="itr-h3">Head-wise Summary of Income &amp; TDS</h3>
-          <div class="itr-scroll">
-          <table class="itr-table itr-tds">
-            <thead>
-              <tr><th>Head</th><th>Section</th><th>Amount Paid/Credited (26AS)</th><th>As per Computation</th><th>TDS</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><input type="text" class="itr-input" value="Business" ></td><td><input type="text" class="itr-input itr-sec" value="194C" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td><td>&#8377; <input type="text" class="itr-input itr-amt" value="" ></td></tr>
-            </tbody>
-          </table>
+          <h3 class="itr-h3">Verification</h3>
+          <div class="itr-doc-head">
+            <div><span>Verified By</span><b><input type="text" class="itr-input" id="v_verifiedby" value=""></b></div>
+            <div><span>Father's Name</span><b><input type="text" class="itr-input" id="v_father" value=""></b></div>
+            <div><span>PAN</span><b><input type="text" class="itr-input" id="v_pan" value=""></b></div>
+            <div><span>Place</span><b><input type="text" class="itr-input" id="v_place" value=""></b></div>
           </div>
+          <p class="itr-sig">Signature</p>
 
-          <p class="itr-sig">Signature<br /><b>(<input type="text" class="itr-input" value="Client Name" >)</b></p>
+          <p class="itr-footnote">This is a sample computation format for illustration purposes only, prepared by Tarun Prajapat. Please verify all figures independently before relying on them for actual filing.</p>
         </div>
 
         <a class="button button-primary" href="index.html" style="margin-top:2.5rem;">&larr; Back to Resume</a>
@@ -550,6 +628,7 @@
     <button id="backToTop" class="back-to-top" aria-label="Back to top" type="button">↑</button>
 
     <script>
+
       const menuBtn = document.getElementById('menuBtn');
       const siteNav = document.getElementById('site-nav');
       menuBtn.addEventListener('click', () => {
@@ -583,6 +662,162 @@
       backToTop.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+
+      // ---- ITR JSON auto-fill (client-side only, nothing is uploaded anywhere) ----
+      // NOTE: the official ITR JSON schema's exact field names vary by ITR form (1/2/3/4)
+      // and by assessment year. Rather than hardcoding one fixed path, this does a
+      // recursive, case-insensitive search for likely key names, so it works across
+      // several schema variants on a best-effort basis. Always review filled values.
+      const itrUpload = document.getElementById('itrUpload');
+      const itrFileInput = document.getElementById('itrFileInput');
+      const itrStatus = document.getElementById('itrUploadStatus');
+
+      function setItrField(id, value) {
+        if (value === undefined || value === null || value === '') return;
+        const el = document.getElementById(id);
+        if (el) el.value = String(value).trim();
+      }
+
+      // Recursively search a nested object/array for the first key whose name
+      // contains any of the given candidate substrings (case-insensitive).
+      function findByKey(obj, candidates, seen = new Set()) {
+        if (obj === null || typeof obj !== 'object' || seen.has(obj)) return undefined;
+        seen.add(obj);
+        const entries = Array.isArray(obj) ? obj.map((v, i) => [String(i), v]) : Object.entries(obj);
+        for (const [key, val] of entries) {
+          const lower = key.toLowerCase();
+          if (candidates.some((c) => lower.includes(c.toLowerCase())) &&
+              (typeof val === 'string' || typeof val === 'number')) {
+            return val;
+          }
+        }
+        for (const [, val] of entries) {
+          if (val && typeof val === 'object') {
+            const found = findByKey(val, candidates, seen);
+            if (found !== undefined) return found;
+          }
+        }
+        return undefined;
+      }
+
+      function buildAssesseeName(data) {
+        const first = findByKey(data, ['FirstName']);
+        const middle = findByKey(data, ['MiddleName']);
+        const last = findByKey(data, ['SurNameOrOrgName', 'SurName']);
+        const parts = [first, middle, last].filter(Boolean);
+        if (parts.length) return parts.join(' ');
+        return findByKey(data, ['AssesseeName', 'NameOfPerson', 'Name']);
+      }
+
+      function parseAndFillItrJson(data) {
+        const statusCodeMap = { I: 'Individual', H: 'HUF', F: 'Firm', A: 'AOP', B: 'BOI', C: 'Company', T: 'Trust', G: 'Government', L: 'Local Authority' };
+        function readableStatus() {
+          const raw = findByKey(data, ['Status', 'AssesseeStatus']);
+          if (raw === undefined) return undefined;
+          const code = String(raw).trim().toUpperCase();
+          return statusCodeMap[code] || raw;
+        }
+        const fieldMap = {
+          p_name: () => buildAssesseeName(data),
+          p_pan: ['PAN'],
+          p_address: ['AddressDetail', 'AddrDetail', 'Address'],
+          p_aadhaar: ['AadhaarCardNo', 'Aadhaar'],
+          p_mobile: ['MobileNo', 'Mobile'],
+          p_email: ['EmailAddress', 'Email'],
+          p_gender: ['Gender', 'Sex'],
+          p_father: ['FatherName'],
+          p_dob: ['DOB', 'DateOfBirth'],
+          p_fy: ['FinancialYear'],
+          p_ay: ['AssessmentYear'],
+          p_status: () => readableStatus(),
+          p_itrform: ['FormName', 'ITRFormType', 'ITRType'],
+          p_rettype: ['FilingType', 'ReturnType'],
+          p_retdate: ['FilingDate', 'ReturnDate'],
+          b_turnover44ad: ['GrossTurnover44AD', 'GrossReceiptsFor44AD', 'TotTurnoverGross44AD'],
+          b_presump44ad: ['Sec44AD', 'PresumpIncome44AD', 'Rule44AD'],
+          b_presump44ae: ['Sec44AE', 'PresumpIncome44AE'],
+          b_totalbusiness: ['IncOfBP', 'IncomeBusiness', 'ProfGainBusProf', 'GrossFromBusiness', 'TotalBusinessIncome'],
+          o_sav: ['IntrstFrmSavingBank', 'IntrstFrmSB'],
+          o_tax: ['IntrstFrmTermDeposit', 'OthNOTScheduleIncome'],
+          o_total: ['TotOthSrcIncome', 'IncFromOthSrc', 'TotalOtherIncome'],
+          o_gti: ['GrossTotIncome', 'GrossTotalIncome'],
+          d_total: ['DeductUndChapVIA', 'TotalChapVIADeductions', 'UsrDeductUndChapVIA'],
+          d_totalincome: ['TotalIncome'],
+          t_taxontotal: ['TaxOnTotIncome', 'TaxOnTotalIncome'],
+          t_rebate87a: ['Rebate87A', 'RebateOnAgriInc87A'],
+          t_cess: ['HealthEduCess', 'EducationCess', 'Cess'],
+          t_grosstax: ['GrossTaxLiability', 'TotalTaxPayable'],
+          t_234a: ['Section234A', 'Int234A'],
+          t_234b: ['Section234B', 'Int234B'],
+          t_234c: ['Section234C', 'Int234C'],
+          t_totaltaxinterest: ['NetTaxLiability', 'TotTaxAndIntPayable'],
+          tp_advance: ['AdvanceTax'],
+          tp_tds: ['TotalTDS', 'TDSOnOthThanSal', 'TotTDS'],
+          tp_selfassessment: ['SelfAssessmentTax', 'TaxPaidSelfAssessment'],
+          tp_total: ['TotalTaxesPaid', 'TotalTaxPayment'],
+          bal_refund: ['RefundDue', 'Refund', 'BalTaxPayable'],
+          bd_name: ['BusinessName', 'NameOfBusiness', 'TradeName'],
+          bd_nature: ['NatureOfBusiness', 'BusinessNature'],
+          bd_totalturnover: ['GrossTurnoverOrGrossReceipt', 'GrossReceipts', 'GrossTurnover', 'TotalTurnover'],
+          bd_turnoverbank: ['TurnoverThruBank', 'TurnoverThroughBank', 'ReceiptsThroughBank'],
+          bd_turnovercash: ['TurnoverInCash', 'ReceiptsInCash'],
+          bk1_name: ['BankName'],
+          bk1_acc: ['BankAccountNo', 'AccountNo'],
+          bk1_ifsc: ['IFSC', 'IFSCode'],
+          v_verifiedby: () => buildAssesseeName(data),
+          v_father: ['FatherName'],
+          v_pan: ['PAN'],
+        };
+        let found = 0;
+        for (const [id, spec] of Object.entries(fieldMap)) {
+          const value = typeof spec === 'function' ? spec() : findByKey(data, spec);
+          if (value !== undefined) {
+            setItrField(id, value);
+            found++;
+          }
+        }
+        return found;
+      }
+
+      async function handleItrFile(file) {
+        const isJson = file && (file.type === 'application/json' || /\.json$/i.test(file.name));
+        if (!isJson) {
+          itrStatus.textContent = 'Please choose a .json file.';
+          itrStatus.className = 'itr-upload-status err';
+          return;
+        }
+        itrStatus.textContent = 'Reading JSON…';
+        itrStatus.className = 'itr-upload-status';
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          const found = parseAndFillItrJson(data);
+          if (found > 0) {
+            itrStatus.textContent = `Auto-filled ${found} field(s). Please review before using.`;
+            itrStatus.className = 'itr-upload-status ok';
+          } else {
+            itrStatus.textContent = "Couldn't recognise fields in this JSON — please fill manually.";
+            itrStatus.className = 'itr-upload-status err';
+          }
+        } catch (err) {
+          itrStatus.textContent = 'Could not read this file — is it a valid ITR JSON?';
+          itrStatus.className = 'itr-upload-status err';
+        }
+      }
+
+      if (itrFileInput) {
+        itrFileInput.addEventListener('change', (e) => handleItrFile(e.target.files[0]));
+        ['dragover', 'dragenter'].forEach((evt) =>
+          itrUpload.addEventListener(evt, (e) => { e.preventDefault(); itrUpload.classList.add('dragover'); })
+        );
+        ['dragleave', 'drop'].forEach((evt) =>
+          itrUpload.addEventListener(evt, (e) => { e.preventDefault(); itrUpload.classList.remove('dragover'); })
+        );
+        itrUpload.addEventListener('drop', (e) => {
+          const file = e.dataTransfer.files[0];
+          if (file) handleItrFile(file);
+        });
+      }
     </script>
   </body>
 </html>
