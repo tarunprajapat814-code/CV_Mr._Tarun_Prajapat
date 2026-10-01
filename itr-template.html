@@ -439,21 +439,60 @@
       .itr-upload-status.err { color: var(--terracotta); }
 
       @media print {
+        @page { size: A4; margin: 14mm 12mm; }
+
         body::before, .top-banner, .site-header, .hero-bg-image, .hero-art, .hero-stamp,
         .ticker, .career-doodle, .experience-icon, .back-to-top, .qr-block,
         .hero-actions, .download-group, .contact-form a.button, .site-footer,
         .project-card .view-details { display: none !important; }
         .itr-pdf-btn, a[href="index.html"] { display: none !important; }
         .itr-upload { display: none !important; }
-        .itr-input { border-bottom: none !important; background: transparent !important; }
-        body { background: white !important; font-size: 12pt; }
-        .section, .hero { width: 100% !important; padding: 0.4in 0 !important; }
+        body { background: white !important; font-size: 10.5pt; line-height: 1.4; }
+        .section, .hero { width: 100% !important; padding: 0 !important; }
         .contact { background: white !important; color: var(--ink) !important; padding: 0.4in 0 !important; }
         .contact .eyebrow, .contact-id span, .small-note { color: var(--muted) !important; }
         .project-card { break-inside: avoid; }
         .project-card > *:not(summary) { display: block !important; }
         a { text-decoration: none; color: var(--ink) !important; }
         .steps li.step-yellow, .steps li.step-green { background: none !important; border: 1px solid var(--line) !important; }
+
+        /* ---- ITR computation sheet: clean, letterhead-style print ---- */
+        #itr-computation { padding: 0 !important; }
+        #itr-computation .section-heading { margin-bottom: 0.3in !important; border-bottom: 1.5pt solid var(--ink); padding-bottom: 10pt; }
+        #itr-computation .eyebrow { font-size: 8pt; }
+        #itr-computation h2 { font-size: 20pt !important; line-height: 1.15; }
+        #itr-computation .itr-note { display: none !important; }
+        #itr-computation::before {
+          content: "Income Tax Computation — Sample Format";
+          display: block; font-family: var(--body); font-weight: 700; font-size: 8pt;
+          letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4pt;
+        }
+
+        .itr-doc { border: none !important; padding: 0 !important; background: white !important; }
+        .itr-topline { justify-content: flex-start; gap: 0.3in; padding-bottom: 8pt; margin-bottom: 14pt;
+          border-bottom: 1pt solid var(--line); font-size: 8.5pt; }
+
+        .itr-h3 { font-size: 12pt !important; margin: 16pt 0 6pt !important; break-after: avoid; color: var(--terracotta); }
+        .itr-h3 span { font-size: 8pt; }
+
+        .itr-doc-head { grid-template-columns: repeat(2, 1fr) !important; gap: 6pt 24pt !important; margin-bottom: 10pt !important; padding-bottom: 10pt !important; }
+        .itr-doc-head span { font-size: 7pt !important; }
+        .itr-doc-head b { font-size: 9.5pt !important; }
+        .itr-bank-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+        table.itr-table { font-size: 9.5pt !important; break-inside: avoid; margin-bottom: 4pt; }
+        .itr-table tr { break-inside: avoid; }
+        .itr-table td { padding: 3pt 6pt !important; }
+        .itr-table tr.total td { background: #f4f1ea !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+        .itr-input {
+          border: none !important; border-bottom: 0.5pt solid #ccc !important;
+          background: transparent !important; color: black !important; padding: 1pt 2pt !important;
+        }
+        .itr-input::placeholder { color: #bbb !important; }
+
+        .itr-sig { margin-top: 20pt; font-size: 9pt; }
+        .itr-footnote { font-size: 7.5pt; margin-top: 14pt; padding-top: 8pt; }
       }
     </style>
   </head>
