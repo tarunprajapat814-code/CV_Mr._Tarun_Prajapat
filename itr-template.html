@@ -27,16 +27,15 @@
   .field-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; text-align: right; background: #f8fafc; }
   .field-input:focus { outline: none; border-color: #3b82f6; background: #fff; }
   .field-input[readonly] { background: #f1f5f9; color: #1e293b; font-weight: 600; }
+  .field-input.extracted { background: #fef3c7 !important; animation: pulse 1.5s ease-in-out 2; }
+  @keyframes pulse { 0%,100% { background: #fef3c7; } 50% { background: #fde68a; } }
   .total-row { background: #dbeafe; font-weight: 700; color: #1e3a8a; padding: 10px 12px; border-radius: 6px; margin-top: 8px; display: flex; justify-content: space-between; }
   .total-row.green { background: #d1fae5; color: #065f46; }
   .total-row.red { background: #fee2e2; color: #991b1b; }
   .btn { padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; border: none; }
-  .btn-primary { background: #3b82f6; color: #fff; }
-  .btn-primary:hover { background: #2563eb; }
-  .btn-success { background: #10b981; color: #fff; }
-  .btn-success:hover { background: #059669; }
-  .btn-danger { background: #ef4444; color: #fff; }
-  .btn-danger:hover { background: #dc2626; }
+  .btn-primary { background: #3b82f6; color: #fff; } .btn-primary:hover { background: #2563eb; }
+  .btn-success { background: #10b981; color: #fff; } .btn-success:hover { background: #059669; }
+  .btn-danger { background: #ef4444; color: #fff; } .btn-danger:hover { background: #dc2626; }
   .btn-outline { background: #fff; color: #3b82f6; border: 1px solid #3b82f6; }
   .btn-outline:hover { background: #eff6ff; }
   .btn-sm { padding: 4px 10px; font-size: 12px; }
@@ -44,6 +43,7 @@
   .pill-green { background: #d1fae5; color: #065f46; }
   .pill-red { background: #fee2e2; color: #991b1b; }
   .pill-amber { background: #fef3c7; color: #92400e; }
+  .pill-blue { background: #dbeafe; color: #1e40af; }
   table.sub-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   table.sub-table th { background: #f1f5f9; padding: 8px; text-align: left; color: #475569; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
   table.sub-table td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
@@ -57,6 +57,14 @@
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
   .modal-overlay.show { display: flex; }
   .modal-box { background: #fff; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+  .modal-box.large { max-width: 900px; }
+  .progress-bar { height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); width: 0%; transition: width 0.3s; }
+  .extracted-preview { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; max-height: 300px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; }
+  .extracted-field { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .extracted-field .label { color: #64748b; }
+  .extracted-field .value { font-weight: 600; color: #0f172a; }
+  .extracted-field .confidence { font-size: 10px; color: #10b981; margin-left: 6px; }
   @media print {
     body { background: #fff; }
     .no-print, .section-header, .btn, button, footer, .upload-panel { display: none !important; }
@@ -74,7 +82,7 @@
   <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
     <div>
       <h1 class="text-2xl font-bold">📊 ITR Computation Dashboard</h1>
-      <p class="text-blue-200 text-sm">AY 2026-27 | Full Schedule Support | PDF/OCR/AIS/ITR-JSON Parsing</p>
+      <p class="text-blue-200 text-sm">AY 2026-27 | Auto-fill from Form 16 / 26AS / AIS / ITR JSON</p>
     </div>
     <div class="flex flex-wrap items-center gap-3">
       <div><label class="text-xs text-blue-200 block">ITR Form</label>
@@ -109,6 +117,7 @@
 
 <div class="max-w-7xl mx-auto p-4">
 
+  <!-- UPLOAD PANEL -->
   <div class="section-card upload-panel no-print">
     <div class="section-header purple" onclick="toggleSection('uploadBody')">
       <span>📁 Upload / Paste Data — JSON | PDF | Image | Form 16 | AIS | 26AS | ITR JSON</span>
@@ -116,42 +125,60 @@
     </div>
     <div class="section-body open" id="uploadBody">
       <div class="grid md:grid-cols-5 gap-3 mb-4">
-        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50">
-          <input type="file" class="hidden" accept=".json" onchange="handleJSONUpload(event)">
+        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50 transition">
+          <input type="file" class="hidden" accept=".json" multiple onchange="handleJSONUpload(event)">
           <div class="text-3xl">📄</div>
-          <div class="text-xs font-semibold text-purple-700 mt-1">JSON (ITR/AIS)</div>
+          <div class="text-xs font-semibold text-purple-700 mt-1">JSON</div>
+          <div class="text-[10px] text-gray-500">ITR / AIS / Multiple</div>
         </label>
-        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50">
-          <input type="file" class="hidden" accept=".pdf" onchange="handlePDFUpload(event)">
+        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50 transition">
+          <input type="file" class="hidden" accept=".pdf" multiple onchange="handlePDFUpload(event)">
           <div class="text-3xl">📑</div>
-          <div class="text-xs font-semibold text-purple-700 mt-1">PDF (Form 16/26AS)</div>
+          <div class="text-xs font-semibold text-purple-700 mt-1">PDF</div>
+          <div class="text-[10px] text-gray-500">Form 16 / 26AS / AIS</div>
         </label>
-        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50">
-          <input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50 transition">
+          <input type="file" class="hidden" accept="image/*" multiple onchange="handleImageUpload(event)">
           <div class="text-3xl">🖼️</div>
-          <div class="text-xs font-semibold text-purple-700 mt-1">Image (OCR)</div>
+          <div class="text-xs font-semibold text-purple-700 mt-1">Image</div>
+          <div class="text-[10px] text-gray-500">OCR (Form 16 photo)</div>
         </label>
-        <button onclick="openAISDecryptModal()" class="border-2 border-dashed border-amber-300 rounded-lg p-4 text-center hover:bg-amber-50">
+        <button onclick="openAISDecryptModal()" class="border-2 border-dashed border-amber-300 rounded-lg p-4 text-center hover:bg-amber-50 transition">
           <div class="text-3xl">🔐</div>
           <div class="text-xs font-semibold text-amber-700 mt-1">AIS Decrypt</div>
+          <div class="text-[10px] text-gray-500">Encrypted JSON</div>
         </button>
-        <button onclick="loadSampleData()" class="border-2 border-dashed border-green-300 rounded-lg p-4 text-center hover:bg-green-50">
+        <button onclick="loadSampleData()" class="border-2 border-dashed border-green-300 rounded-lg p-4 text-center hover:bg-green-50 transition">
           <div class="text-3xl">⚡</div>
           <div class="text-xs font-semibold text-green-700 mt-1">Load Sample</div>
+          <div class="text-[10px] text-gray-500">Demo data</div>
         </button>
       </div>
       <div class="mb-3">
         <label class="field-label">Or paste JSON / ITR text:</label>
-        <textarea id="jsonInput" rows="4" class="w-full mt-1 p-3 border border-gray-300 rounded-lg font-mono text-xs" placeholder='Paste ITR JSON / AIS JSON / plain text...'></textarea>
+        <textarea id="jsonInput" rows="3" class="w-full mt-1 p-3 border border-gray-300 rounded-lg font-mono text-xs" placeholder='Paste ITR JSON / AIS JSON / plain text...'></textarea>
       </div>
       <div class="flex gap-2 flex-wrap">
-        <button class="btn btn-primary" onclick="parseJSONInput()">🔍 Parse</button>
+        <button class="btn btn-primary" onclick="parseJSONInput()">🔍 Parse JSON</button>
+        <button class="btn btn-outline" onclick="showExtractedPreview()">👁️ Show Extracted Data</button>
         <button class="btn btn-outline" onclick="clearAll()">🗑️ Clear All</button>
       </div>
+
+      <!-- Progress -->
+      <div id="progressArea" class="mt-4" style="display:none;">
+        <div class="text-sm text-gray-700 font-semibold" id="progressText">Processing...</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <!-- Status -->
       <div id="parseStatus" class="mt-3 text-sm"></div>
+
+      <!-- Extracted Fields Summary -->
+      <div id="extractedSummary" class="mt-4" style="display:none;"></div>
     </div>
   </div>
 
+  <!-- A: PERSONAL INFO -->
   <div class="section-card">
     <div class="section-header" onclick="toggleSection('personalBody')">
       <span>👤 A. Personal & Filing Information</span><span class="text-sm no-print">▼</span>
@@ -173,16 +200,19 @@
           <div class="field-row"><span class="field-label">Address</span><input class="field-input" id="p_address"></div>
         </div>
       </div>
+      <div class="field-row mt-2"><span class="field-label">Employer Name (TAN)</span><input class="field-input" id="p_employer"></div>
+      <div class="field-row"><span class="field-label">Employer TAN</span><input class="field-input" id="p_tan"></div>
     </div>
   </div>
 
+  <!-- B1: SALARY -->
   <div class="section-card">
     <div class="section-header" onclick="toggleSection('salaryBody')">
       <span>💼 B1. Income from Salary (Schedule S)</span><span class="text-sm no-print">▼</span>
     </div>
     <div class="section-body" id="salaryBody">
       <div class="field-row"><span class="field-label">Gross Salary u/s 17(1)</span><input type="number" class="field-input calc" id="s_gross" value="0"></div>
-      <div class="field-row"><span class="field-label">Less: Allowances u/s 10 (HRA, LTA, etc.)</span><input type="number" class="field-input calc" id="s_allowances" value="0"></div>
+      <div class="field-row"><span class="field-label">Less: Allowances u/s 10 (HRA, LTA)</span><input type="number" class="field-input calc" id="s_allowances" value="0"></div>
       <div class="field-row"><span class="field-label">Less: Standard Deduction 16(ia)</span><input type="number" class="field-input calc" id="s_stdDed" value="75000"></div>
       <div class="field-row"><span class="field-label">Less: Entertainment Allowance 16(ii)</span><input type="number" class="field-input calc" id="s_entAllow" value="0"></div>
       <div class="field-row"><span class="field-label">Less: Professional Tax 16(iii)</span><input type="number" class="field-input calc" id="s_profTax" value="0"></div>
@@ -190,6 +220,7 @@
     </div>
   </div>
 
+  <!-- B2: HOUSE PROPERTY -->
   <div class="section-card">
     <div class="section-header orange" onclick="toggleSection('hpBody')">
       <span>🏠 B2. House Property (Schedule HP) — Multiple Properties</span><span class="text-sm no-print">▼</span>
@@ -201,6 +232,7 @@
     </div>
   </div>
 
+  <!-- B3: BUSINESS -->
   <div class="section-card" id="businessSection" style="display:none;">
     <div class="section-header orange" onclick="toggleSection('bizBody')">
       <span>🏢 B3. Business/Profession Income (Schedule BP)</span><span class="text-sm no-print">▼</span>
@@ -215,6 +247,7 @@
     </div>
   </div>
 
+  <!-- B4: CAPITAL GAINS -->
   <div class="section-card" id="cgSection">
     <div class="section-header red" onclick="toggleSection('cgBody')">
       <span>📈 B4. Capital Gains (Schedule CG) — STCG / LTCG / VDA</span><span class="text-sm no-print">▼</span>
@@ -248,6 +281,7 @@
     </div>
   </div>
 
+  <!-- B5: OTHER SOURCES -->
   <div class="section-card">
     <div class="section-header" onclick="toggleSection('osBody')">
       <span>💰 B5. Income from Other Sources (Schedule OS)</span><span class="text-sm no-print">▼</span>
@@ -262,6 +296,7 @@
     </div>
   </div>
 
+  <!-- B6: FOREIGN -->
   <div class="section-card" id="foreignSection">
     <div class="section-header green" onclick="toggleSection('foreignBody')">
       <span>🌍 B6. Foreign Income & DTAA (Schedule FA / FSI / Form 67)</span><span class="text-sm no-print">▼</span>
@@ -289,6 +324,7 @@
     </div>
   </div>
 
+  <!-- C: DEDUCTIONS -->
   <div class="section-card">
     <div class="section-header purple" onclick="toggleSection('dedBody')">
       <span>📉 C. Deductions — Chapter VI-A</span><span class="text-sm no-print">▼</span>
@@ -311,10 +347,10 @@
         </div>
       </div>
       <div class="total-row" style="background:#ede9fe;color:#5b21b6;"><span>Total Chapter VI-A Deductions</span><span id="ded_total">₹ 0</span></div>
-      <p class="text-xs text-gray-500 mt-2">⚠️ New Regime: Only 80U, 80DD, 80JJAA etc. allowed.</p>
     </div>
   </div>
 
+  <!-- D: TAX -->
   <div class="section-card">
     <div class="section-header green" onclick="toggleSection('taxBody')">
       <span>🧮 D. Tax Computation — Old vs New with Slab Breakdown</span><span class="text-sm no-print">▼</span>
@@ -352,23 +388,24 @@
     </div>
   </div>
 
+  <!-- AMT -->
   <div class="section-card" id="amtSection" style="display:none;">
     <div class="section-header slate" onclick="toggleSection('amtBody')">
-      <span>⚙️ D2. Alternative Minimum Tax (AMT) — Schedule AMT</span><span class="text-sm no-print">▼</span>
+      <span>⚙️ D2. AMT — Schedule AMT</span><span class="text-sm no-print">▼</span>
     </div>
     <div class="section-body" id="amtBody">
       <div class="field-row"><span class="field-label">Adjusted Total Income</span><input type="number" class="field-input calc" id="amt_ati" value="0"></div>
       <div class="field-row"><span class="field-label">AMT @ 18.5%</span><span class="field-input" id="amt_base" readonly>₹ 0</span></div>
-      <div class="field-row"><span class="field-label">Less: Basic Exemption ₹ 3,00,000</span><input type="number" class="field-input calc" id="amt_exempt" value="300000"></div>
-      <div class="field-row"><span class="field-label">Less: Deductions u/s 80C etc.</span><input type="number" class="field-input calc" id="amt_ded" value="0"></div>
+      <div class="field-row"><span class="field-label">Less: Basic Exemption</span><input type="number" class="field-input calc" id="amt_exempt" value="300000"></div>
+      <div class="field-row"><span class="field-label">Less: Deductions</span><input type="number" class="field-input calc" id="amt_ded" value="0"></div>
       <div class="total-row slate" style="background:#e2e8f0;color:#1e293b;"><span>AMT Payable</span><span id="amt_payable">₹ 0</span></div>
-      <p class="text-xs text-gray-500 mt-2">AMT applicable for ITR-3 with deductions u/s 80HHC, 80HHE, 10A, 10AA etc.</p>
     </div>
   </div>
 
+  <!-- ADVANCE TAX -->
   <div class="section-card no-print">
     <div class="section-header slate" onclick="toggleSection('advBody')">
-      <span>📅 E1. Advance Tax Schedule (Due Dates)</span><span class="text-sm">▼</span>
+      <span>📅 E1. Advance Tax Schedule</span><span class="text-sm">▼</span>
     </div>
     <div class="section-body" id="advBody">
       <table class="sub-table">
@@ -380,10 +417,11 @@
           <tr><td>4th</td><td>15 March</td><td>100%</td><td><input type="number" class="adv_input calc" id="adv_q4" value="0"></td></tr>
         </tbody>
       </table>
-      <div class="total-row slate mt-3" style="background:#e2e8f0;color:#1e293b;"><span>Total Advance Tax Paid</span><span id="adv_total">₹ 0</span></div>
+      <div class="total-row slate mt-3" style="background:#e2e8f0;color:#1e293b;"><span>Total Advance Tax</span><span id="adv_total">₹ 0</span></div>
     </div>
   </div>
 
+  <!-- E: TAXES PAID -->
   <div class="section-card">
     <div class="section-header" onclick="toggleSection('taxesPaidBody')">
       <span>💳 E. Taxes Paid & Refund/Payable</span><span class="text-sm no-print">▼</span>
@@ -404,40 +442,29 @@
     </div>
   </div>
 
+  <!-- SCHEDULE AL -->
   <div class="section-card" id="alSection" style="display:none;">
     <div class="section-header slate" onclick="toggleSection('alBody')">
-      <span>📋 F. Schedule AL — Assets & Liabilities (Income > ₹50L)</span><span class="text-sm no-print">▼</span>
+      <span>📋 F. Schedule AL — Assets & Liabilities</span><span class="text-sm no-print">▼</span>
     </div>
     <div class="section-body" id="alBody">
-      <h3 class="font-bold text-gray-700 mb-2">Immovable Assets</h3>
       <table class="sub-table mb-4">
         <thead><tr><th>Description</th><th>Value</th></tr></thead>
         <tbody>
           <tr><td>Land / Building</td><td><input type="number" class="calc" id="al_land" value="0"></td></tr>
-        </tbody>
-      </table>
-      <h3 class="font-bold text-gray-700 mb-2">Movable Assets</h3>
-      <table class="sub-table mb-4">
-        <thead><tr><th>Description</th><th>Value</th></tr></thead>
-        <tbody>
           <tr><td>Jewellery / Bullion</td><td><input type="number" class="calc" id="al_jewel" value="0"></td></tr>
           <tr><td>Vehicles</td><td><input type="number" class="calc" id="al_veh" value="0"></td></tr>
           <tr><td>Bank Deposits</td><td><input type="number" class="calc" id="al_bank" value="0"></td></tr>
           <tr><td>Shares / Securities</td><td><input type="number" class="calc" id="al_shares" value="0"></td></tr>
           <tr><td>Insurance Policies</td><td><input type="number" class="calc" id="al_ins" value="0"></td></tr>
-        </tbody>
-      </table>
-      <h3 class="font-bold text-gray-700 mb-2">Liabilities</h3>
-      <table class="sub-table mb-4">
-        <thead><tr><th>Description</th><th>Value</th></tr></thead>
-        <tbody>
-          <tr><td>Loans</td><td><input type="number" class="calc" id="al_loan" value="0"></td></tr>
+          <tr><td>Loans (liability)</td><td><input type="number" class="calc" id="al_loan" value="0"></td></tr>
         </tbody>
       </table>
       <div class="total-row slate" style="background:#e2e8f0;color:#1e293b;"><span>Net Worth</span><span id="al_net">₹ 0</span></div>
     </div>
   </div>
 
+  <!-- BANK -->
   <div class="section-card">
     <div class="section-header" onclick="toggleSection('bankBody')">
       <span>🏦 G. Bank Details & Verification</span><span class="text-sm no-print">▼</span>
@@ -472,31 +499,38 @@
   </div>
 
   <footer class="text-center text-gray-500 text-xs py-6">
-    ITR Computation Dashboard | AY 2026-27 | For reference only. Verify with official ITR utility.
+    ITR Computation Dashboard | AY 2026-27 | For reference only.
   </footer>
 </div>
 
+<!-- AIS MODAL -->
 <div id="aisModal" class="modal-overlay no-print">
   <div class="modal-box">
     <h3 class="font-bold text-lg mb-3">🔐 AIS JSON Decryption</h3>
-    <p class="text-sm text-gray-600 mb-3">CBDT AIS files AES-256-CBC encrypted hoti hain. PAN aur DOB se key derive hoti hai.</p>
-    <div class="mb-3">
-      <label class="field-label">AIS JSON File</label>
-      <input type="file" id="aisFile" accept=".json" class="w-full mt-1">
-    </div>
-    <div class="mb-3">
-      <label class="field-label">PAN</label>
-      <input id="aisPAN" class="field-input" placeholder="ABCDE1234F">
-    </div>
-    <div class="mb-3">
-      <label class="field-label">DOB (DDMMYYYY)</label>
-      <input id="aisDOB" class="field-input" placeholder="15041990">
-    </div>
+    <p class="text-sm text-gray-600 mb-3">PAN aur DOB se AES key derive hoti hai.</p>
+    <div class="mb-3"><label class="field-label">AIS JSON File</label><input type="file" id="aisFile" accept=".json" class="w-full mt-1"></div>
+    <div class="mb-3"><label class="field-label">PAN</label><input id="aisPAN" class="field-input" placeholder="ABCDE1234F"></div>
+    <div class="mb-3"><label class="field-label">DOB (DDMMYYYY)</label><input id="aisDOB" class="field-input" placeholder="15041990"></div>
     <div class="flex gap-2">
       <button class="btn btn-primary" onclick="decryptAIS()">🔓 Decrypt</button>
       <button class="btn btn-outline" onclick="closeAISModal()">Cancel</button>
     </div>
     <div id="aisStatus" class="mt-3 text-sm"></div>
+  </div>
+</div>
+
+<!-- EXTRACTED PREVIEW MODAL -->
+<div id="previewModal" class="modal-overlay no-print">
+  <div class="modal-box large">
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="font-bold text-lg">👁️ Extracted Data Preview</h3>
+      <button class="btn btn-outline btn-sm" onclick="closePreviewModal()">✖</button>
+    </div>
+    <div id="previewContent"></div>
+    <div class="flex gap-2 mt-4">
+      <button class="btn btn-success" onclick="applyExtracted()">✅ Apply to Form</button>
+      <button class="btn btn-outline" onclick="closePreviewModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -506,9 +540,10 @@ const num = id => Number(document.getElementById(id)?.value) || 0;
 const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
 const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 
-function toggleSection(id) {
-  document.getElementById(id).classList.toggle('open');
-}
+// Global extracted buffer
+let extractedBuffer = {};
+
+function toggleSection(id) { document.getElementById(id).classList.toggle('open'); }
 
 function updateFormVisibility() {
   const form = document.getElementById('itrForm').value;
@@ -518,9 +553,11 @@ function updateFormVisibility() {
   document.getElementById('amtSection').style.display = (form === 'ITR-3') ? 'block' : 'none';
   document.getElementById('alSection').style.display = (form === 'ITR-2' || form === 'ITR-3') ? 'block' : 'none';
 }
-
 document.getElementById('itrForm').addEventListener('change', () => { updateFormVisibility(); recalc(); });
 
+// ═══════════════════════════════════════════════════════════
+//  HOUSE PROPERTY
+// ═══════════════════════════════════════════════════════════
 let hpCount = 0;
 function addHouseProperty(data = {}) {
   hpCount++;
@@ -553,7 +590,6 @@ function addHouseProperty(data = {}) {
   document.getElementById('hpContainer').insertAdjacentHTML('beforeend', html);
   recalc();
 }
-
 function toggleHP(id) {
   const box = document.getElementById(id);
   const type = box.querySelector('.hp-type').value;
@@ -561,7 +597,6 @@ function toggleHP(id) {
   box.querySelectorAll('.hp-rentField').forEach(f => f.style.display = show ? 'block' : 'none');
   recalc();
 }
-
 function calcHP() {
   let total = 0;
   document.querySelectorAll('#hpContainer .regime-box').forEach(box => {
@@ -570,12 +605,8 @@ function calcHP() {
     const mtax = Number(box.querySelector('.hp-mtax')?.value) || 0;
     const interest = Number(box.querySelector('.hp-interest')?.value) || 0;
     let income = 0;
-    if (type === 'SelfOccupied') {
-      income = -Math.min(interest, 200000);
-    } else {
-      const nav = rent - mtax;
-      income = nav - nav * 0.30 - interest;
-    }
+    if (type === 'SelfOccupied') income = -Math.min(interest, 200000);
+    else { const nav = rent - mtax; income = nav - nav * 0.30 - interest; }
     box.querySelector('.hp-income').textContent = fmt(income);
     total += income;
   });
@@ -583,6 +614,9 @@ function calcHP() {
   return total;
 }
 
+// ═══════════════════════════════════════════════════════════
+//  CAPITAL GAINS
+// ═══════════════════════════════════════════════════════════
 function addSTCG(data={}) {
   const row = `<tr>
     <td><select class="stcg-type"><option>Equity111A</option><option>DebtMF</option><option>OtherAssets</option></select></td>
@@ -641,6 +675,9 @@ function calcCG() {
   return total;
 }
 
+// ═══════════════════════════════════════════════════════════
+//  FOREIGN
+// ═══════════════════════════════════════════════════════════
 function addFSI(data={}) {
   const row = `<tr>
     <td><input class="fsi-country border rounded px-1 py-0.5 text-xs w-full" value="${data.country||''}"></td>
@@ -675,18 +712,19 @@ function calcForeign() {
   return total;
 }
 
+// ═══════════════════════════════════════════════════════════
+//  TAX SLABS
+// ═══════════════════════════════════════════════════════════
 function taxOldRegime(income) {
-  const slabs = [
+  return calcSlabs(income, [
     {min:0, max:250000, rate:0},
     {min:250000, max:500000, rate:5},
     {min:500000, max:1000000, rate:20},
     {min:1000000, max:Infinity, rate:30}
-  ];
-  return calcSlabs(income, slabs);
+  ]);
 }
-
 function taxNewRegime(income) {
-  const slabs = [
+  return calcSlabs(income, [
     {min:0, max:400000, rate:0},
     {min:400000, max:800000, rate:5},
     {min:800000, max:1200000, rate:10},
@@ -694,10 +732,8 @@ function taxNewRegime(income) {
     {min:1600000, max:2000000, rate:20},
     {min:2000000, max:2400000, rate:25},
     {min:2400000, max:Infinity, rate:30}
-  ];
-  return calcSlabs(income, slabs);
+  ]);
 }
-
 function calcSlabs(income, slabs) {
   let tax = 0, breakdown = [];
   slabs.forEach(s => {
@@ -710,7 +746,6 @@ function calcSlabs(income, slabs) {
   });
   return {tax, breakdown};
 }
-
 function calcSurcharge(tax, income, regime) {
   if (income <= 5000000) return 0;
   let rate;
@@ -721,34 +756,33 @@ function calcSurcharge(tax, income, regime) {
   if (regime === 'new' && rate > 0.25) rate = 0.25;
   return tax * rate;
 }
-
 function calcRebate(tax, income, regime) {
   if (regime === 'old' && income <= 500000) return Math.min(tax, 12500);
   if (regime === 'new' && income <= 1200000) return Math.min(tax, 60000);
   return 0;
 }
 
+// ═══════════════════════════════════════════════════════════
+//  MASTER RECALC
+// ═══════════════════════════════════════════════════════════
 function recalc() {
   const salary = Math.max(0, num('s_gross') - num('s_allowances') - num('s_stdDed') - num('s_profTax') - num('s_entAllow'));
   setText('s_total', fmt(salary));
-
   const hpIncome = calcHP();
   const bizIncome = num('biz_netProfit') + num('biz_addBack') - num('biz_deduct') - num('biz_dep') + num('biz_presumptive');
   setText('biz_total', fmt(bizIncome));
-
   const cgIncome = calcCG();
   const osIncome = num('os_sb') + num('os_fd') + num('os_div') + num('os_refund') + num('os_other');
   setText('os_total', fmt(osIncome));
-
   const foreignIncome = calcForeign();
   const advTotal = num('adv_q1') + num('adv_q2') + num('adv_q3') + num('adv_q4');
   setText('adv_total', fmt(advTotal));
   setVal('tp_advance', advTotal);
-
   const gti = salary + hpIncome + bizIncome + cgIncome + osIncome + foreignIncome;
   const dedTotal = num('d_80c') + num('d_80ccd1b') + num('d_80d') + num('d_80e') + num('d_80g') + num('d_80tta') + num('d_80ttb') + num('d_80u') + num('d_80gg') + num('d_other');
   setText('ded_total', fmt(dedTotal));
 
+  // OLD
   const oldTI = Math.max(0, gti - dedTotal);
   const oldTaxCalc = taxOldRegime(oldTI);
   const oldTax = oldTaxCalc.tax;
@@ -758,24 +792,16 @@ function recalc() {
   const oldCess = (oldTaxAfterRebate + oldSur) * 0.04;
   const oldFTC = Math.min(num('f_ftcPaid'), num('f_indianTax'));
   const oldTotal = Math.max(0, oldTaxAfterRebate + oldSur + oldCess - oldFTC);
-
-  setText('old_gti', fmt(gti));
-  setText('old_ded', fmt(dedTotal));
-  setText('old_ti', fmt(oldTI));
-  setText('old_tax', fmt(oldTax));
-  setText('old_surcharge', fmt(oldSur));
-  setText('old_cess', fmt(oldCess));
-  setText('old_rebate', fmt(oldRebate));
-  setText('old_ftc', fmt(oldFTC));
-  setText('old_totalTax', fmt(oldTotal));
+  setText('old_gti', fmt(gti)); setText('old_ded', fmt(dedTotal)); setText('old_ti', fmt(oldTI));
+  setText('old_tax', fmt(oldTax)); setText('old_surcharge', fmt(oldSur)); setText('old_cess', fmt(oldCess));
+  setText('old_rebate', fmt(oldRebate)); setText('old_ftc', fmt(oldFTC)); setText('old_totalTax', fmt(oldTotal));
 
   let oldSlabHTML = '<table class="slab-table"><thead><tr><th>Slab</th><th>Rate</th><th>Taxable</th><th>Tax</th></tr></thead><tbody>';
-  oldTaxCalc.breakdown.forEach(b => {
-    oldSlabHTML += `<tr><td>${b.range}</td><td>${b.rate}</td><td>${fmt(b.taxable)}</td><td>${fmt(b.tax)}</td></tr>`;
-  });
+  oldTaxCalc.breakdown.forEach(b => oldSlabHTML += `<tr><td>${b.range}</td><td>${b.rate}</td><td>${fmt(b.taxable)}</td><td>${fmt(b.tax)}</td></tr>`);
   oldSlabHTML += '</tbody></table>';
   document.getElementById('oldSlabBreakdown').innerHTML = oldSlabHTML;
 
+  // NEW
   const newDed = num('d_80u');
   const newTI = Math.max(0, gti - newDed);
   const newTaxCalc = taxNewRegime(newTI);
@@ -786,21 +812,12 @@ function recalc() {
   const newCess = (newTaxAfterRebate + newSur) * 0.04;
   const newFTC = Math.min(num('f_ftcPaid'), num('f_indianTax'));
   const newTotal = Math.max(0, newTaxAfterRebate + newSur + newCess - newFTC);
-
-  setText('new_gti', fmt(gti));
-  setText('new_ded', fmt(newDed));
-  setText('new_ti', fmt(newTI));
-  setText('new_tax', fmt(newTax));
-  setText('new_surcharge', fmt(newSur));
-  setText('new_cess', fmt(newCess));
-  setText('new_rebate', fmt(newRebate));
-  setText('new_ftc', fmt(newFTC));
-  setText('new_totalTax', fmt(newTotal));
+  setText('new_gti', fmt(gti)); setText('new_ded', fmt(newDed)); setText('new_ti', fmt(newTI));
+  setText('new_tax', fmt(newTax)); setText('new_surcharge', fmt(newSur)); setText('new_cess', fmt(newCess));
+  setText('new_rebate', fmt(newRebate)); setText('new_ftc', fmt(newFTC)); setText('new_totalTax', fmt(newTotal));
 
   let newSlabHTML = '<table class="slab-table"><thead><tr><th>Slab</th><th>Rate</th><th>Taxable</th><th>Tax</th></tr></thead><tbody>';
-  newTaxCalc.breakdown.forEach(b => {
-    newSlabHTML += `<tr><td>${b.range}</td><td>${b.rate}</td><td>${fmt(b.taxable)}</td><td>${fmt(b.tax)}</td></tr>`;
-  });
+  newTaxCalc.breakdown.forEach(b => newSlabHTML += `<tr><td>${b.range}</td><td>${b.rate}</td><td>${fmt(b.taxable)}</td><td>${fmt(b.tax)}</td></tr>`);
   newSlabHTML += '</tbody></table>';
   document.getElementById('newSlabBreakdown').innerHTML = newSlabHTML;
 
@@ -815,28 +832,18 @@ function recalc() {
   const badge = document.getElementById('recommendBadge');
   document.getElementById('oldRegimeBox').classList.remove('recommended');
   document.getElementById('newRegimeBox').classList.remove('recommended');
-  if (newTotal < oldTotal) {
-    document.getElementById('newRegimeBox').classList.add('recommended');
-    badge.style.display = 'inline-block';
-  } else if (oldTotal < newTotal) {
-    document.getElementById('oldRegimeBox').classList.add('recommended');
-    badge.style.display = 'none';
-  } else {
-    badge.style.display = 'none';
-  }
+  if (newTotal < oldTotal) { document.getElementById('newRegimeBox').classList.add('recommended'); badge.style.display = 'inline-block'; }
+  else if (oldTotal < newTotal) { document.getElementById('oldRegimeBox').classList.add('recommended'); badge.style.display = 'none'; }
+  else badge.style.display = 'none';
 
   const tp = num('tp_tds') + num('tp_tcs') + advTotal + num('tp_self');
   setText('tp_total', fmt(tp));
-
   const selectedRegime = document.getElementById('regime').value;
   const finalTax = selectedRegime === 'new' ? newTotal : oldTotal;
   const diff = tp - finalTax;
   const refundBox = document.getElementById('refundBox');
-  if (diff >= 0) {
-    refundBox.innerHTML = `<div class="total-row green" style="font-size:18px;"><span>✅ Refund Due</span><span>${fmt(diff)}</span></div>`;
-  } else {
-    refundBox.innerHTML = `<div class="total-row red" style="font-size:18px;"><span>⚠️ Tax Payable</span><span>${fmt(Math.abs(diff))}</span></div>`;
-  }
+  if (diff >= 0) refundBox.innerHTML = `<div class="total-row green" style="font-size:18px;"><span>✅ Refund Due</span><span>${fmt(diff)}</span></div>`;
+  else refundBox.innerHTML = `<div class="total-row red" style="font-size:18px;"><span>⚠️ Tax Payable</span><span>${fmt(Math.abs(diff))}</span></div>`;
 
   const alAssets = num('al_land') + num('al_jewel') + num('al_veh') + num('al_bank') + num('al_shares') + num('al_ins');
   setText('al_net', fmt(alAssets - num('al_loan')));
@@ -846,9 +853,553 @@ document.addEventListener('input', e => {
   if (e.target.classList.contains('calc') || e.target.closest('.section-card')) recalc();
 });
 document.getElementById('regime').addEventListener('change', recalc);
-document.getElementById('ay').addEventListener('change', () => {
-  document.getElementById('print_ay').textContent = document.getElementById('ay').value;
-});
+document.getElementById('ay').addEventListener('change', () => { document.getElementById('print_ay').textContent = document.getElementById('ay').value; });
+
+// ═══════════════════════════════════════════════════════════
+//  PROGRESS HELPERS
+// ═══════════════════════════════════════════════════════════
+function showProgress(text, pct) {
+  document.getElementById('progressArea').style.display = 'block';
+  document.getElementById('progressText').textContent = text;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+function hideProgress() {
+  setTimeout(() => { document.getElementById('progressArea').style.display = 'none'; }, 800);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PDF PARSING — Form 16 / 26AS / AIS / Computation
+// ═══════════════════════════════════════════════════════════
+async function handlePDFUpload(event) {
+  const files = Array.from(event.target.files || []);
+  if (!files.length) return;
+  const status = document.getElementById('parseStatus');
+  let allExtracted = {};
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    showProgress(`📑 Reading ${file.name} (${i+1}/${files.length})...`, ((i)/files.length)*100);
+    try {
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({data: buffer}).promise;
+      let fullText = '';
+      for (let p = 1; p <= pdf.numPages; p++) {
+        showProgress(`📄 ${file.name} — page ${p}/${pdf.numPages}`, ((i + p/pdf.numPages)/files.length)*100);
+        const page = await pdf.getPage(p);
+        const content = await page.getTextContent();
+        // Preserve line breaks — items have transform matrix; use Y coordinate to detect new lines
+        let lastY = null;
+        let lineText = '';
+        content.items.forEach(item => {
+          const y = Math.round(item.transform[5]);
+          if (lastY !== null && Math.abs(y - lastY) > 2) {
+            fullText += lineText.trim() + '\n';
+            lineText = '';
+          }
+          lineText += item.str + ' ';
+          lastY = y;
+        });
+        fullText += lineText.trim() + '\n';
+      }
+
+      // Detect doc type and parse
+      const detected = detectDocType(fullText, file.name);
+      showProgress(`🔍 Detected: ${detected} — extracting fields...`, 80);
+      const extracted = extractFields(fullText, detected);
+      allExtracted = mergeExtracted(allExtracted, extracted);
+      status.innerHTML = `<span class="pill pill-green">✅ ${file.name}: ${detected} — ${Object.keys(extracted).length} fields detected</span><br>`;
+    } catch(err) {
+      status.innerHTML += `<span class="pill pill-red">❌ ${file.name}: ${err.message}</span><br>`;
+    }
+  }
+
+  showProgress('✅ Extraction complete', 100);
+  hideProgress();
+
+  // Store and show preview
+  extractedBuffer = allExtracted;
+  showExtractedPreview();
+
+  // Auto-apply if user confirms — but let's just auto-apply for convenience
+  applyExtracted(true);
+}
+
+function detectDocType(text, filename) {
+  const t = text.toLowerCase();
+  const fn = filename.toLowerCase();
+  if (t.includes('form 16') || t.includes('form no. 16') || fn.includes('form16') || fn.includes('form_16')) return 'Form 16';
+  if (t.includes('26as') || t.includes('tax credit statement') || fn.includes('26as')) return '26AS';
+  if (t.includes('annual information statement') || t.includes('ais') || fn.includes('ais')) return 'AIS';
+  if (t.includes('computation of total income')) return 'Computation';
+  if (t.includes('capital gain') || t.includes('schedule cg')) return 'Capital Gains';
+  if (t.includes('form 67')) return 'Form 67';
+  return 'Generic';
+}
+
+function extractFields(text, docType) {
+  const out = {};
+  // Normalize — but preserve some line structure
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const flat = text.replace(/\s+/g, ' ');
+
+  // ──── Personal info ────
+  const panMatch = flat.match(/\b([A-Z]{5}[0-9]{4}[A-Z])\b/);
+  if (panMatch) out.p_pan = panMatch[1];
+
+  // Name — try multiple patterns
+  const namePatterns = [
+    /Name\s+of\s+(?:the\s+)?Employee[:\s]+([A-Z][A-Za-z\s.]+?)(?=\s+(?:PAN|Address|Father|Designation|TAN|Sr\.|$))/i,
+    /Name\s+of\s+(?:the\s+)?Assessee[:\s]+([A-Z][A-Za-z\s.]+?)(?=\s+(?:PAN|Address|Father|$))/i,
+    /Employee\s+Name[:\s]+([A-Z][A-Za-z\s.]+?)(?=\s+(?:PAN|Address|Father|$))/i,
+    /Name[:\s]+([A-Z][a-zA-Z\s]{3,50}?)(?=\s+(?:PAN|Address|Father|DOB))/,
+  ];
+  for (const p of namePatterns) {
+    const m = flat.match(p);
+    if (m) { out.p_name = m[1].trim().replace(/\s+/g, ' '); break; }
+  }
+
+  // DOB
+  const dobMatch = flat.match(/(?:Date\s+of\s+Birth|DOB)[:\s]*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/i);
+  if (dobMatch) out.p_dob = dobMatch[1];
+
+  // Aadhaar
+  const aadhaarMatch = flat.match(/(?:Aadhaar|Aadhar)[^\d]*(\d{4}\s?\d{4}\s?\d{4})/i);
+  if (aadhaarMatch) out.p_aadhaar = aadhaarMatch[1];
+
+  // Email
+  const emailMatch = flat.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);
+  if (emailMatch) out.p_email = emailMatch[0];
+
+  // Mobile
+  const mobMatch = flat.match(/(?:Mobile|Phone|Contact)[^\d]*([6-9]\d{9})/i);
+  if (mobMatch) out.p_mobile = mobMatch[1];
+
+  // TAN
+  const tanMatch = flat.match(/\b([A-Z]{4}[0-9]{5}[A-Z])\b/);
+  if (tanMatch) out.p_tan = tanMatch[1];
+
+  // Employer name
+  const empPatterns = [
+    /Name\s+and\s+address\s+of\s+(?:the\s+)?(?:Employer|Deductor)[:\s]+([A-Z][A-Za-z\s.&,]+?)(?=\s+(?:TAN|PAN|Address|Sr\.|$))/i,
+    /Employer[:\s]+([A-Z][A-Za-z\s.&,]+?)(?=\s+(?:TAN|PAN|$))/i,
+  ];
+  for (const p of empPatterns) {
+    const m = flat.match(p);
+    if (m) { out.p_employer = m[1].trim().replace(/\s+/g, ' ').substring(0, 80); break; }
+  }
+
+  // ──── Salary ────
+  // Gross Salary (17(1))
+  const grossMatch = flat.match(/(?:Gross\s+Salary|Salary\s+as\s+per\s+(?:section\s+)?17\(1\)|Total\s+Gross\s+Salary)[^\d₹Rs.]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (grossMatch) out.s_gross = parseNum(grossMatch[1]);
+
+  // Alternative — aggregate of salary components
+  if (!out.s_gross) {
+    const basicMatch = flat.match(/Basic\s+(?:Salary|Pay)[^\d₹Rs.]*([\d,]+(?:\.\d{1,2})?)/i);
+    const hraMatch = flat.match(/(?:HRA|House\s+Rent\s+Allowance)[^\d₹Rs.]*([\d,]+(?:\.\d{1,2})?)/i);
+    const daMatch = flat.match(/(?:DA|Dearness\s+Allowance)[^\d₹Rs.]*([\d,]+(?:\.\d{1,2})?)/i);
+    if (basicMatch) {
+      let sum = parseNum(basicMatch[1]);
+      if (hraMatch) sum += parseNum(hraMatch[1]);
+      if (daMatch) sum += parseNum(daMatch[1]);
+      if (sum > 0) out.s_gross = sum;
+    }
+  }
+
+  // Standard Deduction
+  const sdMatch = flat.match(/Standard\s+Deduction[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (sdMatch) out.s_stdDed = parseNum(sdMatch[1]);
+
+  // Professional Tax
+  const ptMatch = flat.match(/(?:Professional\s+Tax|Tax\s+on\s+employment)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (ptMatch) out.s_profTax = parseNum(ptMatch[1]);
+
+  // HRA Exemption
+  const hraExMatch = flat.match(/(?:HRA\s+Exempt|House\s+Rent\s+Allowance\s+Exempt)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (hraExMatch) out.s_allowances = parseNum(hraExMatch[1]);
+
+  // ──── Chapter VI-A ────
+  const c80cMatch = flat.match(/80\s*C[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
+  if (c80cMatch) out.d_80c = parseNum(c80cMatch[1]);
+
+  const c80dMatch = flat.match(/80\s*D[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
+  if (c80dMatch) out.d_80d = parseNum(c80dMatch[1]);
+
+  const c80ttaMatch = flat.match(/80\s*TTA[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
+  if (c80ttaMatch) out.d_80tta = parseNum(c80ttaMatch[1]);
+
+  const c80ccdMatch = flat.match(/80\s*CCD\s*\(?1B?\)?[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
+  if (c80ccdMatch) out.d_80ccd1b = parseNum(c80ccdMatch[1]);
+
+  const c80gMatch = flat.match(/80\s*G[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
+  if (c80gMatch) out.d_80g = parseNum(c80gMatch[1]);
+
+  const c80eMatch = flat.match(/80\s*E[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
+  if (c80eMatch) out.d_80e = parseNum(c80eMatch[1]);
+
+  // ──── Taxes Paid / TDS ────
+  const tdsMatch = flat.match(/(?:Total\s+TDS|Tax\s+Deducted\s+at\s+Source|TDS\s+Deducted|Total\s+Tax\s+Deducted)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (tdsMatch) out.tp_tds = parseNum(tdsMatch[1]);
+
+  const tcsMatch = flat.match(/(?:TCS|Tax\s+Collected\s+at\s+Source)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (tcsMatch) out.tp_tcs = parseNum(tcsMatch[1]);
+
+  const advMatch = flat.match(/(?:Advance\s+Tax)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (advMatch) out.adv_q4 = parseNum(advMatch[1]);
+
+  const selfMatch = flat.match(/(?:Self[- ]?Assessment\s+Tax)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (selfMatch) out.tp_self = parseNum(selfMatch[1]);
+
+  // ──── Income from Other Sources ────
+  const sbIntMatch = flat.match(/(?:Interest\s+from\s+Savings|Savings\s+Bank\s+Interest|Interest\s+on\s+Savings)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (sbIntMatch) out.os_sb = parseNum(sbIntMatch[1]);
+
+  const fdIntMatch = flat.match(/(?:Interest\s+from\s+(?:FD|Fixed\s+Deposit|Term\s+Deposit|Bank\s+Deposit)|FD\s+Interest)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (fdIntMatch) out.os_fd = parseNum(fdIntMatch[1]);
+
+  const divMatch = flat.match(/(?:Dividend\s+(?:Income|Received)|Dividend)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (divMatch) out.os_div = parseNum(divMatch[1]);
+
+  const refundIntMatch = flat.match(/(?:Interest\s+on\s+(?:Income\s+Tax\s+)?Refund)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (refundIntMatch) out.os_refund = parseNum(refundIntMatch[1]);
+
+  // ──── AIS specific ────
+  if (docType === 'AIS') {
+    // AIS has TDS/TCS by different sections
+    const tdsSections = flat.matchAll(/(?:TDS|Tax\s+Deducted)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/gi);
+    let totalTDS = 0;
+    for (const m of tdsSections) totalTDS += parseNum(m[1]);
+    if (totalTDS > 0 && !out.tp_tds) out.tp_tds = totalTDS;
+  }
+
+  // ──── Capital Gains ────
+  const stcgMatch = flat.match(/(?:Short[- ]?Term\s+Capital\s+Gains?|STCG)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (stcgMatch) out._stcg = parseNum(stcgMatch[1]);
+
+  const ltcgMatch = flat.match(/(?:Long[- ]?Term\s+Capital\s+Gains?|LTCG)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (ltcgMatch) out._ltcg = parseNum(ltcgMatch[1]);
+
+  // ──── Foreign Income ────
+  const fsiMatch = flat.match(/(?:Foreign\s+(?:Source\s+)?Income)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (fsiMatch) out._fsi = parseNum(fsiMatch[1]);
+
+  const ftcMatch = flat.match(/(?:Foreign\s+Tax\s+(?:Paid|Credit)|FTC)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (ftcMatch) out.f_ftcPaid = parseNum(ftcMatch[1]);
+
+  return out;
+}
+
+function parseNum(str) {
+  if (!str) return 0;
+  return Number(String(str).replace(/[,\s₹Rs.]/g, '')) || 0;
+}
+
+function mergeExtracted(a, b) {
+  const out = {...a};
+  for (const k in b) {
+    if (b[k] && (typeof b[k] === 'string' ? b[k].length : b[k] > 0)) {
+      // For numeric fields, sum if duplicate
+      if (['tp_tds','tp_tcs','tp_self','os_sb','os_fd','os_div','os_refund'].includes(k) && out[k]) {
+        out[k] = Number(out[k]) + Number(b[k]);
+      } else {
+        out[k] = b[k];
+      }
+    }
+  }
+  return out;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PREVIEW + APPLY
+// ═══════════════════════════════════════════════════════════
+function showExtractedPreview() {
+  const content = document.getElementById('previewContent');
+  if (Object.keys(extractedBuffer).length === 0) {
+    content.innerHTML = '<p class="text-gray-500 text-center py-6">No data extracted yet. Upload a PDF or JSON first.</p>';
+  } else {
+    let html = '<div class="grid md:grid-cols-2 gap-3">';
+    const labels = {
+      p_name:'Name', p_pan:'PAN', p_dob:'DOB', p_email:'Email', p_mobile:'Mobile',
+      p_aadhaar:'Aadhaar', p_employer:'Employer', p_tan:'TAN',
+      s_gross:'Gross Salary', s_stdDed:'Standard Deduction', s_profTax:'Professional Tax', s_allowances:'Allowances',
+      d_80c:'80C', d_80d:'80D', d_80tta:'80TTA', d_80ccd1b:'80CCD(1B)', d_80g:'80G', d_80e:'80E',
+      tp_tds:'TDS', tp_tcs:'TCS', tp_self:'Self-Assessment Tax', adv_q4:'Advance Tax',
+      os_sb:'Savings Interest', os_fd:'FD Interest', os_div:'Dividend', os_refund:'IT Refund Interest',
+      f_ftcPaid:'Foreign Tax Paid',
+      _stcg:'STCG (detected)', _ltcg:'LTCG (detected)', _fsi:'Foreign Income (detected)'
+    };
+    for (const k in extractedBuffer) {
+      if (extractedBuffer[k] && extractedBuffer[k] !== 0) {
+        const label = labels[k] || k;
+        const val = typeof extractedBuffer[k] === 'number' ? fmt(extractedBuffer[k]) : extractedBuffer[k];
+        html += `<div class="extracted-field"><span class="label">${label}</span><span class="value">${val}<span class="confidence">✓</span></span></div>`;
+      }
+    }
+    html += '</div>';
+    content.innerHTML = html;
+  }
+  document.getElementById('previewModal').classList.add('show');
+}
+function closePreviewModal() { document.getElementById('previewModal').classList.remove('show'); }
+
+function applyExtracted(silent = false) {
+  if (Object.keys(extractedBuffer).length === 0) return;
+  let applied = 0;
+
+  for (const k in extractedBuffer) {
+    if (k.startsWith('_')) continue; // internal flags
+    const el = document.getElementById(k);
+    if (el && extractedBuffer[k]) {
+      el.value = extractedBuffer[k];
+      el.classList.add('extracted');
+      setTimeout(() => el.classList.remove('extracted'), 3000);
+      applied++;
+    }
+  }
+
+  // Handle STCG/LTCG aggregates — add as rows
+  if (extractedBuffer._stcg && extractedBuffer._stcg > 0) {
+    addSTCG({salePrice: extractedBuffer._stcg, cost: 0, expenses: 0});
+    applied++;
+  }
+  if (extractedBuffer._ltcg && extractedBuffer._ltcg > 0) {
+    addLTCG({salePrice: extractedBuffer._ltcg, cost: 0, exemption: 0});
+    applied++;
+  }
+  if (extractedBuffer._fsi && extractedBuffer._fsi > 0) {
+    addFSI({country: 'Detected', incomeType: 'Foreign Income', income: extractedBuffer._fsi, foreignTaxPaid: extractedBuffer.f_ftcPaid || 0});
+    applied++;
+  }
+
+  recalc();
+  if (!silent) {
+    document.getElementById('parseStatus').innerHTML += `<br><span class="pill pill-green">✅ Applied ${applied} fields to form</span>`;
+    closePreviewModal();
+  } else {
+    document.getElementById('parseStatus').innerHTML += `<br><span class="pill pill-blue">ℹ️ ${applied} fields auto-filled. Review highlighted fields.</span>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  IMAGE OCR
+// ═══════════════════════════════════════════════════════════
+async function handleImageUpload(event) {
+  const files = Array.from(event.target.files || []);
+  if (!files.length) return;
+  const status = document.getElementById('parseStatus');
+  status.innerHTML = '';
+  let allExtracted = {};
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    showProgress(`🖼️ OCR ${file.name} (${i+1}/${files.length}) — this may take 20-40s...`, (i/files.length)*100);
+    try {
+      const worker = await Tesseract.createWorker('eng');
+      const { data: { text } } = await worker.recognize(file);
+      await worker.terminate();
+      const extracted = extractFields(text, 'Generic');
+      allExtracted = mergeExtracted(allExtracted, extracted);
+      status.innerHTML += `<span class="pill pill-green">✅ ${file.name}: ${Object.keys(extracted).length} fields</span><br>`;
+    } catch(err) {
+      status.innerHTML += `<span class="pill pill-red">❌ ${file.name}: ${err.message}</span><br>`;
+    }
+  }
+
+  hideProgress();
+  extractedBuffer = allExtracted;
+  applyExtracted(true);
+  showExtractedPreview();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  JSON UPLOAD
+// ═══════════════════════════════════════════════════════════
+async function handleJSONUpload(event) {
+  const files = Array.from(event.target.files || []);
+  if (!files.length) return;
+  const status = document.getElementById('parseStatus');
+  status.innerHTML = '';
+  let allExtracted = {};
+
+  for (const file of files) {
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+
+      if (json.ITR && json.ITR.ITRForm) {
+        populateFromITRJSON(json);
+        status.innerHTML += `<span class="pill pill-green">✅ CBDT ITR JSON: ${file.name}</span><br>`;
+      } else if (json.personalInfo && json.incomeDetails) {
+        populateFromJSON(json);
+        status.innerHTML += `<span class="pill pill-green">✅ Custom JSON: ${file.name}</span><br>`;
+      } else {
+        const e = populateFromGenericJSON(json);
+        allExtracted = mergeExtracted(allExtracted, e);
+        status.innerHTML += `<span class="pill pill-green">✅ Generic JSON: ${file.name}</span><br>`;
+      }
+    } catch(err) {
+      status.innerHTML += `<span class="pill pill-red">❌ ${file.name}: ${err.message}</span><br>`;
+    }
+  }
+  extractedBuffer = mergeExtracted(extractedBuffer, allExtracted);
+  applyExtracted(true);
+  recalc();
+}
+
+function populateFromJSON(j) {
+  const p = j.personalInfo || {};
+  ['name','pan','dob','email','mobile','address'].forEach(k => setVal('p_'+k, p[k] || ''));
+  const inc = j.incomeDetails || {};
+  if (inc.salary) { setVal('s_gross', inc.salary.grossSalary || 0); setVal('s_stdDed', inc.salary.standardDeduction || 75000); }
+  if (inc.houseProperty?.properties) {
+    document.getElementById('hpContainer').innerHTML = ''; hpCount = 0;
+    inc.houseProperty.properties.forEach(p => addHouseProperty(p));
+  }
+  if (inc.capitalGains) {
+    document.getElementById('stcgTable').innerHTML = '';
+    document.getElementById('ltcgTable').innerHTML = '';
+    document.getElementById('vdaTable').innerHTML = '';
+    (inc.capitalGains.stcg || []).forEach(addSTCG);
+    (inc.capitalGains.ltcg || []).forEach(addLTCG);
+    (inc.capitalGains.vda || []).forEach(addVDA);
+  }
+  if (inc.otherSources) { setVal('os_sb', inc.otherSources.interestIncome || 0); setVal('os_div', inc.otherSources.dividendIncome || 0); }
+  if (inc.foreignIncome?.scheduleFSI) { document.getElementById('fsiTable').innerHTML = ''; inc.foreignIncome.scheduleFSI.forEach(addFSI); }
+  if (j.deductions?.chapterVIA) {
+    const d = j.deductions.chapterVIA;
+    setVal('d_80c', d.section80C || 0); setVal('d_80d', d.section80D || 0); setVal('d_80tta', d.section80TTA || 0);
+  }
+  if (j.taxesPaid) { setVal('tp_tds', j.taxesPaid.tds || 0); setVal('tp_self', j.taxesPaid.selfAssessmentTax || 0); }
+  recalc();
+}
+
+function populateFromITRJSON(j) {
+  const itr = j.ITR;
+  document.getElementById('itrForm').value = itr.ITRForm || 'ITR-2';
+  updateFormVisibility();
+  const p = itr.PersonalInfo || {};
+  setVal('p_name', p.AssesseeName?.FirstName ? `${p.AssesseeName.FirstName} ${p.AssesseeName.SurName||''}`.trim() : '');
+  setVal('p_pan', p.PAN || ''); setVal('p_dob', p.DOB || '');
+  setVal('p_email', p.ContactDetail?.EmailAddress || ''); setVal('p_mobile', p.ContactDetail?.MobileNo || '');
+  const sal = itr.ITR1_IncomeDeductions || itr.ITR2_IncomeDeductions || itr.ScheduleS || {};
+  if (sal.GrossSalary) setVal('s_gross', sal.GrossSalary);
+  if (sal.DeductionUs16) setVal('s_stdDed', sal.DeductionUs16);
+  const os = itr.ScheduleOS || {};
+  if (os.IntrstFrmBank) setVal('os_sb', os.IntrstFrmBank);
+  if (os.DividendGross) setVal('os_div', os.DividendGross);
+  const ded = itr.Deductions || {};
+  if (ded.Section80C) setVal('d_80c', ded.Section80C);
+  if (ded.Section80D) setVal('d_80d', ded.Section80D);
+  const tds = itr.ScheduleTDS || {};
+  if (tds.TotalTDS) setVal('tp_tds', tds.TotalTDS);
+  recalc();
+}
+
+function populateFromGenericJSON(j) {
+  const out = {};
+  const findKey = (obj, keys) => {
+    for (const k of Object.keys(obj || {})) {
+      if (keys.some(key => k.toLowerCase().includes(key.toLowerCase()))) return obj[k];
+      if (typeof obj[k] === 'object') {
+        const v = findKey(obj[k], keys);
+        if (v !== undefined) return v;
+      }
+    }
+    return undefined;
+  };
+  const v1 = findKey(j, ['name','assessee']); if (v1) out.p_name = v1;
+  const v2 = findKey(j, ['pan']); if (v2) out.p_pan = v2;
+  const v3 = findKey(j, ['grosssalary','gross']); if (v3) out.s_gross = v3;
+  const v4 = findKey(j, ['tds']); if (v4) out.tp_tds = v4;
+  return out;
+}
+
+function parseJSONInput() {
+  const txt = document.getElementById('jsonInput').value.trim();
+  if (!txt) { document.getElementById('parseStatus').innerHTML = '<span class="pill pill-red">❌ Empty</span>'; return; }
+  try {
+    const json = JSON.parse(txt);
+    extractedBuffer = mergeExtracted(extractedBuffer, populateFromGenericJSON(json));
+    applyExtracted(true);
+    document.getElementById('parseStatus').innerHTML = '<span class="pill pill-green">✅ JSON parsed</span>';
+  } catch(err) {
+    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-red">❌ ${err.message}</span>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  AIS DECRYPT
+// ═══════════════════════════════════════════════════════════
+function openAISDecryptModal() { document.getElementById('aisModal').classList.add('show'); }
+function closeAISModal() { document.getElementById('aisModal').classList.remove('show'); }
+
+async function decryptAIS() {
+  const file = document.getElementById('aisFile').files[0];
+  const pan = document.getElementById('aisPAN').value.trim().toUpperCase();
+  const dob = document.getElementById('aisDOB').value.trim();
+  const status = document.getElementById('aisStatus');
+  if (!file || !pan || !dob) { status.innerHTML = '<span class="pill pill-red">❌ All fields required</span>'; return; }
+  status.innerHTML = '<span class="pill pill-amber">⏳ Decrypting...</span>';
+  try {
+    const text = await file.text();
+    const json = JSON.parse(text);
+    const encryptedB64 = json.data || json.Data || json;
+    if (typeof encryptedB64 !== 'string') {
+      extractFromAIS(json);
+      status.innerHTML = '<span class="pill pill-green">✅ Already decrypted</span>';
+      closeAISModal();
+      return;
+    }
+    const password = pan + dob;
+    const key = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse('00'.repeat(16)), {keySize: 256/32, iterations: 1000});
+    const decrypted = CryptoJS.AES.decrypt(encryptedB64, key, {iv: CryptoJS.enc.Hex.parse('00'.repeat(16)), mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+    const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+    if (!plaintext) throw new Error('Decryption failed');
+    extractFromAIS(JSON.parse(plaintext));
+    status.innerHTML = '<span class="pill pill-green">✅ Decrypted</span>';
+    closeAISModal();
+    recalc();
+  } catch(err) {
+    status.innerHTML = `<span class="pill pill-red">❌ ${err.message}</span>`;
+  }
+}
+
+function extractFromAIS(ais) {
+  const out = {};
+  const traverse = (obj, path=[]) => {
+    if (typeof obj !== 'object' || !obj) return;
+    for (const k in obj) {
+      const v = obj[k];
+      if (typeof v === 'number') {
+        const p = path.join('.').toLowerCase();
+        if (p.includes('tds') || p.includes('taxdeducted')) out.tp_tds = (out.tp_tds||0) + v;
+        if (p.includes('savings') && p.includes('interest')) out.os_sb = v;
+        if (p.includes('fd') && p.includes('interest')) out.os_fd = v;
+        if (p.includes('dividend')) out.os_div = v;
+      } else traverse(v, [...path, k]);
+    }
+  };
+  traverse(ais);
+  extractedBuffer = mergeExtracted(extractedBuffer, out);
+  applyExtracted(true);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CLEAR / SAMPLE
+// ═══════════════════════════════════════════════════════════
+function clearAll() {
+  if (!confirm('Clear all data?')) return;
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    if (el.type === 'number') el.value = 0;
+    else if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else if (!['ay','itrForm','regime'].includes(el.id)) el.value = '';
+  });
+  ['hpContainer','stcgTable','ltcgTable','vdaTable','fsiTable','faTable'].forEach(id => document.getElementById(id).innerHTML = '');
+  hpCount = 0;
+  extractedBuffer = {};
+  setVal('s_stdDed', 75000);
+  recalc();
+}
 
 function loadSampleData() {
   setVal('p_name', 'Rahul Sharma');
@@ -876,281 +1427,9 @@ function loadSampleData() {
   document.getElementById('parseStatus').innerHTML = '<span class="pill pill-green">✅ Sample data loaded</span>';
 }
 
-function handleJSONUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const json = JSON.parse(e.target.result);
-      processJSON(json, file.name);
-    } catch(err) {
-      document.getElementById('parseStatus').innerHTML = `<span class="pill pill-red">❌ Invalid JSON: ${err.message}</span>`;
-    }
-  };
-  reader.readAsText(file);
-}
-
-function processJSON(json, filename='') {
-  if (json.ITR && json.ITR.ITRForm) {
-    populateFromITRJSON(json);
-    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-green">✅ CBDT ITR JSON parsed: ${filename}</span>`;
-  } else if (json.personalInfo && json.incomeDetails) {
-    populateFromJSON(json);
-    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-green">✅ Custom JSON parsed: ${filename}</span>`;
-  } else {
-    populateFromGenericJSON(json);
-    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-green">✅ Generic JSON mapped: ${filename}</span>`;
-  }
-  recalc();
-}
-
-function populateFromJSON(j) {
-  const p = j.personalInfo || {};
-  ['name','pan','dob','email','mobile','address'].forEach(k => setVal('p_'+k, p[k] || ''));
-  const inc = j.incomeDetails || {};
-  if (inc.salary) {
-    setVal('s_gross', inc.salary.grossSalary || 0);
-    setVal('s_stdDed', inc.salary.standardDeduction || 75000);
-  }
-  if (inc.houseProperty && inc.houseProperty.properties) {
-    document.getElementById('hpContainer').innerHTML = ''; hpCount = 0;
-    inc.houseProperty.properties.forEach(p => addHouseProperty(p));
-  }
-  if (inc.capitalGains) {
-    document.getElementById('stcgTable').innerHTML = '';
-    document.getElementById('ltcgTable').innerHTML = '';
-    document.getElementById('vdaTable').innerHTML = '';
-    (inc.capitalGains.stcg || []).forEach(addSTCG);
-    (inc.capitalGains.ltcg || []).forEach(addLTCG);
-    (inc.capitalGains.vda || []).forEach(addVDA);
-  }
-  if (inc.otherSources) {
-    setVal('os_sb', inc.otherSources.interestIncome || 0);
-    setVal('os_div', inc.otherSources.dividendIncome || 0);
-  }
-  if (inc.foreignIncome?.scheduleFSI) {
-    document.getElementById('fsiTable').innerHTML = '';
-    inc.foreignIncome.scheduleFSI.forEach(addFSI);
-  }
-  if (inc.foreignIncome?.scheduleFA) {
-    document.getElementById('faTable').innerHTML = '';
-    inc.foreignIncome.scheduleFA.forEach(addFA);
-  }
-  if (j.deductions?.chapterVIA) {
-    const d = j.deductions.chapterVIA;
-    setVal('d_80c', d.section80C || 0);
-    setVal('d_80d', d.section80D || 0);
-    setVal('d_80tta', d.section80TTA || 0);
-  }
-  if (j.taxesPaid) {
-    setVal('tp_tds', j.taxesPaid.tds || 0);
-    setVal('tp_self', j.taxesPaid.selfAssessmentTax || 0);
-  }
-  if (j.bankAccount) {
-    setVal('b_name', j.bankAccount.bankName || '');
-    setVal('b_acc', j.bankAccount.accountNumber || '');
-    setVal('b_ifsc', j.bankAccount.ifsc || '');
-  }
-}
-
-function populateFromITRJSON(j) {
-  const itr = j.ITR;
-  const form = itr.ITRForm || 'ITR-2';
-  document.getElementById('itrForm').value = form;
-  updateFormVisibility();
-
-  const p = itr.PersonalInfo || {};
-  setVal('p_name', p.AssesseeName?.FirstName ? `${p.AssesseeName.FirstName} ${p.AssesseeName.SurName||''}`.trim() : '');
-  setVal('p_pan', p.PAN || '');
-  setVal('p_dob', p.DOB || '');
-  setVal('p_email', p.ContactDetail?.EmailAddress || '');
-  setVal('p_mobile', p.ContactDetail?.MobileNo || '');
-  setVal('p_address', p.Address?.CityOrTownOrDistrict || '');
-
-  const sal = itr.ITR1_IncomeDeductions || itr.ITR2_IncomeDeductions || itr.ScheduleS || {};
-  if (sal.GrossSalary) setVal('s_gross', sal.GrossSalary);
-  if (sal.DeductionUs16) setVal('s_stdDed', sal.DeductionUs16);
-
-  const os = itr.ScheduleOS || itr.ITR1_IncomeDeductions || {};
-  if (os.IntrstFrmBank) setVal('os_sb', os.IntrstFrmBank);
-  if (os.DividendGross) setVal('os_div', os.DividendGross);
-
-  const ded = itr.Deductions || itr.ChapterVIA || {};
-  if (ded.Section80C) setVal('d_80c', ded.Section80C);
-  if (ded.Section80D) setVal('d_80d', ded.Section80D);
-
-  const tds = itr.ScheduleTDS || {};
-  if (tds.TotalTDS) setVal('tp_tds', tds.TotalTDS);
-}
-
-function populateFromGenericJSON(j) {
-  const findKey = (obj, keys) => {
-    for (const k of Object.keys(obj || {})) {
-      if (keys.some(key => k.toLowerCase().includes(key.toLowerCase()))) return obj[k];
-      if (typeof obj[k] === 'object') {
-        const v = findKey(obj[k], keys);
-        if (v !== undefined) return v;
-      }
-    }
-    return undefined;
-  };
-  const v1 = findKey(j, ['name','assessee']);
-  if (v1) setVal('p_name', v1);
-  const v2 = findKey(j, ['pan']);
-  if (v2) setVal('p_pan', v2);
-  const v3 = findKey(j, ['grosssalary','gross']);
-  if (v3) setVal('s_gross', v3);
-  const v4 = findKey(j, ['tds']);
-  if (v4) setVal('tp_tds', v4);
-}
-
-function parseJSONInput() {
-  const txt = document.getElementById('jsonInput').value.trim();
-  if (!txt) { document.getElementById('parseStatus').innerHTML = '<span class="pill pill-red">❌ Empty</span>'; return; }
-  try {
-    const json = JSON.parse(txt);
-    processJSON(json, 'pasted');
-  } catch(err) {
-    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-red">❌ ${err.message}</span>`;
-  }
-}
-
-async function handlePDFUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const status = document.getElementById('parseStatus');
-  status.innerHTML = `<span class="pill pill-amber">⏳ Parsing PDF...</span>`;
-  try {
-    const buffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({data: buffer}).promise;
-    let text = '';
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      text += content.items.map(it => it.str).join(' ') + '\n';
-    }
-    const extracted = extractFromText(text, file.name);
-    status.innerHTML = `<span class="pill pill-green">✅ PDF parsed: ${file.name} (${pdf.numPages} pages) — ${extracted} fields detected</span>`;
-  } catch(err) {
-    status.innerHTML = `<span class="pill pill-red">❌ PDF error: ${err.message}</span>`;
-  }
-  recalc();
-}
-
-function extractFromText(text, filename) {
-  let count = 0;
-  const t = text.replace(/\s+/g, ' ');
-  const panMatch = t.match(/\b[A-Z]{5}[0-9]{4}[A-Z]\b/);
-  if (panMatch) { setVal('p_pan', panMatch[0]); count++; }
-  const nameMatch = t.match(/Name[:\s]+([A-Z][a-zA-Z\s]+?)(?:\s+(?:PAN|Address|Father|DOB))/);
-  if (nameMatch) { setVal('p_name', nameMatch[1].trim()); count++; }
-  const salMatch = t.match(/Gross\s+Salary[:\s]*([\d,]+)/i);
-  if (salMatch) { setVal('s_gross', Number(salMatch[1].replace(/,/g,''))); count++; }
-  const tdsMatch = t.match(/Total\s+(?:TDS|Tax\s+Deducted)[:\s]*([\d,]+)/i);
-  if (tdsMatch) { setVal('tp_tds', Number(tdsMatch[1].replace(/,/g,''))); count++; }
-  const sdMatch = t.match(/Standard\s+Deduction[:\s]*([\d,]+)/i);
-  if (sdMatch) { setVal('s_stdDed', Number(sdMatch[1].replace(/,/g,''))); count++; }
-  const c80Match = t.match(/80C[:\s]*([\d,]+)/);
-  if (c80Match) { setVal('d_80c', Number(c80Match[1].replace(/,/g,''))); count++; }
-  const d80Match = t.match(/80D[:\s]*([\d,]+)/);
-  if (d80Match) { setVal('d_80d', Number(d80Match[1].replace(/,/g,''))); count++; }
-  return count;
-}
-
-async function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const status = document.getElementById('parseStatus');
-  status.innerHTML = `<span class="pill pill-amber">⏳ Running OCR (10-30s)...</span>`;
-  try {
-    const worker = await Tesseract.createWorker('eng');
-    const { data: { text } } = await worker.recognize(file);
-    await worker.terminate();
-    const count = extractFromText(text, file.name);
-    status.innerHTML = `<span class="pill pill-green">✅ OCR complete: ${count} fields detected</span>`;
-  } catch(err) {
-    status.innerHTML = `<span class="pill pill-red">❌ OCR error: ${err.message}</span>`;
-  }
-  recalc();
-}
-
-function openAISDecryptModal() { document.getElementById('aisModal').classList.add('show'); }
-function closeAISModal() { document.getElementById('aisModal').classList.remove('show'); }
-
-async function decryptAIS() {
-  const file = document.getElementById('aisFile').files[0];
-  const pan = document.getElementById('aisPAN').value.trim().toUpperCase();
-  const dob = document.getElementById('aisDOB').value.trim();
-  const status = document.getElementById('aisStatus');
-
-  if (!file || !pan || !dob) {
-    status.innerHTML = '<span class="pill pill-red">❌ File, PAN and DOB required</span>';
-    return;
-  }
-  status.innerHTML = '<span class="pill pill-amber">⏳ Decrypting...</span>';
-  try {
-    const text = await file.text();
-    const json = JSON.parse(text);
-    const encryptedB64 = json.data || json.Data || json;
-    if (typeof encryptedB64 !== 'string') {
-      processJSON(json, file.name);
-      status.innerHTML = '<span class="pill pill-green">✅ AIS already decrypted</span>';
-      return;
-    }
-    const password = pan + dob;
-    const key = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse('00'.repeat(16)), {
-      keySize: 256/32, iterations: 1000
-    });
-    const decrypted = CryptoJS.AES.decrypt(encryptedB64, key, {
-      iv: CryptoJS.enc.Hex.parse('00'.repeat(16)),
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
-    });
-    const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
-    if (!plaintext) throw new Error('Decryption failed — check PAN/DOB');
-    const aisJson = JSON.parse(plaintext);
-    extractFromAIS(aisJson);
-    status.innerHTML = '<span class="pill pill-green">✅ AIS decrypted and populated</span>';
-    closeAISModal();
-    recalc();
-  } catch(err) {
-    status.innerHTML = `<span class="pill pill-red">❌ ${err.message}</span>`;
-  }
-}
-
-function extractFromAIS(ais) {
-  const traverse = (obj, path=[]) => {
-    if (typeof obj !== 'object' || !obj) return;
-    for (const k in obj) {
-      const v = obj[k];
-      if (typeof v === 'number') {
-        const p = path.join('.').toLowerCase();
-        if (p.includes('tds') || p.includes('taxdeducted')) setVal('tp_tds', num('tp_tds') + v);
-        if (p.includes('savings') && p.includes('interest')) setVal('os_sb', v);
-        if (p.includes('fd') && p.includes('interest')) setVal('os_fd', v);
-        if (p.includes('dividend')) setVal('os_div', v);
-      } else {
-        traverse(v, [...path, k]);
-      }
-    }
-  };
-  traverse(ais);
-}
-
-function clearAll() {
-  if (!confirm('Clear all data?')) return;
-  document.querySelectorAll('input, textarea, select').forEach(el => {
-    if (el.type === 'number') el.value = 0;
-    else if (el.tagName === 'SELECT') el.selectedIndex = 0;
-    else if (!['ay','itrForm','regime'].includes(el.id)) el.value = '';
-  });
-  ['hpContainer','stcgTable','ltcgTable','vdaTable','fsiTable','faTable'].forEach(id => document.getElementById(id).innerHTML = '');
-  hpCount = 0;
-  setVal('s_stdDed', 75000);
-  recalc();
-}
-
+// ═══════════════════════════════════════════════════════════
+//  EXPORTS
+// ═══════════════════════════════════════════════════════════
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -1162,8 +1441,7 @@ function downloadPDF() {
   doc.line(14, y, 196, y); y += 5;
   doc.setFontSize(9);
   doc.text(`Name: ${document.getElementById('p_name').value}`, 14, y); y += 4;
-  doc.text(`PAN: ${document.getElementById('p_pan').value}`, 14, y); y += 4;
-  doc.text(`Address: ${document.getElementById('p_address').value}`, 14, y); y += 6;
+  doc.text(`PAN: ${document.getElementById('p_pan').value}`, 14, y); y += 6;
 
   const rows = [
     ['Income from Salary', document.getElementById('s_total').textContent],
@@ -1180,7 +1458,6 @@ function downloadPDF() {
     ['Surcharge', document.getElementById('old_surcharge').textContent],
     ['Cess', document.getElementById('old_cess').textContent],
     ['Rebate 87A', document.getElementById('old_rebate').textContent],
-    ['FTC', document.getElementById('old_ftc').textContent],
     ['Total Tax (Old)', document.getElementById('old_totalTax').textContent],
     ['--- NEW REGIME ---', ''],
     ['Taxable Income', document.getElementById('new_ti').textContent],
@@ -1188,23 +1465,12 @@ function downloadPDF() {
     ['Surcharge', document.getElementById('new_surcharge').textContent],
     ['Cess', document.getElementById('new_cess').textContent],
     ['Rebate 87A', document.getElementById('new_rebate').textContent],
-    ['FTC', document.getElementById('new_ftc').textContent],
     ['Total Tax (New)', document.getElementById('new_totalTax').textContent],
     ['--- TAXES PAID ---', ''],
     ['Total Taxes Paid', document.getElementById('tp_total').textContent],
   ];
-
-  doc.autoTable({
-    startY: y,
-    head: [['Particulars', 'Amount']],
-    body: rows,
-    theme: 'grid',
-    headStyles: {fillColor: [59, 130, 246]},
-    styles: {fontSize: 9, cellPadding: 2}
-  });
-
+  doc.autoTable({startY: y, head: [['Particulars', 'Amount']], body: rows, theme: 'grid', headStyles: {fillColor: [59, 130, 246]}, styles: {fontSize: 9, cellPadding: 2}});
   y = doc.lastAutoTable.finalY + 8;
-  doc.setFontSize(10);
   doc.text(`Verified by: ${document.getElementById('v_by').value || 'Self'} | Place: ${document.getElementById('v_place').value} | Date: ${document.getElementById('v_date').value}`, 14, y);
   doc.save(`ITR_Computation_${document.getElementById('ay').value}.pdf`);
 }
@@ -1232,12 +1498,10 @@ function exportExcel() {
     [],
     ['Old Regime Tax', document.getElementById('old_totalTax').textContent],
     ['New Regime Tax', document.getElementById('new_totalTax').textContent],
-    [],
     ['Taxes Paid', document.getElementById('tp_total').textContent],
   ];
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(data);
-  XLSX.utils.book_append_sheet(wb, ws, 'ITR Computation');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), 'ITR Computation');
   XLSX.writeFile(wb, `ITR_Computation_${document.getElementById('ay').value}.xlsx`);
 }
 
@@ -1258,9 +1522,7 @@ function exportJSON() {
       salary: {grossSalary: num('s_gross'), standardDeduction: num('s_stdDed')},
       otherSources: {interestIncome: num('os_sb') + num('os_fd'), dividendIncome: num('os_div')},
     },
-    deductions: {
-      chapterVIA: {section80C: num('d_80c'), section80D: num('d_80d'), section80TTA: num('d_80tta')}
-    },
+    deductions: {chapterVIA: {section80C: num('d_80c'), section80D: num('d_80d'), section80TTA: num('d_80tta')}},
     taxesPaid: {tds: num('tp_tds'), advanceTax: num('tp_advance'), selfAssessmentTax: num('tp_self')},
     computation: {
       grossTotalIncome: document.getElementById('old_gti').textContent,
@@ -1270,10 +1532,7 @@ function exportJSON() {
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ITR_Computation_${document.getElementById('ay').value}.json`;
-  a.click();
+  const a = document.createElement('a'); a.href = url; a.download = `ITR_Computation_${document.getElementById('ay').value}.json`; a.click();
 }
 
 function exportITRJSON() {
@@ -1285,32 +1544,18 @@ function exportITRJSON() {
         AssesseeName: {FirstName: document.getElementById('p_name').value},
         PAN: document.getElementById('p_pan').value,
         DOB: document.getElementById('p_dob').value,
-        Address: {CityOrTownOrDistrict: document.getElementById('p_address').value},
-        ContactDetail: {
-          EmailAddress: document.getElementById('p_email').value,
-          MobileNo: document.getElementById('p_mobile').value,
-        }
+        ContactDetail: {EmailAddress: document.getElementById('p_email').value, MobileNo: document.getElementById('p_mobile').value}
       },
-      ITR2_IncomeDeductions: {
-        GrossSalary: num('s_gross'),
-        DeductionUs16: num('s_stdDed'),
-      },
+      ITR2_IncomeDeductions: {GrossSalary: num('s_gross'), DeductionUs16: num('s_stdDed')},
       ScheduleOS: {IntrstFrmBank: num('os_sb'), DividendGross: num('os_div')},
       Deductions: {Section80C: num('d_80c'), Section80D: num('d_80d')},
       ScheduleTDS: {TotalTDS: num('tp_tds')},
-      TaxComputation: {
-        GrossTotalIncome: num('old_gti') || 0,
-        TotalTaxOldRegime: num('old_totalTax') || 0,
-        TotalTaxNewRegime: num('new_totalTax') || 0,
-      }
+      TaxComputation: {GrossTotalIncome: num('old_gti') || 0, TotalTaxOldRegime: num('old_totalTax') || 0, TotalTaxNewRegime: num('new_totalTax') || 0}
     }
   };
   const blob = new Blob([JSON.stringify(itr, null, 2)], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ITR_${document.getElementById('ay').value}_${document.getElementById('itrForm').value}.json`;
-  a.click();
+  const a = document.createElement('a'); a.href = url; a.download = `ITR_${document.getElementById('ay').value}_${document.getElementById('itrForm').value}.json`; a.click();
 }
 
 window.addEventListener('beforeprint', () => {
@@ -1319,9 +1564,7 @@ window.addEventListener('beforeprint', () => {
   document.getElementById('print_regime').textContent = document.getElementById('regime').value === 'new' ? 'New Regime' : 'Old Regime';
   document.querySelector('.print-header').style.display = 'block';
 });
-window.addEventListener('afterprint', () => {
-  document.querySelector('.print-header').style.display = 'none';
-});
+window.addEventListener('afterprint', () => document.querySelector('.print-header').style.display = 'none');
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 updateFormVisibility();
