@@ -1,1003 +1,1332 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sample ITR Computation | Tarun Prajapat</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23b95337'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='24' font-weight='bold' fill='%23fbf6ec' text-anchor='middle'%3EMr.%3C/text%3E%3C/svg%3E" />
-    <meta name="description" content="Tarun Prajapat – MIS Executive specializing in Accounts, GST Filing, Commercial Operations, MIS Reporting and ERP. 7+ years experience, based in Jaipur, Rajasthan." />
-    <link rel="canonical" href="https://tarunprajapat814-code.github.io/CV_Mr_Tarun_Prajapat/itr-template.html" />
-    <meta property="og:type" content="profile" />
-    <meta property="og:title" content="Tarun Prajapat | MIS Executive | Accounts & GST Professional" />
-    <meta property="og:description" content="Tarun Prajapat – MIS Executive specializing in Accounts, GST Filing, Commercial Operations, MIS Reporting and ERP." />
-    <meta property="og:url" content="https://tarunprajapat814-code.github.io/CV_Mr_Tarun_Prajapat/part-time.html" />
-    <meta name="theme-color" content="#f3eadb" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&family=Yatra+One&family=Playfair+Display:wght@700;800&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      :root {
-        --paper: #ffffff;
-        --paper-light: #ffffff;
-        --ink: #1f2926;
-        --muted: #5e665f;
-        --terracotta: #b95337;
-        --saffron: #d69a32;
-        --leaf: #6f8060;
-        --line: rgba(31, 41, 38, 0.22);
-        --display: "Yatra One", Georgia, serif;
-        --body: "Anek Devanagari", Georgia, serif;
-      }
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body {
-        margin: 0;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at 12% 8%, rgba(214, 154, 50, 0.13), transparent 25rem),
-          var(--paper);
-        font-family: var(--body);
-        font-size: 18px;
-        line-height: 1.55;
-      }
-      body::before {
-        position: fixed;
-        inset: 0;
-        z-index: 20;
-        pointer-events: none;
-        content: "";
-        opacity: 0.14;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-      }
-      a { color: inherit; }
-      button, input, textarea, select { font: inherit; }
-      .sr-only {
-        position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-        overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-      }
-      .skip-link {
-        position: fixed; top: 1rem; left: 1rem; z-index: 50;
-        padding: 0.65rem 1rem; background: var(--ink); color: white;
-        transform: translateY(-180%);
-      }
-      .skip-link:focus { transform: translateY(0); }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITR Computation Dashboard | AY 2026-27</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<style>
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f1f5f9; }
+  .section-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 16px; }
+  .section-header { background: linear-gradient(135deg, #1e40af, #3b82f6); color: #fff; padding: 12px 20px; border-radius: 12px 12px 0 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .section-header.green { background: linear-gradient(135deg, #047857, #10b981); }
+  .section-header.purple { background: linear-gradient(135deg, #6d28d9, #8b5cf6); }
+  .section-header.orange { background: linear-gradient(135deg, #c2410c, #f97316); }
+  .section-header.red { background: linear-gradient(135deg, #b91c1c, #ef4444); }
+  .section-header.slate { background: linear-gradient(135deg, #334155, #64748b); }
+  .section-body { padding: 20px; display: none; }
+  .section-body.open { display: block; }
+  .field-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; }
+  .field-label { font-size: 14px; color: #475569; font-weight: 500; }
+  .field-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; text-align: right; background: #f8fafc; }
+  .field-input:focus { outline: none; border-color: #3b82f6; background: #fff; }
+  .field-input[readonly] { background: #f1f5f9; color: #1e293b; font-weight: 600; }
+  .total-row { background: #dbeafe; font-weight: 700; color: #1e3a8a; padding: 10px 12px; border-radius: 6px; margin-top: 8px; display: flex; justify-content: space-between; }
+  .total-row.green { background: #d1fae5; color: #065f46; }
+  .total-row.red { background: #fee2e2; color: #991b1b; }
+  .btn { padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-primary { background: #3b82f6; color: #fff; }
+  .btn-primary:hover { background: #2563eb; }
+  .btn-success { background: #10b981; color: #fff; }
+  .btn-success:hover { background: #059669; }
+  .btn-danger { background: #ef4444; color: #fff; }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-outline { background: #fff; color: #3b82f6; border: 1px solid #3b82f6; }
+  .btn-outline:hover { background: #eff6ff; }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill-green { background: #d1fae5; color: #065f46; }
+  .pill-red { background: #fee2e2; color: #991b1b; }
+  .pill-amber { background: #fef3c7; color: #92400e; }
+  table.sub-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.sub-table th { background: #f1f5f9; padding: 8px; text-align: left; color: #475569; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
+  table.sub-table td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
+  table.sub-table input, table.sub-table select { width: 100%; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; text-align: right; }
+  .regime-box { border: 2px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+  .regime-box.recommended { border-color: #10b981; background: #f0fdf4; }
+  .badge-recommend { background: #10b981; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-left: 8px; }
+  .slab-table { width:100%; font-size:12px; border-collapse: collapse; margin-top: 8px; }
+  .slab-table th, .slab-table td { padding: 4px 8px; border-bottom: 1px solid #e2e8f0; text-align: right; }
+  .slab-table th:first-child, .slab-table td:first-child { text-align: left; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+  .modal-overlay.show { display: flex; }
+  .modal-box { background: #fff; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+  @media print {
+    body { background: #fff; }
+    .no-print, .section-header, .btn, button, footer, .upload-panel { display: none !important; }
+    .section-body { display: block !important; padding: 8px; }
+    .section-card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 8px; }
+    .field-input { background: #fff !important; border: none; font-weight: 500; }
+    .total-row { background: #f0f0f0 !important; color: #000 !important; }
+    .regime-box { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
 
-      .top-banner {
-        display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
-        padding: 0.85rem 1.25rem; background: var(--terracotta); color: var(--paper-light);
-        gap: 12px;
-      }
-      .top-banner .greeting {
-        display: flex; align-items: center; justify-content: center; gap: 14px;
-        font-family: var(--display); font-size: clamp(1.3rem, 3vw, 1.7rem);
-        letter-spacing: 0.03em; text-align: center;
-      }
-      .top-banner i { width: 6px; height: 6px; border-radius: 50%; background: var(--saffron); flex-shrink: 0; }
-      .top-banner .clock {
-        justify-self: end; font-family: var(--body); font-weight: 600; font-size: 0.85rem;
-        letter-spacing: 0.02em; text-align: right; white-space: nowrap;
-      }
-      @media (max-width: 720px) {
-        .top-banner { grid-template-columns: 1fr; gap: 4px; padding: 0.7rem 1rem; }
-        .top-banner .clock { justify-self: center; text-align: center; }
-      }
-
-      .site-header {
-        position: relative; z-index: 10; display: flex; align-items: center;
-        justify-content: space-between; width: min(1180px, calc(100% - 3rem));
-        margin: 0 auto; padding: 1.4rem 0; border-bottom: 1px solid var(--line);
-      }
-      .brand {
-        display: inline-flex; align-items: center; gap: 0.75rem;
-        color: var(--ink); font-weight: 700; text-decoration: none; letter-spacing: 0.01em;
-      }
-      .brand-name {
-        font-family: "Playfair Display", Georgia, serif; font-weight: 800;
-        font-size: 1.55rem; letter-spacing: 0.01em; color: var(--ink);
-      }
-      .brand-mark {
-        display: grid; width: 2.5rem; height: 2.5rem; place-items: center;
-        border-radius: 50% 50% 46% 54% / 55% 43% 57% 45%;
-        background: var(--terracotta); color: var(--paper-light);
-        font-family: var(--body); font-weight: 700; font-size: 0.95rem;
-        letter-spacing: -0.02em; transform: rotate(-5deg);
-      }
-      .site-nav { display: flex; gap: 1.6rem; }
-      .site-nav a { position: relative; color: var(--ink); font-size: 0.95rem; text-decoration: none; }
-      .site-nav a::after {
-        position: absolute; right: 0; bottom: -0.25rem; left: 0; height: 1px; content: "";
-        background: var(--terracotta); transform: scaleX(0); transform-origin: right;
-        transition: transform 180ms ease;
-      }
-      .site-nav a:hover::after, .site-nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
-      .menu-button { display: none; }
-
-      .hero {
-        position: relative; display: grid; grid-template-columns: 1.15fr 0.85fr;
-        min-height: 680px; width: min(1180px, calc(100% - 3rem)); margin: 0 auto;
-        padding: clamp(4.5rem, 9vw, 8rem) 0 5rem;
-      }
-      .hero-copy { position: relative; z-index: 2; max-width: 760px; }
-      .hero-bg-image {
-        position: absolute; inset: 0; width: 100%; height: 100%;
-        object-fit: cover; opacity: 0.14; z-index: 0; pointer-events: none;
-      }
-      .eyebrow {
-        margin: 0 0 1.1rem; color: var(--terracotta); font-size: 0.82rem;
-        font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-      }
-      h1, h2, h3, p { margin-top: 0; }
-      h1, h2 { font-family: var(--display); font-weight: 400; line-height: 1.05; }
-      h1 { margin-bottom: 1.8rem; font-size: clamp(3.2rem, 7vw, 6.4rem); letter-spacing: -0.045em; }
-      h1 em { color: var(--terracotta); font-style: normal; }
-      .hero-text { max-width: 610px; color: var(--muted); font-size: clamp(1.08rem, 2vw, 1.3rem); }
-      .hero-actions { display: flex; align-items: center; gap: 2rem; margin-top: 2.1rem; flex-wrap: wrap; }
-      .button {
-        display: inline-flex; align-items: center; justify-content: center; min-height: 3.25rem;
-        padding: 0.72rem 1.35rem 0.6rem; border: 1px solid transparent; border-radius: 0;
-        cursor: pointer; font-weight: 700; text-decoration: none;
-        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
-      }
-      .button:hover { transform: translateY(-3px) rotate(-1deg); }
-      .button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, a:focus-visible {
-        outline: 3px solid var(--saffron); outline-offset: 4px;
-      }
-      .button-primary { background: var(--terracotta); color: white; box-shadow: 6px 6px 0 var(--ink); }
-      .button-primary:hover { box-shadow: 3px 3px 0 var(--ink); }
-      .button-outline-ink { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
-      .button-outline-ink:hover { background: var(--ink); color: var(--paper); }
-      .text-link { color: var(--ink); font-weight: 700; text-underline-offset: 0.35rem; }
-      .text-link span { display: inline-block; margin-left: 0.35rem; transition: transform 180ms ease; }
-      .text-link:hover span { transform: translateY(4px); }
-
-      .hero-art { position: relative; z-index: 1; min-height: 460px; align-self: center; }
-      .sun-disc {
-        position: absolute; top: 4%; right: 4%; width: min(25vw, 310px); aspect-ratio: 1;
-        border-radius: 50%; background: var(--saffron);
-        box-shadow: inset -24px -18px 0 rgba(185, 83, 55, 0.13);
-      }
-      .arch { position: absolute; border: 2px solid var(--ink); border-bottom: 0; border-radius: 999px 999px 0 0; }
-      .arch-one { right: 10%; bottom: 2%; width: 70%; height: 72%; background: rgba(251, 246, 236, 0.42); }
-      .arch-two { right: 22%; bottom: 2%; width: 45%; height: 48%; background: var(--leaf); border-color: var(--leaf); }
-      .art-note {
-        position: absolute; right: 2%; bottom: 20%; z-index: 2; padding: 1rem 1.1rem 0.75rem;
-        border: 1px solid var(--ink); background: var(--paper-light); font-family: var(--display);
-        font-size: 1.2rem; line-height: 1.25; transform: rotate(5deg);
-      }
-      .thread { position: absolute; inset: 20% 0 auto -5%; width: 105%; color: var(--terracotta); }
-      .hero-stamp {
-        position: absolute; right: 39%; bottom: 2.2rem; display: grid; width: 106px; height: 106px;
-        place-items: center; padding: 0.5rem; border: 1px solid var(--ink); border-radius: 50%;
-        background: var(--paper); font-size: 0.58rem; text-align: center; text-transform: uppercase;
-        transform: rotate(-10deg);
-      }
-      .hero-stamp strong { font-family: var(--display); font-size: 2rem; line-height: 1; }
-
-      .ticker { overflow: hidden; border-block: 1px solid var(--ink); background: var(--ink); color: var(--paper); }
-      .ticker div {
-        display: flex; width: max-content; align-items: center; gap: 1.6rem; padding: 0.75rem 0;
-        animation: drift 24s linear infinite alternate;
-      }
-      .ticker span { font-family: var(--display); font-size: 1.05rem; }
-      .ticker i { width: 7px; height: 7px; border-radius: 50%; background: var(--saffron); }
-      @keyframes drift { to { transform: translateX(calc(100vw - 100%)); } }
-
-      .section { width: min(1180px, calc(100% - 3rem)); margin: 0 auto; padding: clamp(5rem, 10vw, 9rem) 0; }
-      .section-heading { display: grid; grid-template-columns: 0.45fr 1fr; align-items: start; margin-bottom: 4rem; }
-      h2 { margin-bottom: 1.4rem; font-size: clamp(2.4rem, 5vw, 4.6rem); letter-spacing: -0.035em; }
-
-      .service-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem; }
-      .about-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; align-items: start; }
-      .about-lead { font-size: 1.08rem; color: var(--ink); max-width: 46ch; }
-      .about-facts { display: grid; gap: 1rem; }
-      .about-facts div { border-top: 1px solid var(--line); padding-top: 0.6rem; }
-      .about-facts span { display: block; font-size: 0.78rem; color: var(--terracotta); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
-      .about-facts b { font-weight: 600; font-size: 0.95rem; }
-      @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
-
-      .skill-cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-      .skill-card { border: 1px solid var(--ink); background: var(--paper-light); padding: 1.6rem 1.5rem; }
-      .skill-card h3 { font-family: var(--display); font-weight: 400; font-size: 1.5rem; margin-bottom: 1rem; }
-      .skill-row { margin-bottom: 0.85rem; }
-      .skill-row span { display: block; font-size: 0.85rem; margin-bottom: 4px; color: var(--ink); }
-      .skill-row .bar { width: 100%; height: 7px; background: rgba(31,41,38,0.12); border-radius: 5px; overflow: hidden; }
-      .skill-row .bar i { display: block; height: 100%; background: var(--terracotta); border-radius: 5px; }
-      @media (max-width: 820px) { .skill-cats { grid-template-columns: 1fr; } }
-
-      .project-grid { grid-template-columns: repeat(3, 1fr); }
-      .project-card { border: 1px solid var(--ink); background: var(--paper-light); padding: 1.5rem 1.4rem; }
-      .project-card summary { cursor: pointer; list-style: none; }
-      .project-card summary::-webkit-details-marker { display: none; }
-      .project-card h3 { font-family: var(--display); font-weight: 400; font-size: 1.35rem; margin-bottom: 0.5rem; }
-      .project-card summary p { font-size: 0.92rem; color: var(--muted); margin-bottom: 0.7rem; }
-      .project-card .view-details { font-size: 0.85rem; font-weight: 700; color: var(--terracotta); }
-      .project-card[open] .view-details { display: none; }
-      .project-card ul { margin: 0.8rem 0 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.9rem; }
-      .project-card ul li { margin-bottom: 0.35rem; }
-      @media (max-width: 900px) { .project-grid { grid-template-columns: 1fr 1fr; } }
-      @media (max-width: 600px) { .project-grid { grid-template-columns: 1fr; } }
-      .service-card {
-        display: flex; min-height: 250px; flex-direction: column; justify-content: space-between;
-        padding: 2rem; border: 1px solid var(--ink); background: var(--paper-light);
-      }
-      .service-card-large { grid-row: span 2; min-height: 516px; background: var(--leaf); color: white; }
-      .service-card-accent { background: var(--saffron); }
-      .service-number { align-self: flex-end; font-family: var(--display); font-size: 1.2rem; }
-      .service-card h3 { margin-bottom: 0.6rem; font-family: var(--display); font-size: clamp(1.8rem, 3.6vw, 3.2rem); font-weight: 400; line-height: 1; }
-      .service-card p { max-width: 490px; margin-bottom: 0; font-size: 1.06rem; }
-
-      .process { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(3rem, 8vw, 8rem); border-top: 1px solid var(--line); }
-      .process-intro > p:not(.eyebrow) { max-width: 420px; color: var(--muted); }
-      .career-doodle { margin-bottom: 20px; }
-      .experience-icon { margin-bottom: 12px; }
-      .experience-icon img { display: block; }
-      .career-path { stroke: var(--terracotta); opacity: 0.55; fill: none; }
-      .career-dot { fill: var(--terracotta); }
-      .steps { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
-      .steps li { display: grid; grid-template-columns: 70px 1fr; gap: 1rem; padding: 2rem 0; border-bottom: 1px solid var(--ink); }
-      .steps li.step-yellow, .steps li.step-green {
-        border-bottom: 0; border-radius: 18px; padding: 2rem 1.75rem; margin-bottom: 1.25rem;
-      }
-      .steps li.step-yellow { background: linear-gradient(160deg, #f7dd8a 0%, #fdf6e4 65%); }
-      .steps li.step-green { background: linear-gradient(160deg, #c9ddb9 0%, #eef4e8 65%); }
-      .steps li > span { font-family: var(--display); font-size: 2.2rem; color: var(--terracotta); }
-      .steps h3 { margin-bottom: 0.2rem; font-family: var(--display); font-size: 1.7rem; font-weight: 400; }
-      .steps .co { margin-bottom: 0.8rem; color: var(--muted); font-size: 0.95rem; }
-
-      .job-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
-      .company-logo {
-        display: grid; place-items: center; width: 68px; height: 68px; flex-shrink: 0;
-        border-radius: 14px; background: #ffffff; border: 1px solid var(--line);
-        overflow: hidden; padding: 8px;
-      }
-      .company-logo img { width: 100%; height: 100%; object-fit: contain; }
-      .steps a.company-name {
-        display: inline-block; margin: 0 0 3px; font-family: var(--display); font-weight: 400;
-        font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--ink); text-decoration: none;
-        border-bottom: 1px solid transparent;
-      }
-      .steps a.company-name:hover { color: var(--terracotta); border-bottom-color: var(--terracotta); }
-      .role-line { margin: 0; color: var(--muted); font-size: 0.95rem; }
-      .role-line b { color: var(--ink); font-weight: 700; }
-      .steps ul { margin: 0; padding-left: 1.15rem; color: var(--muted); }
-      .steps ul li { display: list-item; grid-template-columns: none; padding: 0; border: 0; margin-bottom: 0.4rem; font-size: 0.98rem; }
-      .steps ul li.cat {
-        list-style: none; margin: 16px 0 6px -1.15rem; padding: 0; font-weight: 700;
-        color: var(--ink); font-family: var(--body); font-size: 1rem;
-      }
-      .steps ul li.cat:first-child { margin-top: 0; }
-
-      .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-      .cards-grid .service-card { min-height: auto; }
-
-      .contact {
-        display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(3rem, 9vw, 9rem); width: 100%;
-        max-width: none; padding-inline: max(1.5rem, calc((100% - 1180px) / 2));
-        background: var(--terracotta); color: var(--paper-light);
-      }
-      .contact .eyebrow { color: var(--paper); }
-      .contact-id { margin: 0.6rem 0 1.4rem; padding: 1rem 1.2rem; border: 1px solid rgba(255,255,255,0.35); }
-      .contact-id b { display: block; font-family: var(--display); font-size: 1.3rem; font-weight: 400; margin-bottom: 4px; }
-      .contact-id span { display: block; font-size: 0.88rem; opacity: 0.9; margin-bottom: 3px; }
-      .contact-copy > p:not(.eyebrow, .small-note) { max-width: 420px; }
-      .contact-rule { width: 50%; height: 1px; margin: 2rem 0; background: rgba(255,255,255,0.55); }
-      .small-note { max-width: 370px; font-size: 0.9rem; opacity: 0.78; }
-      .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem 1.5rem; }
-      .contact-form label { display: grid; gap: 0.35rem; }
-      .contact-form label span { font-size: 0.86rem; font-weight: 700; }
-      input, textarea, select {
-        width: 100%; border: 0; border-bottom: 1px solid rgba(255,255,255,0.7); border-radius: 0;
-        background: rgba(80, 24, 14, 0.12); color: white; padding: 0.7rem 0.75rem 0.55rem;
-      }
-      .button-dark { grid-column: 1 / -1; justify-self: start; margin-top: 0.8rem; background: var(--ink); color: white; box-shadow: 6px 6px 0 var(--saffron); }
-      .download-group { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 0.9rem; }
-      .download-label { font-size: 0.86rem; font-weight: 700; color: var(--paper-light); }
-      .button-outline-light {
-        background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.75);
-        min-height: 2.6rem; padding: 0.55rem 1.15rem 0.45rem;
-      }
-      .button-outline-light:hover { background: rgba(255,255,255,0.15); }
-      .qr-block { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; margin-top: 1.4rem; }
-      .qr-block img { background: white; padding: 6px; border-radius: 6px; flex-shrink: 0; }
-      .qr-block span { font-size: 0.82rem; color: var(--paper); opacity: 0.85; }
-
-      .site-footer {
-        display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 2rem;
-        padding: 2rem max(1.5rem, calc((100% - 1180px) / 2)); background: var(--ink); color: var(--paper);
-        font-size: 0.85rem;
-      }
-      .site-footer p { margin: 0; }
-      .site-footer p:last-child { text-align: right; }
-      .footer-brand { color: var(--paper); }
-
-      .reveal { animation: rise 700ms both cubic-bezier(.2,.7,.2,1); }
-      .delay-1 { animation-delay: 100ms; }
-      .delay-2 { animation-delay: 210ms; }
-      .delay-3 { animation-delay: 330ms; }
-      @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
-
-      @media (max-width: 820px) {
-        .site-header { width: min(100% - 2rem, 1180px); }
-        .menu-button { display: grid; gap: 4px; padding: 0.7rem; border: 0; background: transparent; cursor: pointer; }
-        .menu-button span:not(.sr-only) { width: 24px; height: 2px; background: var(--ink); }
-        .site-nav {
-          position: absolute; top: calc(100% + 1px); right: 0; left: 0; display: none;
-          flex-direction: column; gap: 0; padding: 1rem; border-bottom: 1px solid var(--ink);
-          background: var(--paper-light);
-        }
-        .site-nav.open { display: flex; }
-        .site-nav a { padding: 0.8rem; }
-        .hero, .process, .contact { grid-template-columns: 1fr; }
-        .hero { width: min(100% - 2rem, 1180px); padding-top: 4.5rem; min-height: auto; }
-        .hero-bg-image { object-fit: contain !important; object-position: center 30%; opacity: 0.22; }
-        .hero-art { min-height: 390px; margin-top: 1rem; }
-        .sun-disc { width: min(64vw, 280px); }
-        .hero-stamp { right: auto; bottom: 1rem; left: 0; }
-        .section { width: min(100% - 2rem, 1180px); }
-        .section-heading { grid-template-columns: 1fr; }
-        .service-grid, .cards-grid { grid-template-columns: 1fr; }
-        .service-card-large { grid-row: auto; min-height: 350px; }
-        .contact { width: 100%; padding-inline: 1rem; }
-        .site-footer { grid-template-columns: 1fr; text-align: left; }
-        .site-footer p:last-child { text-align: left; }
-      }
-      @media (max-width: 560px) {
-        body { font-size: 17px; }
-        h1 { font-size: clamp(2.9rem, 16vw, 4.6rem); }
-        .hero-actions { align-items: flex-start; flex-direction: column; gap: 1.3rem; }
-        .hero-art { min-height: 330px; }
-        .contact-form { grid-template-columns: 1fr; }
-      }
-      .back-to-top {
-        position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 40;
-        width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--ink);
-        background: var(--terracotta); color: white; font-size: 1.2rem; line-height: 1; cursor: pointer;
-        box-shadow: 3px 3px 0 var(--ink); opacity: 0; pointer-events: none;
-        transform: translateY(10px); transition: opacity 200ms ease, transform 200ms ease;
-      }
-      .back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
-      .back-to-top:hover { transform: translateY(-3px); }
-
-      @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-      }
-
-
-      .solar-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 1rem; align-items: stretch; }
-      .solar-stats { display: grid; gap: 1rem; }
-      .solar-stat { border: 1px solid var(--ink); background: var(--saffron); padding: 1.3rem 1.5rem; }
-      .solar-stat b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(2rem, 4vw, 3rem); line-height: 1; }
-      .solar-stat span { font-size: 0.9rem; font-weight: 600; }
-      .solar-card { position: relative; overflow: hidden; border: 1px solid var(--ink); background: var(--paper-light); padding: 2rem 1.8rem; }
-      .solar-card::after { content: ""; position: absolute; top: -50px; right: -50px; width: 170px; height: 170px; border-radius: 50%; background: var(--saffron); opacity: 0.35; }
-      .solar-card > * { position: relative; z-index: 1; }
-      .solar-card h3 { font-family: var(--display); font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 2rem); margin-bottom: 0.4rem; max-width: 22ch; }
-      .solar-card .meta { color: var(--terracotta); font-weight: 700; font-size: 0.85rem; margin-bottom: 1rem; }
-      .solar-card ul { margin: 0; padding-left: 1.15rem; color: var(--muted); }
-      .solar-card li { margin-bottom: 0.45rem; }
-      @media (max-width: 820px) { .solar-grid { grid-template-columns: 1fr; } }
-
-
-      .itr-note { max-width: 62ch; color: var(--muted); font-size: 0.92rem; margin: -1.5rem 0 2rem; }
-      .itr-doc { border: 1px solid var(--ink); background: var(--paper-light); padding: 2rem clamp(1.2rem, 4vw, 2.5rem); }
-      .itr-doc-head { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem 2rem; margin-bottom: 1.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
-      .itr-doc-head span { display: block; font-size: 0.75rem; color: var(--terracotta); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 2px; }
-      .itr-doc-head b { font-weight: 600; font-size: 0.95rem; }
-      .itr-h3 { font-family: var(--display); font-weight: 400; font-size: 1.25rem; margin: 1.8rem 0 0.8rem; }
-      .itr-h3 span { font-family: var(--body); font-size: 0.8rem; color: var(--muted); font-weight: 400; }
-      .itr-scroll { overflow-x: auto; }
-      table.itr-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
-      .itr-table td, .itr-table th { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
-      .itr-table td:last-child, .itr-table th:last-child { text-align: right; }
-      .itr-table tr.sub td:first-child { padding-left: 1.4rem; color: var(--muted); font-size: 0.87rem; }
-      .itr-table tr.total td { font-weight: 700; border-top: 1.5px solid var(--ink); border-bottom: none; }
-      .itr-table thead th { color: var(--terracotta); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1.5px solid var(--ink); }
-      .itr-sig { margin-top: 2.5rem; font-size: 0.88rem; color: var(--muted); }
-      .itr-sig b { display: block; margin-top: 1.8rem; font-family: var(--display); font-weight: 400; font-size: 1.1rem; color: var(--ink); }
-      .itr-span2 { grid-column: 1 / -1; }
-      .itr-bank-grid { padding-top: 1.2rem; margin-top: 0.5rem; border-top: 1px dashed var(--line); }
-      .itr-footnote { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); font-style: italic; }
-      .itr-topline { display: flex; justify-content: flex-end; gap: 1.6rem; flex-wrap: wrap; margin-bottom: 1.5rem; font-size: 0.82rem; color: var(--muted); }
-      .itr-topline b { color: var(--ink); font-weight: 700; }
-      @media (max-width: 600px) { .itr-topline { justify-content: flex-start; } }
-      @media (max-width: 600px) { .itr-doc-head { grid-template-columns: 1fr; } }
-
-
-      .itr-heading-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-      .itr-pdf-btn { white-space: nowrap; }
-      .itr-input {
-        border: none; border-bottom: 1px dashed var(--line); background: transparent;
-        font: inherit; color: inherit; padding: 1px 2px; width: 100%; min-width: 60px;
-      }
-      .itr-input:focus { outline: none; border-bottom-color: var(--terracotta); background: rgba(185,83,55,0.05); }
-      .itr-doc-head .itr-input { font-weight: 600; font-size: 0.95rem; }
-      .itr-table td .itr-input { text-align: right; }
-      .itr-table td:first-child .itr-input, .itr-doc-head .itr-input { text-align: left; }
-      .itr-amt { max-width: 110px; }
-      .itr-pct, .itr-sec { max-width: 50px; text-align: center !important; }
-      @media (max-width: 600px) { .itr-heading-row { flex-direction: column; } }
-
-
-      .itr-upload {
-        border: 1.5px dashed var(--ink); background: var(--paper-light);
-        padding: 1.8rem clamp(1.2rem, 4vw, 2.2rem); margin-bottom: 2rem; text-align: center;
-      }
-      .itr-upload-title { font-family: var(--display); font-weight: 400; font-size: 1.3rem; margin-bottom: 0.4rem; }
-      .itr-upload-sub { font-size: 0.85rem; color: var(--muted); max-width: 56ch; margin: 0 auto 1.2rem; }
-      .itr-drop { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; cursor: pointer; padding: 1rem; }
-      .itr-drop-icon { width: 42px; height: 42px; border-radius: 50%; background: var(--saffron); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-      .itr-drop-text { font-weight: 600; }
-      .itr-drop-hint { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.6rem; }
-      .itr-browse-btn { margin-top: 0.3rem; pointer-events: none; }
-      .itr-upload.dragover { background: rgba(214,154,50,0.15); }
-      .itr-upload-status { font-size: 0.85rem; margin: 1rem 0 0; min-height: 1.2em; font-weight: 600; }
-      .itr-upload-status.ok { color: var(--leaf); }
-      .itr-upload-status.err { color: var(--terracotta); }
-
-      @media print {
-        @page { size: A4; margin: 14mm 12mm; }
-
-        body::before, .top-banner, .site-header, .hero-bg-image, .hero-art, .hero-stamp,
-        .ticker, .career-doodle, .experience-icon, .back-to-top, .qr-block,
-        .hero-actions, .download-group, .contact-form a.button, .site-footer,
-        .project-card .view-details { display: none !important; }
-        .itr-pdf-btn, a[href="index.html"] { display: none !important; }
-        .itr-upload { display: none !important; }
-        body { background: white !important; font-size: 10.5pt; line-height: 1.4; }
-        .section, .hero { width: 100% !important; padding: 0 !important; }
-        .contact { background: white !important; color: var(--ink) !important; padding: 0.4in 0 !important; }
-        .contact .eyebrow, .contact-id span, .small-note { color: var(--muted) !important; }
-        .project-card { break-inside: avoid; }
-        .project-card > *:not(summary) { display: block !important; }
-        a { text-decoration: none; color: var(--ink) !important; }
-        .steps li.step-yellow, .steps li.step-green { background: none !important; border: 1px solid var(--line) !important; }
-
-        /* ---- ITR computation sheet: clean, letterhead-style print ---- */
-        #itr-computation { padding: 0 !important; }
-        #itr-computation .section-heading { margin-bottom: 0.3in !important; border-bottom: 1.5pt solid var(--ink); padding-bottom: 10pt; }
-        #itr-computation .eyebrow { font-size: 8pt; }
-        #itr-computation h2 { font-size: 20pt !important; line-height: 1.15; }
-        #itr-computation .itr-note { display: none !important; }
-        #itr-computation::before {
-          content: "Income Tax Computation — Sample Format";
-          display: block; font-family: var(--body); font-weight: 700; font-size: 8pt;
-          letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4pt;
-        }
-
-        .itr-doc { border: none !important; padding: 0 !important; background: white !important; }
-        .itr-topline { justify-content: flex-start; gap: 0.3in; padding-bottom: 8pt; margin-bottom: 14pt;
-          border-bottom: 1pt solid var(--line); font-size: 8.5pt; }
-
-        .itr-h3 { font-size: 12pt !important; margin: 16pt 0 6pt !important; break-after: avoid; color: var(--terracotta); }
-        .itr-h3 span { font-size: 8pt; }
-
-        .itr-doc-head { grid-template-columns: repeat(2, 1fr) !important; gap: 6pt 24pt !important; margin-bottom: 10pt !important; padding-bottom: 10pt !important; }
-        .itr-doc-head span { font-size: 7pt !important; }
-        .itr-doc-head b { font-size: 9.5pt !important; }
-        .itr-bank-grid { grid-template-columns: repeat(3, 1fr) !important; }
-
-        table.itr-table { font-size: 9.5pt !important; break-inside: avoid; margin-bottom: 4pt; }
-        .itr-table tr { break-inside: avoid; }
-        .itr-table td { padding: 3pt 6pt !important; }
-        .itr-table tr.total td { background: #f4f1ea !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-        .itr-input {
-          border: none !important; border-bottom: 0.5pt solid #ccc !important;
-          background: transparent !important; color: black !important; padding: 1pt 2pt !important;
-        }
-        .itr-input::placeholder { color: #bbb !important; }
-
-        .itr-sig { margin-top: 20pt; font-size: 9pt; }
-        .itr-footnote { font-size: 7.5pt; margin-top: 14pt; padding-top: 8pt; }
-      }
-    </style>
-  </head>
-  <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-
-    <div class="top-banner">
-      <span></span>
-      <span class="greeting"><i aria-hidden="true"></i><span>Radhe Radhe</span><i aria-hidden="true"></i></span>
-      <span class="clock" id="liveClock" aria-live="off"></span>
+<div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 shadow-lg no-print">
+  <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold">📊 ITR Computation Dashboard</h1>
+      <p class="text-blue-200 text-sm">AY 2026-27 | Full Schedule Support | PDF/OCR/AIS/ITR-JSON Parsing</p>
     </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <div><label class="text-xs text-blue-200 block">ITR Form</label>
+        <select id="itrForm" class="bg-white text-gray-800 rounded px-3 py-1.5 text-sm font-semibold">
+          <option value="ITR-1">ITR-1 (Sahaj)</option>
+          <option value="ITR-2" selected>ITR-2</option>
+          <option value="ITR-3">ITR-3</option>
+          <option value="ITR-4">ITR-4 (Sugam)</option>
+        </select>
+      </div>
+      <div><label class="text-xs text-blue-200 block">Regime</label>
+        <select id="regime" class="bg-white text-gray-800 rounded px-3 py-1.5 text-sm font-semibold">
+          <option value="new" selected>New Regime</option>
+          <option value="old">Old Regime</option>
+        </select>
+      </div>
+      <div><label class="text-xs text-blue-200 block">AY</label>
+        <select id="ay" class="bg-white text-gray-800 rounded px-3 py-1.5 text-sm font-semibold">
+          <option value="2026-27" selected>2026-27</option>
+          <option value="2025-26">2025-26</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <header class="site-header">
-      <a class="brand" href="index.html" aria-label="Tarun Prajapat home">
-        <span class="brand-mark" aria-hidden="true">Mr.</span>
-        <span class="brand-name">Tarun Prajapat</span>
-      </a>
-      <button class="menu-button" type="button" id="menuBtn" aria-expanded="false" aria-controls="site-nav">
-        <span></span><span></span><span></span>
-        <span class="sr-only">Open menu</span>
-      </button>
-      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
-        <a href="index.html#about">About</a>
-        <a href="index.html#experience">Experience</a>
-        <a href="#part-time">Part-time Job</a>
-        <a href="index.html#skills">Skills</a>
-        <a href="index.html#projects">Projects</a>
-        <a href="index.html#certifications">Certifications</a>
-        <a href="index.html#education">Education</a>
-        <a href="index.html#contact">Contact</a>
-      </nav>
-    </header>
+<div style="display:none;" class="print-header">
+  <h1 style="text-align:center;font-size:20px;margin:10px 0;">ITR COMPUTATION STATEMENT</h1>
+  <p style="text-align:center;font-size:12px;">AY <span id="print_ay">2026-27</span> | <span id="print_form">ITR-2</span> | <span id="print_regime">New Regime</span></p>
+  <hr>
+</div>
 
-    <main id="main-content">
-      <section class="section" id="itr-computation">
-        <div class="section-heading itr-heading-row">
-          <div>
-            <p class="eyebrow">Sample Work &middot; ITR Filing</p>
-            <h2>Computation of<br />Total Income.</h2>
-          </div>
-          <button class="button button-primary itr-pdf-btn" onclick="window.print()" type="button">📄 Download as PDF</button>
+<div class="max-w-7xl mx-auto p-4">
+
+  <div class="section-card upload-panel no-print">
+    <div class="section-header purple" onclick="toggleSection('uploadBody')">
+      <span>📁 Upload / Paste Data — JSON | PDF | Image | Form 16 | AIS | 26AS | ITR JSON</span>
+      <span class="text-sm">▼</span>
+    </div>
+    <div class="section-body open" id="uploadBody">
+      <div class="grid md:grid-cols-5 gap-3 mb-4">
+        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50">
+          <input type="file" class="hidden" accept=".json" onchange="handleJSONUpload(event)">
+          <div class="text-3xl">📄</div>
+          <div class="text-xs font-semibold text-purple-700 mt-1">JSON (ITR/AIS)</div>
+        </label>
+        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50">
+          <input type="file" class="hidden" accept=".pdf" onchange="handlePDFUpload(event)">
+          <div class="text-3xl">📑</div>
+          <div class="text-xs font-semibold text-purple-700 mt-1">PDF (Form 16/26AS)</div>
+        </label>
+        <label class="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-50">
+          <input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+          <div class="text-3xl">🖼️</div>
+          <div class="text-xs font-semibold text-purple-700 mt-1">Image (OCR)</div>
+        </label>
+        <button onclick="openAISDecryptModal()" class="border-2 border-dashed border-amber-300 rounded-lg p-4 text-center hover:bg-amber-50">
+          <div class="text-3xl">🔐</div>
+          <div class="text-xs font-semibold text-amber-700 mt-1">AIS Decrypt</div>
+        </button>
+        <button onclick="loadSampleData()" class="border-2 border-dashed border-green-300 rounded-lg p-4 text-center hover:bg-green-50">
+          <div class="text-3xl">⚡</div>
+          <div class="text-xs font-semibold text-green-700 mt-1">Load Sample</div>
+        </button>
+      </div>
+      <div class="mb-3">
+        <label class="field-label">Or paste JSON / ITR text:</label>
+        <textarea id="jsonInput" rows="4" class="w-full mt-1 p-3 border border-gray-300 rounded-lg font-mono text-xs" placeholder='Paste ITR JSON / AIS JSON / plain text...'></textarea>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <button class="btn btn-primary" onclick="parseJSONInput()">🔍 Parse</button>
+        <button class="btn btn-outline" onclick="clearAll()">🗑️ Clear All</button>
+      </div>
+      <div id="parseStatus" class="mt-3 text-sm"></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('personalBody')">
+      <span>👤 A. Personal & Filing Information</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body open" id="personalBody">
+      <div class="grid md:grid-cols-2 gap-x-8">
+        <div>
+          <div class="field-row"><span class="field-label">Name</span><input class="field-input" id="p_name"></div>
+          <div class="field-row"><span class="field-label">PAN</span><input class="field-input" id="p_pan"></div>
+          <div class="field-row"><span class="field-label">Date of Birth</span><input class="field-input" id="p_dob"></div>
+          <div class="field-row"><span class="field-label">Aadhaar</span><input class="field-input" id="p_aadhaar"></div>
         </div>
-        <p class="itr-note">Sample format only &mdash; illustrative computation sheet showing the structure I prepare for clients. Names, PAN, and figures below are placeholders, not real client data.</p>
+        <div>
+          <div class="field-row"><span class="field-label">Email</span><input class="field-input" id="p_email"></div>
+          <div class="field-row"><span class="field-label">Mobile</span><input class="field-input" id="p_mobile"></div>
+          <div class="field-row"><span class="field-label">Residential Status</span>
+            <select class="field-input" id="p_resStatus"><option>Resident</option><option>Non-Resident</option><option>RNOR</option></select>
+          </div>
+          <div class="field-row"><span class="field-label">Address</span><input class="field-input" id="p_address"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="itr-upload" id="itrUpload">
-          <p class="itr-upload-title">Auto-fill from your ITR JSON or PDF</p>
-          <p class="itr-upload-sub">Upload the JSON file from the Income Tax e-Filing portal, or a computation PDF &mdash; everything is read entirely in your browser, nothing is uploaded anywhere. Matching fields below are auto-filled; exact field names/labels vary by form and PDF format, so always review before using "Download as PDF".</p>
-          <label class="itr-drop" for="itrFileInput">
-            <span class="itr-drop-icon">&#8593;</span>
-            <span class="itr-drop-text">Choose a JSON or PDF file, or drag &amp; drop it here</span>
-            <span class="itr-drop-hint">.JSON or .PDF &middot; fields not found are left blank</span>
-            <span class="button button-outline-ink itr-browse-btn">Browse File</span>
-            <input type="file" id="itrFileInput" accept=".json,.pdf,application/json,application/pdf" hidden />
-          </label>
-          <p class="itr-upload-status" id="itrUploadStatus"></p>
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('salaryBody')">
+      <span>💼 B1. Income from Salary (Schedule S)</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="salaryBody">
+      <div class="field-row"><span class="field-label">Gross Salary u/s 17(1)</span><input type="number" class="field-input calc" id="s_gross" value="0"></div>
+      <div class="field-row"><span class="field-label">Less: Allowances u/s 10 (HRA, LTA, etc.)</span><input type="number" class="field-input calc" id="s_allowances" value="0"></div>
+      <div class="field-row"><span class="field-label">Less: Standard Deduction 16(ia)</span><input type="number" class="field-input calc" id="s_stdDed" value="75000"></div>
+      <div class="field-row"><span class="field-label">Less: Entertainment Allowance 16(ii)</span><input type="number" class="field-input calc" id="s_entAllow" value="0"></div>
+      <div class="field-row"><span class="field-label">Less: Professional Tax 16(iii)</span><input type="number" class="field-input calc" id="s_profTax" value="0"></div>
+      <div class="total-row"><span>Net Income from Salary</span><span id="s_total">₹ 0</span></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header orange" onclick="toggleSection('hpBody')">
+      <span>🏠 B2. House Property (Schedule HP) — Multiple Properties</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="hpBody">
+      <div id="hpContainer"></div>
+      <button class="btn btn-success btn-sm mt-3 no-print" onclick="addHouseProperty()">➕ Add Property</button>
+      <div class="total-row" style="background:#ffedd5;color:#9a3412;"><span>Total Income from House Property</span><span id="hp_total">₹ 0</span></div>
+    </div>
+  </div>
+
+  <div class="section-card" id="businessSection" style="display:none;">
+    <div class="section-header orange" onclick="toggleSection('bizBody')">
+      <span>🏢 B3. Business/Profession Income (Schedule BP)</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="bizBody">
+      <div class="field-row"><span class="field-label">Net Profit as per P&L</span><input type="number" class="field-input calc" id="biz_netProfit" value="0"></div>
+      <div class="field-row"><span class="field-label">Add: Inadmissible Expenses</span><input type="number" class="field-input calc" id="biz_addBack" value="0"></div>
+      <div class="field-row"><span class="field-label">Less: Admissible Expenses</span><input type="number" class="field-input calc" id="biz_deduct" value="0"></div>
+      <div class="field-row"><span class="field-label">Presumptive Income 44AD/44ADA/44AE</span><input type="number" class="field-input calc" id="biz_presumptive" value="0"></div>
+      <div class="field-row"><span class="field-label">Depreciation (as per IT Act)</span><input type="number" class="field-input calc" id="biz_dep" value="0"></div>
+      <div class="total-row" style="background:#ffedd5;color:#9a3412;"><span>Income from Business/Profession</span><span id="biz_total">₹ 0</span></div>
+    </div>
+  </div>
+
+  <div class="section-card" id="cgSection">
+    <div class="section-header red" onclick="toggleSection('cgBody')">
+      <span>📈 B4. Capital Gains (Schedule CG) — STCG / LTCG / VDA</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="cgBody">
+      <h3 class="font-bold text-gray-700 mb-2">Short-Term Capital Gains</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Asset Type</th><th>Sale</th><th>Cost</th><th>Expenses</th><th>Gain</th><th class="no-print"></th></tr></thead>
+        <tbody id="stcgTable"></tbody>
+      </table>
+      <button class="btn btn-success btn-sm no-print" onclick="addSTCG()">➕ Add STCG</button>
+      <div class="total-row mt-3"><span>Total STCG</span><span id="stcg_total">₹ 0</span></div>
+
+      <h3 class="font-bold text-gray-700 mb-2 mt-6">Long-Term Capital Gains</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Asset Type</th><th>Sale</th><th>Cost</th><th>Improvement</th><th>Exemption</th><th>Gain</th><th class="no-print"></th></tr></thead>
+        <tbody id="ltcgTable"></tbody>
+      </table>
+      <button class="btn btn-success btn-sm no-print" onclick="addLTCG()">➕ Add LTCG</button>
+      <div class="total-row mt-3"><span>Total LTCG</span><span id="ltcg_total">₹ 0</span></div>
+
+      <h3 class="font-bold text-gray-700 mb-2 mt-6">Virtual Digital Assets (VDA)</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Asset</th><th>Sale</th><th>Cost</th><th>Gain</th><th class="no-print"></th></tr></thead>
+        <tbody id="vdaTable"></tbody>
+      </table>
+      <button class="btn btn-success btn-sm no-print" onclick="addVDA()">➕ Add VDA</button>
+      <div class="total-row mt-3"><span>Total VDA Income</span><span id="vda_total">₹ 0</span></div>
+
+      <div class="total-row red mt-4"><span>Net Capital Gains</span><span id="cg_total">₹ 0</span></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('osBody')">
+      <span>💰 B5. Income from Other Sources (Schedule OS)</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="osBody">
+      <div class="field-row"><span class="field-label">Savings Bank Interest</span><input type="number" class="field-input calc" id="os_sb" value="0"></div>
+      <div class="field-row"><span class="field-label">FD/RD Interest</span><input type="number" class="field-input calc" id="os_fd" value="0"></div>
+      <div class="field-row"><span class="field-label">Dividend Income</span><input type="number" class="field-input calc" id="os_div" value="0"></div>
+      <div class="field-row"><span class="field-label">Interest on IT Refund</span><input type="number" class="field-input calc" id="os_refund" value="0"></div>
+      <div class="field-row"><span class="field-label">Other Income</span><input type="number" class="field-input calc" id="os_other" value="0"></div>
+      <div class="total-row"><span>Total Other Sources</span><span id="os_total">₹ 0</span></div>
+    </div>
+  </div>
+
+  <div class="section-card" id="foreignSection">
+    <div class="section-header green" onclick="toggleSection('foreignBody')">
+      <span>🌍 B6. Foreign Income & DTAA (Schedule FA / FSI / Form 67)</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="foreignBody">
+      <h3 class="font-bold text-gray-700 mb-2">Foreign Source Income (Schedule FSI)</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Country</th><th>Type</th><th>Income (INR)</th><th>Foreign Tax</th><th class="no-print"></th></tr></thead>
+        <tbody id="fsiTable"></tbody>
+      </table>
+      <button class="btn btn-success btn-sm no-print" onclick="addFSI()">➕ Add Foreign Income</button>
+      <div class="total-row green mt-3"><span>Total Foreign Income</span><span id="fsi_total">₹ 0</span></div>
+
+      <h3 class="font-bold text-gray-700 mb-2 mt-6">Foreign Assets (Schedule FA)</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Country</th><th>Type</th><th>Peak (INR)</th><th>Closing (INR)</th><th class="no-print"></th></tr></thead>
+        <tbody id="faTable"></tbody>
+      </table>
+      <button class="btn btn-success btn-sm no-print" onclick="addFA()">➕ Add Foreign Asset</button>
+
+      <h3 class="font-bold text-gray-700 mb-2 mt-6">Foreign Tax Credit (Form 67)</h3>
+      <div class="field-row"><span class="field-label">Total Foreign Tax Paid (INR)</span><input type="number" class="field-input calc" id="f_ftcPaid" value="0"></div>
+      <div class="field-row"><span class="field-label">Indian Tax on Foreign Income</span><input type="number" class="field-input calc" id="f_indianTax" value="0"></div>
+      <div class="total-row green"><span>FTC Allowed (lower of two)</span><span id="ftc_allowed">₹ 0</span></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header purple" onclick="toggleSection('dedBody')">
+      <span>📉 C. Deductions — Chapter VI-A</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="dedBody">
+      <div class="grid md:grid-cols-2 gap-x-8">
+        <div>
+          <div class="field-row"><span class="field-label">80C (LIC/PPF/ELSS)</span><input type="number" class="field-input calc" id="d_80c" value="0"></div>
+          <div class="field-row"><span class="field-label">80CCD(1B) NPS</span><input type="number" class="field-input calc" id="d_80ccd1b" value="0"></div>
+          <div class="field-row"><span class="field-label">80D Health Insurance</span><input type="number" class="field-input calc" id="d_80d" value="0"></div>
+          <div class="field-row"><span class="field-label">80E Education Loan</span><input type="number" class="field-input calc" id="d_80e" value="0"></div>
+          <div class="field-row"><span class="field-label">80G Donations</span><input type="number" class="field-input calc" id="d_80g" value="0"></div>
+        </div>
+        <div>
+          <div class="field-row"><span class="field-label">80TTA Savings Interest</span><input type="number" class="field-input calc" id="d_80tta" value="0"></div>
+          <div class="field-row"><span class="field-label">80TTB Senior Interest</span><input type="number" class="field-input calc" id="d_80ttb" value="0"></div>
+          <div class="field-row"><span class="field-label">80U/80DD Disability</span><input type="number" class="field-input calc" id="d_80u" value="0"></div>
+          <div class="field-row"><span class="field-label">80GG Rent Paid</span><input type="number" class="field-input calc" id="d_80gg" value="0"></div>
+          <div class="field-row"><span class="field-label">Other Deductions</span><input type="number" class="field-input calc" id="d_other" value="0"></div>
+        </div>
+      </div>
+      <div class="total-row" style="background:#ede9fe;color:#5b21b6;"><span>Total Chapter VI-A Deductions</span><span id="ded_total">₹ 0</span></div>
+      <p class="text-xs text-gray-500 mt-2">⚠️ New Regime: Only 80U, 80DD, 80JJAA etc. allowed.</p>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header green" onclick="toggleSection('taxBody')">
+      <span>🧮 D. Tax Computation — Old vs New with Slab Breakdown</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body open" id="taxBody">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="regime-box" id="oldRegimeBox">
+          <h3 class="font-bold text-gray-700 mb-3">🔴 OLD REGIME</h3>
+          <div class="field-row"><span class="field-label">Gross Total Income</span><span class="field-input" id="old_gti" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Less: Deductions</span><span class="field-input" id="old_ded" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Total Taxable Income</span><span class="field-input" id="old_ti" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Tax on Income</span><span class="field-input" id="old_tax" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Add: Surcharge</span><span class="field-input" id="old_surcharge" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Add: Cess 4%</span><span class="field-input" id="old_cess" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Less: Rebate 87A</span><span class="field-input" id="old_rebate" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Less: FTC</span><span class="field-input" id="old_ftc" readonly>₹ 0</span></div>
+          <div class="total-row red" style="font-size:16px;"><span>Total Tax (Old)</span><span id="old_totalTax">₹ 0</span></div>
+          <div id="oldSlabBreakdown" class="mt-3"></div>
         </div>
 
-        <div class="itr-doc">
-          <div class="itr-topline">
-            <span>Financial Year: <b id="disp_fy">20XX&ndash;20XX</b></span>
-            <span>Assessment Year: <b id="disp_ay">20XX&ndash;20XX</b></span>
-            <span>Document ID: <b id="disp_docid">XXXXXXXXXX/20XX-20XX</b></span>
-          </div>
-          <h3 class="itr-h3" style="margin-top:0;">Personal Information</h3>
-          <div class="itr-doc-head">
-            <div><span>Name</span><b><input type="text" class="itr-input" id="p_name" value="" placeholder="[Client Name]"></b></div>
-            <div><span>PAN</span><b><input type="text" class="itr-input" id="p_pan" value="" placeholder="XXXXXXXXXX"></b></div>
-            <div class="itr-span2"><span>Address</span><b><input type="text" class="itr-input" id="p_address" value="" placeholder="[Client Address]"></b></div>
-            <div><span>Aadhaar</span><b><input type="text" class="itr-input" id="p_aadhaar" value="" placeholder="XXXX XXXX XXXX"></b></div>
-            <div><span>Mobile</span><b><input type="text" class="itr-input" id="p_mobile" value="" placeholder="+91 __________"></b></div>
-            <div><span>Email</span><b><input type="text" class="itr-input" id="p_email" value="" placeholder="client@email.com"></b></div>
-            <div><span>Gender</span><b><input type="text" class="itr-input" id="p_gender" value=""></b></div>
-            <div><span>Father's Name</span><b><input type="text" class="itr-input" id="p_father" value=""></b></div>
-            <div><span>Date of Birth</span><b><input type="text" class="itr-input" id="p_dob" value="" placeholder="YYYY-MM-DD"></b></div>
-          </div>
-
-          <h3 class="itr-h3">Filing Details</h3>
-          <div class="itr-doc-head">
-            <div><span>Financial Year</span><b><input type="text" class="itr-input" id="p_fy" value="" placeholder="20XX-20XX"></b></div>
-            <div><span>Assessment Year</span><b><input type="text" class="itr-input" id="p_ay" value="" placeholder="20XX-20XX"></b></div>
-            <div><span>Status</span><b><input type="text" class="itr-input" id="p_status" value="Individual"></b></div>
-            <div><span>Residential Status</span><b><input type="text" class="itr-input" id="p_resstatus" value="Resident"></b></div>
-            <div><span>ITR Form Type</span><b><input type="text" class="itr-input" id="p_itrform" value="" placeholder="ITR-4"></b></div>
-            <div><span>Tax Regime</span><b><input type="text" class="itr-input" id="p_regime" value="New"></b></div>
-            <div><span>Return Type</span><b><input type="text" class="itr-input" id="p_rettype" value="Original"></b></div>
-            <div><span>Return Date</span><b><input type="text" class="itr-input" id="p_retdate" value="" placeholder="YYYY-MM-DD"></b></div>
-            <div><span>Employer Category</span><b><input type="text" class="itr-input" id="p_empcat" value=""></b></div>
-          </div>
-
-          <h3 class="itr-h3">Calculation of Taxable Income <span>&mdash; Business Income</span></h3>
-          <table class="itr-table">
-            <tr><td>Gross Total Turnover (44AD)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_turnover44ad" value=""></td></tr>
-            <tr><td>Presumptive Income u/s 44AD</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_presump44ad" value=""></td></tr>
-            <tr><td>Presumptive Income u/s 44AE</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_presump44ae" value=""></td></tr>
-            <tr class="total"><td>Total Business Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="b_totalbusiness" value=""></td></tr>
-          </table>
-
-          <h3 class="itr-h3">Income from Other Sources</h3>
-          <table class="itr-table">
-            <tr><td>Other Income (Savings Interest)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_sav" value=""></td></tr>
-            <tr><td>Other Income (Taxable)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_tax" value=""></td></tr>
-            <tr><td>Rental Income from machinery, plants, building, etc.</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_rental" value=""></td></tr>
-            <tr><td>Income under section 56(2)(x)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_56" value=""></td></tr>
-            <tr><td>Any other income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_any" value=""></td></tr>
-            <tr class="total"><td>Total Other Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_total" value=""></td></tr>
-            <tr class="total"><td>Gross Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="o_gti" value=""></td></tr>
-          </table>
-
-          <h3 class="itr-h3">Deductions under Chapter VI-A</h3>
-          <table class="itr-table">
-            <tr class="total"><td>Total Deductions under Chapter VI-A</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="d_total" value=""></td></tr>
-            <tr class="total"><td>Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="d_totalincome" value=""></td></tr>
-          </table>
-
-          <h3 class="itr-h3">Tax Payable on Total Income</h3>
-          <table class="itr-table">
-            <tr><td>Tax on Total Income</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_taxontotal" value=""></td></tr>
-            <tr><td>Rebate under Section 87A</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_rebate87a" value=""></td></tr>
-            <tr><td>Education / Health Cess</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_cess" value=""></td></tr>
-            <tr class="total"><td>Gross Tax Liability</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_grosstax" value=""></td></tr>
-            <tr><td>Interest under Section 234A</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_234a" value=""></td></tr>
-            <tr><td>Interest under Section 234B</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_234b" value=""></td></tr>
-            <tr><td>Interest under Section 234C</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_234c" value=""></td></tr>
-            <tr class="total"><td>Total Interest Payable</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_totalinterest" value=""></td></tr>
-            <tr class="total"><td>Total Tax and Interest Payable</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="t_totaltaxinterest" value=""></td></tr>
-          </table>
-
-          <h3 class="itr-h3">Tax Payments</h3>
-          <table class="itr-table">
-            <tr><td>Advance Tax</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_advance" value=""></td></tr>
-            <tr><td>T.D.S.</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_tds" value=""></td></tr>
-            <tr><td>Self Assessment Tax</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_selfassessment" value=""></td></tr>
-            <tr class="total"><td>Total Taxes Paid</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="tp_total" value=""></td></tr>
-            <tr class="total"><td>Balance Tax Payable / (Refund Due)</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bal_refund" value=""></td></tr>
-          </table>
-
-          <h3 class="itr-h3">Business Details</h3>
-          <div class="itr-doc-head">
-            <div><span>Business Name</span><b><input type="text" class="itr-input" id="bd_name" value=""></b></div>
-            <div><span>Nature of Business</span><b><input type="text" class="itr-input" id="bd_nature" value=""></b></div>
-          </div>
-          <table class="itr-table">
-            <tr><td>Total Turnover</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bd_totalturnover" value=""></td></tr>
-            <tr><td>Turnover through Bank</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bd_turnoverbank" value=""></td></tr>
-            <tr><td>Turnover in Cash</td><td>&#8377; <input type="text" class="itr-input itr-amt" id="bd_turnovercash" value=""></td></tr>
-          </table>
-
-          <h3 class="itr-h3">Bank Details for Refund</h3>
-          <div class="itr-doc-head itr-bank-grid">
-            <div><span>Bank Name</span><b><input type="text" class="itr-input" id="bk1_name" value=""></b></div>
-            <div><span>Account Number</span><b><input type="text" class="itr-input" id="bk1_acc" value=""></b></div>
-            <div><span>IFSC Code</span><b><input type="text" class="itr-input" id="bk1_ifsc" value=""></b></div>
-            <div><span>Bank Name (2)</span><b><input type="text" class="itr-input" id="bk2_name" value=""></b></div>
-            <div><span>Account Number (2)</span><b><input type="text" class="itr-input" id="bk2_acc" value=""></b></div>
-            <div><span>IFSC Code (2)</span><b><input type="text" class="itr-input" id="bk2_ifsc" value=""></b></div>
-          </div>
-
-          <h3 class="itr-h3">Verification</h3>
-          <div class="itr-doc-head">
-            <div><span>Verified By</span><b><input type="text" class="itr-input" id="v_verifiedby" value=""></b></div>
-            <div><span>Father's Name</span><b><input type="text" class="itr-input" id="v_father" value=""></b></div>
-            <div><span>PAN</span><b><input type="text" class="itr-input" id="v_pan" value=""></b></div>
-            <div><span>Place</span><b><input type="text" class="itr-input" id="v_place" value=""></b></div>
-          </div>
-          <p class="itr-sig">Signature</p>
-
-          <p class="itr-footnote">This is a sample computation format for illustration purposes only, prepared by Tarun Prajapat. Please verify all figures independently before relying on them for actual filing.</p>
+        <div class="regime-box recommended" id="newRegimeBox">
+          <h3 class="font-bold text-gray-700 mb-3">🟢 NEW REGIME <span class="badge-recommend" id="recommendBadge" style="display:none;">RECOMMENDED</span></h3>
+          <div class="field-row"><span class="field-label">Gross Total Income</span><span class="field-input" id="new_gti" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Less: Deductions</span><span class="field-input" id="new_ded" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Total Taxable Income</span><span class="field-input" id="new_ti" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Tax on Income</span><span class="field-input" id="new_tax" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Add: Surcharge</span><span class="field-input" id="new_surcharge" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Add: Cess 4%</span><span class="field-input" id="new_cess" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Less: Rebate 87A</span><span class="field-input" id="new_rebate" readonly>₹ 0</span></div>
+          <div class="field-row"><span class="field-label">Less: FTC</span><span class="field-input" id="new_ftc" readonly>₹ 0</span></div>
+          <div class="total-row green" style="font-size:16px;"><span>Total Tax (New)</span><span id="new_totalTax">₹ 0</span></div>
+          <div id="newSlabBreakdown" class="mt-3"></div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <a class="button button-primary" href="index.html" style="margin-top:2.5rem;">&larr; Back to Resume</a>
-      </section>
-    </main>
+  <div class="section-card" id="amtSection" style="display:none;">
+    <div class="section-header slate" onclick="toggleSection('amtBody')">
+      <span>⚙️ D2. Alternative Minimum Tax (AMT) — Schedule AMT</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="amtBody">
+      <div class="field-row"><span class="field-label">Adjusted Total Income</span><input type="number" class="field-input calc" id="amt_ati" value="0"></div>
+      <div class="field-row"><span class="field-label">AMT @ 18.5%</span><span class="field-input" id="amt_base" readonly>₹ 0</span></div>
+      <div class="field-row"><span class="field-label">Less: Basic Exemption ₹ 3,00,000</span><input type="number" class="field-input calc" id="amt_exempt" value="300000"></div>
+      <div class="field-row"><span class="field-label">Less: Deductions u/s 80C etc.</span><input type="number" class="field-input calc" id="amt_ded" value="0"></div>
+      <div class="total-row slate" style="background:#e2e8f0;color:#1e293b;"><span>AMT Payable</span><span id="amt_payable">₹ 0</span></div>
+      <p class="text-xs text-gray-500 mt-2">AMT applicable for ITR-3 with deductions u/s 80HHC, 80HHE, 10A, 10AA etc.</p>
+    </div>
+  </div>
 
-    <footer class="site-footer">
-      <div class="brand footer-brand"><span class="brand-mark">Mr.</span><span class="brand-name" style="color: var(--paper);">Tarun Prajapat</span></div>
-      <p>Clear numbers. Reliable reporting.</p>
-      <p>&copy; <span id="year">2026</span> Tarun Prajapat</p>
-    </footer>
+  <div class="section-card no-print">
+    <div class="section-header slate" onclick="toggleSection('advBody')">
+      <span>📅 E1. Advance Tax Schedule (Due Dates)</span><span class="text-sm">▼</span>
+    </div>
+    <div class="section-body" id="advBody">
+      <table class="sub-table">
+        <thead><tr><th>Installment</th><th>Due Date</th><th>% Required</th><th>Amount Paid</th></tr></thead>
+        <tbody>
+          <tr><td>1st</td><td>15 June</td><td>15%</td><td><input type="number" class="adv_input calc" id="adv_q1" value="0"></td></tr>
+          <tr><td>2nd</td><td>15 September</td><td>45%</td><td><input type="number" class="adv_input calc" id="adv_q2" value="0"></td></tr>
+          <tr><td>3rd</td><td>15 December</td><td>75%</td><td><input type="number" class="adv_input calc" id="adv_q3" value="0"></td></tr>
+          <tr><td>4th</td><td>15 March</td><td>100%</td><td><input type="number" class="adv_input calc" id="adv_q4" value="0"></td></tr>
+        </tbody>
+      </table>
+      <div class="total-row slate mt-3" style="background:#e2e8f0;color:#1e293b;"><span>Total Advance Tax Paid</span><span id="adv_total">₹ 0</span></div>
+    </div>
+  </div>
 
-    <button id="backToTop" class="back-to-top" aria-label="Back to top" type="button">↑</button>
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('taxesPaidBody')">
+      <span>💳 E. Taxes Paid & Refund/Payable</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="taxesPaidBody">
+      <div class="grid md:grid-cols-2 gap-x-8">
+        <div>
+          <div class="field-row"><span class="field-label">TDS</span><input type="number" class="field-input calc" id="tp_tds" value="0"></div>
+          <div class="field-row"><span class="field-label">TCS</span><input type="number" class="field-input calc" id="tp_tcs" value="0"></div>
+          <div class="field-row"><span class="field-label">Advance Tax (auto)</span><input type="number" class="field-input" id="tp_advance" value="0" readonly></div>
+          <div class="field-row"><span class="field-label">Self-Assessment Tax</span><input type="number" class="field-input calc" id="tp_self" value="0"></div>
+        </div>
+        <div class="flex flex-col justify-center">
+          <div class="total-row"><span>Total Taxes Paid</span><span id="tp_total">₹ 0</span></div>
+          <div id="refundBox" class="mt-4 text-center"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-      if (window['pdfjsLib']) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  <div class="section-card" id="alSection" style="display:none;">
+    <div class="section-header slate" onclick="toggleSection('alBody')">
+      <span>📋 F. Schedule AL — Assets & Liabilities (Income > ₹50L)</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="alBody">
+      <h3 class="font-bold text-gray-700 mb-2">Immovable Assets</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Description</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Land / Building</td><td><input type="number" class="calc" id="al_land" value="0"></td></tr>
+        </tbody>
+      </table>
+      <h3 class="font-bold text-gray-700 mb-2">Movable Assets</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Description</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Jewellery / Bullion</td><td><input type="number" class="calc" id="al_jewel" value="0"></td></tr>
+          <tr><td>Vehicles</td><td><input type="number" class="calc" id="al_veh" value="0"></td></tr>
+          <tr><td>Bank Deposits</td><td><input type="number" class="calc" id="al_bank" value="0"></td></tr>
+          <tr><td>Shares / Securities</td><td><input type="number" class="calc" id="al_shares" value="0"></td></tr>
+          <tr><td>Insurance Policies</td><td><input type="number" class="calc" id="al_ins" value="0"></td></tr>
+        </tbody>
+      </table>
+      <h3 class="font-bold text-gray-700 mb-2">Liabilities</h3>
+      <table class="sub-table mb-4">
+        <thead><tr><th>Description</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Loans</td><td><input type="number" class="calc" id="al_loan" value="0"></td></tr>
+        </tbody>
+      </table>
+      <div class="total-row slate" style="background:#e2e8f0;color:#1e293b;"><span>Net Worth</span><span id="al_net">₹ 0</span></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('bankBody')">
+      <span>🏦 G. Bank Details & Verification</span><span class="text-sm no-print">▼</span>
+    </div>
+    <div class="section-body" id="bankBody">
+      <div class="grid md:grid-cols-2 gap-x-8">
+        <div>
+          <div class="field-row"><span class="field-label">Bank Name</span><input class="field-input" id="b_name"></div>
+          <div class="field-row"><span class="field-label">Account Number</span><input class="field-input" id="b_acc"></div>
+        </div>
+        <div>
+          <div class="field-row"><span class="field-label">IFSC</span><input class="field-input" id="b_ifsc"></div>
+          <div class="field-row"><span class="field-label">Account Type</span>
+            <select class="field-input" id="b_type"><option>Savings</option><option>Current</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 mt-4">
+        <div><label class="field-label">Place</label><input class="field-input" id="v_place"></div>
+        <div><label class="field-label">Date</label><input class="field-input" id="v_date"></div>
+        <div><label class="field-label">Verified By</label><input class="field-input" id="v_by"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3 justify-center my-6 no-print">
+    <button class="btn btn-primary" onclick="downloadPDF()">📥 Download PDF</button>
+    <button class="btn btn-success" onclick="exportExcel()">📊 Export Excel</button>
+    <button class="btn btn-outline" onclick="window.print()">🖨️ Print</button>
+    <button class="btn btn-outline" onclick="exportJSON()">💾 Save JSON</button>
+    <button class="btn btn-outline" onclick="exportITRJSON()">📤 Export ITR JSON</button>
+  </div>
+
+  <footer class="text-center text-gray-500 text-xs py-6">
+    ITR Computation Dashboard | AY 2026-27 | For reference only. Verify with official ITR utility.
+  </footer>
+</div>
+
+<div id="aisModal" class="modal-overlay no-print">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg mb-3">🔐 AIS JSON Decryption</h3>
+    <p class="text-sm text-gray-600 mb-3">CBDT AIS files AES-256-CBC encrypted hoti hain. PAN aur DOB se key derive hoti hai.</p>
+    <div class="mb-3">
+      <label class="field-label">AIS JSON File</label>
+      <input type="file" id="aisFile" accept=".json" class="w-full mt-1">
+    </div>
+    <div class="mb-3">
+      <label class="field-label">PAN</label>
+      <input id="aisPAN" class="field-input" placeholder="ABCDE1234F">
+    </div>
+    <div class="mb-3">
+      <label class="field-label">DOB (DDMMYYYY)</label>
+      <input id="aisDOB" class="field-input" placeholder="15041990">
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-primary" onclick="decryptAIS()">🔓 Decrypt</button>
+      <button class="btn btn-outline" onclick="closeAISModal()">Cancel</button>
+    </div>
+    <div id="aisStatus" class="mt-3 text-sm"></div>
+  </div>
+</div>
+
+<script>
+const fmt = n => '₹ ' + Math.round(Number(n)||0).toLocaleString('en-IN');
+const num = id => Number(document.getElementById(id)?.value) || 0;
+const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function updateFormVisibility() {
+  const form = document.getElementById('itrForm').value;
+  document.getElementById('businessSection').style.display = (form === 'ITR-3' || form === 'ITR-4') ? 'block' : 'none';
+  document.getElementById('cgSection').style.display = (form === 'ITR-1') ? 'none' : 'block';
+  document.getElementById('foreignSection').style.display = (form === 'ITR-1' || form === 'ITR-4') ? 'none' : 'block';
+  document.getElementById('amtSection').style.display = (form === 'ITR-3') ? 'block' : 'none';
+  document.getElementById('alSection').style.display = (form === 'ITR-2' || form === 'ITR-3') ? 'block' : 'none';
+}
+
+document.getElementById('itrForm').addEventListener('change', () => { updateFormVisibility(); recalc(); });
+
+let hpCount = 0;
+function addHouseProperty(data = {}) {
+  hpCount++;
+  const id = 'hp_' + hpCount;
+  const type = data.type || 'SelfOccupied';
+  const isLetOut = type !== 'SelfOccupied';
+  const html = `
+    <div class="regime-box mb-3" id="${id}" style="border-color:#fdba74;background:#fff7ed;">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex gap-3 items-center">
+          <strong class="text-orange-800">Property ${hpCount}</strong>
+          <select class="hp-type border rounded px-2 py-1 text-xs" onchange="toggleHP('${id}')">
+            <option value="SelfOccupied" ${type==='SelfOccupied'?'selected':''}>Self-Occupied</option>
+            <option value="LetOut" ${type==='LetOut'?'selected':''}>Let-Out</option>
+            <option value="DeemedLetOut" ${type==='DeemedLetOut'?'selected':''}>Deemed Let-Out</option>
+          </select>
+        </div>
+        <button class="btn btn-danger btn-sm no-print" onclick="document.getElementById('${id}').remove(); recalc();">✖</button>
+      </div>
+      <div class="grid md:grid-cols-4 gap-3 text-sm">
+        <div><label class="text-xs text-gray-600">Address</label><input class="hp-addr w-full border rounded px-2 py-1" value="${data.address||''}"></div>
+        <div class="hp-rentField" style="display:${isLetOut?'block':'none'};"><label class="text-xs text-gray-600">Gross Rent</label><input type="number" class="hp-rent w-full border rounded px-2 py-1 calc" value="${data.grossRent||0}"></div>
+        <div class="hp-rentField" style="display:${isLetOut?'block':'none'};"><label class="text-xs text-gray-600">Municipal Tax</label><input type="number" class="hp-mtax w-full border rounded px-2 py-1 calc" value="${data.municipalTax||0}"></div>
+        <div><label class="text-xs text-gray-600">Interest u/s 24(b)</label><input type="number" class="hp-interest w-full border rounded px-2 py-1 calc" value="${data.interestBorrowed||0}"></div>
+      </div>
+      <div class="total-row mt-2" style="background:#fed7aa;color:#7c2d12;font-size:13px;">
+        <span>Income from this property</span><span class="hp-income">₹ 0</span>
+      </div>
+    </div>`;
+  document.getElementById('hpContainer').insertAdjacentHTML('beforeend', html);
+  recalc();
+}
+
+function toggleHP(id) {
+  const box = document.getElementById(id);
+  const type = box.querySelector('.hp-type').value;
+  const show = type !== 'SelfOccupied';
+  box.querySelectorAll('.hp-rentField').forEach(f => f.style.display = show ? 'block' : 'none');
+  recalc();
+}
+
+function calcHP() {
+  let total = 0;
+  document.querySelectorAll('#hpContainer .regime-box').forEach(box => {
+    const type = box.querySelector('.hp-type').value;
+    const rent = Number(box.querySelector('.hp-rent')?.value) || 0;
+    const mtax = Number(box.querySelector('.hp-mtax')?.value) || 0;
+    const interest = Number(box.querySelector('.hp-interest')?.value) || 0;
+    let income = 0;
+    if (type === 'SelfOccupied') {
+      income = -Math.min(interest, 200000);
+    } else {
+      const nav = rent - mtax;
+      income = nav - nav * 0.30 - interest;
+    }
+    box.querySelector('.hp-income').textContent = fmt(income);
+    total += income;
+  });
+  setText('hp_total', fmt(total));
+  return total;
+}
+
+function addSTCG(data={}) {
+  const row = `<tr>
+    <td><select class="stcg-type"><option>Equity111A</option><option>DebtMF</option><option>OtherAssets</option></select></td>
+    <td><input type="number" class="stcg-sale calc" value="${data.salePrice||0}"></td>
+    <td><input type="number" class="stcg-cost calc" value="${data.cost||0}"></td>
+    <td><input type="number" class="stcg-exp calc" value="${data.expenses||0}"></td>
+    <td class="stcg-gain text-right font-semibold">₹ 0</td>
+    <td class="no-print"><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove(); recalc();">✖</button></td>
+  </tr>`;
+  document.getElementById('stcgTable').insertAdjacentHTML('beforeend', row);
+  recalc();
+}
+function addLTCG(data={}) {
+  const row = `<tr>
+    <td><select class="ltcg-type"><option>Equity112A</option><option>Property112</option><option>OtherAssets</option></select></td>
+    <td><input type="number" class="ltcg-sale calc" value="${data.salePrice||0}"></td>
+    <td><input type="number" class="ltcg-cost calc" value="${data.cost||0}"></td>
+    <td><input type="number" class="ltcg-imp calc" value="${data.improvement||0}"></td>
+    <td><input type="number" class="ltcg-exempt calc" value="${data.exemption||0}"></td>
+    <td class="ltcg-gain text-right font-semibold">₹ 0</td>
+    <td class="no-print"><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove(); recalc();">✖</button></td>
+  </tr>`;
+  document.getElementById('ltcgTable').insertAdjacentHTML('beforeend', row);
+  recalc();
+}
+function addVDA(data={}) {
+  const row = `<tr>
+    <td><input class="vda-type border rounded px-1 py-0.5 text-xs w-full" value="${data.assetType||'Crypto'}"></td>
+    <td><input type="number" class="vda-sale calc" value="${data.salePrice||0}"></td>
+    <td><input type="number" class="vda-cost calc" value="${data.cost||0}"></td>
+    <td class="vda-gain text-right font-semibold">₹ 0</td>
+    <td class="no-print"><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove(); recalc();">✖</button></td>
+  </tr>`;
+  document.getElementById('vdaTable').insertAdjacentHTML('beforeend', row);
+  recalc();
+}
+function calcCG() {
+  let stcg = 0, ltcg = 0, vda = 0;
+  document.querySelectorAll('#stcgTable tr').forEach(tr => {
+    const g = (Number(tr.querySelector('.stcg-sale').value)||0) - (Number(tr.querySelector('.stcg-cost').value)||0) - (Number(tr.querySelector('.stcg-exp').value)||0);
+    tr.querySelector('.stcg-gain').textContent = fmt(g); stcg += g;
+  });
+  document.querySelectorAll('#ltcgTable tr').forEach(tr => {
+    const g = (Number(tr.querySelector('.ltcg-sale').value)||0) - (Number(tr.querySelector('.ltcg-cost').value)||0) - (Number(tr.querySelector('.ltcg-imp').value)||0) - (Number(tr.querySelector('.ltcg-exempt').value)||0);
+    tr.querySelector('.ltcg-gain').textContent = fmt(g); ltcg += g;
+  });
+  document.querySelectorAll('#vdaTable tr').forEach(tr => {
+    const g = (Number(tr.querySelector('.vda-sale').value)||0) - (Number(tr.querySelector('.vda-cost').value)||0);
+    tr.querySelector('.vda-gain').textContent = fmt(g); vda += g;
+  });
+  setText('stcg_total', fmt(stcg));
+  setText('ltcg_total', fmt(ltcg));
+  setText('vda_total', fmt(vda));
+  const total = stcg + ltcg + vda;
+  setText('cg_total', fmt(total));
+  return total;
+}
+
+function addFSI(data={}) {
+  const row = `<tr>
+    <td><input class="fsi-country border rounded px-1 py-0.5 text-xs w-full" value="${data.country||''}"></td>
+    <td><input class="fsi-type border rounded px-1 py-0.5 text-xs w-full" value="${data.incomeType||''}"></td>
+    <td><input type="number" class="fsi-income calc" value="${data.income||0}"></td>
+    <td><input type="number" class="fsi-tax calc" value="${data.foreignTaxPaid||0}"></td>
+    <td class="no-print"><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove(); recalc();">✖</button></td>
+  </tr>`;
+  document.getElementById('fsiTable').insertAdjacentHTML('beforeend', row);
+  recalc();
+}
+function addFA(data={}) {
+  const row = `<tr>
+    <td><input class="fa-country border rounded px-1 py-0.5 text-xs w-full" value="${data.country||''}"></td>
+    <td><input class="fa-type border rounded px-1 py-0.5 text-xs w-full" value="${data.assetType||''}"></td>
+    <td><input type="number" class="fa-peak calc" value="${data.peakBalance||0}"></td>
+    <td><input type="number" class="fa-close calc" value="${data.closingBalance||0}"></td>
+    <td class="no-print"><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove();">✖</button></td>
+  </tr>`;
+  document.getElementById('faTable').insertAdjacentHTML('beforeend', row);
+}
+function calcForeign() {
+  let total = 0, ftcPaid = 0;
+  document.querySelectorAll('#fsiTable tr').forEach(tr => {
+    total += Number(tr.querySelector('.fsi-income').value) || 0;
+    ftcPaid += Number(tr.querySelector('.fsi-tax').value) || 0;
+  });
+  setText('fsi_total', fmt(total));
+  if (ftcPaid) setVal('f_ftcPaid', ftcPaid);
+  const ftc = Math.min(num('f_ftcPaid'), num('f_indianTax'));
+  setText('ftc_allowed', fmt(ftc));
+  return total;
+}
+
+function taxOldRegime(income) {
+  const slabs = [
+    {min:0, max:250000, rate:0},
+    {min:250000, max:500000, rate:5},
+    {min:500000, max:1000000, rate:20},
+    {min:1000000, max:Infinity, rate:30}
+  ];
+  return calcSlabs(income, slabs);
+}
+
+function taxNewRegime(income) {
+  const slabs = [
+    {min:0, max:400000, rate:0},
+    {min:400000, max:800000, rate:5},
+    {min:800000, max:1200000, rate:10},
+    {min:1200000, max:1600000, rate:15},
+    {min:1600000, max:2000000, rate:20},
+    {min:2000000, max:2400000, rate:25},
+    {min:2400000, max:Infinity, rate:30}
+  ];
+  return calcSlabs(income, slabs);
+}
+
+function calcSlabs(income, slabs) {
+  let tax = 0, breakdown = [];
+  slabs.forEach(s => {
+    if (income > s.min) {
+      const taxable = Math.min(income, s.max) - s.min;
+      const t = taxable * s.rate / 100;
+      tax += t;
+      breakdown.push({range: `${fmt(s.min)} - ${s.max===Infinity?'Above':fmt(s.max)}`, rate: s.rate+'%', taxable, tax: t});
+    }
+  });
+  return {tax, breakdown};
+}
+
+function calcSurcharge(tax, income, regime) {
+  if (income <= 5000000) return 0;
+  let rate;
+  if (income > 50000000) rate = 0.37;
+  else if (income > 20000000) rate = 0.25;
+  else if (income > 10000000) rate = 0.15;
+  else rate = 0.10;
+  if (regime === 'new' && rate > 0.25) rate = 0.25;
+  return tax * rate;
+}
+
+function calcRebate(tax, income, regime) {
+  if (regime === 'old' && income <= 500000) return Math.min(tax, 12500);
+  if (regime === 'new' && income <= 1200000) return Math.min(tax, 60000);
+  return 0;
+}
+
+function recalc() {
+  const salary = Math.max(0, num('s_gross') - num('s_allowances') - num('s_stdDed') - num('s_profTax') - num('s_entAllow'));
+  setText('s_total', fmt(salary));
+
+  const hpIncome = calcHP();
+  const bizIncome = num('biz_netProfit') + num('biz_addBack') - num('biz_deduct') - num('biz_dep') + num('biz_presumptive');
+  setText('biz_total', fmt(bizIncome));
+
+  const cgIncome = calcCG();
+  const osIncome = num('os_sb') + num('os_fd') + num('os_div') + num('os_refund') + num('os_other');
+  setText('os_total', fmt(osIncome));
+
+  const foreignIncome = calcForeign();
+  const advTotal = num('adv_q1') + num('adv_q2') + num('adv_q3') + num('adv_q4');
+  setText('adv_total', fmt(advTotal));
+  setVal('tp_advance', advTotal);
+
+  const gti = salary + hpIncome + bizIncome + cgIncome + osIncome + foreignIncome;
+  const dedTotal = num('d_80c') + num('d_80ccd1b') + num('d_80d') + num('d_80e') + num('d_80g') + num('d_80tta') + num('d_80ttb') + num('d_80u') + num('d_80gg') + num('d_other');
+  setText('ded_total', fmt(dedTotal));
+
+  const oldTI = Math.max(0, gti - dedTotal);
+  const oldTaxCalc = taxOldRegime(oldTI);
+  const oldTax = oldTaxCalc.tax;
+  const oldSur = calcSurcharge(oldTax, oldTI, 'old');
+  const oldRebate = calcRebate(oldTax, oldTI, 'old');
+  const oldTaxAfterRebate = Math.max(0, oldTax - oldRebate);
+  const oldCess = (oldTaxAfterRebate + oldSur) * 0.04;
+  const oldFTC = Math.min(num('f_ftcPaid'), num('f_indianTax'));
+  const oldTotal = Math.max(0, oldTaxAfterRebate + oldSur + oldCess - oldFTC);
+
+  setText('old_gti', fmt(gti));
+  setText('old_ded', fmt(dedTotal));
+  setText('old_ti', fmt(oldTI));
+  setText('old_tax', fmt(oldTax));
+  setText('old_surcharge', fmt(oldSur));
+  setText('old_cess', fmt(oldCess));
+  setText('old_rebate', fmt(oldRebate));
+  setText('old_ftc', fmt(oldFTC));
+  setText('old_totalTax', fmt(oldTotal));
+
+  let oldSlabHTML = '<table class="slab-table"><thead><tr><th>Slab</th><th>Rate</th><th>Taxable</th><th>Tax</th></tr></thead><tbody>';
+  oldTaxCalc.breakdown.forEach(b => {
+    oldSlabHTML += `<tr><td>${b.range}</td><td>${b.rate}</td><td>${fmt(b.taxable)}</td><td>${fmt(b.tax)}</td></tr>`;
+  });
+  oldSlabHTML += '</tbody></table>';
+  document.getElementById('oldSlabBreakdown').innerHTML = oldSlabHTML;
+
+  const newDed = num('d_80u');
+  const newTI = Math.max(0, gti - newDed);
+  const newTaxCalc = taxNewRegime(newTI);
+  const newTax = newTaxCalc.tax;
+  const newSur = calcSurcharge(newTax, newTI, 'new');
+  const newRebate = calcRebate(newTax, newTI, 'new');
+  const newTaxAfterRebate = Math.max(0, newTax - newRebate);
+  const newCess = (newTaxAfterRebate + newSur) * 0.04;
+  const newFTC = Math.min(num('f_ftcPaid'), num('f_indianTax'));
+  const newTotal = Math.max(0, newTaxAfterRebate + newSur + newCess - newFTC);
+
+  setText('new_gti', fmt(gti));
+  setText('new_ded', fmt(newDed));
+  setText('new_ti', fmt(newTI));
+  setText('new_tax', fmt(newTax));
+  setText('new_surcharge', fmt(newSur));
+  setText('new_cess', fmt(newCess));
+  setText('new_rebate', fmt(newRebate));
+  setText('new_ftc', fmt(newFTC));
+  setText('new_totalTax', fmt(newTotal));
+
+  let newSlabHTML = '<table class="slab-table"><thead><tr><th>Slab</th><th>Rate</th><th>Taxable</th><th>Tax</th></tr></thead><tbody>';
+  newTaxCalc.breakdown.forEach(b => {
+    newSlabHTML += `<tr><td>${b.range}</td><td>${b.rate}</td><td>${fmt(b.taxable)}</td><td>${fmt(b.tax)}</td></tr>`;
+  });
+  newSlabHTML += '</tbody></table>';
+  document.getElementById('newSlabBreakdown').innerHTML = newSlabHTML;
+
+  if (document.getElementById('itrForm').value === 'ITR-3') {
+    const amtATI = num('amt_ati') || gti;
+    const amtBase = amtATI * 0.185;
+    const amtPayable = Math.max(0, amtBase - num('amt_exempt') - num('amt_ded'));
+    setText('amt_base', fmt(amtBase));
+    setText('amt_payable', fmt(amtPayable));
+  }
+
+  const badge = document.getElementById('recommendBadge');
+  document.getElementById('oldRegimeBox').classList.remove('recommended');
+  document.getElementById('newRegimeBox').classList.remove('recommended');
+  if (newTotal < oldTotal) {
+    document.getElementById('newRegimeBox').classList.add('recommended');
+    badge.style.display = 'inline-block';
+  } else if (oldTotal < newTotal) {
+    document.getElementById('oldRegimeBox').classList.add('recommended');
+    badge.style.display = 'none';
+  } else {
+    badge.style.display = 'none';
+  }
+
+  const tp = num('tp_tds') + num('tp_tcs') + advTotal + num('tp_self');
+  setText('tp_total', fmt(tp));
+
+  const selectedRegime = document.getElementById('regime').value;
+  const finalTax = selectedRegime === 'new' ? newTotal : oldTotal;
+  const diff = tp - finalTax;
+  const refundBox = document.getElementById('refundBox');
+  if (diff >= 0) {
+    refundBox.innerHTML = `<div class="total-row green" style="font-size:18px;"><span>✅ Refund Due</span><span>${fmt(diff)}</span></div>`;
+  } else {
+    refundBox.innerHTML = `<div class="total-row red" style="font-size:18px;"><span>⚠️ Tax Payable</span><span>${fmt(Math.abs(diff))}</span></div>`;
+  }
+
+  const alAssets = num('al_land') + num('al_jewel') + num('al_veh') + num('al_bank') + num('al_shares') + num('al_ins');
+  setText('al_net', fmt(alAssets - num('al_loan')));
+}
+
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('calc') || e.target.closest('.section-card')) recalc();
+});
+document.getElementById('regime').addEventListener('change', recalc);
+document.getElementById('ay').addEventListener('change', () => {
+  document.getElementById('print_ay').textContent = document.getElementById('ay').value;
+});
+
+function loadSampleData() {
+  setVal('p_name', 'Rahul Sharma');
+  setVal('p_pan', 'ABCPE1234F');
+  setVal('p_dob', '15/04/1990');
+  setVal('p_email', 'rahul@example.com');
+  setVal('p_mobile', '9876543210');
+  setVal('p_address', 'New Delhi');
+  setVal('s_gross', 1250000);
+  setVal('s_stdDed', 75000);
+  addHouseProperty({type: 'SelfOccupied', address: 'Mumbai', interestBorrowed: 200000});
+  addHouseProperty({type: 'LetOut', address: 'Delhi', grossRent: 480000, municipalTax: 12000});
+  addSTCG({salePrice: 500000, cost: 300000, expenses: 5000});
+  addLTCG({salePrice: 1000000, cost: 600000, exemption: 125000});
+  setVal('os_sb', 15000);
+  setVal('os_fd', 50000);
+  setVal('os_div', 20000);
+  setVal('d_80c', 150000);
+  setVal('d_80d', 25000);
+  setVal('tp_tds', 180000);
+  setVal('b_name', 'SBI');
+  setVal('b_acc', 'XXXX1234');
+  setVal('b_ifsc', 'SBIN0001234');
+  recalc();
+  document.getElementById('parseStatus').innerHTML = '<span class="pill pill-green">✅ Sample data loaded</span>';
+}
+
+function handleJSONUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const json = JSON.parse(e.target.result);
+      processJSON(json, file.name);
+    } catch(err) {
+      document.getElementById('parseStatus').innerHTML = `<span class="pill pill-red">❌ Invalid JSON: ${err.message}</span>`;
+    }
+  };
+  reader.readAsText(file);
+}
+
+function processJSON(json, filename='') {
+  if (json.ITR && json.ITR.ITRForm) {
+    populateFromITRJSON(json);
+    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-green">✅ CBDT ITR JSON parsed: ${filename}</span>`;
+  } else if (json.personalInfo && json.incomeDetails) {
+    populateFromJSON(json);
+    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-green">✅ Custom JSON parsed: ${filename}</span>`;
+  } else {
+    populateFromGenericJSON(json);
+    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-green">✅ Generic JSON mapped: ${filename}</span>`;
+  }
+  recalc();
+}
+
+function populateFromJSON(j) {
+  const p = j.personalInfo || {};
+  ['name','pan','dob','email','mobile','address'].forEach(k => setVal('p_'+k, p[k] || ''));
+  const inc = j.incomeDetails || {};
+  if (inc.salary) {
+    setVal('s_gross', inc.salary.grossSalary || 0);
+    setVal('s_stdDed', inc.salary.standardDeduction || 75000);
+  }
+  if (inc.houseProperty && inc.houseProperty.properties) {
+    document.getElementById('hpContainer').innerHTML = ''; hpCount = 0;
+    inc.houseProperty.properties.forEach(p => addHouseProperty(p));
+  }
+  if (inc.capitalGains) {
+    document.getElementById('stcgTable').innerHTML = '';
+    document.getElementById('ltcgTable').innerHTML = '';
+    document.getElementById('vdaTable').innerHTML = '';
+    (inc.capitalGains.stcg || []).forEach(addSTCG);
+    (inc.capitalGains.ltcg || []).forEach(addLTCG);
+    (inc.capitalGains.vda || []).forEach(addVDA);
+  }
+  if (inc.otherSources) {
+    setVal('os_sb', inc.otherSources.interestIncome || 0);
+    setVal('os_div', inc.otherSources.dividendIncome || 0);
+  }
+  if (inc.foreignIncome?.scheduleFSI) {
+    document.getElementById('fsiTable').innerHTML = '';
+    inc.foreignIncome.scheduleFSI.forEach(addFSI);
+  }
+  if (inc.foreignIncome?.scheduleFA) {
+    document.getElementById('faTable').innerHTML = '';
+    inc.foreignIncome.scheduleFA.forEach(addFA);
+  }
+  if (j.deductions?.chapterVIA) {
+    const d = j.deductions.chapterVIA;
+    setVal('d_80c', d.section80C || 0);
+    setVal('d_80d', d.section80D || 0);
+    setVal('d_80tta', d.section80TTA || 0);
+  }
+  if (j.taxesPaid) {
+    setVal('tp_tds', j.taxesPaid.tds || 0);
+    setVal('tp_self', j.taxesPaid.selfAssessmentTax || 0);
+  }
+  if (j.bankAccount) {
+    setVal('b_name', j.bankAccount.bankName || '');
+    setVal('b_acc', j.bankAccount.accountNumber || '');
+    setVal('b_ifsc', j.bankAccount.ifsc || '');
+  }
+}
+
+function populateFromITRJSON(j) {
+  const itr = j.ITR;
+  const form = itr.ITRForm || 'ITR-2';
+  document.getElementById('itrForm').value = form;
+  updateFormVisibility();
+
+  const p = itr.PersonalInfo || {};
+  setVal('p_name', p.AssesseeName?.FirstName ? `${p.AssesseeName.FirstName} ${p.AssesseeName.SurName||''}`.trim() : '');
+  setVal('p_pan', p.PAN || '');
+  setVal('p_dob', p.DOB || '');
+  setVal('p_email', p.ContactDetail?.EmailAddress || '');
+  setVal('p_mobile', p.ContactDetail?.MobileNo || '');
+  setVal('p_address', p.Address?.CityOrTownOrDistrict || '');
+
+  const sal = itr.ITR1_IncomeDeductions || itr.ITR2_IncomeDeductions || itr.ScheduleS || {};
+  if (sal.GrossSalary) setVal('s_gross', sal.GrossSalary);
+  if (sal.DeductionUs16) setVal('s_stdDed', sal.DeductionUs16);
+
+  const os = itr.ScheduleOS || itr.ITR1_IncomeDeductions || {};
+  if (os.IntrstFrmBank) setVal('os_sb', os.IntrstFrmBank);
+  if (os.DividendGross) setVal('os_div', os.DividendGross);
+
+  const ded = itr.Deductions || itr.ChapterVIA || {};
+  if (ded.Section80C) setVal('d_80c', ded.Section80C);
+  if (ded.Section80D) setVal('d_80d', ded.Section80D);
+
+  const tds = itr.ScheduleTDS || {};
+  if (tds.TotalTDS) setVal('tp_tds', tds.TotalTDS);
+}
+
+function populateFromGenericJSON(j) {
+  const findKey = (obj, keys) => {
+    for (const k of Object.keys(obj || {})) {
+      if (keys.some(key => k.toLowerCase().includes(key.toLowerCase()))) return obj[k];
+      if (typeof obj[k] === 'object') {
+        const v = findKey(obj[k], keys);
+        if (v !== undefined) return v;
       }
+    }
+    return undefined;
+  };
+  const v1 = findKey(j, ['name','assessee']);
+  if (v1) setVal('p_name', v1);
+  const v2 = findKey(j, ['pan']);
+  if (v2) setVal('p_pan', v2);
+  const v3 = findKey(j, ['grosssalary','gross']);
+  if (v3) setVal('s_gross', v3);
+  const v4 = findKey(j, ['tds']);
+  if (v4) setVal('tp_tds', v4);
+}
 
-      const menuBtn = document.getElementById('menuBtn');
-      const siteNav = document.getElementById('site-nav');
-      menuBtn.addEventListener('click', () => {
-        const open = siteNav.classList.toggle('open');
-        menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      });
-      siteNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-        siteNav.classList.remove('open');
-        menuBtn.setAttribute('aria-expanded', 'false');
-      }));
-      document.getElementById('year').textContent = new Date().getFullYear();
+function parseJSONInput() {
+  const txt = document.getElementById('jsonInput').value.trim();
+  if (!txt) { document.getElementById('parseStatus').innerHTML = '<span class="pill pill-red">❌ Empty</span>'; return; }
+  try {
+    const json = JSON.parse(txt);
+    processJSON(json, 'pasted');
+  } catch(err) {
+    document.getElementById('parseStatus').innerHTML = `<span class="pill pill-red">❌ ${err.message}</span>`;
+  }
+}
 
-      const clockEl = document.getElementById('liveClock');
-      function updateClock() {
-        const now = new Date();
-        const datePart = now.toLocaleDateString('en-IN', {
-          timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric'
-        });
-        const timePart = now.toLocaleTimeString('en-IN', {
-          timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-        });
-        clockEl.textContent = `${datePart} · ${timePart} IST`;
+async function handlePDFUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = document.getElementById('parseStatus');
+  status.innerHTML = `<span class="pill pill-amber">⏳ Parsing PDF...</span>`;
+  try {
+    const buffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data: buffer}).promise;
+    let text = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(it => it.str).join(' ') + '\n';
+    }
+    const extracted = extractFromText(text, file.name);
+    status.innerHTML = `<span class="pill pill-green">✅ PDF parsed: ${file.name} (${pdf.numPages} pages) — ${extracted} fields detected</span>`;
+  } catch(err) {
+    status.innerHTML = `<span class="pill pill-red">❌ PDF error: ${err.message}</span>`;
+  }
+  recalc();
+}
+
+function extractFromText(text, filename) {
+  let count = 0;
+  const t = text.replace(/\s+/g, ' ');
+  const panMatch = t.match(/\b[A-Z]{5}[0-9]{4}[A-Z]\b/);
+  if (panMatch) { setVal('p_pan', panMatch[0]); count++; }
+  const nameMatch = t.match(/Name[:\s]+([A-Z][a-zA-Z\s]+?)(?:\s+(?:PAN|Address|Father|DOB))/);
+  if (nameMatch) { setVal('p_name', nameMatch[1].trim()); count++; }
+  const salMatch = t.match(/Gross\s+Salary[:\s]*([\d,]+)/i);
+  if (salMatch) { setVal('s_gross', Number(salMatch[1].replace(/,/g,''))); count++; }
+  const tdsMatch = t.match(/Total\s+(?:TDS|Tax\s+Deducted)[:\s]*([\d,]+)/i);
+  if (tdsMatch) { setVal('tp_tds', Number(tdsMatch[1].replace(/,/g,''))); count++; }
+  const sdMatch = t.match(/Standard\s+Deduction[:\s]*([\d,]+)/i);
+  if (sdMatch) { setVal('s_stdDed', Number(sdMatch[1].replace(/,/g,''))); count++; }
+  const c80Match = t.match(/80C[:\s]*([\d,]+)/);
+  if (c80Match) { setVal('d_80c', Number(c80Match[1].replace(/,/g,''))); count++; }
+  const d80Match = t.match(/80D[:\s]*([\d,]+)/);
+  if (d80Match) { setVal('d_80d', Number(d80Match[1].replace(/,/g,''))); count++; }
+  return count;
+}
+
+async function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = document.getElementById('parseStatus');
+  status.innerHTML = `<span class="pill pill-amber">⏳ Running OCR (10-30s)...</span>`;
+  try {
+    const worker = await Tesseract.createWorker('eng');
+    const { data: { text } } = await worker.recognize(file);
+    await worker.terminate();
+    const count = extractFromText(text, file.name);
+    status.innerHTML = `<span class="pill pill-green">✅ OCR complete: ${count} fields detected</span>`;
+  } catch(err) {
+    status.innerHTML = `<span class="pill pill-red">❌ OCR error: ${err.message}</span>`;
+  }
+  recalc();
+}
+
+function openAISDecryptModal() { document.getElementById('aisModal').classList.add('show'); }
+function closeAISModal() { document.getElementById('aisModal').classList.remove('show'); }
+
+async function decryptAIS() {
+  const file = document.getElementById('aisFile').files[0];
+  const pan = document.getElementById('aisPAN').value.trim().toUpperCase();
+  const dob = document.getElementById('aisDOB').value.trim();
+  const status = document.getElementById('aisStatus');
+
+  if (!file || !pan || !dob) {
+    status.innerHTML = '<span class="pill pill-red">❌ File, PAN and DOB required</span>';
+    return;
+  }
+  status.innerHTML = '<span class="pill pill-amber">⏳ Decrypting...</span>';
+  try {
+    const text = await file.text();
+    const json = JSON.parse(text);
+    const encryptedB64 = json.data || json.Data || json;
+    if (typeof encryptedB64 !== 'string') {
+      processJSON(json, file.name);
+      status.innerHTML = '<span class="pill pill-green">✅ AIS already decrypted</span>';
+      return;
+    }
+    const password = pan + dob;
+    const key = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse('00'.repeat(16)), {
+      keySize: 256/32, iterations: 1000
+    });
+    const decrypted = CryptoJS.AES.decrypt(encryptedB64, key, {
+      iv: CryptoJS.enc.Hex.parse('00'.repeat(16)),
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    });
+    const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+    if (!plaintext) throw new Error('Decryption failed — check PAN/DOB');
+    const aisJson = JSON.parse(plaintext);
+    extractFromAIS(aisJson);
+    status.innerHTML = '<span class="pill pill-green">✅ AIS decrypted and populated</span>';
+    closeAISModal();
+    recalc();
+  } catch(err) {
+    status.innerHTML = `<span class="pill pill-red">❌ ${err.message}</span>`;
+  }
+}
+
+function extractFromAIS(ais) {
+  const traverse = (obj, path=[]) => {
+    if (typeof obj !== 'object' || !obj) return;
+    for (const k in obj) {
+      const v = obj[k];
+      if (typeof v === 'number') {
+        const p = path.join('.').toLowerCase();
+        if (p.includes('tds') || p.includes('taxdeducted')) setVal('tp_tds', num('tp_tds') + v);
+        if (p.includes('savings') && p.includes('interest')) setVal('os_sb', v);
+        if (p.includes('fd') && p.includes('interest')) setVal('os_fd', v);
+        if (p.includes('dividend')) setVal('os_div', v);
+      } else {
+        traverse(v, [...path, k]);
       }
-      updateClock();
-      setInterval(updateClock, 1000);
+    }
+  };
+  traverse(ais);
+}
 
-      const backToTop = document.getElementById('backToTop');
-      window.addEventListener('scroll', () => {
-        backToTop.classList.toggle('visible', window.scrollY > 500);
-      });
-      backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+function clearAll() {
+  if (!confirm('Clear all data?')) return;
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    if (el.type === 'number') el.value = 0;
+    else if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else if (!['ay','itrForm','regime'].includes(el.id)) el.value = '';
+  });
+  ['hpContainer','stcgTable','ltcgTable','vdaTable','fsiTable','faTable'].forEach(id => document.getElementById(id).innerHTML = '');
+  hpCount = 0;
+  setVal('s_stdDed', 75000);
+  recalc();
+}
 
-      // ---- Auto-derive Financial Year + Document ID from PAN / Assessment Year ----
-      function deriveFinancialYear(ayValue) {
-        const m = String(ayValue || '').match(/(\d{4})\s*-\s*(\d{2,4})/);
-        if (!m) return '';
-        const startYear = parseInt(m[1], 10);
-        const fyStart = startYear - 1;
-        const fyEnd = startYear;
-        return `${fyStart}-${fyEnd}`;
-      }
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 15;
+  doc.setFontSize(16);
+  doc.text('ITR COMPUTATION STATEMENT', 105, y, {align:'center'}); y += 8;
+  doc.setFontSize(10);
+  doc.text(`AY ${document.getElementById('ay').value} | ${document.getElementById('itrForm').value} | ${document.getElementById('regime').value.toUpperCase()} Regime`, 105, y, {align:'center'}); y += 8;
+  doc.line(14, y, 196, y); y += 5;
+  doc.setFontSize(9);
+  doc.text(`Name: ${document.getElementById('p_name').value}`, 14, y); y += 4;
+  doc.text(`PAN: ${document.getElementById('p_pan').value}`, 14, y); y += 4;
+  doc.text(`Address: ${document.getElementById('p_address').value}`, 14, y); y += 6;
 
-      function updateItrDerivedFields() {
-        const ayEl = document.getElementById('p_ay');
-        const panEl = document.getElementById('p_pan');
-        const fyInputEl = document.getElementById('p_fy');
-        const ayVal = (ayEl && ayEl.value.trim()) || '20XX-20XX';
-        const panVal = (panEl && panEl.value.trim()) || 'XXXXXXXXXX';
-        const fy = deriveFinancialYear(ayVal) || '20XX-20XX';
+  const rows = [
+    ['Income from Salary', document.getElementById('s_total').textContent],
+    ['Income from House Property', document.getElementById('hp_total').textContent],
+    ['Business/Profession', document.getElementById('biz_total').textContent],
+    ['Capital Gains', document.getElementById('cg_total').textContent],
+    ['Other Sources', document.getElementById('os_total').textContent],
+    ['Foreign Income', document.getElementById('fsi_total').textContent],
+    ['Gross Total Income', document.getElementById('old_gti').textContent],
+    ['Less: Deductions', document.getElementById('ded_total').textContent],
+    ['--- OLD REGIME ---', ''],
+    ['Taxable Income', document.getElementById('old_ti').textContent],
+    ['Tax', document.getElementById('old_tax').textContent],
+    ['Surcharge', document.getElementById('old_surcharge').textContent],
+    ['Cess', document.getElementById('old_cess').textContent],
+    ['Rebate 87A', document.getElementById('old_rebate').textContent],
+    ['FTC', document.getElementById('old_ftc').textContent],
+    ['Total Tax (Old)', document.getElementById('old_totalTax').textContent],
+    ['--- NEW REGIME ---', ''],
+    ['Taxable Income', document.getElementById('new_ti').textContent],
+    ['Tax', document.getElementById('new_tax').textContent],
+    ['Surcharge', document.getElementById('new_surcharge').textContent],
+    ['Cess', document.getElementById('new_cess').textContent],
+    ['Rebate 87A', document.getElementById('new_rebate').textContent],
+    ['FTC', document.getElementById('new_ftc').textContent],
+    ['Total Tax (New)', document.getElementById('new_totalTax').textContent],
+    ['--- TAXES PAID ---', ''],
+    ['Total Taxes Paid', document.getElementById('tp_total').textContent],
+  ];
 
-        const dispFy = document.getElementById('disp_fy');
-        const dispAy = document.getElementById('disp_ay');
-        const dispDocId = document.getElementById('disp_docid');
-        if (dispFy) dispFy.textContent = fy;
-        if (dispAy) dispAy.textContent = ayVal;
-        if (dispDocId) dispDocId.textContent = `${panVal}/${ayVal}`;
+  doc.autoTable({
+    startY: y,
+    head: [['Particulars', 'Amount']],
+    body: rows,
+    theme: 'grid',
+    headStyles: {fillColor: [59, 130, 246]},
+    styles: {fontSize: 9, cellPadding: 2}
+  });
 
-        // Keep the Financial Year field in Filing Details in sync automatically
-        if (fyInputEl && deriveFinancialYear(ayVal)) fyInputEl.value = fy;
-      }
+  y = doc.lastAutoTable.finalY + 8;
+  doc.setFontSize(10);
+  doc.text(`Verified by: ${document.getElementById('v_by').value || 'Self'} | Place: ${document.getElementById('v_place').value} | Date: ${document.getElementById('v_date').value}`, 14, y);
+  doc.save(`ITR_Computation_${document.getElementById('ay').value}.pdf`);
+}
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const ayEl = document.getElementById('p_ay');
-        const panEl = document.getElementById('p_pan');
-        if (ayEl) ayEl.addEventListener('input', updateItrDerivedFields);
-        if (panEl) panEl.addEventListener('input', updateItrDerivedFields);
-        updateItrDerivedFields();
-      });
+function exportExcel() {
+  const data = [
+    ['ITR Computation Statement'],
+    ['AY', document.getElementById('ay').value],
+    ['ITR Form', document.getElementById('itrForm').value],
+    ['Regime', document.getElementById('regime').value],
+    [],
+    ['Personal Info'],
+    ['Name', document.getElementById('p_name').value],
+    ['PAN', document.getElementById('p_pan').value],
+    [],
+    ['Income'],
+    ['Salary', document.getElementById('s_total').textContent],
+    ['House Property', document.getElementById('hp_total').textContent],
+    ['Business', document.getElementById('biz_total').textContent],
+    ['Capital Gains', document.getElementById('cg_total').textContent],
+    ['Other Sources', document.getElementById('os_total').textContent],
+    ['Foreign Income', document.getElementById('fsi_total').textContent],
+    ['GTI', document.getElementById('old_gti').textContent],
+    ['Deductions', document.getElementById('ded_total').textContent],
+    [],
+    ['Old Regime Tax', document.getElementById('old_totalTax').textContent],
+    ['New Regime Tax', document.getElementById('new_totalTax').textContent],
+    [],
+    ['Taxes Paid', document.getElementById('tp_total').textContent],
+  ];
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, 'ITR Computation');
+  XLSX.writeFile(wb, `ITR_Computation_${document.getElementById('ay').value}.xlsx`);
+}
 
-      // ---- ITR JSON auto-fill (client-side only, nothing is uploaded anywhere) ----
-      // NOTE: the official ITR JSON schema's exact field names vary by ITR form (1/2/3/4)
-      // and by assessment year. Rather than hardcoding one fixed path, this does a
-      // recursive, case-insensitive search for likely key names, so it works across
-      // several schema variants on a best-effort basis. Always review filled values.
-      const itrUpload = document.getElementById('itrUpload');
-      const itrFileInput = document.getElementById('itrFileInput');
-      const itrStatus = document.getElementById('itrUploadStatus');
+function exportJSON() {
+  const data = {
+    assessmentYear: document.getElementById('ay').value,
+    itrForm: document.getElementById('itrForm').value,
+    regime: document.getElementById('regime').value,
+    personalInfo: {
+      name: document.getElementById('p_name').value,
+      pan: document.getElementById('p_pan').value,
+      dob: document.getElementById('p_dob').value,
+      email: document.getElementById('p_email').value,
+      mobile: document.getElementById('p_mobile').value,
+      address: document.getElementById('p_address').value,
+    },
+    incomeDetails: {
+      salary: {grossSalary: num('s_gross'), standardDeduction: num('s_stdDed')},
+      otherSources: {interestIncome: num('os_sb') + num('os_fd'), dividendIncome: num('os_div')},
+    },
+    deductions: {
+      chapterVIA: {section80C: num('d_80c'), section80D: num('d_80d'), section80TTA: num('d_80tta')}
+    },
+    taxesPaid: {tds: num('tp_tds'), advanceTax: num('tp_advance'), selfAssessmentTax: num('tp_self')},
+    computation: {
+      grossTotalIncome: document.getElementById('old_gti').textContent,
+      oldRegimeTax: document.getElementById('old_totalTax').textContent,
+      newRegimeTax: document.getElementById('new_totalTax').textContent,
+    }
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ITR_Computation_${document.getElementById('ay').value}.json`;
+  a.click();
+}
 
-      function setItrField(id, value) {
-        if (value === undefined || value === null || value === '') return;
-        const el = document.getElementById(id);
-        if (el) el.value = String(value).trim();
-      }
-
-      // Recursively search a nested object/array for the first key whose name
-      // contains any of the given candidate substrings (case-insensitive).
-      function findByKey(obj, candidates, seen = new Set()) {
-        if (obj === null || typeof obj !== 'object' || seen.has(obj)) return undefined;
-        seen.add(obj);
-        const entries = Array.isArray(obj) ? obj.map((v, i) => [String(i), v]) : Object.entries(obj);
-        for (const [key, val] of entries) {
-          const lower = key.toLowerCase();
-          if (candidates.some((c) => lower.includes(c.toLowerCase())) &&
-              (typeof val === 'string' || typeof val === 'number')) {
-            return val;
-          }
+function exportITRJSON() {
+  const itr = {
+    ITR: {
+      ITRForm: document.getElementById('itrForm').value,
+      AssessmentYear: document.getElementById('ay').value,
+      PersonalInfo: {
+        AssesseeName: {FirstName: document.getElementById('p_name').value},
+        PAN: document.getElementById('p_pan').value,
+        DOB: document.getElementById('p_dob').value,
+        Address: {CityOrTownOrDistrict: document.getElementById('p_address').value},
+        ContactDetail: {
+          EmailAddress: document.getElementById('p_email').value,
+          MobileNo: document.getElementById('p_mobile').value,
         }
-        for (const [, val] of entries) {
-          if (val && typeof val === 'object') {
-            const found = findByKey(val, candidates, seen);
-            if (found !== undefined) return found;
-          }
-        }
-        return undefined;
+      },
+      ITR2_IncomeDeductions: {
+        GrossSalary: num('s_gross'),
+        DeductionUs16: num('s_stdDed'),
+      },
+      ScheduleOS: {IntrstFrmBank: num('os_sb'), DividendGross: num('os_div')},
+      Deductions: {Section80C: num('d_80c'), Section80D: num('d_80d')},
+      ScheduleTDS: {TotalTDS: num('tp_tds')},
+      TaxComputation: {
+        GrossTotalIncome: num('old_gti') || 0,
+        TotalTaxOldRegime: num('old_totalTax') || 0,
+        TotalTaxNewRegime: num('new_totalTax') || 0,
       }
+    }
+  };
+  const blob = new Blob([JSON.stringify(itr, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ITR_${document.getElementById('ay').value}_${document.getElementById('itrForm').value}.json`;
+  a.click();
+}
 
-      function buildAssesseeName(data) {
-        const first = findByKey(data, ['FirstName']);
-        const middle = findByKey(data, ['MiddleName']);
-        const last = findByKey(data, ['SurNameOrOrgName', 'SurName']);
-        const parts = [first, middle, last].filter(Boolean);
-        if (parts.length) return parts.join(' ');
-        return findByKey(data, ['AssesseeName', 'NameOfPerson', 'Name']);
-      }
+window.addEventListener('beforeprint', () => {
+  document.getElementById('print_ay').textContent = document.getElementById('ay').value;
+  document.getElementById('print_form').textContent = document.getElementById('itrForm').value;
+  document.getElementById('print_regime').textContent = document.getElementById('regime').value === 'new' ? 'New Regime' : 'Old Regime';
+  document.querySelector('.print-header').style.display = 'block';
+});
+window.addEventListener('afterprint', () => {
+  document.querySelector('.print-header').style.display = 'none';
+});
 
-      function parseAndFillItrJson(data) {
-        const statusCodeMap = { I: 'Individual', H: 'HUF', F: 'Firm', A: 'AOP', B: 'BOI', C: 'Company', T: 'Trust', G: 'Government', L: 'Local Authority' };
-        function readableStatus() {
-          const raw = findByKey(data, ['Status', 'AssesseeStatus']);
-          if (raw === undefined) return undefined;
-          const code = String(raw).trim().toUpperCase();
-          return statusCodeMap[code] || raw;
-        }
-        const fieldMap = {
-          p_name: () => buildAssesseeName(data),
-          p_pan: ['PAN'],
-          p_address: ['AddressDetail', 'AddrDetail', 'Address'],
-          p_aadhaar: ['AadhaarCardNo', 'Aadhaar'],
-          p_mobile: ['MobileNo', 'Mobile'],
-          p_email: ['EmailAddress', 'Email'],
-          p_gender: ['Gender', 'Sex'],
-          p_father: ['FatherName'],
-          p_dob: ['DOB', 'DateOfBirth'],
-          p_fy: ['FinancialYear'],
-          p_ay: ['AssessmentYear'],
-          p_status: () => readableStatus(),
-          p_itrform: ['FormName', 'ITRFormType', 'ITRType'],
-          p_rettype: ['FilingType', 'ReturnType'],
-          p_retdate: ['FilingDate', 'ReturnDate'],
-          b_turnover44ad: ['GrossTurnover44AD', 'GrossReceiptsFor44AD', 'TotTurnoverGross44AD'],
-          b_presump44ad: ['Sec44AD', 'PresumpIncome44AD', 'Rule44AD'],
-          b_presump44ae: ['Sec44AE', 'PresumpIncome44AE'],
-          b_totalbusiness: ['IncOfBP', 'IncomeBusiness', 'ProfGainBusProf', 'GrossFromBusiness', 'TotalBusinessIncome'],
-          o_sav: ['IntrstFrmSavingBank', 'IntrstFrmSB'],
-          o_tax: ['IntrstFrmTermDeposit', 'OthNOTScheduleIncome'],
-          o_total: ['TotOthSrcIncome', 'IncFromOthSrc', 'TotalOtherIncome'],
-          o_gti: ['GrossTotIncome', 'GrossTotalIncome'],
-          d_total: ['DeductUndChapVIA', 'TotalChapVIADeductions', 'UsrDeductUndChapVIA'],
-          d_totalincome: ['TotalIncome'],
-          t_taxontotal: ['TaxOnTotIncome', 'TaxOnTotalIncome'],
-          t_rebate87a: ['Rebate87A', 'RebateOnAgriInc87A'],
-          t_cess: ['HealthEduCess', 'EducationCess', 'Cess'],
-          t_grosstax: ['GrossTaxLiability', 'TotalTaxPayable'],
-          t_234a: ['Section234A', 'Int234A'],
-          t_234b: ['Section234B', 'Int234B'],
-          t_234c: ['Section234C', 'Int234C'],
-          t_totaltaxinterest: ['NetTaxLiability', 'TotTaxAndIntPayable'],
-          tp_advance: ['AdvanceTax'],
-          tp_tds: ['TotalTDS', 'TDSOnOthThanSal', 'TotTDS'],
-          tp_selfassessment: ['SelfAssessmentTax', 'TaxPaidSelfAssessment'],
-          tp_total: ['TotalTaxesPaid', 'TotalTaxPayment'],
-          bal_refund: ['RefundDue', 'Refund', 'BalTaxPayable'],
-          bd_name: ['BusinessName', 'NameOfBusiness', 'TradeName'],
-          bd_nature: ['NatureOfBusiness', 'BusinessNature'],
-          bd_totalturnover: ['GrossTurnoverOrGrossReceipt', 'GrossReceipts', 'GrossTurnover', 'TotalTurnover'],
-          bd_turnoverbank: ['TurnoverThruBank', 'TurnoverThroughBank', 'ReceiptsThroughBank'],
-          bd_turnovercash: ['TurnoverInCash', 'ReceiptsInCash'],
-          bk1_name: ['BankName'],
-          bk1_acc: ['BankAccountNo', 'AccountNo'],
-          bk1_ifsc: ['IFSC', 'IFSCode'],
-          v_verifiedby: () => buildAssesseeName(data),
-          v_father: ['FatherName'],
-          v_pan: ['PAN'],
-        };
-        let found = 0;
-        for (const [id, spec] of Object.entries(fieldMap)) {
-          const value = typeof spec === 'function' ? spec() : findByKey(data, spec);
-          if (value !== undefined) {
-            setItrField(id, value);
-            found++;
-          }
-        }
-        return found;
-      }
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+updateFormVisibility();
+recalc();
+</script>
 
-      function parseAndFillItrPdfText(text) {
-        const patterns = {
-          p_name: /(?<!'s )(?:Name of Assessee|\bName)\s+([A-Za-z][A-Za-z .]+?)(?:\s+Father|\s*\n|\s+Status|\s+PAN|\s+Address)/i,
-          p_pan: /PAN\s+([A-Z]{5}[0-9]{4}[A-Z])/i,
-          p_aadhaar: /AADHAAR\s+([0-9]{12})/i,
-          p_mobile: /MOBILE\s+([0-9]{10})/i,
-          p_email: /EMAIL\s+(\S+@\S+)/i,
-          p_father: /FATHER'S NAME\s+([A-Za-z .]+?)\s*\n/i,
-          p_dob: /DATE OF BIRTH\s+([0-9]{4}-[0-9]{2}-[0-9]{2})/i,
-          p_fy: /Financial Year\s*\n\s*([0-9]{4}-[0-9]{4})/i,
-          p_ay: /Assessment Year:?\s*([0-9]{4}-[0-9]{4})/i,
-          p_status: /\bSTATUS\s+([A-Za-z]+)/i,
-          p_itrform: /ITR FORM TYPE\s+(ITR-[0-9A-Z]+)/i,
-          p_regime: /Tax Regime\s*\n\s*(\w+)/i,
-          p_rettype: /Return Type\s*\n\s*(\w+)/i,
-          p_retdate: /Return Date\s*\n\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i,
-          p_empcat: /EMPLOYER CATEGORY\s+(\w+)/i,
-          b_turnover44ad: /Gross Total Turnover \(44AD\)\s+\u20b9?\s*([0-9,]+)/i,
-          b_presump44ad: /Presumptive Income u\/s 44AD\s+\u20b9?\s*([0-9,]+)/i,
-          b_presump44ae: /Presumptive Income u\/s 44AE\s+\u20b9?\s*([0-9,]+)/i,
-          b_totalbusiness: /Total Business Income\s+\u20b9?\s*([0-9,]+)/i,
-          o_sav: /Other Income \(SAV\)\s+\u20b9?\s*([0-9,]+)/i,
-          o_tax: /Other Income \(TAX\)\s+\u20b9?\s*([0-9,]+)/i,
-          o_rental: /Rental Income from machinery[^0-9₹]*.?\s*([0-9,]+)/i,
-          o_56: /section 56\(2\)\(x\)\s+\u20b9?\s*([0-9,]+)/i,
-          o_any: /Any other income\s+\u20b9?\s*([0-9,]+)/i,
-          o_total: /Total Other Income\s+\u20b9?\s*([0-9,]+)/i,
-          o_gti: /Gross Total Income\s+\u20b9?\s*([0-9,]+)/i,
-          d_total: /Total Deductions under Chapter VI-A\s+\u20b9?\s*([0-9,]+)/i,
-          d_totalincome: /(?<!Gross )Total Income\s+\u20b9?\s*([0-9,]+)/i,
-          t_rebate87a: /Rebate under Section 87A\s+\u20b9?\s*([0-9,]+)/i,
-          t_cess: /Education Cess\s+([0-9,]+)/i,
-          t_grosstax: /Gross Tax Liability\s+([0-9,]+)/i,
-          t_234a: /Interest under Section 234A\s+([0-9,]+)/i,
-          t_234b: /Interest under Section 234B\s+([0-9,]+)/i,
-          t_234c: /Interest under Section 234C\s+([0-9,]+)/i,
-          tp_advance: /Advance Tax\s+([0-9,]+)/i,
-          tp_tds: /\bTDS\s+([0-9,]+)/i,
-          tp_selfassessment: /Self Assessment Tax\s+([0-9,]+)/i,
-          tp_total: /Total Taxes Paid\s+([0-9,]+)/i,
-          bal_refund: /Balance Tax Payable\/\(Refund Due\)\s+([0-9,]+)/i,
-          bd_totalturnover: /(?<!Gross )Total Turnover\s+\u20b9?\s*([0-9,]+)/i,
-          bd_turnoverbank: /Turnover through Bank\s+\u20b9?\s*([0-9,]+)/i,
-          v_place: /PAN\s+PLACE\s*\n\s*\S+\s+(\w+)/i,
-        };
-        let found = 0;
-        for (const [id, re] of Object.entries(patterns)) {
-          const m = text.match(re);
-          if (m && m[1]) {
-            setItrField(id, m[1]);
-            found++;
-          }
-        }
-        // Bank details: two-column rows need positional (findall) matching
-        const bankNamesM = text.match(/BANK NAME\s+(.+?)\s+BANK NAME\s+(.+?)(?:\n|ACCOUNT)/i);
-        if (bankNamesM) {
-          setItrField('bk1_name', bankNamesM[1]);
-          setItrField('bk2_name', bankNamesM[2]);
-          found += 2;
-        } else {
-          const singleBank = text.match(/BANK NAME\s+(.+?)\n/i);
-          if (singleBank) { setItrField('bk1_name', singleBank[1]); found++; }
-        }
-        const accNums = [...text.matchAll(/ACCOUNT NUMBER\s+([0-9]{6,18})/gi)].map((m) => m[1]);
-        if (accNums[0]) { setItrField('bk1_acc', accNums[0]); found++; }
-        if (accNums[1]) { setItrField('bk2_acc', accNums[1]); found++; }
-        const ifscCodes = [...text.matchAll(/IFSC CODE\s+([A-Z]{4}0[A-Z0-9]{6})/gi)].map((m) => m[1]);
-        if (ifscCodes[0]) { setItrField('bk1_ifsc', ifscCodes[0]); found++; }
-        if (ifscCodes[1]) { setItrField('bk2_ifsc', ifscCodes[1]); found++; }
-        return found;
-      }
-
-      async function extractPdfText(file) {
-        const buf = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-        let fullText = '';
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          fullText += content.items.map((it) => it.str).join(' ') + '\n';
-        }
-        return fullText;
-      }
-
-      async function handleItrFile(file) {
-        const isJson = file && (file.type === 'application/json' || /\.json$/i.test(file.name));
-        const isPdf = file && (file.type === 'application/pdf' || /\.pdf$/i.test(file.name));
-        if (!isJson && !isPdf) {
-          itrStatus.textContent = 'Please choose a .json or .pdf file.';
-          itrStatus.className = 'itr-upload-status err';
-          return;
-        }
-        itrStatus.textContent = isJson ? 'Reading JSON…' : 'Reading PDF…';
-        itrStatus.className = 'itr-upload-status';
-        try {
-          let found = 0;
-          if (isJson) {
-            const text = await file.text();
-            const data = JSON.parse(text);
-            found = parseAndFillItrJson(data);
-          } else {
-            const text = await extractPdfText(file);
-            found = parseAndFillItrPdfText(text);
-          }
-          updateItrDerivedFields();
-          if (found > 0) {
-            itrStatus.textContent = `Auto-filled ${found} field(s). Please review before using.`;
-            itrStatus.className = 'itr-upload-status ok';
-          } else {
-            itrStatus.textContent = "Couldn't recognise fields in this file — please fill manually.";
-            itrStatus.className = 'itr-upload-status err';
-          }
-        } catch (err) {
-          itrStatus.textContent = 'Could not read this file. Please fill manually.';
-          itrStatus.className = 'itr-upload-status err';
-        }
-      }
-
-      if (itrFileInput) {
-        itrFileInput.addEventListener('change', (e) => handleItrFile(e.target.files[0]));
-        ['dragover', 'dragenter'].forEach((evt) =>
-          itrUpload.addEventListener(evt, (e) => { e.preventDefault(); itrUpload.classList.add('dragover'); })
-        );
-        ['dragleave', 'drop'].forEach((evt) =>
-          itrUpload.addEventListener(evt, (e) => { e.preventDefault(); itrUpload.classList.remove('dragover'); })
-        );
-        itrUpload.addEventListener('drop', (e) => {
-          const file = e.dataTransfer.files[0];
-          if (file) handleItrFile(file);
-        });
-      }
-    </script>
-  </body>
+</body>
 </html>
