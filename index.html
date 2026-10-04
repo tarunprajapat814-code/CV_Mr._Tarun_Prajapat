@@ -103,9 +103,6 @@
     background-clip: text;
   }
   
-  /* ══════════════════════════════════════════
-     HERO BACKGROUND — RADHE KRISHNA IMAGE
-     ══════════════════════════════════════════ */
   .hero-bg {
     background:
       linear-gradient(135deg, rgba(10,30,63,0.78) 0%, rgba(40,61,98,0.72) 45%, rgba(14,73,68,0.82) 100%),
@@ -440,9 +437,6 @@
     height: 2px; background: #e5b236; border-radius: 2px;
   }
   
-  /* ══════════════════════════════════════════
-     SERVICES SECTION
-     ══════════════════════════════════════════ */
   .service-card {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -501,9 +495,6 @@
     font-weight: 700;
   }
   
-  /* ══════════════════════════════════════════
-     ITR TOOL — COMPACT CTA STRIP
-     ══════════════════════════════════════════ */
   .itr-cta {
     display: flex;
     align-items: center;
@@ -608,6 +599,25 @@
   }
   .itr-cta:hover .itr-cta-btn { transform: translateX(4px); }
 
+  .itr-cta-green {
+    background: linear-gradient(135deg, #0a1e3f 0%, #134e4a 55%, #166534 100%);
+    border-color: rgba(38,199,175,0.3);
+  }
+  .itr-cta-green:hover {
+    border-color: rgba(38,199,175,0.6);
+    box-shadow: 0 18px 40px rgba(22,101,52,0.3);
+  }
+  .itr-cta-icon-green {
+    background: linear-gradient(135deg, #26c7af, #0dab97) !important;
+    box-shadow: 0 6px 18px rgba(38,199,175,0.4) !important;
+  }
+  .itr-cta-badge-green { color: #a7f3d0 !important; }
+  .itr-cta-btn-green {
+    background: linear-gradient(135deg, #26c7af, #0dab97) !important;
+    color: #0a1e3f !important;
+    box-shadow: 0 6px 18px rgba(38,199,175,0.35) !important;
+  }
+
   @media (max-width: 768px) {
     .itr-cta {
       flex-direction: column;
@@ -622,7 +632,6 @@
     .itr-cta-btn { width: 100%; justify-content: center; padding: 12px 18px; }
   }
   
-  /* PRINT */
   #printCV { display: none; }
   
   @media print {
@@ -673,7 +682,6 @@
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 transition-colors">
 
-<!-- RADHE RADHE BANNER -->
 <div class="radhe-banner no-print">
   <div style="width: 180px;"></div>
   <div class="radhe-center">
@@ -687,7 +695,6 @@
 
 <div class="scroll-progress no-print" id="scrollProgress"></div>
 
-<!-- NAVIGATION -->
 <nav class="fixed top-9 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 no-print">
   <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
     <a href="#" class="font-bold text-lg font-display text-navy-900 dark:text-gold-300">Tarun Prajapat</a>
@@ -717,7 +724,6 @@
   </div>
 </nav>
 
-<!-- HERO — RADHE KRISHNA BACKGROUND -->
 <header class="hero-bg pt-36 pb-24 px-6 relative">
   <div class="max-w-7xl mx-auto relative z-10">
     <div class="max-w-3xl">
@@ -766,7 +772,6 @@
   </div>
 </header>
 
-<!-- ABOUT -->
 <section id="about" class="py-20 px-6 bg-white dark:bg-slate-950 transition-colors">
   <div class="max-w-7xl mx-auto">
     <div class="fade-in">
@@ -824,7 +829,6 @@
   </div>
 </section>
 
-<!-- WHY ME -->
 <section class="py-20 px-6 bg-slate-50 dark:bg-slate-900 transition-colors">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12 fade-in">
@@ -852,7 +856,6 @@
   </div>
 </section>
 
-<!-- ═══════════════ SERVICES ═══════════════ -->
 <section id="services" class="py-20 px-6 bg-white dark:bg-slate-950 transition-colors">
   <div class="max-w-7xl mx-auto">
     <div class="fade-in">
@@ -940,26 +943,37 @@
       
     </div>
     
-    <!-- ITR TOOL — COMPACT CTA -->
-    <a href="itr-tool.html" target="_blank" rel="noopener" class="itr-cta mt-12 fade-in">
-      <div class="itr-cta-left">
-        <div class="itr-cta-icon">🧮</div>
-        <div class="itr-cta-text">
-          <div class="itr-cta-badge">⚡ Featured Tool · Free</div>
-          <div class="itr-cta-title">ITR Computation Dashboard — AY 2026-27</div>
-          <div class="itr-cta-desc">Old vs New Regime · Auto-fill from Form 16 / 26AS / AIS · PDF & Excel export</div>
+    <div class="mt-12 fade-in" style="display:grid;grid-template-columns:1fr;gap:14px;">
+      
+      <a href="itr-tool.html" target="_blank" rel="noopener" class="itr-cta">
+        <div class="itr-cta-left">
+          <div class="itr-cta-icon">🧮</div>
+          <div class="itr-cta-text">
+            <div class="itr-cta-badge">⚡ Featured Tool · Free</div>
+            <div class="itr-cta-title">ITR Computation Dashboard — AY 2026-27</div>
+            <div class="itr-cta-desc">Old vs New Regime · Auto-fill from Form 16 / 26AS / AIS · PDF & Excel export</div>
+          </div>
         </div>
-      </div>
-      <span class="itr-cta-btn">
-        Launch Tool
-        <span>→</span>
-      </span>
-    </a>
+        <span class="itr-cta-btn">Launch Tool <span>→</span></span>
+      </a>
+      
+      <a href="invoice-tool.html" target="_blank" rel="noopener" class="itr-cta itr-cta-green">
+        <div class="itr-cta-left">
+          <div class="itr-cta-icon itr-cta-icon-green">🧾</div>
+          <div class="itr-cta-text">
+            <div class="itr-cta-badge itr-cta-badge-green">⚡ New Tool · Free</div>
+            <div class="itr-cta-title">Invoice Generator — 4 Templates with GST</div>
+            <div class="itr-cta-desc">Classic · Modern · Minimal · GST Pro · Auto tax calculation · PDF export</div>
+          </div>
+        </div>
+        <span class="itr-cta-btn itr-cta-btn-green">Launch Tool <span>→</span></span>
+      </a>
+      
+    </div>
     
   </div>
 </section>
 
-<!-- ═══════════════ EXPERIENCE ═══════════════ -->
 <section id="experience" class="py-20 px-6 bg-slate-50 dark:bg-slate-900 transition-colors">
   <div class="max-w-7xl mx-auto">
     <div class="fade-in">
@@ -1118,7 +1132,6 @@
   </div>
 </section>
 
-<!-- PROJECTS -->
 <section id="projects" class="py-20 px-6 bg-white dark:bg-slate-950 transition-colors">
   <div class="max-w-7xl mx-auto">
     <div class="fade-in">
@@ -1169,7 +1182,6 @@
   </div>
 </section>
 
-<!-- SKILLS -->
 <section id="skills" class="py-20 px-6 bg-slate-50 dark:bg-slate-900 transition-colors">
   <div class="max-w-7xl mx-auto">
     <div class="fade-in">
@@ -1233,7 +1245,6 @@
   </div>
 </section>
 
-<!-- EDUCATION -->
 <section id="education" class="py-20 px-6 bg-white dark:bg-slate-950 transition-colors">
   <div class="max-w-7xl mx-auto">
     <div class="fade-in">
@@ -1286,7 +1297,6 @@
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact" class="py-20 px-6 bg-gradient-to-br from-navy-900 via-navy-800 to-teal-900 text-white relative overflow-hidden">
   <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 80%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
   
@@ -1360,7 +1370,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="bg-slate-950 text-slate-400 py-8 px-6 text-center text-sm no-print">
   <div class="max-w-7xl mx-auto">
     <div class="font-bold text-white mb-2 font-display">Tarun Prajapat</div>
@@ -1378,7 +1387,6 @@
   </div>
 </footer>
 
-<!-- FLOATING BUTTONS -->
 <a href="https://wa.me/917877524281" target="_blank" rel="noopener"
    class="whatsapp-float no-print"
    aria-label="Chat on WhatsApp" title="Chat on WhatsApp">
@@ -1389,7 +1397,6 @@
 
 <button class="back-to-top no-print" id="backToTop" aria-label="Back to top" title="Back to top">↑</button>
 
-<!-- PROJECT MODAL -->
 <div id="projectModal" class="modal-overlay" onclick="closeProjectModal(event)">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="flex justify-between items-start mb-4">
@@ -1407,7 +1414,6 @@
   </div>
 </div>
 
-<!-- PRINT CV -->
 <div id="printCV">
   <div class="header-line">
     <div>
