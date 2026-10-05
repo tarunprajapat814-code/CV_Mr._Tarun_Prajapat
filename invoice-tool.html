@@ -48,22 +48,12 @@
   .item-row input:focus { outline: none; border-color: #3b82f6; }
   .item-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3px; }
 
-  /* ══════════════════════════════════════════
-     LINE ITEMS — HORIZONTAL SCROLL FIX
-     ══════════════════════════════════════════ */
-  .items-scroll-wrap {
-    position: relative;
-    margin-bottom: 4px;
-  }
+  .items-scroll-wrap { position: relative; margin-bottom: 4px; }
   .items-scroll {
-    overflow-x: auto;
-    overflow-y: visible;
-    padding-bottom: 8px;
-    margin: 0 -4px;
-    padding-left: 4px;
-    padding-right: 4px;
-    scrollbar-width: thin;
-    scrollbar-color: #94a3b8 #f1f5f9;
+    overflow-x: auto; overflow-y: visible;
+    padding-bottom: 8px; margin: 0 -4px;
+    padding-left: 4px; padding-right: 4px;
+    scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9;
   }
   .items-scroll::-webkit-scrollbar { height: 8px; }
   .items-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -71,16 +61,93 @@
   .items-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
   .items-inner { min-width: 480px; }
 
-  .invoice-a4 {
+  /* ══════════════════════════════════════════
+     DETAILS SECTION (like Items)
+     ══════════════════════════════════════════ */
+  .details-section { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #e2e8f0; }
+  .details-heading {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10.5px; font-weight: 700; color: #64748b;
+    text-transform: uppercase; letter-spacing: 0.4px;
+    margin-bottom: 6px;
+  }
+  .detail-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+    padding: 4px 0;
+    align-items: center;
+  }
+  .detail-row input {
+    padding: 7px 10px;
+    font-size: 12.5px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    width: 100%;
     background: #fff;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 14mm;
-    font-size: 12px;
-    color: var(--text, #0f172a);
+  }
+  .detail-row input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+
+  /* ══════════════════════════════════════════
+     SAVED INVOICES (HISTORY) PANEL
+     ══════════════════════════════════════════ */
+  .history-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; padding: 0 7px;
+    background: #3b82f6; color: #fff;
+    border-radius: 999px; font-size: 11px; font-weight: 700;
+    margin-left: 6px;
+  }
+  .history-list {
+    max-height: 280px; overflow-y: auto; padding: 4px;
+    scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9;
+  }
+  .history-list::-webkit-scrollbar { width: 8px; }
+  .history-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+  .history-list::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+  .history-list::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+  .history-item {
+    background: #f8fafc; border: 1.5px solid #e2e8f0;
+    border-radius: 10px; padding: 10px 12px;
+    margin-bottom: 8px; cursor: pointer;
+    transition: all 0.2s; position: relative;
+  }
+  .history-item:hover { background: #eff6ff; border-color: #3b82f6; transform: translateX(2px); }
+  .history-item.selected { background: #dbeafe; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+  .history-item .hi-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+  .history-item .hi-no { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12.5px; color: #1e3a8a; }
+  .history-item .hi-date { font-size: 10px; color: #94a3b8; white-space: nowrap; }
+  .history-item .hi-client { font-size: 12px; color: #334155; font-weight: 500; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-item .hi-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .history-item .hi-amount { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; color: #059669; }
+  .history-item .hi-actions { display: flex; gap: 4px; }
+  .history-item .hi-actions button { width: 26px; height: 26px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; }
+  .history-item .hi-del { background: #fee2e2; color: #dc2626; }
+  .history-item .hi-del:hover { background: #fecaca; }
+  .history-empty { text-align: center; padding: 24px 12px; color: #94a3b8; font-size: 12px; }
+  .history-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #059669; color: #fff;
+    padding: 12px 22px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 10px 30px rgba(5,150,105,0.35);
+    z-index: 1000;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.toast-blue { background: #3b82f6; box-shadow: 0 10px 30px rgba(59,130,246,0.35); }
+
+  .invoice-a4 {
+    background: #fff; width: 210mm; min-height: 297mm; padding: 14mm;
+    font-size: 12px; color: var(--text, #0f172a);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin: 0 auto;
-    position: relative;
+    margin: 0 auto; position: relative;
   }
   @media (max-width: 1024px) { .invoice-a4 { width: 100%; min-height: auto; padding: 20px; } }
 
@@ -102,6 +169,40 @@
   .inv-party-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
   .inv-party-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
   .inv-party-info { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* ══════════════════════════════════════════
+     DETAILS BLOCK IN PREVIEW
+     ══════════════════════════════════════════ */
+  .details-block {
+    margin: 12px 0;
+    padding: 10px 14px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+  }
+  .details-block-title {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .details-block-list { list-style: none; padding: 0; margin: 0; }
+  .details-block-list li {
+    font-size: 11.5px;
+    color: var(--text);
+    padding: 2px 0 2px 14px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .details-block-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
 
   .inv-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
   .inv-table th { background: var(--accent); color: var(--accent-text); padding: 9px 10px; font-size: 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
@@ -153,6 +254,7 @@
   .tpl-minimal .inv-table td { padding: 10px 6px; border-bottom: 1px solid var(--line); }
   .tpl-minimal .inv-party-label { font-size: 9px; }
   .tpl-minimal .words-box { background: transparent; border: 1px solid var(--line); }
+  .tpl-minimal .details-block { background: transparent; border-left: 2px solid var(--accent); }
 
   .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 2px solid var(--accent); margin-bottom: 14px; }
   .tpl-gst .inv-h1 { font-size: 26px; color: var(--accent); }
@@ -195,24 +297,35 @@
 
 <div class="toolbar no-print">
   <button class="btn btn-primary" onclick="loadSample()">⚡ Load Sample</button>
-  <button class="btn btn-success" onclick="window.print()">📄 Print / Save PDF</button>
+  <button class="btn btn-success" onclick="printAndSave()">📄 Print / Save PDF</button>
   <button class="btn btn-outline" onclick="saveJSON()">💾 Save JSON</button>
   <button class="btn btn-outline" onclick="document.getElementById('loadFile').click()">📂 Load JSON</button>
   <input type="file" id="loadFile" accept=".json" style="display:none" onchange="loadJSON(event)">
-  <button class="btn btn-ghost" onclick="clearAll()">🗑️ Clear All</button>
+  <button class="btn btn-ghost" onclick="clearAll()">🗑️ Clear Form</button>
   <span style="margin-left:auto;font-size:11px;color:#94a3b8;">Data auto-saved locally</span>
 </div>
 
 <div class="layout">
   <aside class="no-print">
-    
+
+    <!-- ═══ SAVED INVOICES ═══ -->
+    <div class="panel" id="historyPanel">
+      <div class="panel-head" onclick="togglePanel(this, 'historyBody')">
+        <div style="display:flex;align-items:center;">📚 Saved Invoices <span class="history-badge" id="historyCount">0</span></div>
+        <span>▼</span>
+      </div>
+      <div class="panel-body" id="historyBody" style="padding:8px;">
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'bizBody')">🏢 Your Business <span>▼</span></div>
       <div class="panel-body" id="bizBody">
         <div class="field"><label>Business Name</label><input id="bName" placeholder="Your Company Name" oninput="sync()"></div>
         <div class="field"><label>Address</label><textarea id="bAddr" rows="2" placeholder="Street, City, State - PIN" oninput="sync()"></textarea></div>
         <div class="grid2">
-          <div class="field"><label>GSTIN</label><input id="bGstin" placeholder="27ABCDE1234F1Z5" oninput="sync()"></div>
+          <div class="field"><label>GSTIN</label><input id="bGstin" placeholder="27ABCDE1234F1Z5" oninput="autoPanFromGstin(); sync()"></div>
           <div class="field"><label>PAN</label><input id="bPan" placeholder="ABCDE1234F" oninput="sync()"></div>
         </div>
         <div class="grid2">
@@ -235,6 +348,7 @@
       </div>
     </div>
     
+    <!-- ═══ INVOICE DETAILS (with NEW Details section) ═══ -->
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'metaBody')">📅 Invoice Details <span>▼</span></div>
       <div class="panel-body" id="metaBody">
@@ -242,11 +356,16 @@
           <div class="field"><label>Invoice No.</label><input id="mNo" oninput="sync()"></div>
           <div class="field"><label>Date</label><input id="mDate" type="date" oninput="sync()"></div>
         </div>
-        <div class="grid2">
-          <div class="field"><label>Due Date</label><input id="mDue" type="date" oninput="sync()"></div>
-          <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" oninput="sync()"></div>
+        <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" oninput="sync()"></div>
+
+        <!-- NEW: DETAILS SECTION (like Items) -->
+        <div class="details-section">
+          <div class="details-heading">
+            <span>Details</span>
+          </div>
+          <div id="detailsContainer"></div>
+          <button class="btn btn-success btn-sm" style="margin-top:6px;width:100%;justify-content:center;" onclick="addDetail()">➕ Add Line</button>
         </div>
-        <div class="field"><label>PO / Reference No.</label><input id="mPo" placeholder="Optional" oninput="sync()"></div>
       </div>
     </div>
     
@@ -310,6 +429,8 @@
   </main>
 </div>
 
+<div class="toast" id="toast">✓ Saved</div>
+
 <script>
 const state = {
   template: 'classic',
@@ -317,8 +438,12 @@ const state = {
   discount: 0,
   shipping: 0,
   items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }],
+  details: [''],   // NEW: array of detail lines
   business: {}, client: {}, meta: {}, bank: {}, terms:'', notes:''
 };
+
+let history = [];
+let editingHistoryId = null;
 
 const $ = id => document.getElementById(id);
 const num = v => Number(v) || 0;
@@ -331,12 +456,34 @@ const fmtDate = d => {
   return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 };
 
+// ═══ TOAST ═══
+function showToast(msg, type) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'blue' ? ' toast-blue' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ═══ PANEL TOGGLE ═══
 function togglePanel(head, bodyId) {
   const body = $(bodyId);
   body.classList.toggle('hidden');
   head.classList.toggle('collapsed');
 }
 
+// ═══ AUTO-FILL PAN FROM GSTIN ═══
+function autoPanFromGstin() {
+  const gstin = $('bGstin').value.trim().toUpperCase();
+  const panField = $('bPan');
+  if (gstin.length === 15) {
+    panField.value = gstin.substring(2, 12);
+  } else if (gstin.length === 0) {
+    panField.value = '';
+  }
+}
+
+// ═══ ITEMS ═══
 function renderItems() {
   const c = $('itemsContainer');
   c.innerHTML = state.items.map((it, i) => `
@@ -364,6 +511,44 @@ function removeItem(i) {
   renderItems(); sync();
 }
 
+// ═══════════════════════════════════════════════════════════
+//  DETAILS — NEW (like items)
+// ═══════════════════════════════════════════════════════════
+function renderDetails() {
+  const c = $('detailsContainer');
+  if (!state.details || !state.details.length) state.details = [''];
+  c.innerHTML = state.details.map((d, i) => `
+    <div class="detail-row">
+      <input placeholder="Enter detail..." value="${esc(d)}" oninput="updateDetail(${i}, this.value)">
+      <button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})" title="Remove">✖</button>
+    </div>
+  `).join('');
+}
+function updateDetail(i, v) {
+  state.details[i] = v;
+  sync();
+}
+function addDetail() {
+  state.details.push('');
+  renderDetails();
+  // Focus on newly added field
+  setTimeout(() => {
+    const inputs = $('detailsContainer').querySelectorAll('input');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  }, 50);
+  sync();
+}
+function removeDetail(i) {
+  if (state.details.length === 1) {
+    state.details[0] = '';
+  } else {
+    state.details.splice(i, 1);
+  }
+  renderDetails();
+  sync();
+}
+
+// ═══ SYNC FORM → STATE ═══
 function sync() {
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value,
@@ -374,8 +559,8 @@ function sync() {
     email: $('cEmail').value, phone: $('cPhone').value
   };
   state.meta = {
-    no: $('mNo').value, date: $('mDate').value, due: $('mDue').value,
-    place: $('mPlace').value, po: $('mPo').value
+    no: $('mNo').value, date: $('mDate').value,
+    place: $('mPlace').value
   };
   state.bank = { name: $('bkName').value, ac: $('bkAc').value, ifsc: $('bkIfsc').value, upi: $('bkUpi').value };
   state.terms = $('terms').value;
@@ -388,6 +573,25 @@ function sync() {
   render();
 }
 
+// ═══ POPULATE FORM FROM STATE ═══
+function populateForm(s) {
+  const b = s.business || {}, c = s.client || {}, m = s.meta || {}, bk = s.bank || {};
+  $('bName').value = b.name || ''; $('bAddr').value = b.addr || '';
+  $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || '';
+  $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || '';
+  $('cName').value = c.name || ''; $('cAddr').value = c.addr || '';
+  $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
+  $('mNo').value = m.no || ''; $('mDate').value = m.date || '';
+  $('mPlace').value = m.place || '';
+  $('bkName').value = bk.name || ''; $('bkAc').value = bk.ac || '';
+  $('bkIfsc').value = bk.ifsc || ''; $('bkUpi').value = bk.upi || '';
+  $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
+  $('taxType').value = s.taxType || 'cgst-sgst';
+  $('discount').value = s.discount || 0; $('shipping').value = s.shipping || 0;
+  $('templateSelect').value = s.template || 'classic';
+}
+
+// ═══ CALCULATE TOTALS ═══
 function calcTotals() {
   let subtotal = 0, totalTax = 0;
   const hsnSummary = {};
@@ -412,6 +616,7 @@ function calcTotals() {
   return { subtotal, discount, taxable, totalTax, shipping, beforeRound, rounded, roundOff, hsnSummary };
 }
 
+// ═══ NUMBER TO WORDS ═══
 function numToWords(n) {
   n = Math.round(Math.abs(n));
   if (n === 0) return 'Zero Rupees Only';
@@ -430,6 +635,7 @@ function numToWords(n) {
   return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
+// ═══ RENDER INVOICE PREVIEW ═══
 function render() {
   const s = state;
   const preview = $('invoicePreview');
@@ -518,6 +724,17 @@ function render() {
       <strong>Amount in Words:</strong> ${numToWords(t.rounded)}
     </div>`;
 
+  // NEW: Details block
+  const validDetails = (s.details || []).filter(d => d && d.trim());
+  const detailsBlock = validDetails.length ? `
+    <div class="details-block">
+      <div class="details-block-title">Details</div>
+      <ul class="details-block-list">
+        ${validDetails.map(d => `<li>${esc(d)}</li>`).join('')}
+      </ul>
+    </div>
+  ` : '';
+
   const footerBlock = `
     <div class="footer-grid">
       <div>
@@ -562,12 +779,11 @@ function render() {
           <div class="inv-meta">
             <div class="inv-meta-row"><span>Invoice No.</span><span>${esc(meta.no) || '—'}</span></div>
             <div class="inv-meta-row"><span>Invoice Date</span><span>${fmtDate(meta.date)}</span></div>
-            <div class="inv-meta-row"><span>Due Date</span><span>${fmtDate(meta.due)}</span></div>
             <div class="inv-meta-row"><span>Place of Supply</span><span>${esc(meta.place) || '—'}</span></div>
-            ${meta.po ? `<div class="inv-meta-row"><span>PO / Ref</span><span>${esc(meta.po)}</span></div>` : ''}
           </div>
         </div>
       </div>
+      ${detailsBlock}
       ${tableBlock}
       ${totalsBlock}
       ${wordsBlock}
@@ -592,7 +808,7 @@ function render() {
             <div class="inv-meta">
               <div class="inv-meta-row"><span>Invoice No.</span><span>${esc(meta.no) || '—'}</span></div>
               <div class="inv-meta-row"><span>Date</span><span>${fmtDate(meta.date)}</span></div>
-              <div class="inv-meta-row"><span>Due Date</span><span>${fmtDate(meta.due)}</span></div>
+              <div class="inv-meta-row"><span>Place of Supply</span><span>${esc(meta.place) || '—'}</span></div>
             </div>
           </div>
           <div style="margin-bottom:14px;">
@@ -600,6 +816,7 @@ function render() {
             <div class="inv-party-name">${esc(cliName)}</div>
             <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
           </div>
+          ${detailsBlock}
           ${tableBlock}
           ${totalsBlock}
           ${wordsBlock}
@@ -628,11 +845,11 @@ function render() {
         <div style="text-align:right;">
           <div style="font-size:11px;line-height:1.8;color:var(--muted);">
             <div>Date: <strong style="color:var(--text);">${fmtDate(meta.date)}</strong></div>
-            <div>Due: <strong style="color:var(--text);">${fmtDate(meta.due)}</strong></div>
             ${meta.place ? `<div>Place: <strong style="color:var(--text);">${esc(meta.place)}</strong></div>` : ''}
           </div>
         </div>
       </div>
+      ${detailsBlock}
       ${tableBlock}
       ${totalsBlock}
       ${wordsBlock}
@@ -643,15 +860,211 @@ function render() {
   preview.innerHTML = html;
 }
 
+// ═══ TEMPLATE SWITCH ═══
 function changeTemplate() {
   state.template = $('templateSelect').value;
   localStorage.setItem('invoiceState', JSON.stringify(state));
   render();
 }
 
+// ═══ HISTORY ═══
+function saveHistoryToLS() {
+  try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); }
+  catch (e) {
+    if (history.length > 20) {
+      history = history.slice(0, 20);
+      localStorage.setItem('invoiceHistory', JSON.stringify(history));
+    }
+  }
+}
+
+function saveToHistory() {
+  if (!state.client.name && !state.meta.no && !state.items.some(i => i.desc)) return false;
+
+  const totals = calcTotals();
+  const entry = {
+    id: editingHistoryId || ('inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
+    savedAt: new Date().toISOString(),
+    business: JSON.parse(JSON.stringify(state.business)),
+    client: JSON.parse(JSON.stringify(state.client)),
+    meta: JSON.parse(JSON.stringify(state.meta)),
+    items: JSON.parse(JSON.stringify(state.items)),
+    details: JSON.parse(JSON.stringify(state.details || [])),  // NEW
+    bank: JSON.parse(JSON.stringify(state.bank)),
+    terms: state.terms,
+    notes: state.notes,
+    taxType: state.taxType,
+    discount: state.discount,
+    shipping: state.shipping,
+    template: state.template,
+    total: totals.rounded,
+    invoiceNo: state.meta.no || '(no number)',
+    clientName: state.client.name || '(no client)',
+    invoiceDate: state.meta.date || new Date().toISOString().split('T')[0]
+  };
+
+  if (editingHistoryId) {
+    const idx = history.findIndex(h => h.id === editingHistoryId);
+    if (idx >= 0) history[idx] = entry;
+    else history.unshift(entry);
+    editingHistoryId = null;
+  } else {
+    history.unshift(entry);
+  }
+
+  if (history.length > 50) history = history.slice(0, 50);
+  saveHistoryToLS();
+  renderHistory();
+  return true;
+}
+
+function renderHistory() {
+  const list = $('historyList');
+  const count = $('historyCount');
+  count.textContent = history.length;
+
+  if (!history.length) {
+    list.innerHTML = `
+      <div class="history-empty">
+        <div class="history-empty-icon">📭</div>
+        <div>No saved invoices yet</div>
+        <div style="font-size:10.5px;margin-top:4px;color:#cbd5e1;">Fill the form & click Print to save</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = history.map(h => {
+    const isSelected = h.id === editingHistoryId;
+    const dateStr = h.invoiceDate ? fmtDate(h.invoiceDate) : fmtDate(h.savedAt);
+    return `
+      <div class="history-item ${isSelected ? 'selected' : ''}" onclick="loadFromHistory('${h.id}')">
+        <div class="hi-top">
+          <div class="hi-no">${esc(h.invoiceNo)}</div>
+          <div class="hi-date">${dateStr}</div>
+        </div>
+        <div class="hi-client">${esc(h.clientName)}</div>
+        <div class="hi-bottom">
+          <div class="hi-amount">${fmt(h.total)}</div>
+          <div class="hi-actions" onclick="event.stopPropagation()">
+            <button class="hi-del" onclick="deleteFromHistory('${h.id}')" title="Delete">🗑️</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function loadFromHistory(id) {
+  const entry = history.find(h => h.id === id);
+  if (!entry) return;
+
+  const hasCurrentData = state.client.name || state.items.some(i => i.desc);
+  if (hasCurrentData && editingHistoryId !== id) {
+    if (!confirm('Load this saved invoice? Current form data will be replaced.')) return;
+  }
+
+  state.business = JSON.parse(JSON.stringify(entry.business));
+  state.client = JSON.parse(JSON.stringify(entry.client));
+  state.meta = JSON.parse(JSON.stringify(entry.meta));
+  state.items = JSON.parse(JSON.stringify(entry.items));
+  state.details = JSON.parse(JSON.stringify(entry.details || ['']));  // NEW
+  state.bank = JSON.parse(JSON.stringify(entry.bank));
+  state.terms = entry.terms;
+  state.notes = entry.notes;
+  state.taxType = entry.taxType;
+  state.discount = entry.discount;
+  state.shipping = entry.shipping;
+  state.template = entry.template;
+
+  editingHistoryId = id;
+
+  populateForm(state);
+  renderItems();
+  renderDetails();  // NEW
+  render();
+  renderHistory();
+
+  showToast('✓ Invoice loaded for editing', 'blue');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deleteFromHistory(id) {
+  const entry = history.find(h => h.id === id);
+  if (!entry) return;
+  if (!confirm(`Delete invoice "${entry.invoiceNo}"?`)) return;
+
+  history = history.filter(h => h.id !== id);
+  if (editingHistoryId === id) editingHistoryId = null;
+
+  saveHistoryToLS();
+  renderHistory();
+  showToast('🗑️ Invoice deleted');
+}
+
+// ═══ AUTO-INCREMENT ═══
+function getNextInvoiceNo() {
+  if (history.length > 0) {
+    const last = history[0].invoiceNo || '';
+    const match = last.match(/(.*?)(\d+)$/);
+    if (match) {
+      const prefix = match[1];
+      const n = parseInt(match[2]) + 1;
+      const padLen = match[2].length;
+      return prefix + String(n).padStart(padLen, '0');
+    }
+  }
+  const yr = new Date().getFullYear();
+  return `INV-${yr}-001`;
+}
+
+// ═══ RESET FOR NEXT INVOICE ═══
+function resetForNextInvoice() {
+  const today = new Date().toISOString().split('T')[0];
+  $('cName').value = '';
+  $('cAddr').value = '';
+  $('cGstin').value = '';
+  $('cEmail').value = '';
+  $('cPhone').value = '';
+  $('mNo').value = getNextInvoiceNo();
+  $('mDate').value = today;
+  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
+  state.details = [''];   // NEW: reset details
+  $('discount').value = 0;
+  $('shipping').value = 0;
+  editingHistoryId = null;
+  renderItems();
+  renderDetails();        // NEW
+  sync();
+  renderHistory();
+}
+
+// ═══ PRINT & SAVE ═══
+let printHandled = false;
+
+function printAndSave() {
+  const saved = saveToHistory();
+  if (saved) {
+    showToast('✓ Invoice saved — opening print');
+  } else {
+    showToast('⚠️ Nothing to save — fill the form first');
+    return;
+  }
+  printHandled = false;
+  setTimeout(() => { window.print(); }, 300);
+}
+
+window.addEventListener('afterprint', () => {
+  if (printHandled) return;
+  printHandled = true;
+  setTimeout(() => {
+    resetForNextInvoice();
+    showToast('✓ Ready for next invoice');
+  }, 200);
+});
+
+// ═══ SAMPLE ═══
 function loadSample() {
   const today = new Date().toISOString().split('T')[0];
-  const due = new Date(Date.now() + 15*86400000).toISOString().split('T')[0];
   $('bName').value = 'Tarun Prajapat & Co.';
   $('bAddr').value = 'Shop 12, MI Road, Jaipur, Rajasthan - 302001';
   $('bGstin').value = '08ABCDE1234F1Z5';
@@ -663,11 +1076,9 @@ function loadSample() {
   $('cGstin').value = '07XYZAB5678G1Z9';
   $('cEmail').value = 'accounts@sharmaent.com';
   $('cPhone').value = '+91 98111 22334';
-  $('mNo').value = 'INV-2026-001';
+  $('mNo').value = getNextInvoiceNo();
   $('mDate').value = today;
-  $('mDue').value = due;
   $('mPlace').value = 'Jaipur, RJ';
-  $('mPo').value = 'PO-2026-045';
   $('taxType').value = 'cgst-sgst';
   $('discount').value = 0;
   $('shipping').value = 0;
@@ -684,22 +1095,47 @@ function loadSample() {
     { desc:'TDS Return Filing (Quarterly)', hsn:'998221', qty:1, rate:5000, gst:18 },
     { desc:'ERP Data Entry & Reconciliation', hsn:'998313', qty:10, rate:800, gst:18 }
   ];
+
+  // NEW: sample details
+  state.details = [
+    'Project: MIS Automation — Q1 2026',
+    'Site: Sharma Enterprises HO, New Delhi',
+    'Work Order: WO-2026-045 dated 01-Oct-2026'
+  ];
+
   renderItems();
+  renderDetails();  // NEW
   sync();
 }
 
+// ═══ CLEAR FORM ═══
 function clearAll() {
-  if (!confirm('Clear all invoice data?')) return;
-  const ids = ['bName','bAddr','bGstin','bPan','bEmail','bPhone','cName','cAddr','cGstin','cEmail','cPhone','mNo','mDate','mDue','mPlace','mPo','bkName','bkAc','bkIfsc','bkUpi','terms','notes'];
-  ids.forEach(id => { const el = $(id); if (el) el.value = ''; });
+  if (!confirm('Clear current form? (Business details & saved invoices will be kept)')) return;
+
+  $('cName').value = '';
+  $('cAddr').value = '';
+  $('cGstin').value = '';
+  $('cEmail').value = '';
+  $('cPhone').value = '';
+
+  const today = new Date().toISOString().split('T')[0];
+  $('mNo').value = getNextInvoiceNo();
+  $('mDate').value = today;
   $('discount').value = 0;
   $('shipping').value = 0;
-  $('taxType').value = 'cgst-sgst';
+
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
+  state.details = [''];  // NEW
+  editingHistoryId = null;
+
   renderItems();
+  renderDetails();  // NEW
   sync();
+  renderHistory();
+  showToast('🗑️ Form cleared');
 }
 
+// ═══ JSON SAVE/LOAD ═══
 function saveJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -715,22 +1151,12 @@ function loadJSON(e) {
     try {
       const data = JSON.parse(ev.target.result);
       Object.assign(state, data);
-      const b = state.business, c = state.client, m = state.meta, bk = state.bank;
-      $('bName').value = b.name || ''; $('bAddr').value = b.addr || '';
-      $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || '';
-      $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || '';
-      $('cName').value = c.name || ''; $('cAddr').value = c.addr || '';
-      $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
-      $('mNo').value = m.no || ''; $('mDate').value = m.date || '';
-      $('mDue').value = m.due || ''; $('mPlace').value = m.place || ''; $('mPo').value = m.po || '';
-      $('bkName').value = bk.name || ''; $('bkAc').value = bk.ac || '';
-      $('bkIfsc').value = bk.ifsc || ''; $('bkUpi').value = bk.upi || '';
-      $('terms').value = state.terms || ''; $('notes').value = state.notes || '';
-      $('taxType').value = state.taxType || 'cgst-sgst';
-      $('discount').value = state.discount || 0; $('shipping').value = state.shipping || 0;
-      $('templateSelect').value = state.template || 'classic';
+      if (!state.details) state.details = [''];  // backward compat
+      populateForm(state);
       renderItems();
+      renderDetails();
       sync();
+      showToast('✓ JSON loaded');
     } catch (err) {
       alert('Invalid JSON file: ' + err.message);
     }
@@ -739,48 +1165,34 @@ function loadJSON(e) {
   e.target.value = '';
 }
 
+// ═══ INIT ═══
 (function init() {
+  try {
+    const savedHistory = localStorage.getItem('invoiceHistory');
+    if (savedHistory) history = JSON.parse(savedHistory);
+  } catch (e) { history = []; }
+
   const saved = localStorage.getItem('invoiceState');
   if (saved) {
     try {
       const data = JSON.parse(saved);
       Object.assign(state, data);
-      const b = state.business || {}, c = state.client || {}, m = state.meta || {}, bk = state.bank || {};
-      if ($('bName')) $('bName').value = b.name || '';
-      if ($('bAddr')) $('bAddr').value = b.addr || '';
-      if ($('bGstin')) $('bGstin').value = b.gstin || '';
-      if ($('bPan')) $('bPan').value = b.pan || '';
-      if ($('bEmail')) $('bEmail').value = b.email || '';
-      if ($('bPhone')) $('bPhone').value = b.phone || '';
-      if ($('cName')) $('cName').value = c.name || '';
-      if ($('cAddr')) $('cAddr').value = c.addr || '';
-      if ($('cGstin')) $('cGstin').value = c.gstin || '';
-      if ($('cEmail')) $('cEmail').value = c.email || '';
-      if ($('cPhone')) $('cPhone').value = c.phone || '';
-      if ($('mNo')) $('mNo').value = m.no || '';
-      if ($('mDate')) $('mDate').value = m.date || '';
-      if ($('mDue')) $('mDue').value = m.due || '';
-      if ($('mPlace')) $('mPlace').value = m.place || '';
-      if ($('mPo')) $('mPo').value = m.po || '';
-      if ($('bkName')) $('bkName').value = bk.name || '';
-      if ($('bkAc')) $('bkAc').value = bk.ac || '';
-      if ($('bkIfsc')) $('bkIfsc').value = bk.ifsc || '';
-      if ($('bkUpi')) $('bkUpi').value = bk.upi || '';
-      if ($('terms')) $('terms').value = state.terms || '';
-      if ($('notes')) $('notes').value = state.notes || '';
-      if ($('taxType')) $('taxType').value = state.taxType || 'cgst-sgst';
-      if ($('discount')) $('discount').value = state.discount || 0;
-      if ($('shipping')) $('shipping').value = state.shipping || 0;
-      if ($('templateSelect')) $('templateSelect').value = state.template || 'classic';
+      if (!state.details) state.details = [''];  // backward compat
+      populateForm(state);
     } catch (err) {}
   } else {
     const t = new Date().toISOString().split('T')[0];
     $('mDate').value = t;
-    const d = new Date(Date.now() + 15*86400000).toISOString().split('T')[0];
-    $('mDue').value = d;
+    $('mNo').value = getNextInvoiceNo();
   }
+
+  if (!$('mNo').value) $('mNo').value = getNextInvoiceNo();
+  if (!state.details || !state.details.length) state.details = [''];
+
   renderItems();
+  renderDetails();  // NEW
   sync();
+  renderHistory();
 })();
 </script>
 
