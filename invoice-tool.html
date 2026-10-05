@@ -43,10 +43,33 @@
   .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  .item-row { display: grid; grid-template-columns: 1.6fr 0.8fr 0.6fr 0.9fr 0.7fr auto; gap: 5px; padding: 5px 0; align-items: center; }
-  .item-row input { padding: 6px 8px; font-size: 12px; border: 1.5px solid #e2e8f0; border-radius: 6px; }
+  .item-row { display: grid; grid-template-columns: 1.8fr 0.9fr 0.6fr 0.9fr 0.7fr auto; gap: 5px; padding: 5px 0; align-items: center; min-width: 480px; }
+  .item-row input { padding: 6px 8px; font-size: 12px; border: 1.5px solid #e2e8f0; border-radius: 6px; width: 100%; }
   .item-row input:focus { outline: none; border-color: #3b82f6; }
   .item-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  /* ══════════════════════════════════════════
+     LINE ITEMS — HORIZONTAL SCROLL FIX
+     ══════════════════════════════════════════ */
+  .items-scroll-wrap {
+    position: relative;
+    margin-bottom: 4px;
+  }
+  .items-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 8px;
+    margin: 0 -4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 #f1f5f9;
+  }
+  .items-scroll::-webkit-scrollbar { height: 8px; }
+  .items-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+  .items-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+  .items-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
+  .items-inner { min-width: 480px; }
 
   .invoice-a4 {
     background: #fff;
@@ -230,15 +253,21 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'itemsBody')">📦 Line Items <span>▼</span></div>
       <div class="panel-body" id="itemsBody" style="padding:12px;">
-        <div class="item-row" style="padding-bottom:4px;">
-          <div class="item-label">Description</div>
-          <div class="item-label">HSN/SAC</div>
-          <div class="item-label">Qty</div>
-          <div class="item-label">Rate</div>
-          <div class="item-label">GST%</div>
-          <div></div>
+        <div class="items-scroll-wrap">
+          <div class="items-scroll">
+            <div class="items-inner">
+              <div class="item-row" style="padding-bottom:4px;">
+                <div class="item-label">Description</div>
+                <div class="item-label">HSN/SAC</div>
+                <div class="item-label">Qty</div>
+                <div class="item-label">Rate</div>
+                <div class="item-label">GST%</div>
+                <div></div>
+              </div>
+              <div id="itemsContainer"></div>
+            </div>
+          </div>
         </div>
-        <div id="itemsContainer"></div>
         <button class="btn btn-success btn-sm" style="margin-top:10px;width:100%;justify-content:center;" onclick="addItem()">➕ Add Item</button>
       </div>
     </div>
