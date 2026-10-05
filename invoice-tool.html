@@ -324,6 +324,9 @@
           </div>
           <div id="detailsContainer"></div>
           <button class="btn btn-success btn-sm" style="margin-top:6px;width:100%;justify-content:center;" onclick="addDetail()">➕ Add Line</button>
+          <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.4;">
+            💡 Tip: <strong>Label : Value</strong> format me likho — jaise <code>Site name: Namma</code>
+          </div>
         </div>
       </div>
     </div>
@@ -533,7 +536,7 @@ function renderDetails() {
   if (!state.details || !state.details.length) state.details = [''];
   c.innerHTML = state.details.map((d, i) => `
     <div class="detail-row">
-      <input placeholder="Enter detail..." value="${esc(d)}" oninput="updateDetail(${i}, this.value)">
+      <input placeholder="e.g. Site name: Namma" value="${esc(d)}" oninput="updateDetail(${i}, this.value)">
       <button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})" title="Remove">✖</button>
     </div>
   `).join('');
@@ -729,10 +732,20 @@ function render() {
       <strong>Amount in Words:</strong> ${numToWords(t.rounded)}
     </div>`;
 
+  // ═══════════════════════════════════════════════════════════
+  //  DETAILS BLOCK — Invoice No. / Date / Place style
+  //  (label left muted, value right bold)
+  // ═══════════════════════════════════════════════════════════
   const validDetails = (s.details || []).filter(d => d && d.trim());
   const detailsBlock = validDetails.length ? `
-    <div style="margin-top: 10px;">
-      ${validDetails.map(d => `<div style="font-size: 11.5px; color: var(--text); margin-bottom: 3px; line-height: 1.55;"><strong>${esc(d)}</strong></div>`).join('')}
+    <div style="margin-top: 8px;">
+      ${validDetails.map(d => {
+        const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
+        if (m) {
+          return `<div class="inv-meta-row"><span>${esc(m[1].trim())}</span><span>${esc(m[2].trim())}</span></div>`;
+        }
+        return `<div class="inv-meta-row"><span></span><span>${esc(d)}</span></div>`;
+      }).join('')}
     </div>
   ` : '';
 
@@ -1074,7 +1087,7 @@ function loadSample() {
   $('cPhone').value = '+91 98111 22334';
   $('mNo').value = getNextInvoiceNo();
   $('mDate').value = today;
-  $('mPlace').value = 'Jaipur, RJ';
+  $('mPlace').value = '08-Rajasthan';
   $('taxType').value = 'cgst-sgst';
   $('bkName').value = 'HDFC Bank';
   $('bkAc').value = '50100123456789';
@@ -1092,9 +1105,9 @@ function loadSample() {
   ];
 
   state.details = [
-    'Project: MIS Automation — Q1 2026',
-    'Site: Sharma Enterprises HO, New Delhi',
-    'Work Order: WO-2026-045 dated 01-Oct-2026'
+    'Site name: Namma',
+    'Site Id: IN-12521251',
+    'Site Ref No.: R/fd/231413'
   ];
 
   renderItems();
