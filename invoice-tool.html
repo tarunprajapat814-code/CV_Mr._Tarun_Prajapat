@@ -158,26 +158,6 @@
   .inv-party-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
   .inv-party-info { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
-  .details-block {
-    margin: 12px 0; padding: 10px 14px;
-    background: var(--accent-soft); border-radius: 8px;
-    border-left: 3px solid var(--accent);
-  }
-  .details-block-title {
-    font-size: 10px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 1.2px;
-    color: var(--accent); margin-bottom: 6px;
-  }
-  .details-block-list { list-style: none; padding: 0; margin: 0; }
-  .details-block-list li {
-    font-size: 11.5px; color: var(--text);
-    padding: 2px 0 2px 14px; position: relative; line-height: 1.55;
-  }
-  .details-block-list li::before {
-    content: '•'; position: absolute; left: 0;
-    color: var(--accent); font-weight: 700;
-  }
-
   .inv-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
   .inv-table th { background: var(--accent); color: var(--accent-text); padding: 9px 10px; font-size: 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
   .inv-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 11.5px; vertical-align: top; }
@@ -228,7 +208,6 @@
   .tpl-minimal .inv-table td { padding: 10px 6px; border-bottom: 1px solid var(--line); }
   .tpl-minimal .inv-party-label { font-size: 9px; }
   .tpl-minimal .words-box { background: transparent; border: 1px solid var(--line); }
-  .tpl-minimal .details-block { background: transparent; border-left: 2px solid var(--accent); }
 
   .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 2px solid var(--accent); margin-bottom: 14px; }
   .tpl-gst .inv-h1 { font-size: 26px; color: var(--accent); }
@@ -430,9 +409,6 @@ const fmtDate = d => {
   return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 };
 
-// ═══════════════════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════════════════
 function showToast(msg, type) {
   const t = $('toast');
   t.textContent = msg;
@@ -441,18 +417,12 @@ function showToast(msg, type) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  PANEL TOGGLE
-// ═══════════════════════════════════════════════════════════
 function togglePanel(head, bodyId) {
   const body = $(bodyId);
   body.classList.toggle('hidden');
   head.classList.toggle('collapsed');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  AUTO-FILL PAN FROM GSTIN
-// ═══════════════════════════════════════════════════════════
 function autoPanFromGstin() {
   const gstin = $('bGstin').value.trim().toUpperCase();
   const panField = $('bPan');
@@ -465,7 +435,6 @@ function autoPanFromGstin() {
 
 // ═══════════════════════════════════════════════════════════
 //  AUTO-FETCH BRANCH FROM IFSC
-//  Uses Razorpay IFSC API via AllOrigins CORS proxy
 // ═══════════════════════════════════════════════════════════
 let ifscFetchTimer = null;
 let ifscLastFetched = '';
@@ -526,9 +495,6 @@ async function fetchBranchFromIFSC(ifsc) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  ITEMS
-// ═══════════════════════════════════════════════════════════
 function renderItems() {
   const c = $('itemsContainer');
   c.innerHTML = state.items.map((it, i) => `
@@ -556,9 +522,6 @@ function removeItem(i) {
   renderItems(); sync();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  DETAILS — like items
-// ═══════════════════════════════════════════════════════════
 function renderDetails() {
   const c = $('detailsContainer');
   if (!state.details || !state.details.length) state.details = [''];
@@ -592,9 +555,6 @@ function removeDetail(i) {
   sync();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SYNC FORM → STATE
-// ═══════════════════════════════════════════════════════════
 function sync() {
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value,
@@ -620,9 +580,6 @@ function sync() {
   render();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  POPULATE FORM FROM STATE
-// ═══════════════════════════════════════════════════════════
 function populateForm(s) {
   const b = s.business || {}, c = s.client || {}, m = s.meta || {}, bk = s.bank || {};
   $('bName').value = b.name || ''; $('bAddr').value = b.addr || '';
@@ -640,9 +597,6 @@ function populateForm(s) {
   $('templateSelect').value = s.template || 'classic';
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CALCULATE TOTALS
-// ═══════════════════════════════════════════════════════════
 function calcTotals() {
   let subtotal = 0, totalTax = 0;
   const hsnSummary = {};
@@ -665,9 +619,6 @@ function calcTotals() {
   return { subtotal, taxable, totalTax, beforeRound, rounded, roundOff, hsnSummary };
 }
 
-// ═══════════════════════════════════════════════════════════
-//  NUMBER TO WORDS
-// ═══════════════════════════════════════════════════════════
 function numToWords(n) {
   n = Math.round(Math.abs(n));
   if (n === 0) return 'Zero Rupees Only';
@@ -686,9 +637,6 @@ function numToWords(n) {
   return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  RENDER INVOICE PREVIEW
-// ═══════════════════════════════════════════════════════════
 function render() {
   const s = state;
   const preview = $('invoicePreview');
@@ -775,13 +723,13 @@ function render() {
       <strong>Amount in Words:</strong> ${numToWords(t.rounded)}
     </div>`;
 
+  // ═══════════════════════════════════════════════════════════
+  //  DETAILS BLOCK — Simple bold text (no box, no bullets)
+  // ═══════════════════════════════════════════════════════════
   const validDetails = (s.details || []).filter(d => d && d.trim());
   const detailsBlock = validDetails.length ? `
-    <div class="details-block">
-      <div class="details-block-title">Details</div>
-      <ul class="details-block-list">
-        ${validDetails.map(d => `<li>${esc(d)}</li>`).join('')}
-      </ul>
+    <div style="margin: 10px 0 14px 0;">
+      ${validDetails.map(d => `<div style="font-size: 11.5px; color: var(--text); margin-bottom: 3px; line-height: 1.55;"><strong>${esc(d)}</strong></div>`).join('')}
     </div>
   ` : '';
 
@@ -911,18 +859,12 @@ function render() {
   preview.innerHTML = html;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  TEMPLATE SWITCH
-// ═══════════════════════════════════════════════════════════
 function changeTemplate() {
   state.template = $('templateSelect').value;
   localStorage.setItem('invoiceState', JSON.stringify(state));
   render();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  HISTORY — SAVE / LOAD / DELETE
-// ═══════════════════════════════════════════════════════════
 function saveHistoryToLS() {
   try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); }
   catch (e) {
@@ -1052,9 +994,6 @@ function deleteFromHistory(id) {
   showToast('🗑️ Invoice deleted');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  AUTO-INCREMENT INVOICE NUMBER
-// ═══════════════════════════════════════════════════════════
 function getNextInvoiceNo() {
   if (history.length > 0) {
     const last = history[0].invoiceNo || '';
@@ -1070,9 +1009,6 @@ function getNextInvoiceNo() {
   return `INV-${yr}-001`;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  RESET FOR NEXT INVOICE
-// ═══════════════════════════════════════════════════════════
 function resetForNextInvoice() {
   const today = new Date().toISOString().split('T')[0];
   $('cName').value = '';
@@ -1091,9 +1027,6 @@ function resetForNextInvoice() {
   renderHistory();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  PRINT & SAVE
-// ═══════════════════════════════════════════════════════════
 let printHandled = false;
 
 function printAndSave() {
@@ -1117,9 +1050,6 @@ window.addEventListener('afterprint', () => {
   }, 200);
 });
 
-// ═══════════════════════════════════════════════════════════
-//  SAMPLE DATA
-// ═══════════════════════════════════════════════════════════
 function loadSample() {
   const today = new Date().toISOString().split('T')[0];
   $('bName').value = 'Tarun Prajapat & Co.';
@@ -1163,9 +1093,6 @@ function loadSample() {
   sync();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CLEAR FORM (keep business + bank)
-// ═══════════════════════════════════════════════════════════
 function clearAll() {
   if (!confirm('Clear current form? (Business details & saved invoices will be kept)')) return;
 
@@ -1190,9 +1117,6 @@ function clearAll() {
   showToast('🗑️ Form cleared');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SAVE / LOAD JSON
-// ═══════════════════════════════════════════════════════════
 function saveJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -1222,9 +1146,6 @@ function loadJSON(e) {
   e.target.value = '';
 }
 
-// ═══════════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════════
 (function init() {
   try {
     const savedHistory = localStorage.getItem('invoiceHistory');
