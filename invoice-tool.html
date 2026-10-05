@@ -61,9 +61,6 @@
   .items-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
   .items-inner { min-width: 480px; }
 
-  /* ══════════════════════════════════════════
-     DETAILS SECTION (like Items)
-     ══════════════════════════════════════════ */
   .details-section { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #e2e8f0; }
   .details-heading {
     display: flex; align-items: center; justify-content: space-between;
@@ -72,25 +69,16 @@
     margin-bottom: 6px;
   }
   .detail-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 6px;
-    padding: 4px 0;
-    align-items: center;
+    display: grid; grid-template-columns: 1fr auto; gap: 6px;
+    padding: 4px 0; align-items: center;
   }
   .detail-row input {
-    padding: 7px 10px;
-    font-size: 12.5px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 6px;
-    width: 100%;
-    background: #fff;
+    padding: 7px 10px; font-size: 12.5px;
+    border: 1.5px solid #e2e8f0; border-radius: 6px;
+    width: 100%; background: #fff;
   }
   .detail-row input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
 
-  /* ══════════════════════════════════════════
-     SAVED INVOICES (HISTORY) PANEL
-     ══════════════════════════════════════════ */
   .history-badge {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 22px; height: 22px; padding: 0 7px;
@@ -170,38 +158,24 @@
   .inv-party-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
   .inv-party-info { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
-  /* ══════════════════════════════════════════
-     DETAILS BLOCK IN PREVIEW
-     ══════════════════════════════════════════ */
   .details-block {
-    margin: 12px 0;
-    padding: 10px 14px;
-    background: var(--accent-soft);
-    border-radius: 8px;
+    margin: 12px 0; padding: 10px 14px;
+    background: var(--accent-soft); border-radius: 8px;
     border-left: 3px solid var(--accent);
   }
   .details-block-title {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--accent);
-    margin-bottom: 6px;
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--accent); margin-bottom: 6px;
   }
   .details-block-list { list-style: none; padding: 0; margin: 0; }
   .details-block-list li {
-    font-size: 11.5px;
-    color: var(--text);
-    padding: 2px 0 2px 14px;
-    position: relative;
-    line-height: 1.55;
+    font-size: 11.5px; color: var(--text);
+    padding: 2px 0 2px 14px; position: relative; line-height: 1.55;
   }
   .details-block-list li::before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: 700;
+    content: '•'; position: absolute; left: 0;
+    color: var(--accent); font-weight: 700;
   }
 
   .inv-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
@@ -308,7 +282,6 @@
 <div class="layout">
   <aside class="no-print">
 
-    <!-- ═══ SAVED INVOICES ═══ -->
     <div class="panel" id="historyPanel">
       <div class="panel-head" onclick="togglePanel(this, 'historyBody')">
         <div style="display:flex;align-items:center;">📚 Saved Invoices <span class="history-badge" id="historyCount">0</span></div>
@@ -348,7 +321,6 @@
       </div>
     </div>
     
-    <!-- ═══ INVOICE DETAILS (with NEW Details section) ═══ -->
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'metaBody')">📅 Invoice Details <span>▼</span></div>
       <div class="panel-body" id="metaBody">
@@ -358,7 +330,6 @@
         </div>
         <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" oninput="sync()"></div>
 
-        <!-- NEW: DETAILS SECTION (like Items) -->
         <div class="details-section">
           <div class="details-heading">
             <span>Details</span>
@@ -392,18 +363,15 @@
     </div>
     
     <div class="panel">
-      <div class="panel-head" onclick="togglePanel(this, 'totBody')">💰 Totals & Tax <span>▼</span></div>
+      <div class="panel-head" onclick="togglePanel(this, 'totBody')">💰 Tax Type <span>▼</span></div>
       <div class="panel-body" id="totBody">
-        <div class="field"><label>Tax Type</label>
+        <div class="field">
+          <label>Tax Type</label>
           <select id="taxType" onchange="sync()">
             <option value="cgst-sgst">CGST + SGST (Intra-state)</option>
             <option value="igst">IGST (Inter-state)</option>
             <option value="none">No GST</option>
           </select>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>Discount (₹)</label><input id="discount" type="number" value="0" oninput="sync()"></div>
-          <div class="field"><label>Shipping (₹)</label><input id="shipping" type="number" value="0" oninput="sync()"></div>
         </div>
       </div>
     </div>
@@ -414,7 +382,15 @@
         <div class="field"><label>Bank Name</label><input id="bkName" placeholder="e.g. HDFC Bank" oninput="sync()"></div>
         <div class="grid2">
           <div class="field"><label>Account No.</label><input id="bkAc" oninput="sync()"></div>
-          <div class="field"><label>IFSC</label><input id="bkIfsc" oninput="sync()"></div>
+          <div class="field">
+            <label>IFSC</label>
+            <input id="bkIfsc" placeholder="HDFC0001234" maxlength="11" style="text-transform:uppercase;" oninput="onIfscInput(this.value); sync()">
+            <div id="ifscStatus" style="font-size:10px;margin-top:3px;min-height:14px;color:#94a3b8;"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Branch Name</label>
+          <input id="bkBranch" placeholder="Auto-filled from IFSC" oninput="sync()">
         </div>
         <div class="field"><label>UPI ID (optional)</label><input id="bkUpi" placeholder="name@upi" oninput="sync()"></div>
         <div class="field"><label>Terms & Conditions</label><textarea id="terms" rows="3" oninput="sync()"></textarea></div>
@@ -435,10 +411,8 @@
 const state = {
   template: 'classic',
   taxType: 'cgst-sgst',
-  discount: 0,
-  shipping: 0,
   items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }],
-  details: [''],   // NEW: array of detail lines
+  details: [''],
   business: {}, client: {}, meta: {}, bank: {}, terms:'', notes:''
 };
 
@@ -456,7 +430,9 @@ const fmtDate = d => {
   return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 };
 
-// ═══ TOAST ═══
+// ═══════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════
 function showToast(msg, type) {
   const t = $('toast');
   t.textContent = msg;
@@ -465,14 +441,18 @@ function showToast(msg, type) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ═══ PANEL TOGGLE ═══
+// ═══════════════════════════════════════════════════════════
+//  PANEL TOGGLE
+// ═══════════════════════════════════════════════════════════
 function togglePanel(head, bodyId) {
   const body = $(bodyId);
   body.classList.toggle('hidden');
   head.classList.toggle('collapsed');
 }
 
-// ═══ AUTO-FILL PAN FROM GSTIN ═══
+// ═══════════════════════════════════════════════════════════
+//  AUTO-FILL PAN FROM GSTIN
+// ═══════════════════════════════════════════════════════════
 function autoPanFromGstin() {
   const gstin = $('bGstin').value.trim().toUpperCase();
   const panField = $('bPan');
@@ -483,7 +463,72 @@ function autoPanFromGstin() {
   }
 }
 
-// ═══ ITEMS ═══
+// ═══════════════════════════════════════════════════════════
+//  AUTO-FETCH BRANCH FROM IFSC
+//  Uses Razorpay IFSC API via AllOrigins CORS proxy
+// ═══════════════════════════════════════════════════════════
+let ifscFetchTimer = null;
+let ifscLastFetched = '';
+
+function onIfscInput(value) {
+  const ifsc = (value || '').trim().toUpperCase();
+  const status = $('ifscStatus');
+  const branchField = $('bkBranch');
+
+  if (ifscFetchTimer) clearTimeout(ifscFetchTimer);
+
+  if (!ifsc) {
+    status.textContent = '';
+    return;
+  }
+
+  if (ifsc.length !== 11) {
+    status.textContent = `${ifsc.length}/11`;
+    status.style.color = '#94a3b8';
+    return;
+  }
+
+  if (ifscLastFetched === ifsc) return;
+
+  status.textContent = '🔄 Fetching branch...';
+  status.style.color = '#3b82f6';
+
+  ifscFetchTimer = setTimeout(() => {
+    fetchBranchFromIFSC(ifsc);
+  }, 400);
+}
+
+async function fetchBranchFromIFSC(ifsc) {
+  const status = $('ifscStatus');
+  const branchField = $('bkBranch');
+
+  try {
+    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc);
+    const res = await fetch(proxyUrl);
+
+    if (!res.ok) throw new Error('Invalid IFSC code');
+
+    const data = await res.json();
+
+    if (data && data.BRANCH) {
+      branchField.value = data.BRANCH;
+      ifscLastFetched = ifsc;
+      status.textContent = '✓ ' + data.BANK + ' · ' + data.CITY;
+      status.style.color = '#059669';
+      sync();
+    } else {
+      throw new Error('Branch not found');
+    }
+  } catch (err) {
+    status.textContent = '✗ ' + (err.message || 'Not found');
+    status.style.color = '#dc2626';
+    ifscLastFetched = '';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ITEMS
+// ═══════════════════════════════════════════════════════════
 function renderItems() {
   const c = $('itemsContainer');
   c.innerHTML = state.items.map((it, i) => `
@@ -512,7 +557,7 @@ function removeItem(i) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  DETAILS — NEW (like items)
+//  DETAILS — like items
 // ═══════════════════════════════════════════════════════════
 function renderDetails() {
   const c = $('detailsContainer');
@@ -531,7 +576,6 @@ function updateDetail(i, v) {
 function addDetail() {
   state.details.push('');
   renderDetails();
-  // Focus on newly added field
   setTimeout(() => {
     const inputs = $('detailsContainer').querySelectorAll('input');
     if (inputs.length) inputs[inputs.length - 1].focus();
@@ -548,7 +592,9 @@ function removeDetail(i) {
   sync();
 }
 
-// ═══ SYNC FORM → STATE ═══
+// ═══════════════════════════════════════════════════════════
+//  SYNC FORM → STATE
+// ═══════════════════════════════════════════════════════════
 function sync() {
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value,
@@ -562,18 +608,21 @@ function sync() {
     no: $('mNo').value, date: $('mDate').value,
     place: $('mPlace').value
   };
-  state.bank = { name: $('bkName').value, ac: $('bkAc').value, ifsc: $('bkIfsc').value, upi: $('bkUpi').value };
+  state.bank = {
+    name: $('bkName').value, ac: $('bkAc').value, ifsc: $('bkIfsc').value,
+    branch: $('bkBranch').value, upi: $('bkUpi').value
+  };
   state.terms = $('terms').value;
   state.notes = $('notes').value;
   state.taxType = $('taxType').value;
-  state.discount = num($('discount').value);
-  state.shipping = num($('shipping').value);
 
   localStorage.setItem('invoiceState', JSON.stringify(state));
   render();
 }
 
-// ═══ POPULATE FORM FROM STATE ═══
+// ═══════════════════════════════════════════════════════════
+//  POPULATE FORM FROM STATE
+// ═══════════════════════════════════════════════════════════
 function populateForm(s) {
   const b = s.business || {}, c = s.client || {}, m = s.meta || {}, bk = s.bank || {};
   $('bName').value = b.name || ''; $('bAddr').value = b.addr || '';
@@ -584,14 +633,16 @@ function populateForm(s) {
   $('mNo').value = m.no || ''; $('mDate').value = m.date || '';
   $('mPlace').value = m.place || '';
   $('bkName').value = bk.name || ''; $('bkAc').value = bk.ac || '';
-  $('bkIfsc').value = bk.ifsc || ''; $('bkUpi').value = bk.upi || '';
+  $('bkIfsc').value = bk.ifsc || ''; $('bkBranch').value = bk.branch || '';
+  $('bkUpi').value = bk.upi || '';
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
   $('taxType').value = s.taxType || 'cgst-sgst';
-  $('discount').value = s.discount || 0; $('shipping').value = s.shipping || 0;
   $('templateSelect').value = s.template || 'classic';
 }
 
-// ═══ CALCULATE TOTALS ═══
+// ═══════════════════════════════════════════════════════════
+//  CALCULATE TOTALS
+// ═══════════════════════════════════════════════════════════
 function calcTotals() {
   let subtotal = 0, totalTax = 0;
   const hsnSummary = {};
@@ -607,16 +658,16 @@ function calcTotals() {
     else { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
     hsnSummary[key].total += amt + gstAmt;
   });
-  const discount = num(state.discount);
-  const shipping = num(state.shipping);
-  const taxable = subtotal - discount;
-  const beforeRound = taxable + totalTax + shipping;
+  const taxable = subtotal;
+  const beforeRound = taxable + totalTax;
   const rounded = Math.round(beforeRound);
   const roundOff = rounded - beforeRound;
-  return { subtotal, discount, taxable, totalTax, shipping, beforeRound, rounded, roundOff, hsnSummary };
+  return { subtotal, taxable, totalTax, beforeRound, rounded, roundOff, hsnSummary };
 }
 
-// ═══ NUMBER TO WORDS ═══
+// ═══════════════════════════════════════════════════════════
+//  NUMBER TO WORDS
+// ═══════════════════════════════════════════════════════════
 function numToWords(n) {
   n = Math.round(Math.abs(n));
   if (n === 0) return 'Zero Rupees Only';
@@ -635,7 +686,9 @@ function numToWords(n) {
   return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
-// ═══ RENDER INVOICE PREVIEW ═══
+// ═══════════════════════════════════════════════════════════
+//  RENDER INVOICE PREVIEW
+// ═══════════════════════════════════════════════════════════
 function render() {
   const s = state;
   const preview = $('invoicePreview');
@@ -710,10 +763,8 @@ function render() {
     <div class="totals-wrap">
       <div class="totals-box">
         <div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
-        ${t.discount ? `<div class="totals-row"><span class="lbl">Discount</span><span class="amt">- ${fmt(t.discount)}</span></div>` : ''}
         <div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">${fmt(t.taxable)}</span></div>
         ${taxRows}
-        ${t.shipping ? `<div class="totals-row"><span class="lbl">Shipping</span><span class="amt">${fmt(t.shipping)}</span></div>` : ''}
         ${t.roundOff ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff >= 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}
         <div class="totals-row grand"><span class="lbl">Grand Total</span><span>${fmt(t.rounded)}</span></div>
       </div>
@@ -724,7 +775,6 @@ function render() {
       <strong>Amount in Words:</strong> ${numToWords(t.rounded)}
     </div>`;
 
-  // NEW: Details block
   const validDetails = (s.details || []).filter(d => d && d.trim());
   const detailsBlock = validDetails.length ? `
     <div class="details-block">
@@ -743,6 +793,7 @@ function render() {
           <div class="kv"><strong>Bank:</strong> ${esc(bank.name)}</div>
           ${bank.ac ? `<div class="kv"><strong>A/C:</strong> ${esc(bank.ac)}</div>` : ''}
           ${bank.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(bank.ifsc)}</div>` : ''}
+          ${bank.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(bank.branch)}</div>` : ''}
           ${bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(bank.upi)}</div>` : ''}
         ` : ''}
         ${s.terms ? `<h4 style="margin-top:14px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}
@@ -800,7 +851,7 @@ function render() {
           ${biz.phone ? `<h4>Phone</h4><p>${esc(biz.phone)}</p>` : ''}
           ${biz.gstin ? `<h4>GSTIN</h4><p>${esc(biz.gstin)}</p>` : ''}
           ${biz.pan ? `<h4>PAN</h4><p>${esc(biz.pan)}</p>` : ''}
-          ${bank.name ? `<h4>Bank</h4><p>${esc(bank.name)}<br>${esc(bank.ac)}<br>${esc(bank.ifsc)}</p>` : ''}
+          ${bank.name ? `<h4>Bank</h4><p>${esc(bank.name)}<br>${esc(bank.ac)}<br>${esc(bank.ifsc)}${bank.branch ? '<br>' + esc(bank.branch) : ''}</p>` : ''}
         </div>
         <div class="inv-main">
           <div class="inv-header">
@@ -860,14 +911,18 @@ function render() {
   preview.innerHTML = html;
 }
 
-// ═══ TEMPLATE SWITCH ═══
+// ═══════════════════════════════════════════════════════════
+//  TEMPLATE SWITCH
+// ═══════════════════════════════════════════════════════════
 function changeTemplate() {
   state.template = $('templateSelect').value;
   localStorage.setItem('invoiceState', JSON.stringify(state));
   render();
 }
 
-// ═══ HISTORY ═══
+// ═══════════════════════════════════════════════════════════
+//  HISTORY — SAVE / LOAD / DELETE
+// ═══════════════════════════════════════════════════════════
 function saveHistoryToLS() {
   try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); }
   catch (e) {
@@ -889,13 +944,11 @@ function saveToHistory() {
     client: JSON.parse(JSON.stringify(state.client)),
     meta: JSON.parse(JSON.stringify(state.meta)),
     items: JSON.parse(JSON.stringify(state.items)),
-    details: JSON.parse(JSON.stringify(state.details || [])),  // NEW
+    details: JSON.parse(JSON.stringify(state.details || [])),
     bank: JSON.parse(JSON.stringify(state.bank)),
     terms: state.terms,
     notes: state.notes,
     taxType: state.taxType,
-    discount: state.discount,
-    shipping: state.shipping,
     template: state.template,
     total: totals.rounded,
     invoiceNo: state.meta.no || '(no number)',
@@ -967,20 +1020,18 @@ function loadFromHistory(id) {
   state.client = JSON.parse(JSON.stringify(entry.client));
   state.meta = JSON.parse(JSON.stringify(entry.meta));
   state.items = JSON.parse(JSON.stringify(entry.items));
-  state.details = JSON.parse(JSON.stringify(entry.details || ['']));  // NEW
+  state.details = JSON.parse(JSON.stringify(entry.details || ['']));
   state.bank = JSON.parse(JSON.stringify(entry.bank));
   state.terms = entry.terms;
   state.notes = entry.notes;
   state.taxType = entry.taxType;
-  state.discount = entry.discount;
-  state.shipping = entry.shipping;
   state.template = entry.template;
 
   editingHistoryId = id;
 
   populateForm(state);
   renderItems();
-  renderDetails();  // NEW
+  renderDetails();
   render();
   renderHistory();
 
@@ -1001,7 +1052,9 @@ function deleteFromHistory(id) {
   showToast('🗑️ Invoice deleted');
 }
 
-// ═══ AUTO-INCREMENT ═══
+// ═══════════════════════════════════════════════════════════
+//  AUTO-INCREMENT INVOICE NUMBER
+// ═══════════════════════════════════════════════════════════
 function getNextInvoiceNo() {
   if (history.length > 0) {
     const last = history[0].invoiceNo || '';
@@ -1017,7 +1070,9 @@ function getNextInvoiceNo() {
   return `INV-${yr}-001`;
 }
 
-// ═══ RESET FOR NEXT INVOICE ═══
+// ═══════════════════════════════════════════════════════════
+//  RESET FOR NEXT INVOICE
+// ═══════════════════════════════════════════════════════════
 function resetForNextInvoice() {
   const today = new Date().toISOString().split('T')[0];
   $('cName').value = '';
@@ -1028,17 +1083,17 @@ function resetForNextInvoice() {
   $('mNo').value = getNextInvoiceNo();
   $('mDate').value = today;
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
-  state.details = [''];   // NEW: reset details
-  $('discount').value = 0;
-  $('shipping').value = 0;
+  state.details = [''];
   editingHistoryId = null;
   renderItems();
-  renderDetails();        // NEW
+  renderDetails();
   sync();
   renderHistory();
 }
 
-// ═══ PRINT & SAVE ═══
+// ═══════════════════════════════════════════════════════════
+//  PRINT & SAVE
+// ═══════════════════════════════════════════════════════════
 let printHandled = false;
 
 function printAndSave() {
@@ -1062,7 +1117,9 @@ window.addEventListener('afterprint', () => {
   }, 200);
 });
 
-// ═══ SAMPLE ═══
+// ═══════════════════════════════════════════════════════════
+//  SAMPLE DATA
+// ═══════════════════════════════════════════════════════════
 function loadSample() {
   const today = new Date().toISOString().split('T')[0];
   $('bName').value = 'Tarun Prajapat & Co.';
@@ -1080,11 +1137,10 @@ function loadSample() {
   $('mDate').value = today;
   $('mPlace').value = 'Jaipur, RJ';
   $('taxType').value = 'cgst-sgst';
-  $('discount').value = 0;
-  $('shipping').value = 0;
   $('bkName').value = 'HDFC Bank';
   $('bkAc').value = '50100123456789';
   $('bkIfsc').value = 'HDFC0001234';
+  $('bkBranch').value = 'MI Road Branch';
   $('bkUpi').value = 'tarun@hdfcbank';
   $('terms').value = 'Payment due within 15 days of invoice date.\nPlease mention invoice number in payment reference.\nInterest @18% p.a. will be charged on overdue payments.';
   $('notes').value = 'Thank you for your business!';
@@ -1096,7 +1152,6 @@ function loadSample() {
     { desc:'ERP Data Entry & Reconciliation', hsn:'998313', qty:10, rate:800, gst:18 }
   ];
 
-  // NEW: sample details
   state.details = [
     'Project: MIS Automation — Q1 2026',
     'Site: Sharma Enterprises HO, New Delhi',
@@ -1104,11 +1159,13 @@ function loadSample() {
   ];
 
   renderItems();
-  renderDetails();  // NEW
+  renderDetails();
   sync();
 }
 
-// ═══ CLEAR FORM ═══
+// ═══════════════════════════════════════════════════════════
+//  CLEAR FORM (keep business + bank)
+// ═══════════════════════════════════════════════════════════
 function clearAll() {
   if (!confirm('Clear current form? (Business details & saved invoices will be kept)')) return;
 
@@ -1121,21 +1178,21 @@ function clearAll() {
   const today = new Date().toISOString().split('T')[0];
   $('mNo').value = getNextInvoiceNo();
   $('mDate').value = today;
-  $('discount').value = 0;
-  $('shipping').value = 0;
 
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
-  state.details = [''];  // NEW
+  state.details = [''];
   editingHistoryId = null;
 
   renderItems();
-  renderDetails();  // NEW
+  renderDetails();
   sync();
   renderHistory();
   showToast('🗑️ Form cleared');
 }
 
-// ═══ JSON SAVE/LOAD ═══
+// ═══════════════════════════════════════════════════════════
+//  SAVE / LOAD JSON
+// ═══════════════════════════════════════════════════════════
 function saveJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -1151,7 +1208,7 @@ function loadJSON(e) {
     try {
       const data = JSON.parse(ev.target.result);
       Object.assign(state, data);
-      if (!state.details) state.details = [''];  // backward compat
+      if (!state.details) state.details = [''];
       populateForm(state);
       renderItems();
       renderDetails();
@@ -1165,7 +1222,9 @@ function loadJSON(e) {
   e.target.value = '';
 }
 
-// ═══ INIT ═══
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
 (function init() {
   try {
     const savedHistory = localStorage.getItem('invoiceHistory');
@@ -1177,7 +1236,7 @@ function loadJSON(e) {
     try {
       const data = JSON.parse(saved);
       Object.assign(state, data);
-      if (!state.details) state.details = [''];  // backward compat
+      if (!state.details) state.details = [''];
       populateForm(state);
     } catch (err) {}
   } else {
@@ -1190,7 +1249,7 @@ function loadJSON(e) {
   if (!state.details || !state.details.length) state.details = [''];
 
   renderItems();
-  renderDetails();  // NEW
+  renderDetails();
   sync();
   renderHistory();
 })();
