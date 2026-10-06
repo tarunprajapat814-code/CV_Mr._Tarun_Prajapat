@@ -83,44 +83,28 @@
   .detail-row input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
 
   .ifsc-status {
-    font-size: 10.5px;
-    margin-top: 4px;
-    min-height: 15px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    line-height: 1.4;
+    font-size: 10.5px; margin-top: 4px; min-height: 15px;
+    display: flex; align-items: center; gap: 4px; line-height: 1.4;
   }
   .ifsc-status.loading { color: #3b82f6; }
   .ifsc-status.success { color: #059669; }
   .ifsc-status.error { color: #dc2626; }
   .ifsc-status.idle { color: #94a3b8; }
   .spinner {
-    display: inline-block;
-    width: 10px; height: 10px;
-    border: 2px solid #bfdbfe;
-    border-top-color: #3b82f6;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
+    display: inline-block; width: 10px; height: 10px;
+    border: 2px solid #bfdbfe; border-top-color: #3b82f6;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .bank-preview {
     background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border: 1px solid #bae6fd;
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-top: 10px;
-    font-size: 12px;
-    display: none;
+    border: 1px solid #bae6fd; border-radius: 8px;
+    padding: 10px 12px; margin-top: 10px;
+    font-size: 12px; display: none;
   }
   .bank-preview.show { display: block; }
-  .bank-preview-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 3px 0;
-    gap: 10px;
-  }
+  .bank-preview-row { display: flex; justify-content: space-between; padding: 3px 0; gap: 10px; }
   .bank-preview-row .lbl { color: #0369a1; font-weight: 500; }
   .bank-preview-row .val { color: #0c4a6e; font-weight: 700; text-align: right; word-break: break-all; }
 
@@ -164,47 +148,30 @@
 
   .profile-item {
     background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-    border: 1.5px solid #d8b4fe;
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
+    border: 1.5px solid #d8b4fe; border-radius: 10px;
+    padding: 10px 12px; margin-bottom: 8px;
+    cursor: pointer; transition: all 0.2s;
   }
   .profile-item:hover { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-color: #a855f7; transform: translateX(2px); }
   .profile-item .pi-name {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    color: #6b21a8;
-    margin-bottom: 2px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-family: 'Poppins', sans-serif; font-weight: 700;
+    font-size: 13px; color: #6b21a8; margin-bottom: 2px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .profile-item .pi-info {
-    font-size: 10.5px;
-    color: #9333ea;
-    margin-bottom: 6px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 10.5px; color: #9333ea; margin-bottom: 6px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .profile-item .pi-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .profile-item .pi-gst {
-    font-size: 10px;
-    font-weight: 700;
-    color: #6b21a8;
+    font-size: 10px; font-weight: 700; color: #6b21a8;
     background: rgba(255,255,255,0.7);
-    padding: 2px 8px;
-    border-radius: 999px;
+    padding: 2px 8px; border-radius: 999px;
   }
   .profile-item .pi-actions { display: flex; gap: 4px; }
   .profile-item .pi-actions button {
-    width: 24px; height: 24px;
-    border-radius: 6px; border: none;
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 6px; border: none;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
     font-size: 11px; transition: all 0.15s;
   }
   .profile-item .pi-del { background: #fee2e2; color: #dc2626; }
@@ -227,13 +194,22 @@
   .toast.toast-red { background: #dc2626; box-shadow: 0 10px 30px rgba(220,38,38,0.35); }
   .toast.toast-purple { background: #8b5cf6; box-shadow: 0 10px 30px rgba(139,92,246,0.35); }
 
+  /* ═══════════════════════════════════════════
+     INVOICE — COMPACT A4 LAYOUT (FITS 1 PAGE)
+     ═══════════════════════════════════════════ */
   .invoice-a4 {
-    background: #fff; width: 210mm; min-height: 297mm; padding: 14mm;
-    font-size: 12px; color: var(--text, #0f172a);
+    background: #fff;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10mm 12mm;
+    font-size: 11px;
+    color: var(--text, #0f172a);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin: 0 auto; position: relative;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
   }
-  @media (max-width: 1024px) { .invoice-a4 { width: 100%; min-height: auto; padding: 20px; } }
+  @media (max-width: 1024px) { .invoice-a4 { width: 100%; min-height: auto; padding: 16px; } }
 
   .tpl { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; --text: #0f172a; --muted: #64748b; --line: #e2e8f0; }
   .tpl-classic { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; }
@@ -242,122 +218,172 @@
   .tpl-gst     { --accent: #7c2d12; --accent-soft: #fed7aa; --accent-text: #fff; }
 
   .inv-h1 { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1.5px; }
-  .inv-biz-name { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1.2; }
-  .inv-biz-info { font-size: 10.5px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
+  .inv-biz-name { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.15; }
+  .inv-biz-info { font-size: 9.5px; color: var(--muted); line-height: 1.35; margin-top: 3px; }
 
-  .inv-details-box { font-size: 11.5px; }
+  .inv-details-box { font-size: 10.5px; }
   .inv-details-title {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
-    font-size: 14px;
-    color: var(--text);
-    text-align: right;
-    margin-bottom: 6px;
-    letter-spacing: 0.3px;
+    font-family: 'Poppins', sans-serif; font-weight: 800;
+    font-size: 12.5px; color: var(--text); text-align: right;
+    margin-bottom: 4px; letter-spacing: 0.3px;
   }
   .inv-meta-row {
-    display: flex;
-    justify-content: flex-end;
-    align-items: baseline;
-    gap: 6px;
-    padding: 2.5px 0;
-    font-size: 11.5px;
+    display: flex; justify-content: flex-end; align-items: baseline;
+    gap: 6px; padding: 1.5px 0; font-size: 10.5px;
   }
   .inv-meta-row > span:first-child { color: var(--muted); font-weight: 500; }
   .inv-meta-row > span:last-child {
-    font-weight: 700;
-    color: var(--text);
-    min-width: 130px;
-    text-align: right;
+    font-weight: 700; color: var(--text);
+    min-width: 120px; text-align: right;
   }
-
-  .inv-detail-row { text-align: right; padding: 2.5px 0; font-size: 11.5px; color: var(--text); }
+  .inv-detail-row { text-align: right; padding: 1.5px 0; font-size: 10.5px; color: var(--text); }
   .inv-detail-row .lbl { font-weight: 700; color: var(--text); }
   .inv-detail-row .val { font-weight: 700; color: var(--text); }
-  .inv-gap { height: 8px; }
+  .inv-gap { height: 5px; }
 
   .inv-top-right {
-    text-align: right;
-    font-size: 9.5px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    font-weight: 600;
-    margin-bottom: 8px;
+    text-align: right; font-size: 8.5px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1.2px;
+    font-weight: 600; margin-bottom: 6px;
   }
 
-  .inv-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px; }
-  .inv-party-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
-  .inv-party-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-  .inv-party-info { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .inv-party-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 3px; }
+  .inv-party-name { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .inv-party-info { font-size: 10px; color: var(--muted); line-height: 1.4; }
 
-  .inv-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
-  .inv-table th { background: var(--accent); color: var(--accent-text); padding: 9px 8px; font-size: 9.5px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
-  .inv-table td { padding: 8px 8px; border-bottom: 1px solid var(--line); font-size: 11px; vertical-align: top; }
+  .inv-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+  .inv-table th { background: var(--accent); color: var(--accent-text); padding: 6px 6px; font-size: 8.5px; text-align: left; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 700; }
+  .inv-table td { padding: 5px 6px; border-bottom: 1px solid var(--line); font-size: 10px; vertical-align: top; line-height: 1.35; }
   .inv-table .r, .inv-table th.r { text-align: right; }
   .inv-table .c, .inv-table th.c { text-align: center; }
 
-  .totals-wrap { display: flex; justify-content: flex-end; margin-top: 4px; }
-  .totals-box { width: 320px; }
-  .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; border-bottom: 1px solid var(--line); }
+  .totals-wrap { display: flex; justify-content: flex-end; margin-top: 2px; }
+  .totals-box { width: 280px; }
+  .totals-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 10.5px; border-bottom: 1px solid var(--line); }
   .totals-row .lbl { color: var(--muted); }
   .totals-row .amt { font-weight: 600; }
   .totals-row.subtotal .amt { font-weight: 700; }
-  .totals-row.grand { border-top: 2px solid var(--accent); border-bottom: none; margin-top: 6px; padding-top: 10px; font-weight: 800; color: var(--accent); font-size: 16px; }
+  .totals-row.grand { border-top: 2px solid var(--accent); border-bottom: none; margin-top: 4px; padding-top: 6px; font-weight: 800; color: var(--accent); font-size: 13px; }
   .totals-row.grand .lbl { color: var(--accent); }
 
-  .words-box { background: var(--accent-soft); padding: 9px 12px; border-radius: 8px; font-size: 11px; margin: 14px 0; }
-  .words-box strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.4px; font-size: 10px; }
+  .words-box { background: var(--accent-soft); padding: 6px 10px; border-radius: 6px; font-size: 10px; margin: 8px 0; }
+  .words-box strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.3px; font-size: 9px; }
 
-  .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 11px; }
-  .footer-grid h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 800; margin-bottom: 6px; }
-  .footer-grid p { color: var(--muted); line-height: 1.55; margin-bottom: 3px; }
-  .footer-grid .kv { display: flex; gap: 6px; margin-bottom: 3px; color: var(--muted); }
+  .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 10px; }
+  .footer-grid h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent); font-weight: 800; margin-bottom: 4px; }
+  .footer-grid p { color: var(--muted); line-height: 1.4; margin-bottom: 2px; font-size: 9.5px; }
+  .footer-grid .kv { display: flex; gap: 5px; margin-bottom: 2px; color: var(--muted); font-size: 9.5px; }
   .footer-grid .kv strong { color: var(--text); font-weight: 600; }
-  .sign-area { margin-top: 40px; text-align: right; padding-top: 8px; }
-  .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 6px; font-size: 11px; min-width: 180px; font-weight: 600; }
+  .sign-area { margin-top: 18px; text-align: right; padding-top: 6px; }
+  .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
 
-  .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 3px solid var(--accent); margin-bottom: 16px; }
+  .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
   .tpl-classic .inv-title-box { text-align: right; }
-  .tpl-classic .inv-title-box .inv-h1 { font-size: 32px; color: var(--accent); }
+  .tpl-classic .inv-title-box .inv-h1 { font-size: 26px; color: var(--accent); }
 
-  .tpl-modern .inv-wrap { display: grid; grid-template-columns: 200px 1fr; gap: 0; margin: -14mm; min-height: 297mm; }
-  .tpl-modern .inv-side { background: var(--accent); color: #fff; padding: 14mm 16px; }
-  .tpl-modern .inv-side .inv-biz-name { color: #fff; }
-  .tpl-modern .inv-side .inv-biz-info { color: rgba(255,255,255,0.8); }
-  .tpl-modern .inv-side h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); margin: 16px 0 6px; font-weight: 700; }
-  .tpl-modern .inv-side p { font-size: 11px; line-height: 1.5; color: rgba(255,255,255,0.9); }
-  .tpl-modern .inv-main { padding: 14mm 16mm 14mm 16px; }
-  .tpl-modern .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 2px solid var(--accent); margin-bottom: 16px; }
-  .tpl-modern .inv-h1 { font-size: 30px; color: var(--accent); }
+  .tpl-modern .inv-wrap { display: grid; grid-template-columns: 180px 1fr; gap: 0; margin: -10mm -12mm; min-height: 297mm; }
+  .tpl-modern .inv-side { background: var(--accent); color: #fff; padding: 10mm 14px; }
+  .tpl-modern .inv-side .inv-biz-name { color: #fff; font-size: 15px; }
+  .tpl-modern .inv-side .inv-biz-info { color: rgba(255,255,255,0.8); font-size: 9px; }
+  .tpl-modern .inv-side h4 { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); margin: 10px 0 4px; font-weight: 700; }
+  .tpl-modern .inv-side p { font-size: 9.5px; line-height: 1.4; color: rgba(255,255,255,0.9); }
+  .tpl-modern .inv-main { padding: 10mm 12mm 10mm 14px; }
+  .tpl-modern .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 12px; }
+  .tpl-modern .inv-h1 { font-size: 24px; color: var(--accent); }
   .tpl-modern .inv-table th { background: var(--accent); }
-  @media (max-width: 1024px) { .tpl-modern .inv-wrap { margin: 0; } .tpl-modern .inv-side { padding: 20px; } .tpl-modern .inv-main { padding: 20px; } }
+  @media (max-width: 1024px) { .tpl-modern .inv-wrap { margin: 0; } .tpl-modern .inv-side { padding: 16px; } .tpl-modern .inv-main { padding: 16px; } }
 
-  .tpl-minimal { padding: 20mm 18mm; }
-  .tpl-minimal .inv-header { display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
-  .tpl-minimal .inv-h1 { font-size: 22px; color: var(--text); letter-spacing: 4px; font-weight: 500; }
-  .tpl-minimal .inv-table th { background: transparent; color: var(--accent); border-bottom: 2px solid var(--accent); padding: 8px 6px; }
-  .tpl-minimal .inv-table td { padding: 10px 6px; border-bottom: 1px solid var(--line); }
-  .tpl-minimal .inv-party-label { font-size: 9px; }
+  .tpl-minimal { padding: 14mm 14mm; }
+  .tpl-minimal .inv-header { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+  .tpl-minimal .inv-h1 { font-size: 18px; color: var(--text); letter-spacing: 4px; font-weight: 500; }
+  .tpl-minimal .inv-table th { background: transparent; color: var(--accent); border-bottom: 2px solid var(--accent); padding: 6px 4px; }
+  .tpl-minimal .inv-table td { padding: 6px 4px; border-bottom: 1px solid var(--line); }
   .tpl-minimal .words-box { background: transparent; border: 1px solid var(--line); }
-  .tpl-minimal .inv-details-title { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
+  .tpl-minimal .inv-details-title { font-size: 11.5px; letter-spacing: 2px; text-transform: uppercase; }
 
-  .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 2px solid var(--accent); margin-bottom: 14px; }
-  .tpl-gst .inv-h1 { font-size: 26px; color: var(--accent); }
-  .tpl-gst .hsn-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-top: 8px; }
-  .tpl-gst .hsn-table th { background: var(--accent-soft); color: var(--accent); padding: 6px 8px; text-align: right; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 10px; }
+  .tpl-gst .inv-h1 { font-size: 22px; color: var(--accent); }
+  .tpl-gst .hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 6px; }
+  .tpl-gst .hsn-table th { background: var(--accent-soft); color: var(--accent); padding: 4px 6px; text-align: right; font-weight: 700; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; }
   .tpl-gst .hsn-table th:first-child { text-align: left; }
-  .tpl-gst .hsn-table td { padding: 5px 8px; text-align: right; border-bottom: 1px solid var(--line); }
+  .tpl-gst .hsn-table td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
   .tpl-gst .hsn-table td:first-child { text-align: left; font-weight: 600; }
 
+  /* ═══════════════════════════════════════════
+     PRINT — SINGLE PAGE A4
+     ═══════════════════════════════════════════ */
   @media print {
-    @page { size: A4; margin: 8mm; }
-    body { background: #fff !important; }
+    @page { size: A4 portrait; margin: 0; }
+
+    html, body {
+      background: #fff !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 210mm !important;
+      height: 297mm !important;
+      overflow: hidden !important;
+    }
+
+    /* Hide everything */
     body * { visibility: hidden; }
+
+    /* Show only the invoice preview */
     #invoicePreview, #invoicePreview * { visibility: visible; }
-    #invoicePreview { position: absolute; top: 0; left: 0; width: 100%; min-height: auto; padding: 8mm; box-shadow: none; margin: 0; }
+
+    #invoicePreview {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 210mm !important;
+      height: 297mm !important;
+      max-height: 297mm !important;
+      min-height: 297mm !important;
+      padding: 10mm 12mm !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
+      page-break-after: avoid !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    /* For modern template (has negative margins) */
+    #invoicePreview.tpl-modern {
+      padding: 0 !important;
+    }
+    #invoicePreview.tpl-modern .inv-wrap {
+      height: 297mm !important;
+      min-height: 297mm !important;
+      max-height: 297mm !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+    }
+
+    /* Force all major blocks to avoid page break */
+    .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    /* Hide non-print stuff */
     .no-print { display: none !important; }
+
+    /* Body overflow reset for print */
+    body { overflow: hidden !important; }
   }
+
+  /* Print fit indicator (dev only) */
+  .print-warning {
+    position: fixed; top: 70px; right: 20px;
+    background: #fef3c7; color: #92400e;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid #fcd34d;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: none;
+  }
+  .print-warning.show { display: block; }
 </style>
 </head>
 <body autocomplete="off">
@@ -391,6 +417,8 @@
   <button class="btn btn-ghost" style="color:#dc2626;" onclick="nukeEverything()">💥 Reset Everything</button>
   <span style="margin-left:auto;font-size:11px;color:#94a3b8;">Data auto-saved locally</span>
 </div>
+
+<div class="print-warning" id="printWarning">⚠️ Content thoda zyada hai — auto-scale ho raha hai</div>
 
 <div class="layout">
   <aside class="no-print" autocomplete="off">
@@ -584,9 +612,6 @@ const fmtDate = d => {
   return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 };
 
-// ═══════════════════════════════════════════════════════════
-//  DISABLE BROWSER AUTOFILL on all form inputs
-// ═══════════════════════════════════════════════════════════
 function disableAutofill() {
   document.querySelectorAll('input, textarea').forEach(el => {
     el.setAttribute('autocomplete', 'new-password');
@@ -620,9 +645,6 @@ function autoPanFromGstin() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  BUSINESS PROFILES
-// ═══════════════════════════════════════════════════════════
 function saveProfilesToLS() {
   try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); }
   catch (e) {}
@@ -631,11 +653,7 @@ function saveProfilesToLS() {
 function saveBusinessProfile() {
   const name = $('bName').value.trim();
   const gstin = $('bGstin').value.trim();
-
-  if (!name) {
-    showToast('⚠️ Business Name required to save', 'red');
-    return;
-  }
+  if (!name) { showToast('⚠️ Business Name required to save', 'red'); return; }
 
   const existingIdx = profiles.findIndex(p => 
     p.name.toLowerCase() === name.toLowerCase() && (p.gstin || '') === gstin
@@ -701,20 +719,17 @@ function renderProfiles() {
 function loadBusinessProfile(id) {
   const p = profiles.find(x => x.id === id);
   if (!p) return;
-
   const hasData = $('bName').value.trim() || $('bGstin').value.trim();
   const same = ($('bName').value.trim() === p.name) && ($('bGstin').value.trim() === p.gstin);
   if (hasData && !same) {
     if (!confirm(`Load "${p.name}"? Current business details will be replaced.`)) return;
   }
-
   $('bName').value = p.name || '';
   $('bAddr').value = p.addr || '';
   $('bGstin').value = p.gstin || '';
   $('bPan').value = p.pan || '';
   $('bEmail').value = p.email || '';
   $('bPhone').value = p.phone || '';
-
   sync();
   showToast('✓ Business detail loaded', 'purple');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -724,16 +739,12 @@ function deleteBusinessProfile(id) {
   const p = profiles.find(x => x.id === id);
   if (!p) return;
   if (!confirm(`Delete saved business "${p.name}"?`)) return;
-
   profiles = profiles.filter(x => x.id !== id);
   saveProfilesToLS();
   renderProfiles();
   showToast('🗑️ Business detail deleted');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  IFSC AUTO-FETCH
-// ═══════════════════════════════════════════════════════════
 let ifscFetchTimer = null;
 let ifscLastFetched = '';
 let ifscFetchAbort = null;
@@ -757,29 +768,24 @@ function onIfscInput(value) {
     preview.classList.remove('show');
     return;
   }
-
   if (ifsc.length < 11) {
     setIfscStatus('idle', `${ifsc.length}/11 characters`);
     branchField.value = '';
     preview.classList.remove('show');
     return;
   }
-
   if (ifscLastFetched === ifsc) return;
 
   setIfscStatus('loading', '<span class="spinner"></span> Fetching branch details...');
   branchField.value = '';
-
-  ifscFetchTimer = setTimeout(() => {
-    fetchBranchFromIFSC(ifsc);
-  }, 500);
+  ifscFetchTimer = setTimeout(() => { fetchBranchFromIFSC(ifsc); }, 500);
 }
 
 async function fetchBranchFromIFSC(ifsc) {
   const endpoints = [
-    { name: 'direct', url: 'https://ifsc.razorpay.com/' + ifsc },
-    { name: 'corsproxy', url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) },
-    { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) }
+    { url: 'https://ifsc.razorpay.com/' + ifsc },
+    { url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) },
+    { url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) }
   ];
 
   for (const ep of endpoints) {
@@ -787,47 +793,36 @@ async function fetchBranchFromIFSC(ifsc) {
       const controller = new AbortController();
       ifscFetchAbort = controller;
       const timeout = setTimeout(() => controller.abort(), 8000);
-
       const res = await fetch(ep.url, { signal: controller.signal });
       clearTimeout(timeout);
-
       if (!res.ok) continue;
-
       let data;
       const text = await res.text();
       try { data = JSON.parse(text); } catch(e) { continue; }
-
       if (!data) continue;
-
       const bank = data.BANK || data.bank || '';
       const branch = data.BRANCH || data.branch || '';
       const city = data.CITY || data.city || '';
       const state_ = data.STATE || data.state || '';
       const contact = data.CONTACT || data.contact || data.PHONE || '';
-
       if (bank && branch) {
         $('bkBranch').value = branch;
         if ($('bkName').value.trim() === '') $('bkName').value = bank;
-
         $('bpBank').textContent = bank;
         $('bpBranch').textContent = branch;
         $('bpCity').textContent = city || '—';
         $('bpState').textContent = state_ || '—';
         $('bpContact').textContent = contact || '—';
         $('bankPreview').classList.add('show');
-
         ifscLastFetched = ifsc;
         setIfscStatus('success', `✓ ${bank} · ${city || state_ || 'Branch found'}`);
-
         $('bkBranch').classList.add('auto-filled');
         setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
-
         sync();
         return;
       }
     } catch (err) {}
   }
-
   setIfscStatus('error', '✗ Could not fetch — please fill branch manually');
   $('bkBranch').readOnly = false;
   $('bkBranch').placeholder = 'Enter branch name manually';
@@ -1103,8 +1098,8 @@ function render() {
           ${bank.type ? `<div class="kv"><strong>Type:</strong> ${esc(bank.type)}</div>` : ''}
           ${bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(bank.upi)}</div>` : ''}
         ` : ''}
-        ${s.terms ? `<h4 style="margin-top:14px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}
-        ${s.notes ? `<h4 style="margin-top:10px;">Notes</h4><p>${esc(s.notes).replace(/\n/g, '<br>')}</p>` : ''}
+        ${s.terms ? `<h4 style="margin-top:10px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}
+        ${s.notes ? `<h4 style="margin-top:8px;">Notes</h4><p>${esc(s.notes).replace(/\n/g, '<br>')}</p>` : ''}
       </div>
       <div>
         <div class="sign-area">
@@ -1127,20 +1122,18 @@ function render() {
           <div class="inv-h1">Tax Invoice</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;align-items:flex-start;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
         <div>
           <div class="inv-party-label">Bill To</div>
           <div class="inv-party-name">${esc(cliName)}</div>
           <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
         </div>
-        <div>
-          ${detailsBoxHTML}
-        </div>
+        <div>${detailsBoxHTML}</div>
       </div>
       ${tableBlock}
       ${totalsBlock}
       ${wordsBlock}
-      ${s.template === 'gst' ? `<div style="margin-top:10px;"><h4 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:4px;">HSN-wise Tax Summary</h4>${hsnTable}</div>` : ''}
+      ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN-wise Tax Summary</h4>${hsnTable}</div>` : ''}
       ${footerBlock}
     `;
   } else if (s.template === 'modern') {
@@ -1160,15 +1153,13 @@ function render() {
           <div class="inv-header">
             <div class="inv-h1">Tax Invoice</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;align-items:flex-start;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
             <div>
               <div class="inv-party-label">Bill To</div>
               <div class="inv-party-name">${esc(cliName)}</div>
               <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
             </div>
-            <div>
-              ${detailsBoxHTML}
-            </div>
+            <div>${detailsBoxHTML}</div>
           </div>
           ${tableBlock}
           ${totalsBlock}
@@ -1189,15 +1180,13 @@ function render() {
           <div class="inv-h1">Tax Invoice</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px;align-items:flex-start;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
         <div>
           <div class="inv-party-label">Billed To</div>
           <div class="inv-party-name">${esc(cliName)}</div>
           <div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div>
         </div>
-        <div>
-          ${detailsBoxHTML}
-        </div>
+        <div>${detailsBoxHTML}</div>
       </div>
       ${tableBlock}
       ${totalsBlock}
@@ -1302,12 +1291,10 @@ function renderHistory() {
 function loadFromHistory(id) {
   const entry = history.find(h => h.id === id);
   if (!entry) return;
-
   const hasCurrentData = state.client.name || state.items.some(i => i.desc);
   if (hasCurrentData && editingHistoryId !== id) {
     if (!confirm('Load this saved invoice? Current form data will be replaced.')) return;
   }
-
   state.business = JSON.parse(JSON.stringify(entry.business));
   state.client = JSON.parse(JSON.stringify(entry.client));
   state.meta = JSON.parse(JSON.stringify(entry.meta));
@@ -1318,15 +1305,12 @@ function loadFromHistory(id) {
   state.notes = entry.notes;
   state.taxType = entry.taxType;
   state.template = entry.template;
-
   editingHistoryId = id;
-
   populateForm(state);
   renderItems();
   renderDetails();
   render();
   renderHistory();
-
   showToast('✓ Invoice loaded for editing', 'blue');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1335,10 +1319,8 @@ function deleteFromHistory(id) {
   const entry = history.find(h => h.id === id);
   if (!entry) return;
   if (!confirm(`Delete invoice "${entry.invoiceNo}"?`)) return;
-
   history = history.filter(h => h.id !== id);
   if (editingHistoryId === id) editingHistoryId = null;
-
   saveHistoryToLS();
   renderHistory();
   showToast('🗑️ Invoice deleted');
@@ -1377,6 +1359,64 @@ function resetForNextInvoice() {
   renderHistory();
 }
 
+// ═══════════════════════════════════════════════════════════
+//  AUTO-SCALE FOR SINGLE PAGE PRINT
+//  If invoice content exceeds A4 height, scale it down
+// ═══════════════════════════════════════════════════════════
+function prepareForPrint() {
+  const el = $('invoicePreview');
+  if (!el) return;
+
+  // Reset any previous zoom
+  el.style.zoom = '';
+  el.style.transform = '';
+  const warning = $('printWarning');
+  if (warning) warning.classList.remove('show');
+
+  // Force reflow to measure natural size
+  void el.offsetHeight;
+
+  // A4 dimensions at 96dpi: 794px x 1122px
+  // Available: 210mm x 297mm → 794 x 1122 px
+  const A4_HEIGHT_PX = 1122;
+  const A4_WIDTH_PX = 794;
+
+  // Scroll height includes any overflow
+  const naturalHeight = el.scrollHeight;
+  const naturalWidth = el.scrollWidth;
+
+  // Only scale if it overflows
+  if (naturalHeight > A4_HEIGHT_PX || naturalWidth > A4_WIDTH_PX) {
+    const heightScale = A4_HEIGHT_PX / naturalHeight;
+    const widthScale = A4_WIDTH_PX / naturalWidth;
+    const scale = Math.min(heightScale, widthScale, 1);
+    // Leave a tiny safety margin (0.97 = 3% buffer)
+    const safeScale = (scale * 0.97).toFixed(4);
+    el.style.zoom = safeScale;
+    if (warning) warning.classList.add('show');
+    // Re-measure for any residual overflow
+    void el.offsetHeight;
+  }
+}
+
+function resetAfterPrint() {
+  const el = $('invoicePreview');
+  if (el) { el.style.zoom = ''; el.style.transform = ''; }
+  const warning = $('printWarning');
+  if (warning) warning.classList.remove('show');
+}
+
+window.addEventListener('beforeprint', prepareForPrint);
+window.addEventListener('afterprint', () => {
+  resetAfterPrint();
+  if (printHandled) return;
+  printHandled = true;
+  setTimeout(() => {
+    resetForNextInvoice();
+    showToast('✓ Ready for next invoice');
+  }, 200);
+});
+
 let printHandled = false;
 
 function printAndSave() {
@@ -1388,17 +1428,9 @@ function printAndSave() {
     return;
   }
   printHandled = false;
-  setTimeout(() => { window.print(); }, 300);
+  prepareForPrint();
+  setTimeout(() => { window.print(); }, 200);
 }
-
-window.addEventListener('afterprint', () => {
-  if (printHandled) return;
-  printHandled = true;
-  setTimeout(() => {
-    resetForNextInvoice();
-    showToast('✓ Ready for next invoice');
-  }, 200);
-});
 
 function loadSample() {
   const today = new Date().toISOString().split('T')[0];
@@ -1447,56 +1479,22 @@ function loadSample() {
   setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CLEAR ALL — Complete reset + prevent browser autofill
-// ═══════════════════════════════════════════════════════════
 function clearAll() {
   if (!confirm('Clear everything?\n\n✅ Business, Client, Invoice, Bank, Items, Details, Terms — sab clear ho jayega\n\n📚 Saved Invoices & 💼 Saved Business Detail — safe rahenge')) return;
 
-  // ═══ Business ═══
-  $('bName').value = '';
-  $('bAddr').value = '';
-  $('bGstin').value = '';
-  $('bPan').value = '';
-  $('bEmail').value = '';
-  $('bPhone').value = '';
-
-  // ═══ Client ═══
-  $('cName').value = '';
-  $('cAddr').value = '';
-  $('cGstin').value = '';
-  $('cEmail').value = '';
-  $('cPhone').value = '';
-
-  // ═══ Invoice Meta ═══
-  $('mNo').value = '';
-  $('mDate').value = '';
-  $('mPlace').value = '';
-
-  // ═══ Bank ═══
-  $('bkHolder').value = '';
-  $('bkName').value = '';
-  $('bkAc').value = '';
-  $('bkIfsc').value = '';
-  $('bkBranch').value = '';
-  $('bkType').value = '';
-  $('bkUpi').value = '';
-
-  // ═══ Terms & Notes ═══
-  $('terms').value = '';
-  $('notes').value = '';
-
-  // ═══ Tax Type Reset ═══
+  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = '';
+  $('bEmail').value = ''; $('bPhone').value = '';
+  $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
+  $('mNo').value = ''; $('mDate').value = ''; $('mPlace').value = '';
+  $('bkHolder').value = ''; $('bkName').value = ''; $('bkAc').value = ''; $('bkIfsc').value = '';
+  $('bkBranch').value = ''; $('bkType').value = ''; $('bkUpi').value = '';
+  $('terms').value = ''; $('notes').value = '';
   $('taxType').value = 'cgst-sgst';
 
-  // ═══ Items & Details Reset ═══
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
   state.details = [''];
-
-  // ═══ Clear editing flag ═══
   editingHistoryId = null;
 
-  // ═══ Clear IFSC Status & Preview ═══
   if (typeof setIfscStatus === 'function') setIfscStatus('idle', '');
   const bp = $('bankPreview');
   if (bp) bp.classList.remove('show');
@@ -1504,33 +1502,17 @@ function clearAll() {
   $('bkBranch').readOnly = true;
   $('bkBranch').placeholder = 'Branch will appear here...';
 
-  // ═══ Reset state object ═══
-  state.business = {};
-  state.client = {};
-  state.meta = {};
-  state.bank = {};
-  state.terms = '';
-  state.notes = '';
+  state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
+  state.terms = ''; state.notes = '';
 
-  // ═══ Remove localStorage + set flag so init doesn't auto-fill ═══
   localStorage.removeItem('invoiceState');
   localStorage.setItem('userClearedForm', '1');
 
-  // ═══ Also re-disable autofill (safety) ═══
   disableAutofill();
-
-  // ═══ Re-render ═══
-  renderItems();
-  renderDetails();
-  render();
-  renderHistory();
-
+  renderItems(); renderDetails(); render(); renderHistory();
   showToast('🗑️ Form fully cleared — everything empty');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  NUKE EVERYTHING — clears even saved invoices & profiles
-// ═══════════════════════════════════════════════════════════
 function nukeEverything() {
   if (!confirm('💥 RESET EVERYTHING?\n\nYe sab kuch delete karega:\n• Current form\n• Saved Invoices (📚)\n• Saved Business Details (💼)\n\nWapas nahi aa sakta!')) return;
   if (!confirm('Pakka? Ek aur baar confirm karo.')) return;
@@ -1540,11 +1522,8 @@ function nukeEverything() {
   localStorage.removeItem('businessProfiles');
   localStorage.removeItem('userClearedForm');
 
-  history = [];
-  profiles = [];
-  editingHistoryId = null;
+  history = []; profiles = []; editingHistoryId = null;
 
-  // Clear all fields
   $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = '';
   $('bEmail').value = ''; $('bPhone').value = '';
   $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
@@ -1565,7 +1544,6 @@ function nukeEverything() {
 
   disableAutofill();
   renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
-
   showToast('💥 Everything reset — fresh start!', 'red');
 }
 
@@ -1598,30 +1576,22 @@ function loadJSON(e) {
   e.target.value = '';
 }
 
-// ═══════════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════════
 (function init() {
-  // Disable autofill first
   disableAutofill();
 
-  // Load saved invoices
   try {
     const savedHistory = localStorage.getItem('invoiceHistory');
     if (savedHistory) history = JSON.parse(savedHistory);
   } catch (e) { history = []; }
 
-  // Load business profiles
   try {
     const savedProfiles = localStorage.getItem('businessProfiles');
     if (savedProfiles) profiles = JSON.parse(savedProfiles);
   } catch (e) { profiles = []; }
 
-  // Check if user had previously cleared the form
   const wasCleared = localStorage.getItem('userClearedForm') === '1';
-
-  // Load current state
   const saved = localStorage.getItem('invoiceState');
+
   if (saved && !wasCleared) {
     try {
       const data = JSON.parse(saved);
@@ -1633,13 +1603,7 @@ function loadJSON(e) {
         setTimeout(() => onIfscInput(bk.ifsc), 400);
       }
     } catch (err) {}
-  } else if (wasCleared) {
-    // User had cleared the form — keep it empty, don't auto-fill anything
-    state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
-    state.details = [''];
-    // Don't call sync() — that would save empty state and remove flag
   } else {
-    // First time ever — leave empty too (no auto-fill)
     state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
     state.details = [''];
   }
@@ -1651,11 +1615,6 @@ function loadJSON(e) {
   render();
   renderHistory();
   renderProfiles();
-
-  // Only save state if it wasn't explicitly cleared
-  if (!wasCleared && saved) {
-    // nothing extra needed
-  }
 })();
 </script>
 
