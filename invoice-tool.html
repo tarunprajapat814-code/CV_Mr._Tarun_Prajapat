@@ -41,6 +41,8 @@
   .field label { display: block; font-size: 10.5px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
   .field input, .field textarea, .field select { width: 100%; padding: 8px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; background: #fff; transition: all 0.15s; }
   .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+  .field input:read-only { background: #f8fafc; color: #64748b; cursor: not-allowed; }
+  .field input.auto-filled { background: #ecfdf5; border-color: #10b981; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
   .item-row { display: grid; grid-template-columns: 1.8fr 0.9fr 0.6fr 0.9fr 0.7fr auto; gap: 5px; padding: 5px 0; align-items: center; min-width: 480px; }
@@ -78,6 +80,50 @@
     width: 100%; background: #fff;
   }
   .detail-row input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+
+  /* ═══ IFSC Status ═══ */
+  .ifsc-status {
+    font-size: 10.5px;
+    margin-top: 4px;
+    min-height: 15px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.4;
+  }
+  .ifsc-status.loading { color: #3b82f6; }
+  .ifsc-status.success { color: #059669; }
+  .ifsc-status.error { color: #dc2626; }
+  .ifsc-status.idle { color: #94a3b8; }
+  .spinner {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border: 2px solid #bfdbfe;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ═══ Bank Preview Card ═══ */
+  .bank-preview {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    display: none;
+  }
+  .bank-preview.show { display: block; }
+  .bank-preview-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    gap: 10px;
+  }
+  .bank-preview-row .lbl { color: #0369a1; font-weight: 500; }
+  .bank-preview-row .val { color: #0c4a6e; font-weight: 700; text-align: right; word-break: break-all; }
 
   .history-badge {
     display: inline-flex; align-items: center; justify-content: center;
@@ -130,6 +176,7 @@
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.toast-blue { background: #3b82f6; box-shadow: 0 10px 30px rgba(59,130,246,0.35); }
+  .toast.toast-red { background: #dc2626; box-shadow: 0 10px 30px rgba(220,38,38,0.35); }
 
   .invoice-a4 {
     background: #fff; width: 210mm; min-height: 297mm; padding: 14mm;
@@ -149,12 +196,7 @@
   .inv-biz-name { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1.2; }
   .inv-biz-info { font-size: 10.5px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
 
-  /* ═══════════════════════════════════════════
-     INVOICE DETAILS BLOCK (unified style)
-     ═══════════════════════════════════════════ */
-  .inv-details-box {
-    font-size: 11.5px;
-  }
+  .inv-details-box { font-size: 11.5px; }
   .inv-details-title {
     font-family: 'Poppins', sans-serif;
     font-weight: 800;
@@ -172,10 +214,7 @@
     padding: 2.5px 0;
     font-size: 11.5px;
   }
-  .inv-meta-row > span:first-child {
-    color: var(--muted);
-    font-weight: 500;
-  }
+  .inv-meta-row > span:first-child { color: var(--muted); font-weight: 500; }
   .inv-meta-row > span:last-child {
     font-weight: 700;
     color: var(--text);
@@ -183,27 +222,10 @@
     text-align: right;
   }
 
-  .inv-detail-row {
-    text-align: right;
-    padding: 2.5px 0;
-    font-size: 11.5px;
-    color: var(--text);
-  }
-  .inv-detail-row strong {
-    font-weight: 700;
-  }
-  .inv-detail-row .lbl {
-    font-weight: 700;
-    color: var(--text);
-  }
-  .inv-detail-row .val {
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .inv-gap {
-    height: 8px;
-  }
+  .inv-detail-row { text-align: right; padding: 2.5px 0; font-size: 11.5px; color: var(--text); }
+  .inv-detail-row .lbl { font-weight: 700; color: var(--text); }
+  .inv-detail-row .val { font-weight: 700; color: var(--text); }
+  .inv-gap { height: 8px; }
 
   .inv-top-right {
     text-align: right;
@@ -420,23 +442,53 @@
       </div>
     </div>
     
+    <!-- ═══════════════════════════════════════════
+         BANK DETAILS — IMPROVED
+         ═══════════════════════════════════════════ -->
     <div class="panel">
-      <div class="panel-head" onclick="togglePanel(this, 'bankBody')">🏦 Bank, Terms & Notes <span>▼</span></div>
+      <div class="panel-head" onclick="togglePanel(this, 'bankBody')">🏦 Bank Details <span>▼</span></div>
       <div class="panel-body" id="bankBody">
-        <div class="field"><label>Bank Name</label><input id="bkName" placeholder="e.g. HDFC Bank" oninput="sync()"></div>
-        <div class="grid2">
-          <div class="field"><label>Account No.</label><input id="bkAc" oninput="sync()"></div>
-          <div class="field">
-            <label>IFSC</label>
-            <input id="bkIfsc" placeholder="HDFC0001234" maxlength="11" style="text-transform:uppercase;" oninput="onIfscInput(this.value); sync()">
-            <div id="ifscStatus" style="font-size:10px;margin-top:3px;min-height:14px;color:#94a3b8;"></div>
-          </div>
+        <div class="field"><label>Account Holder Name</label><input id="bkHolder" placeholder="e.g. Tarun Prajapat" oninput="sync()"></div>
+        <div class="field"><label>Bank Name</label><input id="bkName" placeholder="e.g. Bank of Baroda" oninput="sync()"></div>
+        <div class="field"><label>Account Number</label><input id="bkAc" placeholder="e.g. 33930200000505" oninput="sync()"></div>
+        
+        <div class="field" style="margin-bottom:6px;">
+          <label>IFSC Code</label>
+          <input id="bkIfsc" placeholder="e.g. BARB0BANDIK" maxlength="11" style="text-transform:uppercase;" oninput="onIfscInput(this.value); sync()">
+          <div id="ifscStatus" class="ifsc-status idle"></div>
         </div>
+        
         <div class="field">
-          <label>Branch Name</label>
-          <input id="bkBranch" placeholder="Auto-filled from IFSC" oninput="sync()">
+          <label>Branch Name <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(auto-filled)</span></label>
+          <input id="bkBranch" placeholder="Branch will appear here..." readonly>
         </div>
+        
+        <div class="field"><label>Account Type</label>
+          <select id="bkType" onchange="sync()">
+            <option value="">— Select —</option>
+            <option value="Savings">Savings</option>
+            <option value="Current">Current</option>
+            <option value="Cash Credit">Cash Credit</option>
+            <option value="Overdraft">Overdraft</option>
+          </select>
+        </div>
+        
         <div class="field"><label>UPI ID (optional)</label><input id="bkUpi" placeholder="name@upi" oninput="sync()"></div>
+
+        <!-- Preview Card -->
+        <div class="bank-preview" id="bankPreview">
+          <div class="bank-preview-row"><span class="lbl">✓ Verified IFSC</span><span class="val" id="bpBank"></span></div>
+          <div class="bank-preview-row"><span class="lbl">Branch</span><span class="val" id="bpBranch"></span></div>
+          <div class="bank-preview-row"><span class="lbl">City</span><span class="val" id="bpCity"></span></div>
+          <div class="bank-preview-row"><span class="lbl">State</span><span class="val" id="bpState"></span></div>
+          <div class="bank-preview-row"><span class="lbl">Contact</span><span class="val" id="bpContact"></span></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <div class="panel-head" onclick="togglePanel(this, 'termsBody')">📝 Terms & Notes <span>▼</span></div>
+      <div class="panel-body" id="termsBody">
         <div class="field"><label>Terms & Conditions</label><textarea id="terms" rows="3" oninput="sync()"></textarea></div>
         <div class="field"><label>Notes</label><textarea id="notes" rows="2" placeholder="Any additional notes..." oninput="sync()"></textarea></div>
       </div>
@@ -477,9 +529,9 @@ const fmtDate = d => {
 function showToast(msg, type) {
   const t = $('toast');
   t.textContent = msg;
-  t.className = 'toast' + (type === 'blue' ? ' toast-blue' : '');
+  t.className = 'toast' + (type === 'blue' ? ' toast-blue' : type === 'red' ? ' toast-red' : '');
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
 function togglePanel(head, bodyId) {
@@ -498,63 +550,121 @@ function autoPanFromGstin() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  IFSC AUTO-FETCH — Multi-fallback
+//  Tries Razorpay directly → corsproxy.io → allorigins
+// ═══════════════════════════════════════════════════════════
 let ifscFetchTimer = null;
 let ifscLastFetched = '';
+let ifscFetchAbort = null;
+
+function setIfscStatus(type, html) {
+  const el = $('ifscStatus');
+  el.className = 'ifsc-status ' + type;
+  el.innerHTML = html;
+}
 
 function onIfscInput(value) {
   const ifsc = (value || '').trim().toUpperCase();
-  const status = $('ifscStatus');
   const branchField = $('bkBranch');
+  const preview = $('bankPreview');
 
   if (ifscFetchTimer) clearTimeout(ifscFetchTimer);
+  if (ifscFetchAbort) { try { ifscFetchAbort.abort(); } catch(e){} }
 
   if (!ifsc) {
-    status.textContent = '';
+    setIfscStatus('idle', '');
+    branchField.value = '';
+    preview.classList.remove('show');
     return;
   }
 
-  if (ifsc.length !== 11) {
-    status.textContent = `${ifsc.length}/11`;
-    status.style.color = '#94a3b8';
+  if (ifsc.length < 11) {
+    setIfscStatus('idle', `${ifsc.length}/11 characters`);
+    branchField.value = '';
+    preview.classList.remove('show');
     return;
   }
 
   if (ifscLastFetched === ifsc) return;
 
-  status.textContent = '🔄 Fetching branch...';
-  status.style.color = '#3b82f6';
+  setIfscStatus('loading', '<span class="spinner"></span> Fetching branch details...');
+  branchField.value = '';
 
   ifscFetchTimer = setTimeout(() => {
     fetchBranchFromIFSC(ifsc);
-  }, 400);
+  }, 500);
 }
 
 async function fetchBranchFromIFSC(ifsc) {
-  const status = $('ifscStatus');
-  const branchField = $('bkBranch');
+  const endpoints = [
+    // Try direct (works in some browsers)
+    { name: 'direct', url: 'https://ifsc.razorpay.com/' + ifsc, parse: (data) => data },
+    // corsproxy.io — most reliable
+    { name: 'corsproxy', url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc), parse: (data) => data },
+    // allorigins — backup
+    { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc), parse: (data) => data }
+  ];
 
-  try {
-    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc);
-    const res = await fetch(proxyUrl);
+  for (const ep of endpoints) {
+    try {
+      const controller = new AbortController();
+      ifscFetchAbort = controller;
+      const timeout = setTimeout(() => controller.abort(), 8000);
 
-    if (!res.ok) throw new Error('Invalid IFSC code');
+      const res = await fetch(ep.url, { signal: controller.signal });
+      clearTimeout(timeout);
 
-    const data = await res.json();
+      if (!res.ok) continue;
 
-    if (data && data.BRANCH) {
-      branchField.value = data.BRANCH;
-      ifscLastFetched = ifsc;
-      status.textContent = '✓ ' + data.BANK + ' · ' + data.CITY;
-      status.style.color = '#059669';
-      sync();
-    } else {
-      throw new Error('Branch not found');
+      let data;
+      const text = await res.text();
+      try { data = JSON.parse(text); } catch(e) { continue; }
+
+      if (!data) continue;
+
+      // Handle different response formats
+      const bank = data.BANK || data.bank || '';
+      const branch = data.BRANCH || data.branch || '';
+      const city = data.CITY || data.city || '';
+      const state_ = data.STATE || data.state || '';
+      const contact = data.CONTACT || data.contact || data.PHONE || '';
+      const ifscResp = data.IFSC || data.ifsc || ifsc;
+
+      if (bank && branch) {
+        $('bkBranch').value = branch;
+        if ($('bkName').value.trim() === '') $('bkName').value = bank;
+
+        // Populate preview
+        $('bpBank').textContent = bank;
+        $('bpBranch').textContent = branch;
+        $('bpCity').textContent = city || '—';
+        $('bpState').textContent = state_ || '—';
+        $('bpContact').textContent = contact || '—';
+        $('bankPreview').classList.add('show');
+
+        ifscLastFetched = ifsc;
+        setIfscStatus('success', `✓ ${bank} · ${city || state_ || 'Branch found'}`);
+
+        // Brief highlight
+        $('bkBranch').classList.add('auto-filled');
+        setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
+
+        sync();
+        return;
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') { /* timeout, try next */ }
+      // try next endpoint
     }
-  } catch (err) {
-    status.textContent = '✗ ' + (err.message || 'Not found');
-    status.style.color = '#dc2626';
-    ifscLastFetched = '';
   }
+
+  // All endpoints failed
+  setIfscStatus('error', '✗ Could not fetch — please fill branch manually');
+  $('bkBranch').readOnly = false;
+  $('bkBranch').placeholder = 'Enter branch name manually';
+  $('bankPreview').classList.remove('show');
+  ifscLastFetched = '';
 }
 
 function renderItems() {
@@ -594,10 +704,7 @@ function renderDetails() {
     </div>
   `).join('');
 }
-function updateDetail(i, v) {
-  state.details[i] = v;
-  sync();
-}
+function updateDetail(i, v) { state.details[i] = v; sync(); }
 function addDetail() {
   state.details.push('');
   renderDetails();
@@ -608,13 +715,9 @@ function addDetail() {
   sync();
 }
 function removeDetail(i) {
-  if (state.details.length === 1) {
-    state.details[0] = '';
-  } else {
-    state.details.splice(i, 1);
-  }
-  renderDetails();
-  sync();
+  if (state.details.length === 1) { state.details[0] = ''; }
+  else { state.details.splice(i, 1); }
+  renderDetails(); sync();
 }
 
 function sync() {
@@ -631,8 +734,13 @@ function sync() {
     place: $('mPlace').value
   };
   state.bank = {
-    name: $('bkName').value, ac: $('bkAc').value, ifsc: $('bkIfsc').value,
-    branch: $('bkBranch').value, upi: $('bkUpi').value
+    holder: $('bkHolder').value,
+    name: $('bkName').value,
+    ac: $('bkAc').value,
+    ifsc: $('bkIfsc').value,
+    branch: $('bkBranch').value,
+    type: $('bkType').value,
+    upi: $('bkUpi').value
   };
   state.terms = $('terms').value;
   state.notes = $('notes').value;
@@ -651,8 +759,12 @@ function populateForm(s) {
   $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
   $('mNo').value = m.no || ''; $('mDate').value = m.date || '';
   $('mPlace').value = m.place || '';
-  $('bkName').value = bk.name || ''; $('bkAc').value = bk.ac || '';
-  $('bkIfsc').value = bk.ifsc || ''; $('bkBranch').value = bk.branch || '';
+  $('bkHolder').value = bk.holder || '';
+  $('bkName').value = bk.name || '';
+  $('bkAc').value = bk.ac || '';
+  $('bkIfsc').value = bk.ifsc || '';
+  $('bkBranch').value = bk.branch || '';
+  $('bkType').value = bk.type || '';
   $('bkUpi').value = bk.upi || '';
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
   $('taxType').value = s.taxType || 'cgst-sgst';
@@ -710,9 +822,6 @@ function render() {
   const cliName = cli.name || 'Client Name';
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
 
-  // ═══════════════════════════════════════════════════════════
-  //  LINE ITEMS — with Sr No. column
-  // ═══════════════════════════════════════════════════════════
   const itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
     const gstAmt = amt * num(it.gst) / 100;
@@ -756,9 +865,6 @@ function render() {
       <tbody>${hsnRows}</tbody>
     </table>`;
 
-  // ═══════════════════════════════════════════════════════════
-  //  MAIN LINE ITEMS TABLE — Sr No. added
-  // ═══════════════════════════════════════════════════════════
   const tableBlock = `
     <table class="inv-table">
       <thead>
@@ -793,9 +899,6 @@ function render() {
       <strong>Amount in Words:</strong> ${numToWords(t.rounded)}
     </div>`;
 
-  // ═══════════════════════════════════════════════════════════
-  //  INVOICE DETAILS BLOCK — unified format
-  // ═══════════════════════════════════════════════════════════
   const validDetails = (s.details || []).filter(d => d && d.trim());
   const detailsRowsHTML = validDetails.map(d => {
     const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
@@ -816,15 +919,21 @@ function render() {
     </div>
   `;
 
+  // ═══════════════════════════════════════════════════════════
+  //  BANK DETAILS BLOCK IN PREVIEW — with Account Holder
+  // ═══════════════════════════════════════════════════════════
+  const hasBank = bank.name || bank.ac || bank.ifsc;
   const footerBlock = `
     <div class="footer-grid">
       <div>
-        ${bank.name ? `
+        ${hasBank ? `
           <h4>Payment Details</h4>
-          <div class="kv"><strong>Bank:</strong> ${esc(bank.name)}</div>
-          ${bank.ac ? `<div class="kv"><strong>A/C:</strong> ${esc(bank.ac)}</div>` : ''}
+          ${bank.holder ? `<div class="kv"><strong>A/C Holder:</strong> ${esc(bank.holder)}</div>` : ''}
+          ${bank.name ? `<div class="kv"><strong>Bank:</strong> ${esc(bank.name)}</div>` : ''}
+          ${bank.ac ? `<div class="kv"><strong>A/C No.:</strong> ${esc(bank.ac)}</div>` : ''}
           ${bank.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(bank.ifsc)}</div>` : ''}
           ${bank.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(bank.branch)}</div>` : ''}
+          ${bank.type ? `<div class="kv"><strong>Type:</strong> ${esc(bank.type)}</div>` : ''}
           ${bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(bank.upi)}</div>` : ''}
         ` : ''}
         ${s.terms ? `<h4 style="margin-top:14px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}
@@ -877,7 +986,7 @@ function render() {
           ${biz.phone ? `<h4>Phone</h4><p>${esc(biz.phone)}</p>` : ''}
           ${biz.gstin ? `<h4>GSTIN</h4><p>${esc(biz.gstin)}</p>` : ''}
           ${biz.pan ? `<h4>PAN</h4><p>${esc(biz.pan)}</p>` : ''}
-          ${bank.name ? `<h4>Bank</h4><p>${esc(bank.name)}<br>${esc(bank.ac)}<br>${esc(bank.ifsc)}${bank.branch ? '<br>' + esc(bank.branch) : ''}</p>` : ''}
+          ${bank.name ? `<h4>Bank</h4><p>${bank.holder ? esc(bank.holder) + '<br>' : ''}${esc(bank.name)}<br>${esc(bank.ac)}<br>${esc(bank.ifsc)}${bank.branch ? '<br>' + esc(bank.branch) : ''}</p>` : ''}
         </div>
         <div class="inv-main">
           <div class="inv-top-right">Original for Recipient</div>
@@ -1108,7 +1217,7 @@ function printAndSave() {
   if (saved) {
     showToast('✓ Invoice saved — opening print');
   } else {
-    showToast('⚠️ Nothing to save — fill the form first');
+    showToast('⚠️ Nothing to save — fill the form first', 'red');
     return;
   }
   printHandled = false;
@@ -1141,11 +1250,13 @@ function loadSample() {
   $('mDate').value = today;
   $('mPlace').value = '08-Rajasthan';
   $('taxType').value = 'cgst-sgst';
-  $('bkName').value = 'HDFC Bank';
-  $('bkAc').value = '50100123456789';
-  $('bkIfsc').value = 'HDFC0001234';
-  $('bkBranch').value = 'MI Road Branch';
-  $('bkUpi').value = 'tarun@hdfcbank';
+  $('bkHolder').value = 'Tarun Prajapat';
+  $('bkName').value = 'Bank of Baroda';
+  $('bkAc').value = '33930200000505';
+  $('bkIfsc').value = 'BARB0BANDIK';
+  $('bkBranch').value = '';
+  $('bkType').value = 'Savings';
+  $('bkUpi').value = 'tarun@barodampay';
   $('terms').value = 'Payment due within 15 days of invoice date.\nPlease mention invoice number in payment reference.\nInterest @18% p.a. will be charged on overdue payments.';
   $('notes').value = 'Thank you for your business!';
 
@@ -1165,6 +1276,9 @@ function loadSample() {
   renderItems();
   renderDetails();
   sync();
+
+  // Auto-trigger IFSC fetch for sample
+  setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
 }
 
 function clearAll() {
@@ -1233,6 +1347,11 @@ function loadJSON(e) {
       Object.assign(state, data);
       if (!state.details) state.details = [''];
       populateForm(state);
+      // If IFSC is already present and branch is empty, try to fetch
+      const bk = state.bank || {};
+      if (bk.ifsc && bk.ifsc.length === 11 && !bk.branch) {
+        setTimeout(() => onIfscInput(bk.ifsc), 400);
+      }
     } catch (err) {}
   } else {
     const t = new Date().toISOString().split('T')[0];
