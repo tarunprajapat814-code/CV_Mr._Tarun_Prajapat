@@ -148,10 +148,62 @@
   .inv-h1 { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1.5px; }
   .inv-biz-name { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1.2; }
   .inv-biz-info { font-size: 10.5px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
-  .inv-meta { font-size: 11.5px; }
-  .inv-meta-row { display: flex; justify-content: flex-end; gap: 10px; padding: 3px 0; }
-  .inv-meta-row span:first-child { color: var(--muted); }
-  .inv-meta-row span:last-child { font-weight: 700; min-width: 110px; text-align: right; }
+
+  /* ═══════════════════════════════════════════
+     INVOICE DETAILS BLOCK (unified style)
+     ═══════════════════════════════════════════ */
+  .inv-details-box {
+    font-size: 11.5px;
+  }
+  .inv-details-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text);
+    text-align: right;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+  .inv-meta-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 6px;
+    padding: 2.5px 0;
+    font-size: 11.5px;
+  }
+  .inv-meta-row > span:first-child {
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .inv-meta-row > span:last-child {
+    font-weight: 700;
+    color: var(--text);
+    min-width: 130px;
+    text-align: right;
+  }
+
+  .inv-detail-row {
+    text-align: right;
+    padding: 2.5px 0;
+    font-size: 11.5px;
+    color: var(--text);
+  }
+  .inv-detail-row strong {
+    font-weight: 700;
+  }
+  .inv-detail-row .lbl {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .inv-detail-row .val {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .inv-gap {
+    height: 8px;
+  }
 
   .inv-top-right {
     text-align: right;
@@ -169,8 +221,8 @@
   .inv-party-info { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
   .inv-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
-  .inv-table th { background: var(--accent); color: var(--accent-text); padding: 9px 10px; font-size: 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
-  .inv-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 11.5px; vertical-align: top; }
+  .inv-table th { background: var(--accent); color: var(--accent-text); padding: 9px 8px; font-size: 9.5px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .inv-table td { padding: 8px 8px; border-bottom: 1px solid var(--line); font-size: 11px; vertical-align: top; }
   .inv-table .r, .inv-table th.r { text-align: right; }
   .inv-table .c, .inv-table th.c { text-align: center; }
 
@@ -217,6 +269,7 @@
   .tpl-minimal .inv-table td { padding: 10px 6px; border-bottom: 1px solid var(--line); }
   .tpl-minimal .inv-party-label { font-size: 9px; }
   .tpl-minimal .words-box { background: transparent; border: 1px solid var(--line); }
+  .tpl-minimal .inv-details-title { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
 
   .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 2px solid var(--accent); margin-bottom: 14px; }
   .tpl-gst .inv-h1 { font-size: 26px; color: var(--accent); }
@@ -325,7 +378,7 @@
           <div id="detailsContainer"></div>
           <button class="btn btn-success btn-sm" style="margin-top:6px;width:100%;justify-content:center;" onclick="addDetail()">➕ Add Line</button>
           <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.4;">
-            💡 Tip: <strong>Label : Value</strong> format me likho — jaise <code>Site name: Namma</code>
+            💡 Tip: <strong>Label : Value</strong> format me likho — jaise <code>Application Ref. No.: NP-RJJAY26</code>
           </div>
         </div>
       </div>
@@ -536,7 +589,7 @@ function renderDetails() {
   if (!state.details || !state.details.length) state.details = [''];
   c.innerHTML = state.details.map((d, i) => `
     <div class="detail-row">
-      <input placeholder="e.g. Site name: Namma" value="${esc(d)}" oninput="updateDetail(${i}, this.value)">
+      <input placeholder="e.g. Application Ref. No.: NP-RJJAY26" value="${esc(d)}" oninput="updateDetail(${i}, this.value)">
       <button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})" title="Remove">✖</button>
     </div>
   `).join('');
@@ -657,10 +710,14 @@ function render() {
   const cliName = cli.name || 'Client Name';
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
 
-  const itemRows = s.items.map(it => {
+  // ═══════════════════════════════════════════════════════════
+  //  LINE ITEMS — with Sr No. column
+  // ═══════════════════════════════════════════════════════════
+  const itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
     const gstAmt = amt * num(it.gst) / 100;
     return `<tr>
+      <td class="c" style="font-weight:600;">${i + 1}</td>
       <td>${esc(it.desc) || '<span style="color:#94a3b8;">—</span>'}</td>
       <td class="c">${esc(it.hsn) || '—'}</td>
       <td class="c">${num(it.qty)}</td>
@@ -699,18 +756,22 @@ function render() {
       <tbody>${hsnRows}</tbody>
     </table>`;
 
+  // ═══════════════════════════════════════════════════════════
+  //  MAIN LINE ITEMS TABLE — Sr No. added
+  // ═══════════════════════════════════════════════════════════
   const tableBlock = `
     <table class="inv-table">
       <thead>
         <tr>
-          <th style="width:30%;">Description</th>
-          <th class="c" style="width:10%;">HSN/SAC</th>
-          <th class="c" style="width:8%;">Qty</th>
-          <th class="r" style="width:13%;">Rate</th>
-          <th class="c" style="width:8%;">GST%</th>
+          <th class="c" style="width:6%;">Sr No.</th>
+          <th style="width:26%;">Description</th>
+          <th class="c" style="width:9%;">HSN/SAC</th>
+          <th class="c" style="width:7%;">Qty</th>
+          <th class="r" style="width:12%;">Rate</th>
+          <th class="c" style="width:7%;">GST%</th>
           <th class="r" style="width:11%;">Amount</th>
-          <th class="r" style="width:10%;">Tax</th>
-          <th class="r" style="width:10%;">Total</th>
+          <th class="r" style="width:11%;">Tax</th>
+          <th class="r" style="width:11%;">Total</th>
         </tr>
       </thead>
       <tbody>${itemRows}</tbody>
@@ -733,21 +794,27 @@ function render() {
     </div>`;
 
   // ═══════════════════════════════════════════════════════════
-  //  DETAILS BLOCK — Invoice No. / Date / Place style
-  //  (label left muted, value right bold)
+  //  INVOICE DETAILS BLOCK — unified format
   // ═══════════════════════════════════════════════════════════
   const validDetails = (s.details || []).filter(d => d && d.trim());
-  const detailsBlock = validDetails.length ? `
-    <div style="margin-top: 8px;">
-      ${validDetails.map(d => {
-        const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
-        if (m) {
-          return `<div class="inv-meta-row"><span>${esc(m[1].trim())}</span><span>${esc(m[2].trim())}</span></div>`;
-        }
-        return `<div class="inv-meta-row"><span></span><span>${esc(d)}</span></div>`;
-      }).join('')}
+  const detailsRowsHTML = validDetails.map(d => {
+    const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
+    if (m) {
+      return `<div class="inv-detail-row"><span class="lbl">${esc(m[1].trim())}:</span> <span class="val">${esc(m[2].trim())}</span></div>`;
+    }
+    return `<div class="inv-detail-row"><span class="val">${esc(d)}</span></div>`;
+  }).join('');
+
+  const hasDetails = validDetails.length > 0;
+  const detailsBoxHTML = `
+    <div class="inv-details-box">
+      <div class="inv-details-title">Invoice Details</div>
+      <div class="inv-meta-row"><span>Invoice No.:</span><span>${esc(meta.no) || '—'}</span></div>
+      <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(meta.date)}</span></div>
+      ${hasDetails ? `<div class="inv-gap"></div>${detailsRowsHTML}<div class="inv-gap"></div>` : ''}
+      <div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(meta.place) || '—'}</span></div>
     </div>
-  ` : '';
+  `;
 
   const footerBlock = `
     <div class="footer-grid">
@@ -784,19 +851,14 @@ function render() {
           <div class="inv-h1">Tax Invoice</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;align-items:flex-start;">
         <div>
           <div class="inv-party-label">Bill To</div>
           <div class="inv-party-name">${esc(cliName)}</div>
           <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
         </div>
         <div>
-          <div class="inv-meta">
-            <div class="inv-meta-row"><span>Invoice No.</span><span>${esc(meta.no) || '—'}</span></div>
-            <div class="inv-meta-row"><span>Invoice Date</span><span>${fmtDate(meta.date)}</span></div>
-            <div class="inv-meta-row"><span>Place of Supply</span><span>${esc(meta.place) || '—'}</span></div>
-          </div>
-          ${detailsBlock}
+          ${detailsBoxHTML}
         </div>
       </div>
       ${tableBlock}
@@ -821,20 +883,15 @@ function render() {
           <div class="inv-top-right">Original for Recipient</div>
           <div class="inv-header">
             <div class="inv-h1">Tax Invoice</div>
-            <div class="inv-meta">
-              <div class="inv-meta-row"><span>Invoice No.</span><span>${esc(meta.no) || '—'}</span></div>
-              <div class="inv-meta-row"><span>Date</span><span>${fmtDate(meta.date)}</span></div>
-              <div class="inv-meta-row"><span>Place of Supply</span><span>${esc(meta.place) || '—'}</span></div>
-            </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;align-items:flex-start;">
             <div>
               <div class="inv-party-label">Bill To</div>
               <div class="inv-party-name">${esc(cliName)}</div>
               <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
             </div>
             <div>
-              ${detailsBlock}
+              ${detailsBoxHTML}
             </div>
           </div>
           ${tableBlock}
@@ -854,21 +911,16 @@ function render() {
         </div>
         <div style="text-align:right;">
           <div class="inv-h1">Tax Invoice</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">#${esc(meta.no) || '—'}</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px;align-items:flex-start;">
         <div>
           <div class="inv-party-label">Billed To</div>
           <div class="inv-party-name">${esc(cliName)}</div>
           <div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div>
         </div>
-        <div style="text-align:right;">
-          <div style="font-size:11px;line-height:1.8;color:var(--muted);">
-            <div>Date: <strong style="color:var(--text);">${fmtDate(meta.date)}</strong></div>
-            ${meta.place ? `<div>Place: <strong style="color:var(--text);">${esc(meta.place)}</strong></div>` : ''}
-          </div>
-          ${detailsBlock}
+        <div>
+          ${detailsBoxHTML}
         </div>
       </div>
       ${tableBlock}
@@ -1080,12 +1132,12 @@ function loadSample() {
   $('bPan').value = 'ABCDE1234F';
   $('bEmail').value = 'tarunprajapat814@gmail.com';
   $('bPhone').value = '+91 78775 24281';
-  $('cName').value = 'Sharma Enterprises Pvt Ltd';
-  $('cAddr').value = '45, MG Road, New Delhi - 110001';
-  $('cGstin').value = '07XYZAB5678G1Z9';
-  $('cEmail').value = 'accounts@sharmaent.com';
-  $('cPhone').value = '+91 98111 22334';
-  $('mNo').value = getNextInvoiceNo();
+  $('cName').value = 'SURGYAN KANWAR';
+  $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur\nMeenawala, Jaipur, Rajasthan, Pin Code: 302034';
+  $('cGstin').value = '';
+  $('cEmail').value = '';
+  $('cPhone').value = '';
+  $('mNo').value = 'BS/26-27/100';
   $('mDate').value = today;
   $('mPlace').value = '08-Rajasthan';
   $('taxType').value = 'cgst-sgst';
@@ -1105,9 +1157,9 @@ function loadSample() {
   ];
 
   state.details = [
-    'Site name: Namma',
-    'Site Id: IN-12521251',
-    'Site Ref No.: R/fd/231413'
+    'Application Ref. No. : NP-RJJAY26-14802195',
+    'Application Date. : 05-09-2026',
+    'Applied Roof Top Solar Capacity (in kWp) - 3KWP'
   ];
 
   renderItems();
