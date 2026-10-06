@@ -26,6 +26,7 @@
   .btn-outline { background: #fff; color: #3b82f6; border: 1.5px solid #3b82f6; } .btn-outline:hover { background: #eff6ff; }
   .btn-ghost { background: #f1f5f9; color: #475569; } .btn-ghost:hover { background: #e2e8f0; }
   .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-warning { background: #f59e0b; color: #fff; } .btn-warning:hover { background: #d97706; }
 
   .layout { display: grid; grid-template-columns: 400px 1fr; gap: 16px; padding: 16px; max-width: 1600px; margin: 0 auto; }
   @media (max-width: 1024px) { .layout { grid-template-columns: 1fr; } }
@@ -81,7 +82,6 @@
   }
   .detail-row input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
 
-  /* ═══ IFSC Status ═══ */
   .ifsc-status {
     font-size: 10.5px;
     margin-top: 4px;
@@ -105,7 +105,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ═══ Bank Preview Card ═══ */
   .bank-preview {
     background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
     border: 1px solid #bae6fd;
@@ -132,6 +131,7 @@
     border-radius: 999px; font-size: 11px; font-weight: 700;
     margin-left: 6px;
   }
+  .history-badge.purple { background: #8b5cf6; }
   .history-list {
     max-height: 280px; overflow-y: auto; padding: 4px;
     scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9;
@@ -162,6 +162,54 @@
   .history-empty { text-align: center; padding: 24px 12px; color: #94a3b8; font-size: 12px; }
   .history-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
 
+  .profile-item {
+    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+    border: 1.5px solid #d8b4fe;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .profile-item:hover { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-color: #a855f7; transform: translateX(2px); }
+  .profile-item .pi-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #6b21a8;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .profile-item .pi-info {
+    font-size: 10.5px;
+    color: #9333ea;
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .profile-item .pi-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .profile-item .pi-gst {
+    font-size: 10px;
+    font-weight: 700;
+    color: #6b21a8;
+    background: rgba(255,255,255,0.7);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .profile-item .pi-actions { display: flex; gap: 4px; }
+  .profile-item .pi-actions button {
+    width: 24px; height: 24px;
+    border-radius: 6px; border: none;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; transition: all 0.15s;
+  }
+  .profile-item .pi-del { background: #fee2e2; color: #dc2626; }
+  .profile-item .pi-del:hover { background: #fecaca; }
+
   .toast {
     position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%) translateY(100px);
@@ -177,6 +225,7 @@
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.toast-blue { background: #3b82f6; box-shadow: 0 10px 30px rgba(59,130,246,0.35); }
   .toast.toast-red { background: #dc2626; box-shadow: 0 10px 30px rgba(220,38,38,0.35); }
+  .toast.toast-purple { background: #8b5cf6; box-shadow: 0 10px 30px rgba(139,92,246,0.35); }
 
   .invoice-a4 {
     background: #fff; width: 210mm; min-height: 297mm; padding: 14mm;
@@ -311,7 +360,7 @@
   }
 </style>
 </head>
-<body>
+<body autocomplete="off">
 
 <div class="app-bar no-print">
   <div style="max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
@@ -339,11 +388,22 @@
   <button class="btn btn-outline" onclick="document.getElementById('loadFile').click()">📂 Load JSON</button>
   <input type="file" id="loadFile" accept=".json" style="display:none" onchange="loadJSON(event)">
   <button class="btn btn-ghost" onclick="clearAll()">🗑️ Clear Form</button>
+  <button class="btn btn-ghost" style="color:#dc2626;" onclick="nukeEverything()">💥 Reset Everything</button>
   <span style="margin-left:auto;font-size:11px;color:#94a3b8;">Data auto-saved locally</span>
 </div>
 
 <div class="layout">
-  <aside class="no-print">
+  <aside class="no-print" autocomplete="off">
+
+    <div class="panel" id="profilePanel">
+      <div class="panel-head" onclick="togglePanel(this, 'profileBody')">
+        <div style="display:flex;align-items:center;">💼 Saved Detail <span class="history-badge purple" id="profileCount">0</span></div>
+        <span>▼</span>
+      </div>
+      <div class="panel-body" id="profileBody" style="padding:8px;">
+        <div class="history-list" id="profileList"></div>
+      </div>
+    </div>
 
     <div class="panel" id="historyPanel">
       <div class="panel-head" onclick="togglePanel(this, 'historyBody')">
@@ -358,28 +418,29 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'bizBody')">🏢 Your Business <span>▼</span></div>
       <div class="panel-body" id="bizBody">
-        <div class="field"><label>Business Name</label><input id="bName" placeholder="Your Company Name" oninput="sync()"></div>
-        <div class="field"><label>Address</label><textarea id="bAddr" rows="2" placeholder="Street, City, State - PIN" oninput="sync()"></textarea></div>
+        <div class="field"><label>Business Name</label><input id="bName" placeholder="Your Company Name" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Address</label><textarea id="bAddr" rows="2" placeholder="Street, City, State - PIN" autocomplete="off" oninput="sync()"></textarea></div>
         <div class="grid2">
-          <div class="field"><label>GSTIN</label><input id="bGstin" placeholder="27ABCDE1234F1Z5" oninput="autoPanFromGstin(); sync()"></div>
-          <div class="field"><label>PAN</label><input id="bPan" placeholder="ABCDE1234F" oninput="sync()"></div>
+          <div class="field"><label>GSTIN</label><input id="bGstin" placeholder="27ABCDE1234F1Z5" autocomplete="off" oninput="autoPanFromGstin(); sync()"></div>
+          <div class="field"><label>PAN</label><input id="bPan" placeholder="ABCDE1234F" autocomplete="off" oninput="sync()"></div>
         </div>
         <div class="grid2">
-          <div class="field"><label>Email</label><input id="bEmail" placeholder="you@business.com" oninput="sync()"></div>
-          <div class="field"><label>Phone</label><input id="bPhone" placeholder="+91 98765 43210" oninput="sync()"></div>
+          <div class="field"><label>Email</label><input id="bEmail" placeholder="you@business.com" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>Phone</label><input id="bPhone" placeholder="+91 98765 43210" autocomplete="off" oninput="sync()"></div>
         </div>
+        <button class="btn btn-warning btn-sm" style="width:100%;justify-content:center;margin-top:6px;" onclick="saveBusinessProfile()">💾 Save This Business Detail</button>
       </div>
     </div>
     
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'cliBody')">👤 Bill To (Client) <span>▼</span></div>
       <div class="panel-body" id="cliBody">
-        <div class="field"><label>Client Name</label><input id="cName" placeholder="Client / Company Name" oninput="sync()"></div>
-        <div class="field"><label>Address</label><textarea id="cAddr" rows="2" placeholder="Client address" oninput="sync()"></textarea></div>
-        <div class="field"><label>GSTIN</label><input id="cGstin" placeholder="Client GSTIN (if any)" oninput="sync()"></div>
+        <div class="field"><label>Client Name</label><input id="cName" placeholder="Client / Company Name" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Address</label><textarea id="cAddr" rows="2" placeholder="Client address" autocomplete="off" oninput="sync()"></textarea></div>
+        <div class="field"><label>GSTIN</label><input id="cGstin" placeholder="Client GSTIN (if any)" autocomplete="off" oninput="sync()"></div>
         <div class="grid2">
-          <div class="field"><label>Email</label><input id="cEmail" placeholder="client@email.com" oninput="sync()"></div>
-          <div class="field"><label>Phone</label><input id="cPhone" placeholder="Client phone" oninput="sync()"></div>
+          <div class="field"><label>Email</label><input id="cEmail" placeholder="client@email.com" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>Phone</label><input id="cPhone" placeholder="Client phone" autocomplete="off" oninput="sync()"></div>
         </div>
       </div>
     </div>
@@ -388,10 +449,10 @@
       <div class="panel-head" onclick="togglePanel(this, 'metaBody')">📅 Invoice Details <span>▼</span></div>
       <div class="panel-body" id="metaBody">
         <div class="grid2">
-          <div class="field"><label>Invoice No.</label><input id="mNo" oninput="sync()"></div>
-          <div class="field"><label>Date</label><input id="mDate" type="date" oninput="sync()"></div>
+          <div class="field"><label>Invoice No.</label><input id="mNo" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>Date</label><input id="mDate" type="date" autocomplete="off" oninput="sync()"></div>
         </div>
-        <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" oninput="sync()"></div>
+        <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" autocomplete="off" oninput="sync()"></div>
 
         <div class="details-section">
           <div class="details-heading">
@@ -442,19 +503,16 @@
       </div>
     </div>
     
-    <!-- ═══════════════════════════════════════════
-         BANK DETAILS — IMPROVED
-         ═══════════════════════════════════════════ -->
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'bankBody')">🏦 Bank Details <span>▼</span></div>
       <div class="panel-body" id="bankBody">
-        <div class="field"><label>Account Holder Name</label><input id="bkHolder" placeholder="e.g. Tarun Prajapat" oninput="sync()"></div>
-        <div class="field"><label>Bank Name</label><input id="bkName" placeholder="e.g. Bank of Baroda" oninput="sync()"></div>
-        <div class="field"><label>Account Number</label><input id="bkAc" placeholder="e.g. 33930200000505" oninput="sync()"></div>
+        <div class="field"><label>Account Holder Name</label><input id="bkHolder" placeholder="e.g. Tarun Prajapat" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Bank Name</label><input id="bkName" placeholder="e.g. Bank of Baroda" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Account Number</label><input id="bkAc" placeholder="e.g. 33930200000505" autocomplete="off" oninput="sync()"></div>
         
         <div class="field" style="margin-bottom:6px;">
           <label>IFSC Code</label>
-          <input id="bkIfsc" placeholder="e.g. BARB0BANDIK" maxlength="11" style="text-transform:uppercase;" oninput="onIfscInput(this.value); sync()">
+          <input id="bkIfsc" placeholder="e.g. BARB0BANDIK" maxlength="11" style="text-transform:uppercase;" autocomplete="off" oninput="onIfscInput(this.value); sync()">
           <div id="ifscStatus" class="ifsc-status idle"></div>
         </div>
         
@@ -473,9 +531,8 @@
           </select>
         </div>
         
-        <div class="field"><label>UPI ID (optional)</label><input id="bkUpi" placeholder="name@upi" oninput="sync()"></div>
+        <div class="field"><label>UPI ID (optional)</label><input id="bkUpi" placeholder="name@upi" autocomplete="off" oninput="sync()"></div>
 
-        <!-- Preview Card -->
         <div class="bank-preview" id="bankPreview">
           <div class="bank-preview-row"><span class="lbl">✓ Verified IFSC</span><span class="val" id="bpBank"></span></div>
           <div class="bank-preview-row"><span class="lbl">Branch</span><span class="val" id="bpBranch"></span></div>
@@ -489,8 +546,8 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'termsBody')">📝 Terms & Notes <span>▼</span></div>
       <div class="panel-body" id="termsBody">
-        <div class="field"><label>Terms & Conditions</label><textarea id="terms" rows="3" oninput="sync()"></textarea></div>
-        <div class="field"><label>Notes</label><textarea id="notes" rows="2" placeholder="Any additional notes..." oninput="sync()"></textarea></div>
+        <div class="field"><label>Terms & Conditions</label><textarea id="terms" rows="3" autocomplete="off" oninput="sync()"></textarea></div>
+        <div class="field"><label>Notes</label><textarea id="notes" rows="2" placeholder="Any additional notes..." autocomplete="off" oninput="sync()"></textarea></div>
       </div>
     </div>
     
@@ -513,6 +570,7 @@ const state = {
 };
 
 let history = [];
+let profiles = [];
 let editingHistoryId = null;
 
 const $ = id => document.getElementById(id);
@@ -526,10 +584,22 @@ const fmtDate = d => {
   return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 };
 
+// ═══════════════════════════════════════════════════════════
+//  DISABLE BROWSER AUTOFILL on all form inputs
+// ═══════════════════════════════════════════════════════════
+function disableAutofill() {
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.setAttribute('autocomplete', 'new-password');
+    el.setAttribute('autocorrect', 'off');
+    el.setAttribute('autocapitalize', 'off');
+    el.setAttribute('spellcheck', 'false');
+  });
+}
+
 function showToast(msg, type) {
   const t = $('toast');
   t.textContent = msg;
-  t.className = 'toast' + (type === 'blue' ? ' toast-blue' : type === 'red' ? ' toast-red' : '');
+  t.className = 'toast' + (type === 'blue' ? ' toast-blue' : type === 'red' ? ' toast-red' : type === 'purple' ? ' toast-purple' : '');
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
@@ -551,8 +621,118 @@ function autoPanFromGstin() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  IFSC AUTO-FETCH — Multi-fallback
-//  Tries Razorpay directly → corsproxy.io → allorigins
+//  BUSINESS PROFILES
+// ═══════════════════════════════════════════════════════════
+function saveProfilesToLS() {
+  try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); }
+  catch (e) {}
+}
+
+function saveBusinessProfile() {
+  const name = $('bName').value.trim();
+  const gstin = $('bGstin').value.trim();
+
+  if (!name) {
+    showToast('⚠️ Business Name required to save', 'red');
+    return;
+  }
+
+  const existingIdx = profiles.findIndex(p => 
+    p.name.toLowerCase() === name.toLowerCase() && (p.gstin || '') === gstin
+  );
+
+  const profile = {
+    id: existingIdx >= 0 ? profiles[existingIdx].id : ('prof_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6)),
+    savedAt: new Date().toISOString(),
+    name: name,
+    addr: $('bAddr').value,
+    gstin: gstin,
+    pan: $('bPan').value.trim(),
+    email: $('bEmail').value.trim(),
+    phone: $('bPhone').value.trim()
+  };
+
+  if (existingIdx >= 0) {
+    profiles[existingIdx] = profile;
+    showToast('✓ Business detail updated');
+  } else {
+    profiles.unshift(profile);
+    showToast('✓ Business detail saved');
+  }
+
+  if (profiles.length > 20) profiles = profiles.slice(0, 20);
+  saveProfilesToLS();
+  renderProfiles();
+}
+
+function renderProfiles() {
+  const list = $('profileList');
+  const count = $('profileCount');
+  if (!list || !count) return;
+  count.textContent = profiles.length;
+
+  if (!profiles.length) {
+    list.innerHTML = `
+      <div class="history-empty">
+        <div class="history-empty-icon">💼</div>
+        <div>No saved business details</div>
+        <div style="font-size:10.5px;margin-top:4px;color:#cbd5e1;">Fill business form & click "Save This Business Detail"</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = profiles.map(p => {
+    const city = (p.addr || '').split('\n')[0].substring(0, 30);
+    return `
+      <div class="profile-item" onclick="loadBusinessProfile('${p.id}')">
+        <div class="pi-name">${esc(p.name)}</div>
+        <div class="pi-info">${esc(city)}${city ? '' : '—'}</div>
+        <div class="pi-bottom">
+          <span class="pi-gst">${p.gstin ? 'GST: ' + esc(p.gstin.substring(0, 8)) + '...' : 'No GSTIN'}</span>
+          <div class="pi-actions" onclick="event.stopPropagation()">
+            <button class="pi-del" onclick="deleteBusinessProfile('${p.id}')" title="Delete">🗑️</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function loadBusinessProfile(id) {
+  const p = profiles.find(x => x.id === id);
+  if (!p) return;
+
+  const hasData = $('bName').value.trim() || $('bGstin').value.trim();
+  const same = ($('bName').value.trim() === p.name) && ($('bGstin').value.trim() === p.gstin);
+  if (hasData && !same) {
+    if (!confirm(`Load "${p.name}"? Current business details will be replaced.`)) return;
+  }
+
+  $('bName').value = p.name || '';
+  $('bAddr').value = p.addr || '';
+  $('bGstin').value = p.gstin || '';
+  $('bPan').value = p.pan || '';
+  $('bEmail').value = p.email || '';
+  $('bPhone').value = p.phone || '';
+
+  sync();
+  showToast('✓ Business detail loaded', 'purple');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deleteBusinessProfile(id) {
+  const p = profiles.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Delete saved business "${p.name}"?`)) return;
+
+  profiles = profiles.filter(x => x.id !== id);
+  saveProfilesToLS();
+  renderProfiles();
+  showToast('🗑️ Business detail deleted');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  IFSC AUTO-FETCH
 // ═══════════════════════════════════════════════════════════
 let ifscFetchTimer = null;
 let ifscLastFetched = '';
@@ -560,8 +740,7 @@ let ifscFetchAbort = null;
 
 function setIfscStatus(type, html) {
   const el = $('ifscStatus');
-  el.className = 'ifsc-status ' + type;
-  el.innerHTML = html;
+  if (el) { el.className = 'ifsc-status ' + type; el.innerHTML = html; }
 }
 
 function onIfscInput(value) {
@@ -598,12 +777,9 @@ function onIfscInput(value) {
 
 async function fetchBranchFromIFSC(ifsc) {
   const endpoints = [
-    // Try direct (works in some browsers)
-    { name: 'direct', url: 'https://ifsc.razorpay.com/' + ifsc, parse: (data) => data },
-    // corsproxy.io — most reliable
-    { name: 'corsproxy', url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc), parse: (data) => data },
-    // allorigins — backup
-    { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc), parse: (data) => data }
+    { name: 'direct', url: 'https://ifsc.razorpay.com/' + ifsc },
+    { name: 'corsproxy', url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) },
+    { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) }
   ];
 
   for (const ep of endpoints) {
@@ -623,19 +799,16 @@ async function fetchBranchFromIFSC(ifsc) {
 
       if (!data) continue;
 
-      // Handle different response formats
       const bank = data.BANK || data.bank || '';
       const branch = data.BRANCH || data.branch || '';
       const city = data.CITY || data.city || '';
       const state_ = data.STATE || data.state || '';
       const contact = data.CONTACT || data.contact || data.PHONE || '';
-      const ifscResp = data.IFSC || data.ifsc || ifsc;
 
       if (bank && branch) {
         $('bkBranch').value = branch;
         if ($('bkName').value.trim() === '') $('bkName').value = bank;
 
-        // Populate preview
         $('bpBank').textContent = bank;
         $('bpBranch').textContent = branch;
         $('bpCity').textContent = city || '—';
@@ -646,20 +819,15 @@ async function fetchBranchFromIFSC(ifsc) {
         ifscLastFetched = ifsc;
         setIfscStatus('success', `✓ ${bank} · ${city || state_ || 'Branch found'}`);
 
-        // Brief highlight
         $('bkBranch').classList.add('auto-filled');
         setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
 
         sync();
         return;
       }
-    } catch (err) {
-      if (err.name === 'AbortError') { /* timeout, try next */ }
-      // try next endpoint
-    }
+    } catch (err) {}
   }
 
-  // All endpoints failed
   setIfscStatus('error', '✗ Could not fetch — please fill branch manually');
   $('bkBranch').readOnly = false;
   $('bkBranch').placeholder = 'Enter branch name manually';
@@ -671,14 +839,15 @@ function renderItems() {
   const c = $('itemsContainer');
   c.innerHTML = state.items.map((it, i) => `
     <div class="item-row">
-      <input placeholder="Item description" value="${esc(it.desc)}" oninput="updateItem(${i},'desc',this.value)">
-      <input placeholder="HSN" value="${esc(it.hsn)}" oninput="updateItem(${i},'hsn',this.value)">
-      <input type="number" placeholder="1" value="${it.qty}" min="0" step="0.01" oninput="updateItem(${i},'qty',this.value)">
-      <input type="number" placeholder="0" value="${it.rate}" min="0" step="0.01" oninput="updateItem(${i},'rate',this.value)">
-      <input type="number" placeholder="18" value="${it.gst}" min="0" max="28" step="0.01" oninput="updateItem(${i},'gst',this.value)">
+      <input placeholder="Item description" value="${esc(it.desc)}" autocomplete="off" oninput="updateItem(${i},'desc',this.value)">
+      <input placeholder="HSN" value="${esc(it.hsn)}" autocomplete="off" oninput="updateItem(${i},'hsn',this.value)">
+      <input type="number" placeholder="1" value="${it.qty}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'qty',this.value)">
+      <input type="number" placeholder="0" value="${it.rate}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'rate',this.value)">
+      <input type="number" placeholder="18" value="${it.gst}" min="0" max="28" step="0.01" autocomplete="off" oninput="updateItem(${i},'gst',this.value)">
       <button class="btn btn-ghost btn-sm" onclick="removeItem(${i})" title="Remove">✖</button>
     </div>
   `).join('');
+  disableAutofill();
 }
 function updateItem(i, k, v) {
   state.items[i][k] = (k === 'desc' || k === 'hsn') ? v : Number(v) || 0;
@@ -699,10 +868,11 @@ function renderDetails() {
   if (!state.details || !state.details.length) state.details = [''];
   c.innerHTML = state.details.map((d, i) => `
     <div class="detail-row">
-      <input placeholder="e.g. Application Ref. No.: NP-RJJAY26" value="${esc(d)}" oninput="updateDetail(${i}, this.value)">
+      <input placeholder="e.g. Application Ref. No.: NP-RJJAY26" value="${esc(d)}" autocomplete="off" oninput="updateDetail(${i}, this.value)">
       <button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})" title="Remove">✖</button>
     </div>
   `).join('');
+  disableAutofill();
 }
 function updateDetail(i, v) { state.details[i] = v; sync(); }
 function addDetail() {
@@ -816,7 +986,7 @@ function render() {
   const preview = $('invoicePreview');
   preview.className = 'invoice-a4 tpl tpl-' + s.template;
   const t = calcTotals();
-  const biz = s.business, cli = s.client, meta = s.meta, bank = s.bank;
+  const biz = s.business || {}, cli = s.client || {}, meta = s.meta || {}, bank = s.bank || {};
   const bizName = biz.name || 'Your Business Name';
   const bizInfo = [biz.addr, biz.email, biz.phone].filter(Boolean).join(' · ');
   const cliName = cli.name || 'Client Name';
@@ -919,9 +1089,6 @@ function render() {
     </div>
   `;
 
-  // ═══════════════════════════════════════════════════════════
-  //  BANK DETAILS BLOCK IN PREVIEW — with Account Holder
-  // ═══════════════════════════════════════════════════════════
   const hasBank = bank.name || bank.ac || bank.ifsc;
   const footerBlock = `
     <div class="footer-grid">
@@ -1277,32 +1444,129 @@ function loadSample() {
   renderDetails();
   sync();
 
-  // Auto-trigger IFSC fetch for sample
   setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
 }
 
+// ═══════════════════════════════════════════════════════════
+//  CLEAR ALL — Complete reset + prevent browser autofill
+// ═══════════════════════════════════════════════════════════
 function clearAll() {
-  if (!confirm('Clear current form? (Business details & saved invoices will be kept)')) return;
+  if (!confirm('Clear everything?\n\n✅ Business, Client, Invoice, Bank, Items, Details, Terms — sab clear ho jayega\n\n📚 Saved Invoices & 💼 Saved Business Detail — safe rahenge')) return;
 
+  // ═══ Business ═══
+  $('bName').value = '';
+  $('bAddr').value = '';
+  $('bGstin').value = '';
+  $('bPan').value = '';
+  $('bEmail').value = '';
+  $('bPhone').value = '';
+
+  // ═══ Client ═══
   $('cName').value = '';
   $('cAddr').value = '';
   $('cGstin').value = '';
   $('cEmail').value = '';
   $('cPhone').value = '';
 
-  const today = new Date().toISOString().split('T')[0];
-  $('mNo').value = getNextInvoiceNo();
-  $('mDate').value = today;
+  // ═══ Invoice Meta ═══
+  $('mNo').value = '';
+  $('mDate').value = '';
+  $('mPlace').value = '';
+
+  // ═══ Bank ═══
+  $('bkHolder').value = '';
+  $('bkName').value = '';
+  $('bkAc').value = '';
+  $('bkIfsc').value = '';
+  $('bkBranch').value = '';
+  $('bkType').value = '';
+  $('bkUpi').value = '';
+
+  // ═══ Terms & Notes ═══
+  $('terms').value = '';
+  $('notes').value = '';
+
+  // ═══ Tax Type Reset ═══
+  $('taxType').value = 'cgst-sgst';
+
+  // ═══ Items & Details Reset ═══
+  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
+  state.details = [''];
+
+  // ═══ Clear editing flag ═══
+  editingHistoryId = null;
+
+  // ═══ Clear IFSC Status & Preview ═══
+  if (typeof setIfscStatus === 'function') setIfscStatus('idle', '');
+  const bp = $('bankPreview');
+  if (bp) bp.classList.remove('show');
+  ifscLastFetched = '';
+  $('bkBranch').readOnly = true;
+  $('bkBranch').placeholder = 'Branch will appear here...';
+
+  // ═══ Reset state object ═══
+  state.business = {};
+  state.client = {};
+  state.meta = {};
+  state.bank = {};
+  state.terms = '';
+  state.notes = '';
+
+  // ═══ Remove localStorage + set flag so init doesn't auto-fill ═══
+  localStorage.removeItem('invoiceState');
+  localStorage.setItem('userClearedForm', '1');
+
+  // ═══ Also re-disable autofill (safety) ═══
+  disableAutofill();
+
+  // ═══ Re-render ═══
+  renderItems();
+  renderDetails();
+  render();
+  renderHistory();
+
+  showToast('🗑️ Form fully cleared — everything empty');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  NUKE EVERYTHING — clears even saved invoices & profiles
+// ═══════════════════════════════════════════════════════════
+function nukeEverything() {
+  if (!confirm('💥 RESET EVERYTHING?\n\nYe sab kuch delete karega:\n• Current form\n• Saved Invoices (📚)\n• Saved Business Details (💼)\n\nWapas nahi aa sakta!')) return;
+  if (!confirm('Pakka? Ek aur baar confirm karo.')) return;
+
+  localStorage.removeItem('invoiceState');
+  localStorage.removeItem('invoiceHistory');
+  localStorage.removeItem('businessProfiles');
+  localStorage.removeItem('userClearedForm');
+
+  history = [];
+  profiles = [];
+  editingHistoryId = null;
+
+  // Clear all fields
+  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = '';
+  $('bEmail').value = ''; $('bPhone').value = '';
+  $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
+  $('mNo').value = ''; $('mDate').value = ''; $('mPlace').value = '';
+  $('bkHolder').value = ''; $('bkName').value = ''; $('bkAc').value = ''; $('bkIfsc').value = '';
+  $('bkBranch').value = ''; $('bkType').value = ''; $('bkUpi').value = '';
+  $('terms').value = ''; $('notes').value = '';
+  $('taxType').value = 'cgst-sgst';
 
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
   state.details = [''];
-  editingHistoryId = null;
+  state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
+  state.terms = ''; state.notes = '';
 
-  renderItems();
-  renderDetails();
-  sync();
-  renderHistory();
-  showToast('🗑️ Form cleared');
+  if (typeof setIfscStatus === 'function') setIfscStatus('idle', '');
+  const bp = $('bankPreview');
+  if (bp) bp.classList.remove('show');
+
+  disableAutofill();
+  renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
+
+  showToast('💥 Everything reset — fresh start!', 'red');
 }
 
 function saveJSON() {
@@ -1334,38 +1598,64 @@ function loadJSON(e) {
   e.target.value = '';
 }
 
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
 (function init() {
+  // Disable autofill first
+  disableAutofill();
+
+  // Load saved invoices
   try {
     const savedHistory = localStorage.getItem('invoiceHistory');
     if (savedHistory) history = JSON.parse(savedHistory);
   } catch (e) { history = []; }
 
+  // Load business profiles
+  try {
+    const savedProfiles = localStorage.getItem('businessProfiles');
+    if (savedProfiles) profiles = JSON.parse(savedProfiles);
+  } catch (e) { profiles = []; }
+
+  // Check if user had previously cleared the form
+  const wasCleared = localStorage.getItem('userClearedForm') === '1';
+
+  // Load current state
   const saved = localStorage.getItem('invoiceState');
-  if (saved) {
+  if (saved && !wasCleared) {
     try {
       const data = JSON.parse(saved);
       Object.assign(state, data);
       if (!state.details) state.details = [''];
       populateForm(state);
-      // If IFSC is already present and branch is empty, try to fetch
       const bk = state.bank || {};
       if (bk.ifsc && bk.ifsc.length === 11 && !bk.branch) {
         setTimeout(() => onIfscInput(bk.ifsc), 400);
       }
     } catch (err) {}
+  } else if (wasCleared) {
+    // User had cleared the form — keep it empty, don't auto-fill anything
+    state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
+    state.details = [''];
+    // Don't call sync() — that would save empty state and remove flag
   } else {
-    const t = new Date().toISOString().split('T')[0];
-    $('mDate').value = t;
-    $('mNo').value = getNextInvoiceNo();
+    // First time ever — leave empty too (no auto-fill)
+    state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
+    state.details = [''];
   }
 
-  if (!$('mNo').value) $('mNo').value = getNextInvoiceNo();
   if (!state.details || !state.details.length) state.details = [''];
 
   renderItems();
   renderDetails();
-  sync();
+  render();
   renderHistory();
+  renderProfiles();
+
+  // Only save state if it wasn't explicitly cleared
+  if (!wasCleared && saved) {
+    // nothing extra needed
+  }
 })();
 </script>
 
