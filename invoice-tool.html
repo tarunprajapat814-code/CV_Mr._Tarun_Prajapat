@@ -324,10 +324,7 @@
       overflow: hidden !important;
     }
 
-    /* Hide everything */
     body * { visibility: hidden; }
-
-    /* Show only the invoice preview */
     #invoicePreview, #invoicePreview * { visibility: visible; }
 
     #invoicePreview {
@@ -347,10 +344,7 @@
       break-inside: avoid !important;
     }
 
-    /* For modern template (has negative margins) */
-    #invoicePreview.tpl-modern {
-      padding: 0 !important;
-    }
+    #invoicePreview.tpl-modern { padding: 0 !important; }
     #invoicePreview.tpl-modern .inv-wrap {
       height: 297mm !important;
       min-height: 297mm !important;
@@ -359,20 +353,15 @@
       overflow: hidden !important;
     }
 
-    /* Force all major blocks to avoid page break */
     .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box {
       page-break-inside: avoid !important;
       break-inside: avoid !important;
     }
 
-    /* Hide non-print stuff */
     .no-print { display: none !important; }
-
-    /* Body overflow reset for print */
     body { overflow: hidden !important; }
   }
 
-  /* Print fit indicator (dev only) */
   .print-warning {
     position: fixed; top: 70px; right: 20px;
     background: #fef3c7; color: #92400e;
@@ -1361,40 +1350,31 @@ function resetForNextInvoice() {
 
 // ═══════════════════════════════════════════════════════════
 //  AUTO-SCALE FOR SINGLE PAGE PRINT
-//  If invoice content exceeds A4 height, scale it down
 // ═══════════════════════════════════════════════════════════
 function prepareForPrint() {
   const el = $('invoicePreview');
   if (!el) return;
 
-  // Reset any previous zoom
   el.style.zoom = '';
   el.style.transform = '';
   const warning = $('printWarning');
   if (warning) warning.classList.remove('show');
 
-  // Force reflow to measure natural size
   void el.offsetHeight;
 
-  // A4 dimensions at 96dpi: 794px x 1122px
-  // Available: 210mm x 297mm → 794 x 1122 px
   const A4_HEIGHT_PX = 1122;
   const A4_WIDTH_PX = 794;
 
-  // Scroll height includes any overflow
   const naturalHeight = el.scrollHeight;
   const naturalWidth = el.scrollWidth;
 
-  // Only scale if it overflows
   if (naturalHeight > A4_HEIGHT_PX || naturalWidth > A4_WIDTH_PX) {
     const heightScale = A4_HEIGHT_PX / naturalHeight;
     const widthScale = A4_WIDTH_PX / naturalWidth;
     const scale = Math.min(heightScale, widthScale, 1);
-    // Leave a tiny safety margin (0.97 = 3% buffer)
     const safeScale = (scale * 0.97).toFixed(4);
     el.style.zoom = safeScale;
     if (warning) warning.classList.add('show');
-    // Re-measure for any residual overflow
     void el.offsetHeight;
   }
 }
