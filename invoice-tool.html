@@ -277,6 +277,20 @@
   .sign-area { margin-top: 18px; text-align: right; padding-top: 6px; }
   .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
 
+  /* ═══════════════════════════════════════════
+     COMPUTER GENERATED LINE
+     ═══════════════════════════════════════════ */
+  .computer-gen-line {
+    text-align: center;
+    font-size: 9px;
+    color: #94a3b8;
+    font-style: italic;
+    letter-spacing: 0.4px;
+    font-weight: 400;
+    margin-top: 14px;
+    padding-top: 6px;
+  }
+
   .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
   .tpl-classic .inv-title-box { text-align: right; }
   .tpl-classic .inv-title-box .inv-h1 { font-size: 26px; color: var(--accent); }
@@ -353,7 +367,7 @@
       overflow: hidden !important;
     }
 
-    .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box {
+    .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box, .computer-gen-line {
       page-break-inside: avoid !important;
       break-inside: avoid !important;
     }
@@ -1097,6 +1111,16 @@ function render() {
       </div>
     </div>`;
 
+  // ═══════════════════════════════════════════════════════════
+  //  COMPUTER GENERATED DOCUMENT LINE
+  //  Light grey, italic, small, centered — appears in all templates
+  // ═══════════════════════════════════════════════════════════
+  const genDocLine = `
+    <div class="computer-gen-line">
+      This is a Computer Generated Document
+    </div>
+  `;
+
   let html = '';
 
   if (s.template === 'classic' || s.template === 'gst') {
@@ -1124,6 +1148,7 @@ function render() {
       ${wordsBlock}
       ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN-wise Tax Summary</h4>${hsnTable}</div>` : ''}
       ${footerBlock}
+      ${genDocLine}
     `;
   } else if (s.template === 'modern') {
     html = `
@@ -1154,6 +1179,7 @@ function render() {
           ${totalsBlock}
           ${wordsBlock}
           ${footerBlock}
+          ${genDocLine}
         </div>
       </div>
     `;
@@ -1181,6 +1207,7 @@ function render() {
       ${totalsBlock}
       ${wordsBlock}
       ${footerBlock}
+      ${genDocLine}
     `;
   }
 
