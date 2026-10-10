@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invoice Generator | Free Tool by Tarun Prajapat</title>
-<meta name="description" content="Free online invoice generator with 8 templates, GST support, PDF export. By Tarun Prajapat.">
+<meta name="description" content="Free online invoice generator with 10 templates, GST support, PDF export. By Tarun Prajapat.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -52,85 +52,37 @@
   .item-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3px; }
 
   .items-scroll-wrap { position: relative; margin-bottom: 4px; }
-  .items-scroll {
-    overflow-x: auto; overflow-y: visible;
-    padding-bottom: 8px; margin: 0 -4px;
-    padding-left: 4px; padding-right: 4px;
-    scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9;
-  }
+  .items-scroll { overflow-x: auto; overflow-y: visible; padding-bottom: 8px; margin: 0 -4px; padding-left: 4px; padding-right: 4px; scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; }
   .items-scroll::-webkit-scrollbar { height: 8px; }
   .items-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
   .items-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
-  .items-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
   .items-inner { min-width: 480px; }
 
   .details-section { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #e2e8f0; }
-  .details-heading {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 10.5px; font-weight: 700; color: #64748b;
-    text-transform: uppercase; letter-spacing: 0.4px;
-    margin-bottom: 6px;
-  }
-  .detail-row {
-    display: grid; grid-template-columns: 1fr auto; gap: 6px;
-    padding: 4px 0; align-items: center;
-  }
-  .detail-row input {
-    padding: 7px 10px; font-size: 12.5px;
-    border: 1.5px solid #e2e8f0; border-radius: 6px;
-    width: 100%; background: #fff;
-  }
-  .detail-row input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+  .details-heading { display: flex; align-items: center; justify-content: space-between; font-size: 10.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+  .detail-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; padding: 4px 0; align-items: center; }
+  .detail-row input { padding: 7px 10px; font-size: 12.5px; border: 1.5px solid #e2e8f0; border-radius: 6px; width: 100%; background: #fff; }
 
-  .ifsc-status {
-    font-size: 10.5px; margin-top: 4px; min-height: 15px;
-    display: flex; align-items: center; gap: 4px; line-height: 1.4;
-  }
-  .ifsc-status.loading { color: #3b82f6; }
-  .ifsc-status.success { color: #059669; }
-  .ifsc-status.error { color: #dc2626; }
-  .ifsc-status.idle { color: #94a3b8; }
-  .spinner {
-    display: inline-block; width: 10px; height: 10px;
-    border: 2px solid #bfdbfe; border-top-color: #3b82f6;
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-  }
+  .ifsc-status { font-size: 10.5px; margin-top: 4px; min-height: 15px; display: flex; align-items: center; gap: 4px; line-height: 1.4; }
+  .ifsc-status.loading { color: #3b82f6; } .ifsc-status.success { color: #059669; }
+  .ifsc-status.error { color: #dc2626; } .ifsc-status.idle { color: #94a3b8; }
+  .spinner { display: inline-block; width: 10px; height: 10px; border: 2px solid #bfdbfe; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .bank-preview {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border: 1px solid #bae6fd; border-radius: 8px;
-    padding: 10px 12px; margin-top: 10px;
-    font-size: 12px; display: none;
-  }
+  .bank-preview { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-radius: 8px; padding: 10px 12px; margin-top: 10px; font-size: 12px; display: none; }
   .bank-preview.show { display: block; }
   .bank-preview-row { display: flex; justify-content: space-between; padding: 3px 0; gap: 10px; }
   .bank-preview-row .lbl { color: #0369a1; font-weight: 500; }
   .bank-preview-row .val { color: #0c4a6e; font-weight: 700; text-align: right; word-break: break-all; }
 
-  .history-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-width: 22px; height: 22px; padding: 0 7px;
-    background: #3b82f6; color: #fff;
-    border-radius: 999px; font-size: 11px; font-weight: 700;
-    margin-left: 6px;
-  }
+  .history-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 7px; background: #3b82f6; color: #fff; border-radius: 999px; font-size: 11px; font-weight: 700; margin-left: 6px; }
   .history-badge.purple { background: #8b5cf6; }
-  .history-list {
-    max-height: 280px; overflow-y: auto; padding: 4px;
-    scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9;
-  }
+  .history-list { max-height: 280px; overflow-y: auto; padding: 4px; scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; }
   .history-list::-webkit-scrollbar { width: 8px; }
   .history-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
   .history-list::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
-  .history-list::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-  .history-item {
-    background: #f8fafc; border: 1.5px solid #e2e8f0;
-    border-radius: 10px; padding: 10px 12px;
-    margin-bottom: 8px; cursor: pointer;
-    transition: all 0.2s; position: relative;
-  }
+  .history-item { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
   .history-item:hover { background: #eff6ff; border-color: #3b82f6; transform: translateX(2px); }
   .history-item.selected { background: #dbeafe; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
   .history-item .hi-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
@@ -140,86 +92,32 @@
   .history-item .hi-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .history-item .hi-amount { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; color: #059669; }
   .history-item .hi-actions { display: flex; gap: 4px; }
-  .history-item .hi-actions button { width: 26px; height: 26px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; }
+  .history-item .hi-actions button { width: 26px; height: 26px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
   .history-item .hi-del { background: #fee2e2; color: #dc2626; }
-  .history-item .hi-del:hover { background: #fecaca; }
-  .history-item .hi-doctype {
-    font-size: 9px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.5px; padding: 1px 6px; border-radius: 999px;
-    background: #e0e7ff; color: #3730a3; display: inline-block; margin-left: 4px;
-  }
+  .history-item .hi-doctype { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 1px 6px; border-radius: 999px; background: #e0e7ff; color: #3730a3; display: inline-block; margin-left: 4px; }
   .history-item .hi-doctype.credit { background: #fee2e2; color: #991b1b; }
   .history-item .hi-doctype.debit { background: #fef3c7; color: #92400e; }
   .history-item .hi-doctype.proforma { background: #dbeafe; color: #1e40af; }
   .history-empty { text-align: center; padding: 24px 12px; color: #94a3b8; font-size: 12px; }
   .history-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
 
-  .profile-item {
-    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-    border: 1.5px solid #d8b4fe; border-radius: 10px;
-    padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;
-  }
+  .profile-item { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border: 1.5px solid #d8b4fe; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
   .profile-item:hover { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-color: #a855f7; transform: translateX(2px); }
-  .profile-item .pi-name {
-    font-family: 'Poppins', sans-serif; font-weight: 700;
-    font-size: 13px; color: #6b21a8; margin-bottom: 2px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .profile-item .pi-info {
-    font-size: 10.5px; color: #9333ea; margin-bottom: 6px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
+  .profile-item .pi-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; color: #6b21a8; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .profile-item .pi-info { font-size: 10.5px; color: #9333ea; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .profile-item .pi-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .profile-item .pi-gst {
-    font-size: 10px; font-weight: 700; color: #6b21a8;
-    background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 999px;
-  }
-  .profile-item .pi-actions { display: flex; gap: 4px; }
-  .profile-item .pi-actions button {
-    width: 24px; height: 24px; border-radius: 6px; border: none;
-    cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-    font-size: 11px; transition: all 0.15s;
-  }
+  .profile-item .pi-gst { font-size: 10px; font-weight: 700; color: #6b21a8; background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 999px; }
+  .profile-item .pi-actions button { width: 24px; height: 24px; border-radius: 6px; border: none; cursor: pointer; font-size: 11px; }
   .profile-item .pi-del { background: #fee2e2; color: #dc2626; }
-  .profile-item .pi-del:hover { background: #fecaca; }
 
-  .toast {
-    position: fixed; bottom: 24px; left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: #059669; color: #fff;
-    padding: 12px 22px; border-radius: 10px;
-    font-size: 13px; font-weight: 600;
-    box-shadow: 0 10px 30px rgba(5,150,105,0.35);
-    z-index: 1000;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    display: flex; align-items: center; gap: 8px;
-  }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #059669; color: #fff; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(5,150,105,0.35); z-index: 1000; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; display: flex; align-items: center; gap: 8px; }
   .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.toast-blue { background: #3b82f6; box-shadow: 0 10px 30px rgba(59,130,246,0.35); }
-  .toast.toast-red { background: #dc2626; box-shadow: 0 10px 30px rgba(220,38,38,0.35); }
-  .toast.toast-purple { background: #8b5cf6; box-shadow: 0 10px 30px rgba(139,92,246,0.35); }
+  .toast.toast-blue { background: #3b82f6; } .toast.toast-red { background: #dc2626; } .toast.toast-purple { background: #8b5cf6; }
 
-  /* ═══════════════════════════════════════════
-     INVOICE — COMPACT A4 LAYOUT
-     ═══════════════════════════════════════════ */
-  .invoice-a4 {
-    background: #fff;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 10mm 12mm;
-    font-size: 11px;
-    color: var(--text, #0f172a);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-  }
+  /* INVOICE BASE */
+  .invoice-a4 { background: #fff; width: 210mm; min-height: 297mm; padding: 10mm 12mm; font-size: 11px; color: var(--text, #0f172a); box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 0 auto; position: relative; overflow: hidden; }
   @media (max-width: 1024px) { .invoice-a4 { width: 100%; min-height: auto; padding: 16px; } }
 
-  /* ═══════════════════════════════════════════
-     TEMPLATE THEMES
-     ═══════════════════════════════════════════ */
   .tpl { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; --text: #0f172a; --muted: #64748b; --line: #e2e8f0; }
   .tpl-classic { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; }
   .tpl-modern  { --accent: #0e7490; --accent-soft: #cffafe; --accent-text: #fff; }
@@ -229,37 +127,22 @@
   .tpl-corporate { --accent: #1e293b; --accent-soft: #e2e8f0; --accent-text: #fff; }
   .tpl-compact { --accent: #374151; --accent-soft: #f3f4f6; --accent-text: #fff; }
   .tpl-rounded { --accent: #7c3aed; --accent-soft: #ede9fe; --accent-text: #fff; }
+  .tpl-gst-detailed { --accent: #065f46; --accent-soft: #d1fae5; --accent-text: #fff; }
+  .tpl-gst-lite { --accent: #0369a1; --accent-soft: #e0f2fe; --accent-text: #fff; }
 
   .inv-h1 { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1.5px; }
   .inv-biz-name { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.15; }
   .inv-biz-info { font-size: 9.5px; color: var(--muted); line-height: 1.35; margin-top: 3px; }
-
   .inv-details-box { font-size: 10.5px; }
-  .inv-details-title {
-    font-family: 'Poppins', sans-serif; font-weight: 800;
-    font-size: 12.5px; color: var(--text); text-align: right;
-    margin-bottom: 4px; letter-spacing: 0.3px;
-  }
-  .inv-meta-row {
-    display: flex; justify-content: flex-end; align-items: baseline;
-    gap: 6px; padding: 1.5px 0; font-size: 10.5px;
-  }
+  .inv-details-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 12.5px; color: var(--text); text-align: right; margin-bottom: 4px; letter-spacing: 0.3px; }
+  .inv-meta-row { display: flex; justify-content: flex-end; align-items: baseline; gap: 6px; padding: 1.5px 0; font-size: 10.5px; }
   .inv-meta-row > span:first-child { color: var(--muted); font-weight: 500; }
-  .inv-meta-row > span:last-child {
-    font-weight: 700; color: var(--text);
-    min-width: 120px; text-align: right;
-  }
+  .inv-meta-row > span:last-child { font-weight: 700; color: var(--text); min-width: 120px; text-align: right; }
   .inv-detail-row { text-align: right; padding: 1.5px 0; font-size: 10.5px; color: var(--text); }
   .inv-detail-row .lbl { font-weight: 700; color: var(--text); }
   .inv-detail-row .val { font-weight: 700; color: var(--text); }
   .inv-gap { height: 5px; }
-
-  .inv-top-right {
-    text-align: right; font-size: 8.5px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 1.2px;
-    font-weight: 600; margin-bottom: 6px;
-  }
-
+  .inv-top-right { text-align: right; font-size: 8.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.2px; font-weight: 600; margin-bottom: 6px; }
   .inv-party-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 3px; }
   .inv-party-name { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
   .inv-party-info { font-size: 10px; color: var(--muted); line-height: 1.4; }
@@ -290,11 +173,7 @@
   .sign-area { margin-top: 18px; text-align: right; padding-top: 6px; }
   .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
 
-  .computer-gen-line {
-    text-align: center; font-size: 9px; color: #94a3b8;
-    font-style: italic; letter-spacing: 0.4px;
-    font-weight: 400; margin-top: 14px; padding-top: 6px;
-  }
+  .computer-gen-line { text-align: center; font-size: 9px; color: #94a3b8; font-style: italic; letter-spacing: 0.4px; font-weight: 400; margin-top: 14px; padding-top: 6px; }
 
   /* ═══ CLASSIC ═══ */
   .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
@@ -332,9 +211,7 @@
   .tpl-gst .hsn-table td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
   .tpl-gst .hsn-table td:first-child { text-align: left; font-weight: 600; }
 
-  /* ═══════════════════════════════════════════
-     NEW: ELEGANT — Serif fonts, gold accents
-     ═══════════════════════════════════════════ */
+  /* ═══ ELEGANT ═══ */
   .tpl-elegant { padding: 14mm 14mm; font-family: 'Georgia', 'Playfair Display', serif; }
   .tpl-elegant .inv-h1 { font-family: 'Playfair Display', 'Georgia', serif; font-weight: 700; letter-spacing: 3px; }
   .tpl-elegant .inv-biz-name { font-family: 'Playfair Display', 'Georgia', serif; font-size: 22px; letter-spacing: 0.5px; }
@@ -351,9 +228,7 @@
   .tpl-elegant .footer-grid h4 { font-family: 'Playfair Display', serif; font-style: italic; text-transform: none; letter-spacing: 0.5px; font-size: 10.5px; }
   .tpl-elegant .footer-grid { border-top: 1px solid var(--accent); }
 
-  /* ═══════════════════════════════════════════
-     NEW: CORPORATE — Bold structured layout
-     ═══════════════════════════════════════════ */
+  /* ═══ CORPORATE ═══ */
   .tpl-corporate .inv-header { background: var(--accent); color: #fff; padding: 14px 16px; margin: -10mm -12mm 14px -12mm; display: flex; justify-content: space-between; align-items: center; }
   .tpl-corporate .inv-header .inv-biz-name { color: #fff; font-size: 20px; letter-spacing: 0.5px; }
   .tpl-corporate .inv-header .inv-biz-info { color: rgba(255,255,255,0.8); }
@@ -364,11 +239,8 @@
   .tpl-corporate .inv-table td { padding: 7px 8px; }
   .tpl-corporate .totals-row.grand { background: var(--accent-soft); padding: 8px 10px; margin-top: 6px; border: none; border-radius: 4px; }
   .tpl-corporate .inv-details-title { text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px; }
-  .tpl-corporate .footer-grid h4 { text-transform: uppercase; }
 
-  /* ═══════════════════════════════════════════
-     NEW: COMPACT — Dense table-friendly
-     ═══════════════════════════════════════════ */
+  /* ═══ COMPACT ═══ */
   .tpl-compact { padding: 8mm 10mm; font-size: 10px; }
   .tpl-compact .inv-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--accent); margin-bottom: 8px; }
   .tpl-compact .inv-h1 { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
@@ -389,9 +261,7 @@
   .tpl-compact .inv-party-info { font-size: 9px; }
   .tpl-compact .inv-details-title { font-size: 11px; margin-bottom: 3px; }
 
-  /* ═══════════════════════════════════════════
-     NEW: ROUNDED — Soft, modern, friendly
-     ═══════════════════════════════════════════ */
+  /* ═══ ROUNDED ═══ */
   .tpl-rounded { padding: 12mm 12mm; }
   .tpl-rounded .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; background: var(--accent-soft); border-radius: 14px; margin-bottom: 14px; }
   .tpl-rounded .inv-h1 { font-size: 24px; color: var(--accent); letter-spacing: 1.5px; }
@@ -408,70 +278,75 @@
   .tpl-rounded .sign-line { border-top: 1.5px solid var(--accent); }
 
   /* ═══════════════════════════════════════════
-     PRINT
+     NEW: GST DETAILED — Full tax breakdown, rate-wise
      ═══════════════════════════════════════════ */
+  .tpl-gst-detailed .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 12px; border-bottom: 3px double var(--accent); margin-bottom: 12px; }
+  .tpl-gst-detailed .inv-h1 { font-size: 24px; color: var(--accent); letter-spacing: 2px; }
+  .tpl-gst-detailed .inv-biz-name { font-size: 18px; }
+  .tpl-gst-detailed .inv-table th { padding: 7px 6px; font-size: 8.5px; letter-spacing: 0.5px; }
+  .tpl-gst-detailed .inv-table td { padding: 6px 6px; font-size: 10px; }
+
+  .gst-info-bar { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left: 4px solid var(--accent); padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 10px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .gst-info-bar .item { display: flex; align-items: center; gap: 5px; }
+  .gst-info-bar .item .lbl { color: #065f46; font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .gst-info-bar .item .val { color: #064e3b; font-weight: 800; font-size: 11px; }
+
+  .rate-summary-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); margin: 12px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+  .rate-summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; }
+  .rate-card { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 8px 10px; text-align: center; }
+  .rate-card.rate-5 { background: #fef3c7; border-color: #fcd34d; }
+  .rate-card.rate-12 { background: #fed7aa; border-color: #fdba74; }
+  .rate-card.rate-18 { background: #dbeafe; border-color: #93c5fd; }
+  .rate-card.rate-28 { background: #fee2e2; border-color: #fca5a5; }
+  .rate-card .r-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 3px; }
+  .rate-card .r-value { font-size: 13px; font-weight: 800; color: var(--text); font-family: 'Poppins', sans-serif; }
+  .rate-card .r-tax { font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+  .gst-detail-hsn { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 6px; border: 1px solid #a7f3d0; border-radius: 6px; overflow: hidden; }
+  .gst-detail-hsn th { background: #d1fae5; color: #065f46; padding: 6px 8px; text-align: right; font-weight: 800; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 1.5px solid #86efac; }
+  .gst-detail-hsn th:first-child { text-align: left; }
+  .gst-detail-hsn td { padding: 5px 8px; text-align: right; border-bottom: 1px solid #ecfdf5; font-size: 9.5px; }
+  .gst-detail-hsn td:first-child { text-align: left; font-weight: 700; color: #065f46; }
+  .gst-detail-hsn tr:last-child td { border-bottom: none; }
+  .gst-detail-hsn tr.total-row { background: #d1fae5; font-weight: 800; }
+
+  /* ═══════════════════════════════════════════
+     NEW: GST LITE — Clean, minimal, blue
+     ═══════════════════════════════════════════ */
+  .tpl-gst-lite { padding: 12mm 14mm; }
+  .tpl-gst-lite .inv-header { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-start; }
+  .tpl-gst-lite .inv-h1 { font-size: 26px; color: var(--accent); letter-spacing: 3px; font-weight: 700; }
+  .tpl-gst-lite .inv-biz-name { font-size: 20px; color: var(--accent); }
+  .tpl-gst-lite .inv-table { margin: 10px 0; border-radius: 6px; overflow: hidden; }
+  .tpl-gst-lite .inv-table th { background: var(--accent); padding: 7px 8px; font-size: 9px; letter-spacing: 0.6px; }
+  .tpl-gst-lite .inv-table td { padding: 6px 8px; font-size: 10px; }
+  .tpl-gst-lite .inv-table tr:nth-child(even) td { background: #f8fafc; }
+
+  .gst-lite-summary { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 12px; align-items: start; }
+  .gst-lite-hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
+  .gst-lite-hsn-table th { background: #e0f2fe; color: #075985; padding: 5px 8px; text-align: right; font-weight: 800; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid #7dd3fc; }
+  .gst-lite-hsn-table th:first-child { text-align: left; }
+  .gst-lite-hsn-table td { padding: 5px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 9.5px; }
+  .gst-lite-hsn-table td:first-child { text-align: left; font-weight: 700; color: #075985; }
+  .gst-lite-hsn-table tr:last-child td { border-bottom: none; }
+
+  /* PRINT */
   @media print {
     @page { size: A4 portrait; margin: 0; }
-
-    html, body {
-      background: #fff !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      width: 210mm !important;
-      height: 297mm !important;
-      overflow: hidden !important;
-    }
-
+    html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 210mm !important; height: 297mm !important; overflow: hidden !important; }
     body * { visibility: hidden; }
     #invoicePreview, #invoicePreview * { visibility: visible; }
-
-    #invoicePreview {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 210mm !important;
-      height: 297mm !important;
-      max-height: 297mm !important;
-      min-height: 297mm !important;
-      padding: 10mm 12mm !important;
-      margin: 0 !important;
-      box-shadow: none !important;
-      overflow: hidden !important;
-      page-break-after: avoid !important;
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
-    }
-
+    #invoicePreview { position: fixed !important; top: 0 !important; left: 0 !important; width: 210mm !important; height: 297mm !important; max-height: 297mm !important; min-height: 297mm !important; padding: 10mm 12mm !important; margin: 0 !important; box-shadow: none !important; overflow: hidden !important; page-break-after: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; }
     #invoicePreview.tpl-modern { padding: 0 !important; }
-    #invoicePreview.tpl-modern .inv-wrap {
-      height: 297mm !important;
-      min-height: 297mm !important;
-      max-height: 297mm !important;
-      margin: 0 !important;
-      overflow: hidden !important;
-    }
+    #invoicePreview.tpl-modern .inv-wrap { height: 297mm !important; min-height: 297mm !important; max-height: 297mm !important; margin: 0 !important; overflow: hidden !important; }
     #invoicePreview.tpl-corporate { padding-top: 0 !important; }
     #invoicePreview.tpl-corporate .inv-header { margin-top: 0 !important; }
-
-    .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box, .computer-gen-line {
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
-    }
-
+    .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box, .computer-gen-line, .gst-info-bar, .rate-summary-grid, .gst-detail-hsn, .gst-lite-summary { page-break-inside: avoid !important; break-inside: avoid !important; }
     .no-print { display: none !important; }
     body { overflow: hidden !important; }
   }
 
-  .print-warning {
-    position: fixed; top: 70px; right: 20px;
-    background: #fef3c7; color: #92400e;
-    padding: 8px 14px; border-radius: 8px;
-    font-size: 12px; font-weight: 600;
-    border: 1px solid #fcd34d;
-    z-index: 100;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    display: none;
-  }
+  .print-warning { position: fixed; top: 70px; right: 20px; background: #fef3c7; color: #92400e; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #fcd34d; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; }
   .print-warning.show { display: block; }
 </style>
 </head>
@@ -481,7 +356,7 @@
   <div style="max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
       <h1>🧾 Invoice Generator</h1>
-      <p>8 templates · GST ready · PDF export · Free forever</p>
+      <p>10 templates · GST ready · PDF export · Free forever</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <label style="font-size:11px;color:rgba(255,255,255,0.8);">Document:</label>
@@ -503,6 +378,8 @@
         <option value="corporate">💼 Corporate</option>
         <option value="compact">📏 Compact</option>
         <option value="rounded">🎯 Rounded</option>
+        <option value="gst-detailed">🔬 GST Detailed</option>
+        <option value="gst-lite">⚡ GST Lite</option>
       </select>
       <a href="index.html" style="padding:8px 14px;background:rgba(255,255,255,0.15);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">← Back to Portfolio</a>
     </div>
@@ -524,7 +401,6 @@
 
 <div class="layout">
   <aside class="no-print" autocomplete="off">
-
     <div class="panel" id="profilePanel">
       <div class="panel-head" onclick="togglePanel(this, 'profileBody')">
         <div style="display:flex;align-items:center;">💼 Saved Detail <span class="history-badge purple" id="profileCount">0</span></div>
@@ -585,13 +461,11 @@
         <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" autocomplete="off" oninput="sync()"></div>
 
         <div class="details-section">
-          <div class="details-heading">
-            <span>Details</span>
-          </div>
+          <div class="details-heading"><span>Details</span></div>
           <div id="detailsContainer"></div>
           <button class="btn btn-success btn-sm" style="margin-top:6px;width:100%;justify-content:center;" onclick="addDetail()">➕ Add Line</button>
           <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.4;">
-            💡 Tip: <strong>Label : Value</strong> format me likho — jaise <code>Application Ref. No.: NP-RJJAY26</code>
+            💡 Tip: <strong>Label : Value</strong> format me likho
           </div>
         </div>
       </div>
@@ -639,18 +513,12 @@
         <div class="field"><label>Account Holder Name</label><input id="bkHolder" placeholder="e.g. Tarun Prajapat" autocomplete="off" oninput="sync()"></div>
         <div class="field"><label>Bank Name</label><input id="bkName" placeholder="e.g. Bank of Baroda" autocomplete="off" oninput="sync()"></div>
         <div class="field"><label>Account Number</label><input id="bkAc" placeholder="e.g. 33930200000505" autocomplete="off" oninput="sync()"></div>
-        
         <div class="field" style="margin-bottom:6px;">
           <label>IFSC Code</label>
           <input id="bkIfsc" placeholder="e.g. BARB0BANDIK" maxlength="11" style="text-transform:uppercase;" autocomplete="off" oninput="onIfscInput(this.value); sync()">
           <div id="ifscStatus" class="ifsc-status idle"></div>
         </div>
-        
-        <div class="field">
-          <label>Branch Name <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(auto-filled)</span></label>
-          <input id="bkBranch" placeholder="Branch will appear here..." readonly>
-        </div>
-        
+        <div class="field"><label>Branch Name (auto-filled)</label><input id="bkBranch" placeholder="Branch will appear here..." readonly></div>
         <div class="field"><label>Account Type</label>
           <select id="bkType" onchange="sync()">
             <option value="">— Select —</option>
@@ -660,9 +528,7 @@
             <option value="Overdraft">Overdraft</option>
           </select>
         </div>
-        
         <div class="field"><label>UPI ID (optional)</label><input id="bkUpi" placeholder="name@upi" autocomplete="off" oninput="sync()"></div>
-
         <div class="bank-preview" id="bankPreview">
           <div class="bank-preview-row"><span class="lbl">✓ Verified IFSC</span><span class="val" id="bpBank"></span></div>
           <div class="bank-preview-row"><span class="lbl">Branch</span><span class="val" id="bpBranch"></span></div>
@@ -680,7 +546,6 @@
         <div class="field"><label>Notes</label><textarea id="notes" rows="2" placeholder="Any additional notes..." autocomplete="off" oninput="sync()"></textarea></div>
       </div>
     </div>
-    
   </aside>
   
   <main>
@@ -717,21 +582,14 @@ const fmtDate = d => {
 
 function getLabels(docType) {
   const dt = docType || 'Tax Invoice';
-  switch (dt) {
-    case 'Credit Note':
-      return { title: 'Credit Note', noLabel: 'Credit Note No.', dateLabel: 'Date', detailsTitle: 'Credit Note Details', panelTitle: '📅 Credit Note Details' };
-    case 'Debit Note':
-      return { title: 'Debit Note', noLabel: 'Debit Note No.', dateLabel: 'Date', detailsTitle: 'Debit Note Details', panelTitle: '📅 Debit Note Details' };
-    case 'Proforma Invoice':
-      return { title: 'Proforma Invoice', noLabel: 'Proforma Invoice No.', dateLabel: 'Date', detailsTitle: 'Proforma Details', panelTitle: '📅 Proforma Invoice Details' };
-    case 'Estimate':
-      return { title: 'Estimate', noLabel: 'Estimate No.', dateLabel: 'Date', detailsTitle: 'Estimate Details', panelTitle: '📅 Estimate Details' };
-    case 'Quotation':
-      return { title: 'Quotation', noLabel: 'Quotation No.', dateLabel: 'Date', detailsTitle: 'Quotation Details', panelTitle: '📅 Quotation Details' };
-    case 'Tax Invoice':
-    default:
-      return { title: 'Tax Invoice', noLabel: 'Invoice No.', dateLabel: 'Date', detailsTitle: 'Invoice Details', panelTitle: '📅 Invoice Details' };
-  }
+  const map = {
+    'Credit Note': { title: 'Credit Note', noLabel: 'Credit Note No.', dateLabel: 'Date', detailsTitle: 'Credit Note Details', panelTitle: '📅 Credit Note Details' },
+    'Debit Note': { title: 'Debit Note', noLabel: 'Debit Note No.', dateLabel: 'Date', detailsTitle: 'Debit Note Details', panelTitle: '📅 Debit Note Details' },
+    'Proforma Invoice': { title: 'Proforma Invoice', noLabel: 'Proforma Invoice No.', dateLabel: 'Date', detailsTitle: 'Proforma Details', panelTitle: '📅 Proforma Invoice Details' },
+    'Estimate': { title: 'Estimate', noLabel: 'Estimate No.', dateLabel: 'Date', detailsTitle: 'Estimate Details', panelTitle: '📅 Estimate Details' },
+    'Quotation': { title: 'Quotation', noLabel: 'Quotation No.', dateLabel: 'Date', detailsTitle: 'Quotation Details', panelTitle: '📅 Quotation Details' }
+  };
+  return map[dt] || { title: 'Tax Invoice', noLabel: 'Invoice No.', dateLabel: 'Date', detailsTitle: 'Invoice Details', panelTitle: '📅 Invoice Details' };
 }
 
 function disableAutofill() {
@@ -760,11 +618,8 @@ function togglePanel(head, bodyId) {
 function autoPanFromGstin() {
   const gstin = $('bGstin').value.trim().toUpperCase();
   const panField = $('bPan');
-  if (gstin.length === 15) {
-    panField.value = gstin.substring(2, 12);
-  } else if (gstin.length === 0) {
-    panField.value = '';
-  }
+  if (gstin.length === 15) panField.value = gstin.substring(2, 12);
+  else if (gstin.length === 0) panField.value = '';
 }
 
 function changeDocType() {
@@ -777,80 +632,50 @@ function changeDocType() {
 
 function updateLabels() {
   const labels = getLabels(state.docType);
-  const mNoLabel = $('mNoLabel');
-  const metaPanelTitle = $('metaPanelTitle');
-  if (mNoLabel) mNoLabel.textContent = labels.noLabel;
-  if (metaPanelTitle) metaPanelTitle.textContent = labels.panelTitle;
+  if ($('mNoLabel')) $('mNoLabel').textContent = labels.noLabel;
+  if ($('metaPanelTitle')) $('metaPanelTitle').textContent = labels.panelTitle;
 }
 
-function saveProfilesToLS() {
-  try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); }
-  catch (e) {}
-}
+function saveProfilesToLS() { try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); } catch (e) {} }
 
 function saveBusinessProfile() {
   const name = $('bName').value.trim();
   const gstin = $('bGstin').value.trim();
   if (!name) { showToast('⚠️ Business Name required to save', 'red'); return; }
-
-  const existingIdx = profiles.findIndex(p => 
-    p.name.toLowerCase() === name.toLowerCase() && (p.gstin || '') === gstin
-  );
-
+  const existingIdx = profiles.findIndex(p => p.name.toLowerCase() === name.toLowerCase() && (p.gstin || '') === gstin);
   const profile = {
     id: existingIdx >= 0 ? profiles[existingIdx].id : ('prof_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6)),
     savedAt: new Date().toISOString(),
-    name: name,
-    addr: $('bAddr').value,
-    gstin: gstin,
-    pan: $('bPan').value.trim(),
-    email: $('bEmail').value.trim(),
-    phone: $('bPhone').value.trim()
+    name, addr: $('bAddr').value, gstin, pan: $('bPan').value.trim(),
+    email: $('bEmail').value.trim(), phone: $('bPhone').value.trim()
   };
-
-  if (existingIdx >= 0) {
-    profiles[existingIdx] = profile;
-    showToast('✓ Business detail updated');
-  } else {
-    profiles.unshift(profile);
-    showToast('✓ Business detail saved');
-  }
-
+  if (existingIdx >= 0) { profiles[existingIdx] = profile; showToast('✓ Business detail updated'); }
+  else { profiles.unshift(profile); showToast('✓ Business detail saved'); }
   if (profiles.length > 20) profiles = profiles.slice(0, 20);
   saveProfilesToLS();
   renderProfiles();
 }
 
 function renderProfiles() {
-  const list = $('profileList');
-  const count = $('profileCount');
+  const list = $('profileList'), count = $('profileCount');
   if (!list || !count) return;
   count.textContent = profiles.length;
-
   if (!profiles.length) {
-    list.innerHTML = `
-      <div class="history-empty">
-        <div class="history-empty-icon">💼</div>
-        <div>No saved business details</div>
-        <div style="font-size:10.5px;margin-top:4px;color:#cbd5e1;">Fill business form & click "Save This Business Detail"</div>
-      </div>`;
+    list.innerHTML = `<div class="history-empty"><div class="history-empty-icon">💼</div><div>No saved business details</div></div>`;
     return;
   }
-
   list.innerHTML = profiles.map(p => {
     const city = (p.addr || '').split('\n')[0].substring(0, 30);
-    return `
-      <div class="profile-item" onclick="loadBusinessProfile('${p.id}')">
-        <div class="pi-name">${esc(p.name)}</div>
-        <div class="pi-info">${esc(city)}${city ? '' : '—'}</div>
-        <div class="pi-bottom">
-          <span class="pi-gst">${p.gstin ? 'GST: ' + esc(p.gstin.substring(0, 8)) + '...' : 'No GSTIN'}</span>
-          <div class="pi-actions" onclick="event.stopPropagation()">
-            <button class="pi-del" onclick="deleteBusinessProfile('${p.id}')" title="Delete">🗑️</button>
-          </div>
+    return `<div class="profile-item" onclick="loadBusinessProfile('${p.id}')">
+      <div class="pi-name">${esc(p.name)}</div>
+      <div class="pi-info">${esc(city)}${city ? '' : '—'}</div>
+      <div class="pi-bottom">
+        <span class="pi-gst">${p.gstin ? 'GST: ' + esc(p.gstin.substring(0, 8)) + '...' : 'No GSTIN'}</span>
+        <div class="pi-actions" onclick="event.stopPropagation()">
+          <button class="pi-del" onclick="deleteBusinessProfile('${p.id}')" title="Delete">🗑️</button>
         </div>
       </div>
-    `;
+    </div>`;
   }).join('');
 }
 
@@ -859,15 +684,10 @@ function loadBusinessProfile(id) {
   if (!p) return;
   const hasData = $('bName').value.trim() || $('bGstin').value.trim();
   const same = ($('bName').value.trim() === p.name) && ($('bGstin').value.trim() === p.gstin);
-  if (hasData && !same) {
-    if (!confirm(`Load "${p.name}"? Current business details will be replaced.`)) return;
-  }
-  $('bName').value = p.name || '';
-  $('bAddr').value = p.addr || '';
-  $('bGstin').value = p.gstin || '';
-  $('bPan').value = p.pan || '';
-  $('bEmail').value = p.email || '';
-  $('bPhone').value = p.phone || '';
+  if (hasData && !same) { if (!confirm(`Load "${p.name}"? Current business details will be replaced.`)) return; }
+  $('bName').value = p.name || ''; $('bAddr').value = p.addr || '';
+  $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
+  $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
   sync();
   showToast('✓ Business detail loaded', 'purple');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -883,37 +703,18 @@ function deleteBusinessProfile(id) {
   showToast('🗑️ Business detail deleted');
 }
 
-let ifscFetchTimer = null;
-let ifscLastFetched = '';
-let ifscFetchAbort = null;
-
-function setIfscStatus(type, html) {
-  const el = $('ifscStatus');
-  if (el) { el.className = 'ifsc-status ' + type; el.innerHTML = html; }
-}
+let ifscFetchTimer = null, ifscLastFetched = '', ifscFetchAbort = null;
+function setIfscStatus(type, html) { const el = $('ifscStatus'); if (el) { el.className = 'ifsc-status ' + type; el.innerHTML = html; } }
 
 function onIfscInput(value) {
   const ifsc = (value || '').trim().toUpperCase();
   const branchField = $('bkBranch');
   const preview = $('bankPreview');
-
   if (ifscFetchTimer) clearTimeout(ifscFetchTimer);
   if (ifscFetchAbort) { try { ifscFetchAbort.abort(); } catch(e){} }
-
-  if (!ifsc) {
-    setIfscStatus('idle', '');
-    branchField.value = '';
-    preview.classList.remove('show');
-    return;
-  }
-  if (ifsc.length < 11) {
-    setIfscStatus('idle', `${ifsc.length}/11 characters`);
-    branchField.value = '';
-    preview.classList.remove('show');
-    return;
-  }
+  if (!ifsc) { setIfscStatus('idle', ''); branchField.value = ''; preview.classList.remove('show'); return; }
+  if (ifsc.length < 11) { setIfscStatus('idle', `${ifsc.length}/11 characters`); branchField.value = ''; preview.classList.remove('show'); return; }
   if (ifscLastFetched === ifsc) return;
-
   setIfscStatus('loading', '<span class="spinner"></span> Fetching branch details...');
   branchField.value = '';
   ifscFetchTimer = setTimeout(() => { fetchBranchFromIFSC(ifsc); }, 500);
@@ -925,7 +726,6 @@ async function fetchBranchFromIFSC(ifsc) {
     { url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) },
     { url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) }
   ];
-
   for (const ep of endpoints) {
     try {
       const controller = new AbortController();
@@ -946,10 +746,8 @@ async function fetchBranchFromIFSC(ifsc) {
       if (bank && branch) {
         $('bkBranch').value = branch;
         if ($('bkName').value.trim() === '') $('bkName').value = bank;
-        $('bpBank').textContent = bank;
-        $('bpBranch').textContent = branch;
-        $('bpCity').textContent = city || '—';
-        $('bpState').textContent = state_ || '—';
+        $('bpBank').textContent = bank; $('bpBranch').textContent = branch;
+        $('bpCity').textContent = city || '—'; $('bpState').textContent = state_ || '—';
         $('bpContact').textContent = contact || '—';
         $('bankPreview').classList.add('show');
         ifscLastFetched = ifsc;
@@ -970,86 +768,42 @@ async function fetchBranchFromIFSC(ifsc) {
 
 function renderItems() {
   const c = $('itemsContainer');
-  c.innerHTML = state.items.map((it, i) => `
-    <div class="item-row">
-      <input placeholder="Item description" value="${esc(it.desc)}" autocomplete="off" oninput="updateItem(${i},'desc',this.value)">
-      <input placeholder="HSN" value="${esc(it.hsn)}" autocomplete="off" oninput="updateItem(${i},'hsn',this.value)">
-      <input type="number" placeholder="1" value="${it.qty}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'qty',this.value)">
-      <input type="number" placeholder="0" value="${it.rate}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'rate',this.value)">
-      <input type="number" placeholder="18" value="${it.gst}" min="0" max="28" step="0.01" autocomplete="off" oninput="updateItem(${i},'gst',this.value)">
-      <button class="btn btn-ghost btn-sm" onclick="removeItem(${i})" title="Remove">✖</button>
-    </div>
-  `).join('');
+  c.innerHTML = state.items.map((it, i) => `<div class="item-row">
+    <input placeholder="Item description" value="${esc(it.desc)}" autocomplete="off" oninput="updateItem(${i},'desc',this.value)">
+    <input placeholder="HSN" value="${esc(it.hsn)}" autocomplete="off" oninput="updateItem(${i},'hsn',this.value)">
+    <input type="number" placeholder="1" value="${it.qty}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'qty',this.value)">
+    <input type="number" placeholder="0" value="${it.rate}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'rate',this.value)">
+    <input type="number" placeholder="18" value="${it.gst}" min="0" max="28" step="0.01" autocomplete="off" oninput="updateItem(${i},'gst',this.value)">
+    <button class="btn btn-ghost btn-sm" onclick="removeItem(${i})" title="Remove">✖</button>
+  </div>`).join('');
   disableAutofill();
 }
-function updateItem(i, k, v) {
-  state.items[i][k] = (k === 'desc' || k === 'hsn') ? v : Number(v) || 0;
-  sync();
-}
-function addItem() {
-  state.items.push({ desc:'', hsn:'', qty:1, rate:0, gst:18 });
-  renderItems(); sync();
-}
-function removeItem(i) {
-  if (state.items.length === 1) { state.items[0] = { desc:'', hsn:'', qty:1, rate:0, gst:18 }; }
-  else { state.items.splice(i, 1); }
-  renderItems(); sync();
-}
+function updateItem(i, k, v) { state.items[i][k] = (k === 'desc' || k === 'hsn') ? v : Number(v) || 0; sync(); }
+function addItem() { state.items.push({ desc:'', hsn:'', qty:1, rate:0, gst:18 }); renderItems(); sync(); }
+function removeItem(i) { if (state.items.length === 1) state.items[0] = { desc:'', hsn:'', qty:1, rate:0, gst:18 }; else state.items.splice(i, 1); renderItems(); sync(); }
 
 function renderDetails() {
   const c = $('detailsContainer');
   if (!state.details || !state.details.length) state.details = [''];
-  c.innerHTML = state.details.map((d, i) => `
-    <div class="detail-row">
-      <input placeholder="e.g. Application Ref. No.: NP-RJJAY26" value="${esc(d)}" autocomplete="off" oninput="updateDetail(${i}, this.value)">
-      <button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})" title="Remove">✖</button>
-    </div>
-  `).join('');
+  c.innerHTML = state.details.map((d, i) => `<div class="detail-row">
+    <input placeholder="e.g. Application Ref. No.: NP-RJJAY26" value="${esc(d)}" autocomplete="off" oninput="updateDetail(${i}, this.value)">
+    <button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})" title="Remove">✖</button>
+  </div>`).join('');
   disableAutofill();
 }
 function updateDetail(i, v) { state.details[i] = v; sync(); }
-function addDetail() {
-  state.details.push('');
-  renderDetails();
-  setTimeout(() => {
-    const inputs = $('detailsContainer').querySelectorAll('input');
-    if (inputs.length) inputs[inputs.length - 1].focus();
-  }, 50);
-  sync();
-}
-function removeDetail(i) {
-  if (state.details.length === 1) { state.details[0] = ''; }
-  else { state.details.splice(i, 1); }
-  renderDetails(); sync();
-}
+function addDetail() { state.details.push(''); renderDetails(); setTimeout(() => { const inputs = $('detailsContainer').querySelectorAll('input'); if (inputs.length) inputs[inputs.length - 1].focus(); }, 50); sync(); }
+function removeDetail(i) { if (state.details.length === 1) state.details[0] = ''; else state.details.splice(i, 1); renderDetails(); sync(); }
 
 function sync() {
   state.docType = $('docTypeSelect').value;
-  state.business = {
-    name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value,
-    pan: $('bPan').value, email: $('bEmail').value, phone: $('bPhone').value
-  };
-  state.client = {
-    name: $('cName').value, addr: $('cAddr').value, gstin: $('cGstin').value,
-    email: $('cEmail').value, phone: $('cPhone').value
-  };
-  state.meta = {
-    no: $('mNo').value, date: $('mDate').value,
-    place: $('mPlace').value
-  };
-  state.bank = {
-    holder: $('bkHolder').value,
-    name: $('bkName').value,
-    ac: $('bkAc').value,
-    ifsc: $('bkIfsc').value,
-    branch: $('bkBranch').value,
-    type: $('bkType').value,
-    upi: $('bkUpi').value
-  };
+  state.business = { name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value, pan: $('bPan').value, email: $('bEmail').value, phone: $('bPhone').value };
+  state.client = { name: $('cName').value, addr: $('cAddr').value, gstin: $('cGstin').value, email: $('cEmail').value, phone: $('cPhone').value };
+  state.meta = { no: $('mNo').value, date: $('mDate').value, place: $('mPlace').value };
+  state.bank = { holder: $('bkHolder').value, name: $('bkName').value, ac: $('bkAc').value, ifsc: $('bkIfsc').value, branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value };
   state.terms = $('terms').value;
   state.notes = $('notes').value;
   state.taxType = $('taxType').value;
-
   localStorage.setItem('invoiceState', JSON.stringify(state));
   render();
 }
@@ -1063,12 +817,9 @@ function populateForm(s) {
   $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
   $('mNo').value = m.no || ''; $('mDate').value = m.date || '';
   $('mPlace').value = m.place || '';
-  $('bkHolder').value = bk.holder || '';
-  $('bkName').value = bk.name || '';
-  $('bkAc').value = bk.ac || '';
-  $('bkIfsc').value = bk.ifsc || '';
-  $('bkBranch').value = bk.branch || '';
-  $('bkType').value = bk.type || '';
+  $('bkHolder').value = bk.holder || ''; $('bkName').value = bk.name || '';
+  $('bkAc').value = bk.ac || ''; $('bkIfsc').value = bk.ifsc || '';
+  $('bkBranch').value = bk.branch || ''; $('bkType').value = bk.type || '';
   $('bkUpi').value = bk.upi || '';
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
   $('taxType').value = s.taxType || 'cgst-sgst';
@@ -1080,23 +831,37 @@ function populateForm(s) {
 function calcTotals() {
   let subtotal = 0, totalTax = 0;
   const hsnSummary = {};
+  const rateSummary = {};  // group by GST rate
+
   state.items.forEach(it => {
     const amt = num(it.qty) * num(it.rate);
     const gstAmt = amt * num(it.gst) / 100;
     subtotal += amt;
     totalTax += gstAmt;
+
     const key = it.hsn || '—';
     if (!hsnSummary[key]) hsnSummary[key] = { taxable:0, rate: it.gst, cgst:0, sgst:0, igst:0, total:0 };
     hsnSummary[key].taxable += amt;
     if (state.taxType === 'igst') hsnSummary[key].igst += gstAmt;
     else { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
     hsnSummary[key].total += amt + gstAmt;
+
+    // Rate-wise summary
+    const rk = Number(it.gst) || 0;
+    if (!rateSummary[rk]) rateSummary[rk] = { rate: rk, taxable: 0, cgst: 0, sgst: 0, igst: 0, total: 0, count: 0 };
+    rateSummary[rk].taxable += amt;
+    rateSummary[rk].count += 1;
+    if (state.taxType === 'igst') rateSummary[rk].igst += gstAmt;
+    else { rateSummary[rk].cgst += gstAmt/2; rateSummary[rk].sgst += gstAmt/2; }
+    rateSummary[rk].total += gstAmt;
   });
+
   const taxable = subtotal;
   const beforeRound = taxable + totalTax;
   const rounded = Math.round(beforeRound);
   const roundOff = rounded - beforeRound;
-  return { subtotal, taxable, totalTax, beforeRound, rounded, roundOff, hsnSummary };
+
+  return { subtotal, taxable, totalTax, beforeRound, rounded, roundOff, hsnSummary, rateSummary };
 }
 
 function numToWords(n) {
@@ -1117,9 +882,6 @@ function numToWords(n) {
   return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SHARED BLOCKS
-// ═══════════════════════════════════════════════════════════
 function buildCommonBlocks(s, t) {
   const itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
@@ -1139,64 +901,47 @@ function buildCommonBlocks(s, t) {
 
   let taxRows = '';
   if (s.taxType === 'cgst-sgst') {
-    taxRows = `
-      <div class="totals-row"><span class="lbl">CGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div>
+    taxRows = `<div class="totals-row"><span class="lbl">CGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div>
       <div class="totals-row"><span class="lbl">SGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div>`;
   } else if (s.taxType === 'igst') {
     taxRows = `<div class="totals-row"><span class="lbl">IGST</span><span class="amt">${fmt(t.totalTax)}</span></div>`;
   }
 
-  const hsnRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `
-    <tr>
-      <td>${esc(hsn)}</td>
-      <td>${fmt(d.taxable)}</td>
-      <td>${d.rate}%</td>
-      <td>${fmt(d.cgst)}</td>
-      <td>${fmt(d.sgst)}</td>
-      <td>${fmt(d.igst)}</td>
-      <td style="font-weight:700;">${fmt(d.total)}</td>
-    </tr>
-  `).join('');
+  const hsnRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr>
+    <td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td>
+    <td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td>${fmt(d.igst)}</td>
+    <td style="font-weight:700;">${fmt(d.total)}</td>
+  </tr>`).join('');
 
-  const hsnTable = `
-    <table class="hsn-table">
-      <thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total</th></tr></thead>
-      <tbody>${hsnRows}</tbody>
-    </table>`;
+  const hsnTable = `<table class="hsn-table">
+    <thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total</th></tr></thead>
+    <tbody>${hsnRows}</tbody>
+  </table>`;
 
-  const tableBlock = `
-    <table class="inv-table">
-      <thead>
-        <tr>
-          <th class="c" style="width:6%;">Sr No.</th>
-          <th style="width:26%;">Description</th>
-          <th class="c" style="width:9%;">HSN/SAC</th>
-          <th class="c" style="width:7%;">Qty</th>
-          <th class="r" style="width:12%;">Rate</th>
-          <th class="c" style="width:7%;">GST%</th>
-          <th class="r" style="width:11%;">Amount</th>
-          <th class="r" style="width:11%;">Tax</th>
-          <th class="r" style="width:11%;">Total</th>
-        </tr>
-      </thead>
-      <tbody>${itemRows}</tbody>
-    </table>`;
+  const tableBlock = `<table class="inv-table">
+    <thead><tr>
+      <th class="c" style="width:6%;">Sr No.</th>
+      <th style="width:26%;">Description</th>
+      <th class="c" style="width:9%;">HSN/SAC</th>
+      <th class="c" style="width:7%;">Qty</th>
+      <th class="r" style="width:12%;">Rate</th>
+      <th class="c" style="width:7%;">GST%</th>
+      <th class="r" style="width:11%;">Amount</th>
+      <th class="r" style="width:11%;">Tax</th>
+      <th class="r" style="width:11%;">Total</th>
+    </tr></thead>
+    <tbody>${itemRows}</tbody>
+  </table>`;
 
-  const totalsBlock = `
-    <div class="totals-wrap">
-      <div class="totals-box">
-        <div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
-        <div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">${fmt(t.taxable)}</span></div>
-        ${taxRows}
-        ${t.roundOff ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff >= 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}
-        <div class="totals-row grand"><span class="lbl">Grand Total</span><span>${fmt(t.rounded)}</span></div>
-      </div>
-    </div>`;
+  const totalsBlock = `<div class="totals-wrap"><div class="totals-box">
+    <div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
+    <div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">${fmt(t.taxable)}</span></div>
+    ${taxRows}
+    ${t.roundOff ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff >= 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}
+    <div class="totals-row grand"><span class="lbl">Grand Total</span><span>${fmt(t.rounded)}</span></div>
+  </div></div>`;
 
-  const wordsBlock = `
-    <div class="words-box">
-      <strong>Amount in Words:</strong> ${numToWords(t.rounded)}
-    </div>`;
+  const wordsBlock = `<div class="words-box"><strong>Amount in Words:</strong> ${numToWords(t.rounded)}</div>`;
 
   return { itemRows, taxRows, hsnTable, tableBlock, totalsBlock, wordsBlock };
 }
@@ -1206,56 +951,139 @@ function buildDetailsBox(s, detailsTitle, noLabel, dateLabel) {
   const validDetails = (s.details || []).filter(d => d && d.trim());
   const detailsRowsHTML = validDetails.map(d => {
     const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
-    if (m) {
-      return `<div class="inv-detail-row"><span class="lbl">${esc(m[1].trim())}:</span> <span class="val">${esc(m[2].trim())}</span></div>`;
-    }
+    if (m) return `<div class="inv-detail-row"><span class="lbl">${esc(m[1].trim())}:</span> <span class="val">${esc(m[2].trim())}</span></div>`;
     return `<div class="inv-detail-row"><span class="val">${esc(d)}</span></div>`;
   }).join('');
-
   const hasDetails = validDetails.length > 0;
-  return `
-    <div class="inv-details-box">
-      <div class="inv-details-title">${esc(detailsTitle)}</div>
-      <div class="inv-meta-row"><span>${esc(noLabel)}:</span><span>${esc(meta.no) || '—'}</span></div>
-      <div class="inv-meta-row"><span>${esc(dateLabel)}:</span><span>${fmtDate(meta.date)}</span></div>
-      ${hasDetails ? `<div class="inv-gap"></div>${detailsRowsHTML}<div class="inv-gap"></div>` : ''}
-      <div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(meta.place) || '—'}</span></div>
-    </div>
-  `;
+  return `<div class="inv-details-box">
+    <div class="inv-details-title">${esc(detailsTitle)}</div>
+    <div class="inv-meta-row"><span>${esc(noLabel)}:</span><span>${esc(meta.no) || '—'}</span></div>
+    <div class="inv-meta-row"><span>${esc(dateLabel)}:</span><span>${fmtDate(meta.date)}</span></div>
+    ${hasDetails ? `<div class="inv-gap"></div>${detailsRowsHTML}<div class="inv-gap"></div>` : ''}
+    <div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(meta.place) || '—'}</span></div>
+  </div>`;
 }
 
 function buildFooterBlock(s, bizName) {
   const bank = s.bank || {};
   const hasBank = bank.name || bank.ac || bank.ifsc;
-  return `
-    <div class="footer-grid">
-      <div>
-        ${hasBank ? `
-          <h4>Payment Details</h4>
-          ${bank.holder ? `<div class="kv"><strong>A/C Holder:</strong> ${esc(bank.holder)}</div>` : ''}
-          ${bank.name ? `<div class="kv"><strong>Bank:</strong> ${esc(bank.name)}</div>` : ''}
-          ${bank.ac ? `<div class="kv"><strong>A/C No.:</strong> ${esc(bank.ac)}</div>` : ''}
-          ${bank.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(bank.ifsc)}</div>` : ''}
-          ${bank.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(bank.branch)}</div>` : ''}
-          ${bank.type ? `<div class="kv"><strong>Type:</strong> ${esc(bank.type)}</div>` : ''}
-          ${bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(bank.upi)}</div>` : ''}
-        ` : ''}
-        ${s.terms ? `<h4 style="margin-top:10px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}
-        ${s.notes ? `<h4 style="margin-top:8px;">Notes</h4><p>${esc(s.notes).replace(/\n/g, '<br>')}</p>` : ''}
-      </div>
-      <div>
-        <div class="sign-area">
-          <div class="sign-line">For ${esc(bizName)}</div>
-        </div>
-      </div>
-    </div>`;
+  return `<div class="footer-grid">
+    <div>
+      ${hasBank ? `<h4>Payment Details</h4>
+        ${bank.holder ? `<div class="kv"><strong>A/C Holder:</strong> ${esc(bank.holder)}</div>` : ''}
+        ${bank.name ? `<div class="kv"><strong>Bank:</strong> ${esc(bank.name)}</div>` : ''}
+        ${bank.ac ? `<div class="kv"><strong>A/C No.:</strong> ${esc(bank.ac)}</div>` : ''}
+        ${bank.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(bank.ifsc)}</div>` : ''}
+        ${bank.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(bank.branch)}</div>` : ''}
+        ${bank.type ? `<div class="kv"><strong>Type:</strong> ${esc(bank.type)}</div>` : ''}
+        ${bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(bank.upi)}</div>` : ''}
+      ` : ''}
+      ${s.terms ? `<h4 style="margin-top:10px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}
+      ${s.notes ? `<h4 style="margin-top:8px;">Notes</h4><p>${esc(s.notes).replace(/\n/g, '<br>')}</p>` : ''}
+    </div>
+    <div>
+      <div class="sign-area"><div class="sign-line">For ${esc(bizName)}</div></div>
+    </div>
+  </div>`;
 }
 
-const GEN_DOC_LINE = `
-  <div class="computer-gen-line">
-    This is a Computer Generated Document
-  </div>
-`;
+const GEN_DOC_LINE = `<div class="computer-gen-line">This is a Computer Generated Document</div>`;
+
+// ═══════════════════════════════════════════════════════════
+//  BUILD GST DETAILED BLOCKS (rate-wise summary)
+// ═══════════════════════════════════════════════════════════
+function buildGstDetailedBlocks(t, s) {
+  // Rate cards
+  const rateCards = [0, 5, 12, 18, 28].map(r => {
+    const d = t.rateSummary[r];
+    if (!d) return '';
+    const cls = r === 5 ? 'rate-5' : r === 12 ? 'rate-12' : r === 18 ? 'rate-18' : r === 28 ? 'rate-28' : '';
+    return `<div class="rate-card ${cls}">
+      <div class="r-label">${r}% GST</div>
+      <div class="r-value">${fmt(d.taxable)}</div>
+      <div class="r-tax">Tax: ${fmt(d.total)}</div>
+    </div>`;
+  }).filter(Boolean).join('');
+
+  // Info bar
+  const infoBar = `<div class="gst-info-bar">
+    <div class="item"><span class="lbl">Tax Type:</span><span class="val">${s.taxType === 'igst' ? 'IGST (Inter-State)' : s.taxType === 'cgst-sgst' ? 'CGST + SGST (Intra-State)' : 'No GST'}</span></div>
+    <div class="item"><span class="lbl">Place of Supply:</span><span class="val">${esc(s.meta?.place || '—')}</span></div>
+    <div class="item"><span class="lbl">HSN Count:</span><span class="val">${Object.keys(t.hsnSummary).length}</span></div>
+    <div class="item"><span class="lbl">Total Items:</span><span class="val">${s.items.length}</span></div>
+  </div>`;
+
+  // HSN detail table
+  const hsnDetailRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr>
+    <td>${esc(hsn)}</td>
+    <td>${fmt(d.taxable)}</td>
+    <td>${d.rate}%</td>
+    <td>${fmt(d.cgst)}</td>
+    <td>${fmt(d.sgst)}</td>
+    <td>${fmt(d.igst)}</td>
+    <td style="font-weight:700;">${fmt(d.cgst + d.sgst + d.igst)}</td>
+    <td style="font-weight:700;">${fmt(d.total)}</td>
+  </tr>`).join('');
+
+  const totalTaxable = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
+  const totalCgst = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst, 0);
+  const totalSgst = Object.values(t.hsnSummary).reduce((a, d) => a + d.sgst, 0);
+  const totalIgst = Object.values(t.hsnSummary).reduce((a, d) => a + d.igst, 0);
+  const totalTax = totalCgst + totalSgst + totalIgst;
+  const totalWithTax = totalTaxable + totalTax;
+
+  const hsnDetailTable = `<table class="gst-detail-hsn">
+    <thead><tr>
+      <th>HSN/SAC</th><th>Taxable Value</th><th>Rate</th>
+      <th>CGST</th><th>SGST</th><th>IGST</th><th>Total Tax</th><th>Total</th>
+    </tr></thead>
+    <tbody>
+      ${hsnDetailRows}
+      <tr class="total-row">
+        <td>TOTAL</td>
+        <td>${fmt(totalTaxable)}</td>
+        <td>—</td>
+        <td>${fmt(totalCgst)}</td>
+        <td>${fmt(totalSgst)}</td>
+        <td>${fmt(totalIgst)}</td>
+        <td>${fmt(totalTax)}</td>
+        <td>${fmt(totalWithTax)}</td>
+      </tr>
+    </tbody>
+  </table>`;
+
+  return { rateCards, infoBar, hsnDetailTable };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BUILD GST LITE BLOCKS
+// ═══════════════════════════════════════════════════════════
+function buildGstLiteBlocks(t) {
+  const hsnRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr>
+    <td>${esc(hsn)}</td>
+    <td>${fmt(d.taxable)}</td>
+    <td>${d.rate}%</td>
+    <td>${fmt(d.cgst + d.sgst + d.igst)}</td>
+    <td style="font-weight:700;">${fmt(d.total)}</td>
+  </tr>`).join('');
+
+  const totalTaxable = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
+  const totalTax = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst + d.sgst + d.igst, 0);
+
+  return `<table class="gst-lite-hsn-table">
+    <thead><tr><th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax Amt</th><th>Total</th></tr></thead>
+    <tbody>
+      ${hsnRows}
+      <tr style="background:#e0f2fe;font-weight:800;">
+        <td>TOTAL</td>
+        <td>${fmt(totalTaxable)}</td>
+        <td>—</td>
+        <td>${fmt(totalTax)}</td>
+        <td>${fmt(totalTaxable + totalTax)}</td>
+      </tr>
+    </tbody>
+  </table>`;
+}
 
 // ═══════════════════════════════════════════════════════════
 //  RENDER
@@ -1284,18 +1112,15 @@ function render() {
 
   let html = '';
 
-  // ═══ CLASSIC ═══
+  // ═══ CLASSIC / GST ═══
   if (s.template === 'classic' || s.template === 'gst') {
-    html = `
-      <div class="inv-top-right">Original for Recipient</div>
+    html = `<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header">
         <div>
           <div class="inv-biz-name">${esc(bizName)}</div>
           <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
         </div>
-        <div class="inv-title-box">
-          <div class="inv-h1">${esc(docTitle)}</div>
-        </div>
+        <div class="inv-title-box"><div class="inv-h1">${esc(docTitle)}</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
         <div>
@@ -1305,63 +1130,49 @@ function render() {
         </div>
         <div>${detailsBoxHTML}</div>
       </div>
-      ${common.tableBlock}
-      ${common.totalsBlock}
-      ${common.wordsBlock}
+      ${common.tableBlock}${common.totalsBlock}${common.wordsBlock}
       ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN-wise Tax Summary</h4>${common.hsnTable}</div>` : ''}
-      ${footerBlock}
-      ${genDocLine}
-    `;
+      ${footerBlock}${genDocLine}`;
   }
 
   // ═══ MODERN ═══
   else if (s.template === 'modern') {
-    html = `
-      <div class="inv-wrap">
-        <div class="inv-side">
-          <div class="inv-biz-name">${esc(bizName)}</div>
-          <div class="inv-biz-info">${esc(biz.addr) || ''}</div>
-          ${biz.email ? `<h4>Email</h4><p>${esc(biz.email)}</p>` : ''}
-          ${biz.phone ? `<h4>Phone</h4><p>${esc(biz.phone)}</p>` : ''}
-          ${biz.gstin ? `<h4>GSTIN</h4><p>${esc(biz.gstin)}</p>` : ''}
-          ${biz.pan ? `<h4>PAN</h4><p>${esc(biz.pan)}</p>` : ''}
-          ${bank.name ? `<h4>Bank</h4><p>${bank.holder ? esc(bank.holder) + '<br>' : ''}${esc(bank.name)}<br>${esc(bank.ac)}<br>${esc(bank.ifsc)}${bank.branch ? '<br>' + esc(bank.branch) : ''}</p>` : ''}
-        </div>
-        <div class="inv-main">
-          <div class="inv-top-right">Original for Recipient</div>
-          <div class="inv-header">
-            <div class="inv-h1">${esc(docTitle)}</div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
-            <div>
-              <div class="inv-party-label">Bill To</div>
-              <div class="inv-party-name">${esc(cliName)}</div>
-              <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
-            </div>
-            <div>${detailsBoxHTML}</div>
-          </div>
-          ${common.tableBlock}
-          ${common.totalsBlock}
-          ${common.wordsBlock}
-          ${footerBlock}
-          ${genDocLine}
-        </div>
+    html = `<div class="inv-wrap">
+      <div class="inv-side">
+        <div class="inv-biz-name">${esc(bizName)}</div>
+        <div class="inv-biz-info">${esc(biz.addr) || ''}</div>
+        ${biz.email ? `<h4>Email</h4><p>${esc(biz.email)}</p>` : ''}
+        ${biz.phone ? `<h4>Phone</h4><p>${esc(biz.phone)}</p>` : ''}
+        ${biz.gstin ? `<h4>GSTIN</h4><p>${esc(biz.gstin)}</p>` : ''}
+        ${biz.pan ? `<h4>PAN</h4><p>${esc(biz.pan)}</p>` : ''}
+        ${bank.name ? `<h4>Bank</h4><p>${bank.holder ? esc(bank.holder) + '<br>' : ''}${esc(bank.name)}<br>${esc(bank.ac)}<br>${esc(bank.ifsc)}${bank.branch ? '<br>' + esc(bank.branch) : ''}</p>` : ''}
       </div>
-    `;
+      <div class="inv-main">
+        <div class="inv-top-right">Original for Recipient</div>
+        <div class="inv-header"><div class="inv-h1">${esc(docTitle)}</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
+          <div>
+            <div class="inv-party-label">Bill To</div>
+            <div class="inv-party-name">${esc(cliName)}</div>
+            <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+          </div>
+          <div>${detailsBoxHTML}</div>
+        </div>
+        ${common.tableBlock}${common.totalsBlock}${common.wordsBlock}
+        ${footerBlock}${genDocLine}
+      </div>
+    </div>`;
   }
 
   // ═══ MINIMAL ═══
   else if (s.template === 'minimal') {
-    html = `
-      <div class="inv-top-right">Original for Recipient</div>
+    html = `<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header">
         <div>
           <div class="inv-biz-name">${esc(bizName)}</div>
           <div class="inv-biz-info">${esc(bizInfo)}${biz.gstin ? '<br>GSTIN: ' + esc(biz.gstin) : ''}</div>
         </div>
-        <div style="text-align:right;">
-          <div class="inv-h1">${esc(docTitle)}</div>
-        </div>
+        <div style="text-align:right;"><div class="inv-h1">${esc(docTitle)}</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
         <div>
@@ -1371,18 +1182,13 @@ function render() {
         </div>
         <div>${detailsBoxHTML}</div>
       </div>
-      ${common.tableBlock}
-      ${common.totalsBlock}
-      ${common.wordsBlock}
-      ${footerBlock}
-      ${genDocLine}
-    `;
+      ${common.tableBlock}${common.totalsBlock}${common.wordsBlock}
+      ${footerBlock}${genDocLine}`;
   }
 
-  // ═══ ELEGANT — Serif, centered, classic layout ═══
+  // ═══ ELEGANT ═══
   else if (s.template === 'elegant') {
-    html = `
-      <div class="inv-top-right">Original for Recipient</div>
+    html = `<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header">
         <div class="inv-biz-name">${esc(bizName)}</div>
         <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
@@ -1396,55 +1202,43 @@ function render() {
         </div>
         <div>${detailsBoxHTML}</div>
       </div>
-      ${common.tableBlock}
-      ${common.totalsBlock}
-      ${common.wordsBlock}
-      ${footerBlock}
-      ${genDocLine}
-    `;
+      ${common.tableBlock}${common.totalsBlock}${common.wordsBlock}
+      ${footerBlock}${genDocLine}`;
   }
 
-  // ═══ CORPORATE — Bold header bar, structured ═══
+  // ═══ CORPORATE ═══
   else if (s.template === 'corporate') {
-    html = `
-      <div class="inv-header">
-        <div>
-          <div class="inv-biz-name">${esc(bizName)}</div>
-          <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
-        </div>
-        <div class="inv-title-box">
-          <div class="inv-h1">${esc(docTitle)}</div>
-          <div class="inv-sub">Original for Recipient</div>
-        </div>
+    html = `<div class="inv-header">
+      <div>
+        <div class="inv-biz-name">${esc(bizName)}</div>
+        <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
-        <div>
-          <div class="inv-party-label">Bill To</div>
-          <div class="inv-party-name">${esc(cliName)}</div>
-          <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
-        </div>
-        <div>${detailsBoxHTML}</div>
+      <div class="inv-title-box">
+        <div class="inv-h1">${esc(docTitle)}</div>
+        <div class="inv-sub">Original for Recipient</div>
       </div>
-      ${common.tableBlock}
-      ${common.totalsBlock}
-      ${common.wordsBlock}
-      ${footerBlock}
-      ${genDocLine}
-    `;
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
+      <div>
+        <div class="inv-party-label">Bill To</div>
+        <div class="inv-party-name">${esc(cliName)}</div>
+        <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+      </div>
+      <div>${detailsBoxHTML}</div>
+    </div>
+    ${common.tableBlock}${common.totalsBlock}${common.wordsBlock}
+    ${footerBlock}${genDocLine}`;
   }
 
-  // ═══ COMPACT — Dense, small fonts ═══
+  // ═══ COMPACT ═══
   else if (s.template === 'compact') {
-    html = `
-      <div class="inv-top-right">Original for Recipient</div>
+    html = `<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header">
         <div>
           <div class="inv-biz-name">${esc(bizName)}</div>
           <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
         </div>
-        <div style="text-align:right;">
-          <div class="inv-h1">${esc(docTitle)}</div>
-        </div>
+        <div style="text-align:right;"><div class="inv-h1">${esc(docTitle)}</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;align-items:flex-start;">
         <div>
@@ -1454,17 +1248,76 @@ function render() {
         </div>
         <div>${detailsBoxHTML}</div>
       </div>
+      ${common.tableBlock}${common.totalsBlock}${common.wordsBlock}
+      ${footerBlock}${genDocLine}`;
+  }
+
+  // ═══ ROUNDED ═══
+  else if (s.template === 'rounded') {
+    html = `<div class="inv-header">
+      <div>
+        <div class="inv-biz-name">${esc(bizName)}</div>
+        <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="inv-h1">${esc(docTitle)}</div>
+        <div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
+      <div>
+        <div class="inv-party-label">Bill To</div>
+        <div class="inv-party-name">${esc(cliName)}</div>
+        <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+      </div>
+      <div>${detailsBoxHTML}</div>
+    </div>
+    ${common.tableBlock}${common.totalsBlock}${common.wordsBlock}
+    ${footerBlock}${genDocLine}`;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  //  NEW: GST DETAILED
+  // ═══════════════════════════════════════════════════════════
+  else if (s.template === 'gst-detailed') {
+    const gd = buildGstDetailedBlocks(t, s);
+    html = `<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header">
+        <div>
+          <div class="inv-biz-name">${esc(bizName)}</div>
+          <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
+        </div>
+        <div class="inv-title-box">
+          <div class="inv-h1">${esc(docTitle)}</div>
+          <div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">Tax Detailed Format</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
+        <div>
+          <div class="inv-party-label">Bill To</div>
+          <div class="inv-party-name">${esc(cliName)}</div>
+          <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+        </div>
+        <div>${detailsBoxHTML}</div>
+      </div>
+      ${gd.infoBar}
       ${common.tableBlock}
+      <div class="rate-summary-title">📊 Tax Rate-Wise Summary</div>
+      <div class="rate-summary-grid">${gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;padding:8px;">No data</div>'}</div>
+      <div class="rate-summary-title">📋 HSN-Wise Tax Breakdown</div>
+      ${gd.hsnDetailTable}
       ${common.totalsBlock}
       ${common.wordsBlock}
       ${footerBlock}
-      ${genDocLine}
-    `;
+      ${genDocLine}`;
   }
 
-  // ═══ ROUNDED — Soft pastel, friendly ═══
-  else if (s.template === 'rounded') {
-    html = `
+  // ═══════════════════════════════════════════════════════════
+  //  NEW: GST LITE
+  // ═══════════════════════════════════════════════════════════
+  else if (s.template === 'gst-lite') {
+    const liteHsnTable = buildGstLiteBlocks(t);
+    html = `<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header">
         <div>
           <div class="inv-biz-name">${esc(bizName)}</div>
@@ -1472,7 +1325,7 @@ function render() {
         </div>
         <div style="text-align:right;">
           <div class="inv-h1">${esc(docTitle)}</div>
-          <div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div>
+          <div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">GST Summary Enclosed</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
@@ -1484,11 +1337,18 @@ function render() {
         <div>${detailsBoxHTML}</div>
       </div>
       ${common.tableBlock}
-      ${common.totalsBlock}
+      <div class="gst-lite-summary">
+        <div>
+          <div class="rate-summary-title">📋 HSN Summary</div>
+          ${liteHsnTable}
+        </div>
+        <div>
+          ${common.totalsBlock}
+        </div>
+      </div>
       ${common.wordsBlock}
       ${footerBlock}
-      ${genDocLine}
-    `;
+      ${genDocLine}`;
   }
 
   preview.innerHTML = html;
@@ -1503,17 +1363,11 @@ function changeTemplate() {
 
 function saveHistoryToLS() {
   try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); }
-  catch (e) {
-    if (history.length > 20) {
-      history = history.slice(0, 20);
-      localStorage.setItem('invoiceHistory', JSON.stringify(history));
-    }
-  }
+  catch (e) { if (history.length > 20) { history = history.slice(0, 20); localStorage.setItem('invoiceHistory', JSON.stringify(history)); } }
 }
 
 function saveToHistory() {
   if (!state.client.name && !state.meta.no && !state.items.some(i => i.desc)) return false;
-
   const totals = calcTotals();
   const entry = {
     id: editingHistoryId || ('inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
@@ -1525,25 +1379,16 @@ function saveToHistory() {
     items: JSON.parse(JSON.stringify(state.items)),
     details: JSON.parse(JSON.stringify(state.details || [])),
     bank: JSON.parse(JSON.stringify(state.bank)),
-    terms: state.terms,
-    notes: state.notes,
-    taxType: state.taxType,
-    template: state.template,
-    total: totals.rounded,
-    invoiceNo: state.meta.no || '(no number)',
+    terms: state.terms, notes: state.notes, taxType: state.taxType, template: state.template,
+    total: totals.rounded, invoiceNo: state.meta.no || '(no number)',
     clientName: state.client.name || '(no client)',
     invoiceDate: state.meta.date || new Date().toISOString().split('T')[0]
   };
-
   if (editingHistoryId) {
     const idx = history.findIndex(h => h.id === editingHistoryId);
-    if (idx >= 0) history[idx] = entry;
-    else history.unshift(entry);
+    if (idx >= 0) history[idx] = entry; else history.unshift(entry);
     editingHistoryId = null;
-  } else {
-    history.unshift(entry);
-  }
-
+  } else history.unshift(entry);
   if (history.length > 50) history = history.slice(0, 50);
   saveHistoryToLS();
   renderHistory();
@@ -1561,38 +1406,27 @@ function getDocTypeBadge(docType) {
 }
 
 function renderHistory() {
-  const list = $('historyList');
-  const count = $('historyCount');
+  const list = $('historyList'), count = $('historyCount');
   count.textContent = history.length;
-
   if (!history.length) {
-    list.innerHTML = `
-      <div class="history-empty">
-        <div class="history-empty-icon">📭</div>
-        <div>No saved invoices yet</div>
-        <div style="font-size:10.5px;margin-top:4px;color:#cbd5e1;">Fill the form & click Print to save</div>
-      </div>`;
+    list.innerHTML = `<div class="history-empty"><div class="history-empty-icon">📭</div><div>No saved invoices yet</div></div>`;
     return;
   }
-
   list.innerHTML = history.map(h => {
-    const isSelected = h.id === editingHistoryId;
     const dateStr = h.invoiceDate ? fmtDate(h.invoiceDate) : fmtDate(h.savedAt);
-    return `
-      <div class="history-item ${isSelected ? 'selected' : ''}" onclick="loadFromHistory('${h.id}')">
-        <div class="hi-top">
-          <div class="hi-no">${esc(h.invoiceNo)}${getDocTypeBadge(h.docType)}</div>
-          <div class="hi-date">${dateStr}</div>
-        </div>
-        <div class="hi-client">${esc(h.clientName)}</div>
-        <div class="hi-bottom">
-          <div class="hi-amount">${fmt(h.total)}</div>
-          <div class="hi-actions" onclick="event.stopPropagation()">
-            <button class="hi-del" onclick="deleteFromHistory('${h.id}')" title="Delete">🗑️</button>
-          </div>
+    return `<div class="history-item ${h.id === editingHistoryId ? 'selected' : ''}" onclick="loadFromHistory('${h.id}')">
+      <div class="hi-top">
+        <div class="hi-no">${esc(h.invoiceNo)}${getDocTypeBadge(h.docType)}</div>
+        <div class="hi-date">${dateStr}</div>
+      </div>
+      <div class="hi-client">${esc(h.clientName)}</div>
+      <div class="hi-bottom">
+        <div class="hi-amount">${fmt(h.total)}</div>
+        <div class="hi-actions" onclick="event.stopPropagation()">
+          <button class="hi-del" onclick="deleteFromHistory('${h.id}')" title="Delete">🗑️</button>
         </div>
       </div>
-    `;
+    </div>`;
   }).join('');
 }
 
@@ -1600,9 +1434,7 @@ function loadFromHistory(id) {
   const entry = history.find(h => h.id === id);
   if (!entry) return;
   const hasCurrentData = state.client.name || state.items.some(i => i.desc);
-  if (hasCurrentData && editingHistoryId !== id) {
-    if (!confirm('Load this saved invoice? Current form data will be replaced.')) return;
-  }
+  if (hasCurrentData && editingHistoryId !== id) { if (!confirm('Load this saved invoice? Current form data will be replaced.')) return; }
   state.docType = entry.docType || 'Tax Invoice';
   state.business = JSON.parse(JSON.stringify(entry.business));
   state.client = JSON.parse(JSON.stringify(entry.client));
@@ -1610,16 +1442,10 @@ function loadFromHistory(id) {
   state.items = JSON.parse(JSON.stringify(entry.items));
   state.details = JSON.parse(JSON.stringify(entry.details || ['']));
   state.bank = JSON.parse(JSON.stringify(entry.bank));
-  state.terms = entry.terms;
-  state.notes = entry.notes;
-  state.taxType = entry.taxType;
-  state.template = entry.template;
+  state.terms = entry.terms; state.notes = entry.notes;
+  state.taxType = entry.taxType; state.template = entry.template;
   editingHistoryId = id;
-  populateForm(state);
-  renderItems();
-  renderDetails();
-  render();
-  renderHistory();
+  populateForm(state); renderItems(); renderDetails(); render(); renderHistory();
   showToast('✓ Invoice loaded for editing', 'blue');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1630,8 +1456,7 @@ function deleteFromHistory(id) {
   if (!confirm(`Delete invoice "${entry.invoiceNo}"?`)) return;
   history = history.filter(h => h.id !== id);
   if (editingHistoryId === id) editingHistoryId = null;
-  saveHistoryToLS();
-  renderHistory();
+  saveHistoryToLS(); renderHistory();
   showToast('🗑️ Invoice deleted');
 }
 
@@ -1646,42 +1471,28 @@ function getNextInvoiceNo() {
       return prefix + String(n).padStart(padLen, '0');
     }
   }
-  const yr = new Date().getFullYear();
-  return `INV-${yr}-001`;
+  return `INV-${new Date().getFullYear()}-001`;
 }
 
 function resetForNextInvoice() {
   const today = new Date().toISOString().split('T')[0];
-  $('cName').value = '';
-  $('cAddr').value = '';
-  $('cGstin').value = '';
-  $('cEmail').value = '';
-  $('cPhone').value = '';
-  $('mNo').value = getNextInvoiceNo();
-  $('mDate').value = today;
+  $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
+  $('mNo').value = getNextInvoiceNo(); $('mDate').value = today;
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
   state.details = [''];
   editingHistoryId = null;
-  renderItems();
-  renderDetails();
-  sync();
-  renderHistory();
+  renderItems(); renderDetails(); sync(); renderHistory();
 }
 
 function prepareForPrint() {
   const el = $('invoicePreview');
   if (!el) return;
-  el.style.zoom = '';
-  el.style.transform = '';
+  el.style.zoom = ''; el.style.transform = '';
   const warning = $('printWarning');
   if (warning) warning.classList.remove('show');
   void el.offsetHeight;
-
-  const A4_HEIGHT_PX = 1122;
-  const A4_WIDTH_PX = 794;
-  const naturalHeight = el.scrollHeight;
-  const naturalWidth = el.scrollWidth;
-
+  const A4_HEIGHT_PX = 1122, A4_WIDTH_PX = 794;
+  const naturalHeight = el.scrollHeight, naturalWidth = el.scrollWidth;
   if (naturalHeight > A4_HEIGHT_PX || naturalWidth > A4_WIDTH_PX) {
     const heightScale = A4_HEIGHT_PX / naturalHeight;
     const widthScale = A4_WIDTH_PX / naturalWidth;
@@ -1705,22 +1516,15 @@ window.addEventListener('afterprint', () => {
   resetAfterPrint();
   if (printHandled) return;
   printHandled = true;
-  setTimeout(() => {
-    resetForNextInvoice();
-    showToast('✓ Ready for next invoice');
-  }, 200);
+  setTimeout(() => { resetForNextInvoice(); showToast('✓ Ready for next invoice'); }, 200);
 });
 
 let printHandled = false;
 
 function printAndSave() {
   const saved = saveToHistory();
-  if (saved) {
-    showToast('✓ ' + (state.docType || 'Invoice') + ' saved — opening print');
-  } else {
-    showToast('⚠️ Nothing to save — fill the form first', 'red');
-    return;
-  }
+  if (saved) showToast('✓ ' + (state.docType || 'Invoice') + ' saved — opening print');
+  else { showToast('⚠️ Nothing to save — fill the form first', 'red'); return; }
   printHandled = false;
   prepareForPrint();
   setTimeout(() => { window.print(); }, 200);
@@ -1730,25 +1534,16 @@ function loadSample() {
   const today = new Date().toISOString().split('T')[0];
   $('bName').value = 'Tarun Prajapat & Co.';
   $('bAddr').value = 'Shop 12, MI Road, Jaipur, Rajasthan - 302001';
-  $('bGstin').value = '08ABCDE1234F1Z5';
-  $('bPan').value = 'ABCDE1234F';
-  $('bEmail').value = 'tarunprajapat814@gmail.com';
-  $('bPhone').value = '+91 78775 24281';
+  $('bGstin').value = '08ABCDE1234F1Z5'; $('bPan').value = 'ABCDE1234F';
+  $('bEmail').value = 'tarunprajapat814@gmail.com'; $('bPhone').value = '+91 78775 24281';
   $('cName').value = 'SURGYAN KANWAR';
   $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur\nMeenawala, Jaipur, Rajasthan, Pin Code: 302034';
-  $('cGstin').value = '';
-  $('cEmail').value = '';
-  $('cPhone').value = '';
-  $('mNo').value = 'BS/26-27/100';
-  $('mDate').value = today;
-  $('mPlace').value = '08-Rajasthan';
-  $('taxType').value = 'cgst-sgst';
-  $('bkHolder').value = 'Tarun Prajapat';
-  $('bkName').value = 'Bank of Baroda';
-  $('bkAc').value = '33930200000505';
-  $('bkIfsc').value = 'BARB0BANDIK';
-  $('bkBranch').value = '';
-  $('bkType').value = 'Savings';
+  $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
+  $('mNo').value = 'BS/26-27/100'; $('mDate').value = today;
+  $('mPlace').value = '08-Rajasthan'; $('taxType').value = 'cgst-sgst';
+  $('bkHolder').value = 'Tarun Prajapat'; $('bkName').value = 'Bank of Baroda';
+  $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK';
+  $('bkBranch').value = ''; $('bkType').value = 'Savings';
   $('bkUpi').value = 'tarun@barodampay';
   $('terms').value = 'Payment due within 15 days of invoice date.\nPlease mention invoice number in payment reference.\nInterest @18% p.a. will be charged on overdue payments.';
   $('notes').value = 'Thank you for your business!';
@@ -1757,7 +1552,8 @@ function loadSample() {
     { desc:'MIS Reporting & Dashboard Setup', hsn:'998313', qty:1, rate:25000, gst:18 },
     { desc:'GST Filing — GSTR-1 & GSTR-3B (Monthly)', hsn:'998221', qty:3, rate:3500, gst:18 },
     { desc:'TDS Return Filing (Quarterly)', hsn:'998221', qty:1, rate:5000, gst:18 },
-    { desc:'ERP Data Entry & Reconciliation', hsn:'998313', qty:10, rate:800, gst:18 }
+    { desc:'ERP Data Entry & Reconciliation', hsn:'998313', qty:10, rate:800, gst:18 },
+    { desc:'Business Advisory Services', hsn:'998311', qty:1, rate:10000, gst:12 }
   ];
 
   state.details = [
@@ -1766,16 +1562,12 @@ function loadSample() {
     'Applied Roof Top Solar Capacity (in kWp) - 3KWP'
   ];
 
-  renderItems();
-  renderDetails();
-  sync();
-
+  renderItems(); renderDetails(); sync();
   setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
 }
 
 function clearAll() {
-  if (!confirm('Clear everything?\n\n✅ Business, Client, Invoice, Bank, Items, Details, Terms — sab clear ho jayega\n\n📚 Saved Invoices & 💼 Saved Business Detail — safe rahenge')) return;
-
+  if (!confirm('Clear everything?')) return;
   $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = '';
   $('bEmail').value = ''; $('bPhone').value = '';
   $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
@@ -1785,65 +1577,34 @@ function clearAll() {
   $('terms').value = ''; $('notes').value = '';
   $('taxType').value = 'cgst-sgst';
   $('docTypeSelect').value = 'Tax Invoice';
-
   state.docType = 'Tax Invoice';
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
   state.details = [''];
   editingHistoryId = null;
-
   if (typeof setIfscStatus === 'function') setIfscStatus('idle', '');
-  const bp = $('bankPreview');
-  if (bp) bp.classList.remove('show');
+  $('bankPreview').classList.remove('show');
   ifscLastFetched = '';
   $('bkBranch').readOnly = true;
   $('bkBranch').placeholder = 'Branch will appear here...';
-
   state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
   state.terms = ''; state.notes = '';
-
   localStorage.removeItem('invoiceState');
   localStorage.setItem('userClearedForm', '1');
-
-  updateLabels();
-  disableAutofill();
+  updateLabels(); disableAutofill();
   renderItems(); renderDetails(); render(); renderHistory();
-  showToast('🗑️ Form fully cleared — everything empty');
+  showToast('🗑️ Form fully cleared');
 }
 
 function nukeEverything() {
-  if (!confirm('💥 RESET EVERYTHING?\n\nYe sab kuch delete karega:\n• Current form\n• Saved Invoices (📚)\n• Saved Business Details (💼)\n\nWapas nahi aa sakta!')) return;
+  if (!confirm('💥 RESET EVERYTHING?\n\nYe sab kuch delete karega:\n• Current form\n• Saved Invoices (📚)\n• Saved Business Details (💼)')) return;
   if (!confirm('Pakka? Ek aur baar confirm karo.')) return;
-
   localStorage.removeItem('invoiceState');
   localStorage.removeItem('invoiceHistory');
   localStorage.removeItem('businessProfiles');
   localStorage.removeItem('userClearedForm');
-
   history = []; profiles = []; editingHistoryId = null;
-
-  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = '';
-  $('bEmail').value = ''; $('bPhone').value = '';
-  $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
-  $('mNo').value = ''; $('mDate').value = ''; $('mPlace').value = '';
-  $('bkHolder').value = ''; $('bkName').value = ''; $('bkAc').value = ''; $('bkIfsc').value = '';
-  $('bkBranch').value = ''; $('bkType').value = ''; $('bkUpi').value = '';
-  $('terms').value = ''; $('notes').value = '';
-  $('taxType').value = 'cgst-sgst';
-  $('docTypeSelect').value = 'Tax Invoice';
-
-  state.docType = 'Tax Invoice';
-  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
-  state.details = [''];
-  state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
-  state.terms = ''; state.notes = '';
-
-  if (typeof setIfscStatus === 'function') setIfscStatus('idle', '');
-  const bp = $('bankPreview');
-  if (bp) bp.classList.remove('show');
-
-  updateLabels();
-  disableAutofill();
-  renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
+  clearAll();
+  renderProfiles();
   showToast('💥 Everything reset — fresh start!', 'red');
 }
 
@@ -1864,14 +1625,9 @@ function loadJSON(e) {
       Object.assign(state, data);
       if (!state.details) state.details = [''];
       if (!state.docType) state.docType = 'Tax Invoice';
-      populateForm(state);
-      renderItems();
-      renderDetails();
-      sync();
+      populateForm(state); renderItems(); renderDetails(); sync();
       showToast('✓ JSON loaded');
-    } catch (err) {
-      alert('Invalid JSON file: ' + err.message);
-    }
+    } catch (err) { alert('Invalid JSON file: ' + err.message); }
   };
   r.readAsText(file);
   e.target.value = '';
@@ -1879,20 +1635,10 @@ function loadJSON(e) {
 
 (function init() {
   disableAutofill();
-
-  try {
-    const savedHistory = localStorage.getItem('invoiceHistory');
-    if (savedHistory) history = JSON.parse(savedHistory);
-  } catch (e) { history = []; }
-
-  try {
-    const savedProfiles = localStorage.getItem('businessProfiles');
-    if (savedProfiles) profiles = JSON.parse(savedProfiles);
-  } catch (e) { profiles = []; }
-
+  try { const s = localStorage.getItem('invoiceHistory'); if (s) history = JSON.parse(s); } catch (e) { history = []; }
+  try { const s = localStorage.getItem('businessProfiles'); if (s) profiles = JSON.parse(s); } catch (e) { profiles = []; }
   const wasCleared = localStorage.getItem('userClearedForm') === '1';
   const saved = localStorage.getItem('invoiceState');
-
   if (saved && !wasCleared) {
     try {
       const data = JSON.parse(saved);
@@ -1901,23 +1647,14 @@ function loadJSON(e) {
       if (!state.docType) state.docType = 'Tax Invoice';
       populateForm(state);
       const bk = state.bank || {};
-      if (bk.ifsc && bk.ifsc.length === 11 && !bk.branch) {
-        setTimeout(() => onIfscInput(bk.ifsc), 400);
-      }
+      if (bk.ifsc && bk.ifsc.length === 11 && !bk.branch) setTimeout(() => onIfscInput(bk.ifsc), 400);
     } catch (err) {}
   } else {
     state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
     state.details = [''];
   }
-
   if (!state.details || !state.details.length) state.details = [''];
-
-  updateLabels();
-  renderItems();
-  renderDetails();
-  render();
-  renderHistory();
-  renderProfiles();
+  updateLabels(); renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
 })();
 </script>
 
