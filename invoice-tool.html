@@ -143,6 +143,21 @@
   .history-item .hi-actions button { width: 26px; height: 26px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; }
   .history-item .hi-del { background: #fee2e2; color: #dc2626; }
   .history-item .hi-del:hover { background: #fecaca; }
+  .history-item .hi-doctype {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #e0e7ff;
+    color: #3730a3;
+    display: inline-block;
+    margin-left: 4px;
+  }
+  .history-item .hi-doctype.credit { background: #fee2e2; color: #991b1b; }
+  .history-item .hi-doctype.debit { background: #fef3c7; color: #92400e; }
+  .history-item .hi-doctype.proforma { background: #dbeafe; color: #1e40af; }
   .history-empty { text-align: center; padding: 24px 12px; color: #94a3b8; font-size: 12px; }
   .history-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
 
@@ -277,9 +292,6 @@
   .sign-area { margin-top: 18px; text-align: right; padding-top: 6px; }
   .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
 
-  /* ═══════════════════════════════════════════
-     COMPUTER GENERATED LINE
-     ═══════════════════════════════════════════ */
   .computer-gen-line {
     text-align: center;
     font-size: 9px;
@@ -323,9 +335,6 @@
   .tpl-gst .hsn-table td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
   .tpl-gst .hsn-table td:first-child { text-align: left; font-weight: 600; }
 
-  /* ═══════════════════════════════════════════
-     PRINT — SINGLE PAGE A4
-     ═══════════════════════════════════════════ */
   @media print {
     @page { size: A4 portrait; margin: 0; }
 
@@ -398,6 +407,15 @@
       <p>4 templates · GST ready · PDF export · Free forever</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <label style="font-size:11px;color:rgba(255,255,255,0.8);">Document:</label>
+      <select id="docTypeSelect" onchange="changeDocType()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#0a1e3f;">
+        <option value="Tax Invoice">📄 Tax Invoice</option>
+        <option value="Credit Note">🔴 Credit Note</option>
+        <option value="Debit Note">🟡 Debit Note</option>
+        <option value="Proforma Invoice">🔵 Proforma Invoice</option>
+        <option value="Estimate">📝 Estimate</option>
+        <option value="Quotation">💬 Quotation</option>
+      </select>
       <label style="font-size:11px;color:rgba(255,255,255,0.8);">Template:</label>
       <select id="templateSelect" onchange="changeTemplate()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#0a1e3f;">
         <option value="classic">🎨 Classic</option>
@@ -593,6 +611,7 @@
 
 <script>
 const state = {
+  docType: 'Tax Invoice',
   template: 'classic',
   taxType: 'cgst-sgst',
   items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }],
@@ -646,6 +665,16 @@ function autoPanFromGstin() {
   } else if (gstin.length === 0) {
     panField.value = '';
   }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  DOCUMENT TYPE SWITCH — Tax Invoice / Credit Note / etc.
+// ═══════════════════════════════════════════════════════════
+function changeDocType() {
+  state.docType = $('docTypeSelect').value;
+  localStorage.setItem('invoiceState', JSON.stringify(state));
+  render();
+  showToast('✓ Document type: ' + state.docType, 'blue');
 }
 
 function saveProfilesToLS() {
@@ -889,6 +918,7 @@ function removeDetail(i) {
 }
 
 function sync() {
+  state.docType = $('docTypeSelect').value;
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value,
     pan: $('bPan').value, email: $('bEmail').value, phone: $('bPhone').value
@@ -937,6 +967,7 @@ function populateForm(s) {
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
   $('taxType').value = s.taxType || 'cgst-sgst';
   $('templateSelect').value = s.template || 'classic';
+  $('docTypeSelect').value = s.docType || 'Tax Invoice';
 }
 
 function calcTotals() {
@@ -989,6 +1020,11 @@ function render() {
   const bizInfo = [biz.addr, biz.email, biz.phone].filter(Boolean).join(' · ');
   const cliName = cli.name || 'Client Name';
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
+
+  // ═══════════════════════════════════════════════════════════
+  //  DOCUMENT TITLE — changes based on docType selection
+  // ═══════════════════════════════════════════════════════════
+  const docTitle = s.docType || 'Tax Invoice';
 
   const itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
@@ -1111,10 +1147,6 @@ function render() {
       </div>
     </div>`;
 
-  // ═══════════════════════════════════════════════════════════
-  //  COMPUTER GENERATED DOCUMENT LINE
-  //  Light grey, italic, small, centered — appears in all templates
-  // ═══════════════════════════════════════════════════════════
   const genDocLine = `
     <div class="computer-gen-line">
       This is a Computer Generated Document
@@ -1132,7 +1164,7 @@ function render() {
           <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
         </div>
         <div class="inv-title-box">
-          <div class="inv-h1">Tax Invoice</div>
+          <div class="inv-h1">${esc(docTitle)}</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
@@ -1165,7 +1197,7 @@ function render() {
         <div class="inv-main">
           <div class="inv-top-right">Original for Recipient</div>
           <div class="inv-header">
-            <div class="inv-h1">Tax Invoice</div>
+            <div class="inv-h1">${esc(docTitle)}</div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
             <div>
@@ -1192,7 +1224,7 @@ function render() {
           <div class="inv-biz-info">${esc(bizInfo)}${biz.gstin ? '<br>GSTIN: ' + esc(biz.gstin) : ''}</div>
         </div>
         <div style="text-align:right;">
-          <div class="inv-h1">Tax Invoice</div>
+          <div class="inv-h1">${esc(docTitle)}</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
@@ -1237,6 +1269,7 @@ function saveToHistory() {
   const entry = {
     id: editingHistoryId || ('inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
     savedAt: new Date().toISOString(),
+    docType: state.docType || 'Tax Invoice',
     business: JSON.parse(JSON.stringify(state.business)),
     client: JSON.parse(JSON.stringify(state.client)),
     meta: JSON.parse(JSON.stringify(state.meta)),
@@ -1268,6 +1301,16 @@ function saveToHistory() {
   return true;
 }
 
+function getDocTypeBadge(docType) {
+  const dt = docType || 'Tax Invoice';
+  if (dt === 'Credit Note') return '<span class="hi-doctype credit">Credit</span>';
+  if (dt === 'Debit Note') return '<span class="hi-doctype debit">Debit</span>';
+  if (dt === 'Proforma Invoice') return '<span class="hi-doctype proforma">Proforma</span>';
+  if (dt === 'Estimate') return '<span class="hi-doctype proforma">Estimate</span>';
+  if (dt === 'Quotation') return '<span class="hi-doctype proforma">Quote</span>';
+  return '';
+}
+
 function renderHistory() {
   const list = $('historyList');
   const count = $('historyCount');
@@ -1289,7 +1332,7 @@ function renderHistory() {
     return `
       <div class="history-item ${isSelected ? 'selected' : ''}" onclick="loadFromHistory('${h.id}')">
         <div class="hi-top">
-          <div class="hi-no">${esc(h.invoiceNo)}</div>
+          <div class="hi-no">${esc(h.invoiceNo)}${getDocTypeBadge(h.docType)}</div>
           <div class="hi-date">${dateStr}</div>
         </div>
         <div class="hi-client">${esc(h.clientName)}</div>
@@ -1311,6 +1354,7 @@ function loadFromHistory(id) {
   if (hasCurrentData && editingHistoryId !== id) {
     if (!confirm('Load this saved invoice? Current form data will be replaced.')) return;
   }
+  state.docType = entry.docType || 'Tax Invoice';
   state.business = JSON.parse(JSON.stringify(entry.business));
   state.client = JSON.parse(JSON.stringify(entry.client));
   state.meta = JSON.parse(JSON.stringify(entry.meta));
@@ -1375,9 +1419,6 @@ function resetForNextInvoice() {
   renderHistory();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  AUTO-SCALE FOR SINGLE PAGE PRINT
-// ═══════════════════════════════════════════════════════════
 function prepareForPrint() {
   const el = $('invoicePreview');
   if (!el) return;
@@ -1429,7 +1470,7 @@ let printHandled = false;
 function printAndSave() {
   const saved = saveToHistory();
   if (saved) {
-    showToast('✓ Invoice saved — opening print');
+    showToast('✓ ' + (state.docType || 'Invoice') + ' saved — opening print');
   } else {
     showToast('⚠️ Nothing to save — fill the form first', 'red');
     return;
@@ -1497,7 +1538,9 @@ function clearAll() {
   $('bkBranch').value = ''; $('bkType').value = ''; $('bkUpi').value = '';
   $('terms').value = ''; $('notes').value = '';
   $('taxType').value = 'cgst-sgst';
+  $('docTypeSelect').value = 'Tax Invoice';
 
+  state.docType = 'Tax Invoice';
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
   state.details = [''];
   editingHistoryId = null;
@@ -1539,7 +1582,9 @@ function nukeEverything() {
   $('bkBranch').value = ''; $('bkType').value = ''; $('bkUpi').value = '';
   $('terms').value = ''; $('notes').value = '';
   $('taxType').value = 'cgst-sgst';
+  $('docTypeSelect').value = 'Tax Invoice';
 
+  state.docType = 'Tax Invoice';
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
   state.details = [''];
   state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
@@ -1558,7 +1603,7 @@ function saveJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = (state.meta.no || 'invoice') + '.json';
+  a.download = ((state.meta.no || 'invoice') + '_' + (state.docType || 'Invoice').replace(/\s+/g, '_') + '.json');
   a.click();
 }
 function loadJSON(e) {
@@ -1570,6 +1615,7 @@ function loadJSON(e) {
       const data = JSON.parse(ev.target.result);
       Object.assign(state, data);
       if (!state.details) state.details = [''];
+      if (!state.docType) state.docType = 'Tax Invoice';
       populateForm(state);
       renderItems();
       renderDetails();
@@ -1604,6 +1650,7 @@ function loadJSON(e) {
       const data = JSON.parse(saved);
       Object.assign(state, data);
       if (!state.details) state.details = [''];
+      if (!state.docType) state.docType = 'Tax Invoice';
       populateForm(state);
       const bk = state.bank || {};
       if (bk.ifsc && bk.ifsc.length === 11 && !bk.branch) {
