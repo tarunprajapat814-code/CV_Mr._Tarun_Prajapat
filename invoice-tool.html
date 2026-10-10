@@ -209,9 +209,6 @@
   .toast.toast-red { background: #dc2626; box-shadow: 0 10px 30px rgba(220,38,38,0.35); }
   .toast.toast-purple { background: #8b5cf6; box-shadow: 0 10px 30px rgba(139,92,246,0.35); }
 
-  /* ═══════════════════════════════════════════
-     INVOICE — COMPACT A4 LAYOUT (FITS 1 PAGE)
-     ═══════════════════════════════════════════ */
   .invoice-a4 {
     background: #fff;
     width: 210mm;
@@ -495,10 +492,10 @@
     </div>
     
     <div class="panel">
-      <div class="panel-head" onclick="togglePanel(this, 'metaBody')">📅 Invoice Details <span>▼</span></div>
+      <div class="panel-head" onclick="togglePanel(this, 'metaBody')"><span id="metaPanelTitle">📅 Invoice Details</span><span>▼</span></div>
       <div class="panel-body" id="metaBody">
         <div class="grid2">
-          <div class="field"><label>Invoice No.</label><input id="mNo" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label id="mNoLabel">Invoice No.</label><input id="mNo" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Date</label><input id="mDate" type="date" autocomplete="off" oninput="sync()"></div>
         </div>
         <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" autocomplete="off" oninput="sync()"></div>
@@ -634,6 +631,28 @@ const fmtDate = d => {
   return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 };
 
+// ═══════════════════════════════════════════════════════════
+//  LABEL MAPPING — based on document type
+// ═══════════════════════════════════════════════════════════
+function getLabels(docType) {
+  const dt = docType || 'Tax Invoice';
+  switch (dt) {
+    case 'Credit Note':
+      return { title: 'Credit Note', noLabel: 'Credit Note No.', dateLabel: 'Date', detailsTitle: 'Credit Note Details', panelTitle: '📅 Credit Note Details' };
+    case 'Debit Note':
+      return { title: 'Debit Note', noLabel: 'Debit Note No.', dateLabel: 'Date', detailsTitle: 'Debit Note Details', panelTitle: '📅 Debit Note Details' };
+    case 'Proforma Invoice':
+      return { title: 'Proforma Invoice', noLabel: 'Proforma Invoice No.', dateLabel: 'Date', detailsTitle: 'Proforma Details', panelTitle: '📅 Proforma Invoice Details' };
+    case 'Estimate':
+      return { title: 'Estimate', noLabel: 'Estimate No.', dateLabel: 'Date', detailsTitle: 'Estimate Details', panelTitle: '📅 Estimate Details' };
+    case 'Quotation':
+      return { title: 'Quotation', noLabel: 'Quotation No.', dateLabel: 'Date', detailsTitle: 'Quotation Details', panelTitle: '📅 Quotation Details' };
+    case 'Tax Invoice':
+    default:
+      return { title: 'Tax Invoice', noLabel: 'Invoice No.', dateLabel: 'Date', detailsTitle: 'Invoice Details', panelTitle: '📅 Invoice Details' };
+  }
+}
+
 function disableAutofill() {
   document.querySelectorAll('input, textarea').forEach(el => {
     el.setAttribute('autocomplete', 'new-password');
@@ -668,13 +687,22 @@ function autoPanFromGstin() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  DOCUMENT TYPE SWITCH — Tax Invoice / Credit Note / etc.
+//  DOCUMENT TYPE CHANGE
 // ═══════════════════════════════════════════════════════════
 function changeDocType() {
   state.docType = $('docTypeSelect').value;
+  updateLabels();
   localStorage.setItem('invoiceState', JSON.stringify(state));
   render();
   showToast('✓ Document type: ' + state.docType, 'blue');
+}
+
+function updateLabels() {
+  const labels = getLabels(state.docType);
+  const mNoLabel = $('mNoLabel');
+  const metaPanelTitle = $('metaPanelTitle');
+  if (mNoLabel) mNoLabel.textContent = labels.noLabel;
+  if (metaPanelTitle) metaPanelTitle.textContent = labels.panelTitle;
 }
 
 function saveProfilesToLS() {
@@ -968,6 +996,7 @@ function populateForm(s) {
   $('taxType').value = s.taxType || 'cgst-sgst';
   $('templateSelect').value = s.template || 'classic';
   $('docTypeSelect').value = s.docType || 'Tax Invoice';
+  updateLabels();
 }
 
 function calcTotals() {
@@ -1022,9 +1051,13 @@ function render() {
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
 
   // ═══════════════════════════════════════════════════════════
-  //  DOCUMENT TITLE — changes based on docType selection
+  //  DOCUMENT LABELS — derived from docType
   // ═══════════════════════════════════════════════════════════
-  const docTitle = s.docType || 'Tax Invoice';
+  const labels = getLabels(s.docType);
+  const docTitle = labels.title;
+  const noLabel = labels.noLabel;
+  const dateLabel = labels.dateLabel;
+  const detailsTitle = labels.detailsTitle;
 
   const itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
@@ -1115,9 +1148,9 @@ function render() {
   const hasDetails = validDetails.length > 0;
   const detailsBoxHTML = `
     <div class="inv-details-box">
-      <div class="inv-details-title">Invoice Details</div>
-      <div class="inv-meta-row"><span>Invoice No.:</span><span>${esc(meta.no) || '—'}</span></div>
-      <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(meta.date)}</span></div>
+      <div class="inv-details-title">${esc(detailsTitle)}</div>
+      <div class="inv-meta-row"><span>${esc(noLabel)}:</span><span>${esc(meta.no) || '—'}</span></div>
+      <div class="inv-meta-row"><span>${esc(dateLabel)}:</span><span>${fmtDate(meta.date)}</span></div>
       ${hasDetails ? `<div class="inv-gap"></div>${detailsRowsHTML}<div class="inv-gap"></div>` : ''}
       <div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(meta.place) || '—'}</span></div>
     </div>
@@ -1558,6 +1591,7 @@ function clearAll() {
   localStorage.removeItem('invoiceState');
   localStorage.setItem('userClearedForm', '1');
 
+  updateLabels();
   disableAutofill();
   renderItems(); renderDetails(); render(); renderHistory();
   showToast('🗑️ Form fully cleared — everything empty');
@@ -1594,6 +1628,7 @@ function nukeEverything() {
   const bp = $('bankPreview');
   if (bp) bp.classList.remove('show');
 
+  updateLabels();
   disableAutofill();
   renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
   showToast('💥 Everything reset — fresh start!', 'red');
@@ -1664,6 +1699,7 @@ function loadJSON(e) {
 
   if (!state.details || !state.details.length) state.details = [''];
 
+  updateLabels();
   renderItems();
   renderDetails();
   render();
