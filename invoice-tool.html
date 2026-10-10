@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invoice Generator | Free Tool by Tarun Prajapat</title>
-<meta name="description" content="Free online invoice generator with 4 templates, GST support, PDF export. By Tarun Prajapat.">
+<meta name="description" content="Free online invoice generator with 8 templates, GST support, PDF export. By Tarun Prajapat.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -144,16 +144,9 @@
   .history-item .hi-del { background: #fee2e2; color: #dc2626; }
   .history-item .hi-del:hover { background: #fecaca; }
   .history-item .hi-doctype {
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 1px 6px;
-    border-radius: 999px;
-    background: #e0e7ff;
-    color: #3730a3;
-    display: inline-block;
-    margin-left: 4px;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 1px 6px; border-radius: 999px;
+    background: #e0e7ff; color: #3730a3; display: inline-block; margin-left: 4px;
   }
   .history-item .hi-doctype.credit { background: #fee2e2; color: #991b1b; }
   .history-item .hi-doctype.debit { background: #fef3c7; color: #92400e; }
@@ -164,8 +157,7 @@
   .profile-item {
     background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
     border: 1.5px solid #d8b4fe; border-radius: 10px;
-    padding: 10px 12px; margin-bottom: 8px;
-    cursor: pointer; transition: all 0.2s;
+    padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;
   }
   .profile-item:hover { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-color: #a855f7; transform: translateX(2px); }
   .profile-item .pi-name {
@@ -180,8 +172,7 @@
   .profile-item .pi-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .profile-item .pi-gst {
     font-size: 10px; font-weight: 700; color: #6b21a8;
-    background: rgba(255,255,255,0.7);
-    padding: 2px 8px; border-radius: 999px;
+    background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 999px;
   }
   .profile-item .pi-actions { display: flex; gap: 4px; }
   .profile-item .pi-actions button {
@@ -209,6 +200,9 @@
   .toast.toast-red { background: #dc2626; box-shadow: 0 10px 30px rgba(220,38,38,0.35); }
   .toast.toast-purple { background: #8b5cf6; box-shadow: 0 10px 30px rgba(139,92,246,0.35); }
 
+  /* ═══════════════════════════════════════════
+     INVOICE — COMPACT A4 LAYOUT
+     ═══════════════════════════════════════════ */
   .invoice-a4 {
     background: #fff;
     width: 210mm;
@@ -223,11 +217,18 @@
   }
   @media (max-width: 1024px) { .invoice-a4 { width: 100%; min-height: auto; padding: 16px; } }
 
+  /* ═══════════════════════════════════════════
+     TEMPLATE THEMES
+     ═══════════════════════════════════════════ */
   .tpl { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; --text: #0f172a; --muted: #64748b; --line: #e2e8f0; }
   .tpl-classic { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; }
   .tpl-modern  { --accent: #0e7490; --accent-soft: #cffafe; --accent-text: #fff; }
   .tpl-minimal { --accent: #111827; --accent-soft: #f3f4f6; --accent-text: #111827; }
   .tpl-gst     { --accent: #7c2d12; --accent-soft: #fed7aa; --accent-text: #fff; }
+  .tpl-elegant { --accent: #78350f; --accent-soft: #fef3c7; --accent-text: #fff; }
+  .tpl-corporate { --accent: #1e293b; --accent-soft: #e2e8f0; --accent-text: #fff; }
+  .tpl-compact { --accent: #374151; --accent-soft: #f3f4f6; --accent-text: #fff; }
+  .tpl-rounded { --accent: #7c3aed; --accent-soft: #ede9fe; --accent-text: #fff; }
 
   .inv-h1 { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1.5px; }
   .inv-biz-name { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.15; }
@@ -290,20 +291,17 @@
   .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
 
   .computer-gen-line {
-    text-align: center;
-    font-size: 9px;
-    color: #94a3b8;
-    font-style: italic;
-    letter-spacing: 0.4px;
-    font-weight: 400;
-    margin-top: 14px;
-    padding-top: 6px;
+    text-align: center; font-size: 9px; color: #94a3b8;
+    font-style: italic; letter-spacing: 0.4px;
+    font-weight: 400; margin-top: 14px; padding-top: 6px;
   }
 
+  /* ═══ CLASSIC ═══ */
   .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
   .tpl-classic .inv-title-box { text-align: right; }
   .tpl-classic .inv-title-box .inv-h1 { font-size: 26px; color: var(--accent); }
 
+  /* ═══ MODERN ═══ */
   .tpl-modern .inv-wrap { display: grid; grid-template-columns: 180px 1fr; gap: 0; margin: -10mm -12mm; min-height: 297mm; }
   .tpl-modern .inv-side { background: var(--accent); color: #fff; padding: 10mm 14px; }
   .tpl-modern .inv-side .inv-biz-name { color: #fff; font-size: 15px; }
@@ -316,6 +314,7 @@
   .tpl-modern .inv-table th { background: var(--accent); }
   @media (max-width: 1024px) { .tpl-modern .inv-wrap { margin: 0; } .tpl-modern .inv-side { padding: 16px; } .tpl-modern .inv-main { padding: 16px; } }
 
+  /* ═══ MINIMAL ═══ */
   .tpl-minimal { padding: 14mm 14mm; }
   .tpl-minimal .inv-header { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
   .tpl-minimal .inv-h1 { font-size: 18px; color: var(--text); letter-spacing: 4px; font-weight: 500; }
@@ -324,6 +323,7 @@
   .tpl-minimal .words-box { background: transparent; border: 1px solid var(--line); }
   .tpl-minimal .inv-details-title { font-size: 11.5px; letter-spacing: 2px; text-transform: uppercase; }
 
+  /* ═══ GST PRO ═══ */
   .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 10px; }
   .tpl-gst .inv-h1 { font-size: 22px; color: var(--accent); }
   .tpl-gst .hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 6px; }
@@ -332,6 +332,84 @@
   .tpl-gst .hsn-table td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
   .tpl-gst .hsn-table td:first-child { text-align: left; font-weight: 600; }
 
+  /* ═══════════════════════════════════════════
+     NEW: ELEGANT — Serif fonts, gold accents
+     ═══════════════════════════════════════════ */
+  .tpl-elegant { padding: 14mm 14mm; font-family: 'Georgia', 'Playfair Display', serif; }
+  .tpl-elegant .inv-h1 { font-family: 'Playfair Display', 'Georgia', serif; font-weight: 700; letter-spacing: 3px; }
+  .tpl-elegant .inv-biz-name { font-family: 'Playfair Display', 'Georgia', serif; font-size: 22px; letter-spacing: 0.5px; }
+  .tpl-elegant .inv-header { text-align: center; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--accent); position: relative; }
+  .tpl-elegant .inv-header::after { content: '◆'; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 12px; color: var(--accent); font-size: 10px; }
+  .tpl-elegant .inv-h1 { font-size: 26px; color: var(--accent); margin-top: 6px; letter-spacing: 4px; text-transform: uppercase; }
+  .tpl-elegant .inv-biz-info { text-align: center; margin-top: 6px; font-style: italic; }
+  .tpl-elegant .inv-table th { background: transparent; color: var(--accent); border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); text-align: left; font-family: 'Playfair Display', serif; font-style: italic; letter-spacing: 0.5px; text-transform: none; font-size: 10px; }
+  .tpl-elegant .inv-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); }
+  .tpl-elegant .words-box { background: transparent; border-left: 3px solid var(--accent); border-radius: 0; padding-left: 12px; font-style: italic; }
+  .tpl-elegant .inv-details-title { font-family: 'Playfair Display', serif; font-style: italic; text-transform: none; font-size: 14px; letter-spacing: 0.5px; }
+  .tpl-elegant .totals-row.grand { border-top: 1px solid var(--accent); border-bottom: 1px solid var(--accent); padding-top: 4px; padding-bottom: 4px; }
+  .tpl-elegant .sign-line { font-family: 'Playfair Display', serif; font-style: italic; }
+  .tpl-elegant .footer-grid h4 { font-family: 'Playfair Display', serif; font-style: italic; text-transform: none; letter-spacing: 0.5px; font-size: 10.5px; }
+  .tpl-elegant .footer-grid { border-top: 1px solid var(--accent); }
+
+  /* ═══════════════════════════════════════════
+     NEW: CORPORATE — Bold structured layout
+     ═══════════════════════════════════════════ */
+  .tpl-corporate .inv-header { background: var(--accent); color: #fff; padding: 14px 16px; margin: -10mm -12mm 14px -12mm; display: flex; justify-content: space-between; align-items: center; }
+  .tpl-corporate .inv-header .inv-biz-name { color: #fff; font-size: 20px; letter-spacing: 0.5px; }
+  .tpl-corporate .inv-header .inv-biz-info { color: rgba(255,255,255,0.8); }
+  .tpl-corporate .inv-header .inv-h1 { font-size: 22px; color: #fff; letter-spacing: 3px; }
+  .tpl-corporate .inv-title-box { text-align: right; }
+  .tpl-corporate .inv-title-box .inv-sub { font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,0.7); margin-top: 2px; text-transform: uppercase; }
+  .tpl-corporate .inv-table th { padding: 8px 8px; font-size: 9px; }
+  .tpl-corporate .inv-table td { padding: 7px 8px; }
+  .tpl-corporate .totals-row.grand { background: var(--accent-soft); padding: 8px 10px; margin-top: 6px; border: none; border-radius: 4px; }
+  .tpl-corporate .inv-details-title { text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px; }
+  .tpl-corporate .footer-grid h4 { text-transform: uppercase; }
+
+  /* ═══════════════════════════════════════════
+     NEW: COMPACT — Dense table-friendly
+     ═══════════════════════════════════════════ */
+  .tpl-compact { padding: 8mm 10mm; font-size: 10px; }
+  .tpl-compact .inv-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--accent); margin-bottom: 8px; }
+  .tpl-compact .inv-h1 { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
+  .tpl-compact .inv-biz-name { font-size: 15px; }
+  .tpl-compact .inv-table { margin: 6px 0; }
+  .tpl-compact .inv-table th { padding: 4px 5px; font-size: 8px; }
+  .tpl-compact .inv-table td { padding: 3.5px 5px; font-size: 9.5px; }
+  .tpl-compact .totals-row { padding: 3px 0; font-size: 10px; }
+  .tpl-compact .totals-row.grand { font-size: 12px; padding-top: 5px; }
+  .tpl-compact .words-box { padding: 4px 8px; font-size: 9px; margin: 5px 0; }
+  .tpl-compact .inv-details-box { font-size: 9.5px; }
+  .tpl-compact .inv-meta-row { padding: 1px 0; font-size: 9.5px; }
+  .tpl-compact .footer-grid { margin-top: 8px; padding-top: 6px; gap: 12px; }
+  .tpl-compact .computer-gen-line { margin-top: 8px; font-size: 8.5px; }
+  .tpl-compact .sign-area { margin-top: 12px; }
+  .tpl-compact .inv-detail-row { font-size: 9.5px; }
+  .tpl-compact .inv-party-name { font-size: 11px; }
+  .tpl-compact .inv-party-info { font-size: 9px; }
+  .tpl-compact .inv-details-title { font-size: 11px; margin-bottom: 3px; }
+
+  /* ═══════════════════════════════════════════
+     NEW: ROUNDED — Soft, modern, friendly
+     ═══════════════════════════════════════════ */
+  .tpl-rounded { padding: 12mm 12mm; }
+  .tpl-rounded .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; background: var(--accent-soft); border-radius: 14px; margin-bottom: 14px; }
+  .tpl-rounded .inv-h1 { font-size: 24px; color: var(--accent); letter-spacing: 1.5px; }
+  .tpl-rounded .inv-biz-name { font-size: 18px; }
+  .tpl-rounded .inv-table { border-collapse: separate; border-spacing: 0; border-radius: 10px; overflow: hidden; }
+  .tpl-rounded .inv-table th { background: var(--accent); padding: 8px 10px; font-size: 9px; letter-spacing: 0.8px; }
+  .tpl-rounded .inv-table td { padding: 7px 10px; font-size: 10px; border-bottom: 1px solid var(--line); }
+  .tpl-rounded .inv-table tr:last-child td { border-bottom: none; }
+  .tpl-rounded .words-box { background: var(--accent-soft); border-radius: 10px; padding: 8px 14px; }
+  .tpl-rounded .totals-row.grand { background: var(--accent-soft); padding: 8px 12px; margin-top: 8px; border: none; border-radius: 8px; }
+  .tpl-rounded .inv-details-title { color: var(--accent); }
+  .tpl-rounded .footer-grid { background: var(--accent-soft); padding: 12px 14px; border-radius: 10px; border-top: none; margin-top: 14px; }
+  .tpl-rounded .footer-grid h4 { color: var(--accent); }
+  .tpl-rounded .sign-line { border-top: 1.5px solid var(--accent); }
+
+  /* ═══════════════════════════════════════════
+     PRINT
+     ═══════════════════════════════════════════ */
   @media print {
     @page { size: A4 portrait; margin: 0; }
 
@@ -372,6 +450,8 @@
       margin: 0 !important;
       overflow: hidden !important;
     }
+    #invoicePreview.tpl-corporate { padding-top: 0 !important; }
+    #invoicePreview.tpl-corporate .inv-header { margin-top: 0 !important; }
 
     .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box, .computer-gen-line {
       page-break-inside: avoid !important;
@@ -401,7 +481,7 @@
   <div style="max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
       <h1>🧾 Invoice Generator</h1>
-      <p>4 templates · GST ready · PDF export · Free forever</p>
+      <p>8 templates · GST ready · PDF export · Free forever</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <label style="font-size:11px;color:rgba(255,255,255,0.8);">Document:</label>
@@ -419,6 +499,10 @@
         <option value="modern">✨ Modern</option>
         <option value="minimal">◻️ Minimal</option>
         <option value="gst">📊 GST Pro</option>
+        <option value="elegant">👑 Elegant</option>
+        <option value="corporate">💼 Corporate</option>
+        <option value="compact">📏 Compact</option>
+        <option value="rounded">🎯 Rounded</option>
       </select>
       <a href="index.html" style="padding:8px 14px;background:rgba(255,255,255,0.15);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">← Back to Portfolio</a>
     </div>
@@ -631,9 +715,6 @@ const fmtDate = d => {
   return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 };
 
-// ═══════════════════════════════════════════════════════════
-//  LABEL MAPPING — based on document type
-// ═══════════════════════════════════════════════════════════
 function getLabels(docType) {
   const dt = docType || 'Tax Invoice';
   switch (dt) {
@@ -686,9 +767,6 @@ function autoPanFromGstin() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  DOCUMENT TYPE CHANGE
-// ═══════════════════════════════════════════════════════════
 function changeDocType() {
   state.docType = $('docTypeSelect').value;
   updateLabels();
@@ -1039,26 +1117,10 @@ function numToWords(n) {
   return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
-function render() {
-  const s = state;
-  const preview = $('invoicePreview');
-  preview.className = 'invoice-a4 tpl tpl-' + s.template;
-  const t = calcTotals();
-  const biz = s.business || {}, cli = s.client || {}, meta = s.meta || {}, bank = s.bank || {};
-  const bizName = biz.name || 'Your Business Name';
-  const bizInfo = [biz.addr, biz.email, biz.phone].filter(Boolean).join(' · ');
-  const cliName = cli.name || 'Client Name';
-  const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
-
-  // ═══════════════════════════════════════════════════════════
-  //  DOCUMENT LABELS — derived from docType
-  // ═══════════════════════════════════════════════════════════
-  const labels = getLabels(s.docType);
-  const docTitle = labels.title;
-  const noLabel = labels.noLabel;
-  const dateLabel = labels.dateLabel;
-  const detailsTitle = labels.detailsTitle;
-
+// ═══════════════════════════════════════════════════════════
+//  SHARED BLOCKS
+// ═══════════════════════════════════════════════════════════
+function buildCommonBlocks(s, t) {
   const itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
     const gstAmt = amt * num(it.gst) / 100;
@@ -1136,6 +1198,11 @@ function render() {
       <strong>Amount in Words:</strong> ${numToWords(t.rounded)}
     </div>`;
 
+  return { itemRows, taxRows, hsnTable, tableBlock, totalsBlock, wordsBlock };
+}
+
+function buildDetailsBox(s, detailsTitle, noLabel, dateLabel) {
+  const meta = s.meta || {};
   const validDetails = (s.details || []).filter(d => d && d.trim());
   const detailsRowsHTML = validDetails.map(d => {
     const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
@@ -1146,7 +1213,7 @@ function render() {
   }).join('');
 
   const hasDetails = validDetails.length > 0;
-  const detailsBoxHTML = `
+  return `
     <div class="inv-details-box">
       <div class="inv-details-title">${esc(detailsTitle)}</div>
       <div class="inv-meta-row"><span>${esc(noLabel)}:</span><span>${esc(meta.no) || '—'}</span></div>
@@ -1155,9 +1222,12 @@ function render() {
       <div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(meta.place) || '—'}</span></div>
     </div>
   `;
+}
 
+function buildFooterBlock(s, bizName) {
+  const bank = s.bank || {};
   const hasBank = bank.name || bank.ac || bank.ifsc;
-  const footerBlock = `
+  return `
     <div class="footer-grid">
       <div>
         ${hasBank ? `
@@ -1179,15 +1249,42 @@ function render() {
         </div>
       </div>
     </div>`;
+}
 
-  const genDocLine = `
-    <div class="computer-gen-line">
-      This is a Computer Generated Document
-    </div>
-  `;
+const GEN_DOC_LINE = `
+  <div class="computer-gen-line">
+    This is a Computer Generated Document
+  </div>
+`;
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════════
+function render() {
+  const s = state;
+  const preview = $('invoicePreview');
+  preview.className = 'invoice-a4 tpl tpl-' + s.template;
+  const t = calcTotals();
+  const biz = s.business || {}, cli = s.client || {}, meta = s.meta || {}, bank = s.bank || {};
+  const bizName = biz.name || 'Your Business Name';
+  const bizInfo = [biz.addr, biz.email, biz.phone].filter(Boolean).join(' · ');
+  const cliName = cli.name || 'Client Name';
+  const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
+
+  const labels = getLabels(s.docType);
+  const docTitle = labels.title;
+  const noLabel = labels.noLabel;
+  const dateLabel = labels.dateLabel;
+  const detailsTitle = labels.detailsTitle;
+
+  const common = buildCommonBlocks(s, t);
+  const detailsBoxHTML = buildDetailsBox(s, detailsTitle, noLabel, dateLabel);
+  const footerBlock = buildFooterBlock(s, bizName);
+  const genDocLine = GEN_DOC_LINE;
 
   let html = '';
 
+  // ═══ CLASSIC ═══
   if (s.template === 'classic' || s.template === 'gst') {
     html = `
       <div class="inv-top-right">Original for Recipient</div>
@@ -1208,14 +1305,17 @@ function render() {
         </div>
         <div>${detailsBoxHTML}</div>
       </div>
-      ${tableBlock}
-      ${totalsBlock}
-      ${wordsBlock}
-      ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN-wise Tax Summary</h4>${hsnTable}</div>` : ''}
+      ${common.tableBlock}
+      ${common.totalsBlock}
+      ${common.wordsBlock}
+      ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN-wise Tax Summary</h4>${common.hsnTable}</div>` : ''}
       ${footerBlock}
       ${genDocLine}
     `;
-  } else if (s.template === 'modern') {
+  }
+
+  // ═══ MODERN ═══
+  else if (s.template === 'modern') {
     html = `
       <div class="inv-wrap">
         <div class="inv-side">
@@ -1240,15 +1340,18 @@ function render() {
             </div>
             <div>${detailsBoxHTML}</div>
           </div>
-          ${tableBlock}
-          ${totalsBlock}
-          ${wordsBlock}
+          ${common.tableBlock}
+          ${common.totalsBlock}
+          ${common.wordsBlock}
           ${footerBlock}
           ${genDocLine}
         </div>
       </div>
     `;
-  } else if (s.template === 'minimal') {
+  }
+
+  // ═══ MINIMAL ═══
+  else if (s.template === 'minimal') {
     html = `
       <div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header">
@@ -1268,9 +1371,121 @@ function render() {
         </div>
         <div>${detailsBoxHTML}</div>
       </div>
-      ${tableBlock}
-      ${totalsBlock}
-      ${wordsBlock}
+      ${common.tableBlock}
+      ${common.totalsBlock}
+      ${common.wordsBlock}
+      ${footerBlock}
+      ${genDocLine}
+    `;
+  }
+
+  // ═══ ELEGANT — Serif, centered, classic layout ═══
+  else if (s.template === 'elegant') {
+    html = `
+      <div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header">
+        <div class="inv-biz-name">${esc(bizName)}</div>
+        <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
+        <div class="inv-h1">${esc(docTitle)}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
+        <div>
+          <div class="inv-party-label">Bill To</div>
+          <div class="inv-party-name">${esc(cliName)}</div>
+          <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+        </div>
+        <div>${detailsBoxHTML}</div>
+      </div>
+      ${common.tableBlock}
+      ${common.totalsBlock}
+      ${common.wordsBlock}
+      ${footerBlock}
+      ${genDocLine}
+    `;
+  }
+
+  // ═══ CORPORATE — Bold header bar, structured ═══
+  else if (s.template === 'corporate') {
+    html = `
+      <div class="inv-header">
+        <div>
+          <div class="inv-biz-name">${esc(bizName)}</div>
+          <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
+        </div>
+        <div class="inv-title-box">
+          <div class="inv-h1">${esc(docTitle)}</div>
+          <div class="inv-sub">Original for Recipient</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
+        <div>
+          <div class="inv-party-label">Bill To</div>
+          <div class="inv-party-name">${esc(cliName)}</div>
+          <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+        </div>
+        <div>${detailsBoxHTML}</div>
+      </div>
+      ${common.tableBlock}
+      ${common.totalsBlock}
+      ${common.wordsBlock}
+      ${footerBlock}
+      ${genDocLine}
+    `;
+  }
+
+  // ═══ COMPACT — Dense, small fonts ═══
+  else if (s.template === 'compact') {
+    html = `
+      <div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header">
+        <div>
+          <div class="inv-biz-name">${esc(bizName)}</div>
+          <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="inv-h1">${esc(docTitle)}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;align-items:flex-start;">
+        <div>
+          <div class="inv-party-label">Bill To</div>
+          <div class="inv-party-name">${esc(cliName)}</div>
+          <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+        </div>
+        <div>${detailsBoxHTML}</div>
+      </div>
+      ${common.tableBlock}
+      ${common.totalsBlock}
+      ${common.wordsBlock}
+      ${footerBlock}
+      ${genDocLine}
+    `;
+  }
+
+  // ═══ ROUNDED — Soft pastel, friendly ═══
+  else if (s.template === 'rounded') {
+    html = `
+      <div class="inv-header">
+        <div>
+          <div class="inv-biz-name">${esc(bizName)}</div>
+          <div class="inv-biz-info">${esc(bizInfo)}${bizInfo ? '<br>' : ''}${biz.gstin ? 'GSTIN: ' + esc(biz.gstin) : ''}${biz.pan ? '  ·  PAN: ' + esc(biz.pan) : ''}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="inv-h1">${esc(docTitle)}</div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;">
+        <div>
+          <div class="inv-party-label">Bill To</div>
+          <div class="inv-party-name">${esc(cliName)}</div>
+          <div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div>
+        </div>
+        <div>${detailsBoxHTML}</div>
+      </div>
+      ${common.tableBlock}
+      ${common.totalsBlock}
+      ${common.wordsBlock}
       ${footerBlock}
       ${genDocLine}
     `;
@@ -1283,6 +1498,7 @@ function changeTemplate() {
   state.template = $('templateSelect').value;
   localStorage.setItem('invoiceState', JSON.stringify(state));
   render();
+  showToast('✓ Template: ' + $('templateSelect').selectedOptions[0].text, 'blue');
 }
 
 function saveHistoryToLS() {
@@ -1455,17 +1671,14 @@ function resetForNextInvoice() {
 function prepareForPrint() {
   const el = $('invoicePreview');
   if (!el) return;
-
   el.style.zoom = '';
   el.style.transform = '';
   const warning = $('printWarning');
   if (warning) warning.classList.remove('show');
-
   void el.offsetHeight;
 
   const A4_HEIGHT_PX = 1122;
   const A4_WIDTH_PX = 794;
-
   const naturalHeight = el.scrollHeight;
   const naturalWidth = el.scrollWidth;
 
