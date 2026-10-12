@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invoice Generator | Free Tool by Tarun Prajapat</title>
-<meta name="description" content="Free online invoice generator with 10 templates, GST support, PDF export. By Tarun Prajapat.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,11 +99,8 @@
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #059669; color: #fff; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(5,150,105,0.35); z-index: 1000; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; display: flex; align-items: center; gap: 8px; }
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.toast-blue { background: #3b82f6; } .toast.toast-red { background: #dc2626; } .toast.toast-purple { background: #8b5cf6; } .toast.toast-saffron { background: #d97706; }
-
-  /* INVOICE BASE */
   .invoice-a4 { background: #fff; width: 210mm; min-height: 297mm; padding: 10mm 12mm; font-size: 11px; color: var(--text, #0f172a); box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 0 auto; position: relative; overflow: hidden; }
   @media (max-width: 1024px) { .invoice-a4 { width: 100%; min-height: auto; padding: 16px; } }
-
   .tpl { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; --text: #0f172a; --muted: #64748b; --line: #e2e8f0; }
   .tpl-classic { --accent: #1e3a8a; --accent-soft: #dbeafe; --accent-text: #fff; }
   .tpl-modern  { --accent: #0e7490; --accent-soft: #cffafe; --accent-text: #fff; }
@@ -116,19 +112,13 @@
   .tpl-rounded { --accent: #7c3aed; --accent-soft: #ede9fe; --accent-text: #fff; }
   .tpl-gst-detailed { --accent: #065f46; --accent-soft: #d1fae5; --accent-text: #fff; }
   .tpl-gst-lite { --accent: #0369a1; --accent-soft: #e0f2fe; --accent-text: #fff; }
-
   .inv-h1 { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1.5px; }
   .inv-biz-name { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; letter-spacing: 0.2px; }
-
-  /* ═══════════════════════════════════════════
-     BUSINESS INFO — Structured multi-line
-     ═══════════════════════════════════════════ */
   .inv-biz-info { margin-top: 5px; font-size: 10px; color: var(--muted); line-height: 1.5; }
   .inv-biz-info .biz-line { padding: 1px 0; }
   .inv-biz-info .biz-line strong { color: var(--text); font-weight: 700; }
   .inv-biz-info .biz-line .sep { color: var(--line); margin: 0 5px; }
   .inv-biz-info .biz-line .icon { margin-right: 2px; }
-
   .inv-details-box { font-size: 10.5px; }
   .inv-details-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 12.5px; color: var(--text); text-align: right; margin-bottom: 4px; letter-spacing: 0.3px; }
   .inv-meta-row { display: flex; justify-content: flex-end; align-items: baseline; gap: 6px; padding: 1.5px 0; font-size: 10.5px; }
@@ -142,7 +132,6 @@
   .inv-party-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 3px; }
   .inv-party-name { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
   .inv-party-info { font-size: 10px; color: var(--muted); line-height: 1.4; }
-
   .inv-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
   .inv-table th { background: var(--accent); color: var(--accent-text); padding: 6px 6px; font-size: 8.5px; text-align: left; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 700; }
   .inv-table td { padding: 5px 6px; border-bottom: 1px solid var(--line); font-size: 10px; vertical-align: top; line-height: 1.35; }
@@ -166,28 +155,22 @@
   .sign-area { margin-top: 18px; text-align: right; padding-top: 6px; }
   .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
   .computer-gen-line { text-align: center; font-size: 9px; color: #94a3b8; font-style: italic; letter-spacing: 0.4px; font-weight: 400; margin-top: 14px; padding-top: 6px; }
-
   .custom-text-top { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 4px 0 10px 0; margin-bottom: 10px; border-bottom: 1px dashed currentColor; line-height: 1.3; }
   .custom-text-middle { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 10px 0 4px 0; margin-top: 10px; margin-bottom: 8px; border-top: 1px dashed currentColor; line-height: 1.3; }
   .tpl-elegant .custom-text-top, .tpl-elegant .custom-text-middle { font-family: 'Playfair Display', serif; letter-spacing: 3px; }
-
   .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
   .tpl-classic .inv-title-box { text-align: right; }
   .tpl-classic .inv-title-box .inv-h1 { font-size: 26px; color: var(--accent); }
-
   .tpl-modern .inv-wrap { display: grid; grid-template-columns: 180px 1fr; gap: 0; margin: -10mm -12mm; min-height: 297mm; }
   .tpl-modern .inv-side { background: var(--accent); color: #fff; padding: 10mm 14px; }
   .tpl-modern .inv-side .inv-biz-name { color: #fff; font-size: 15px; }
-  .tpl-modern .inv-side .inv-biz-info { color: rgba(255,255,255,0.8); font-size: 9px; }
-  .tpl-modern .inv-side .inv-biz-info .biz-line strong { color: #fff; }
-  .tpl-modern .inv-side h4 { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); margin: 10px 0 4px; font-weight: 700; }
   .tpl-modern .inv-side p { font-size: 9.5px; line-height: 1.4; color: rgba(255,255,255,0.9); }
+  .tpl-modern .inv-side h4 { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); margin: 10px 0 4px; font-weight: 700; }
   .tpl-modern .inv-main { padding: 10mm 12mm 10mm 14px; }
   .tpl-modern .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 12px; }
   .tpl-modern .inv-h1 { font-size: 24px; color: var(--accent); }
   .tpl-modern .inv-table th { background: var(--accent); }
   @media (max-width: 1024px) { .tpl-modern .inv-wrap { margin: 0; } .tpl-modern .inv-side { padding: 16px; } .tpl-modern .inv-main { padding: 16px; } }
-
   .tpl-minimal { padding: 14mm 14mm; }
   .tpl-minimal .inv-header { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
   .tpl-minimal .inv-h1 { font-size: 18px; color: var(--text); letter-spacing: 4px; font-weight: 500; }
@@ -195,7 +178,6 @@
   .tpl-minimal .inv-table td { padding: 6px 4px; border-bottom: 1px solid var(--line); }
   .tpl-minimal .words-box { background: transparent; border: 1px solid var(--line); }
   .tpl-minimal .inv-details-title { font-size: 11.5px; letter-spacing: 2px; text-transform: uppercase; }
-
   .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 10px; }
   .tpl-gst .inv-h1 { font-size: 22px; color: var(--accent); }
   .tpl-gst .hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 6px; }
@@ -203,7 +185,6 @@
   .tpl-gst .hsn-table th:first-child { text-align: left; }
   .tpl-gst .hsn-table td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
   .tpl-gst .hsn-table td:first-child { text-align: left; font-weight: 600; }
-
   .tpl-elegant { padding: 14mm 14mm; font-family: 'Georgia', 'Playfair Display', serif; }
   .tpl-elegant .inv-h1 { font-family: 'Playfair Display', 'Georgia', serif; font-weight: 700; letter-spacing: 3px; }
   .tpl-elegant .inv-biz-name { font-family: 'Playfair Display', 'Georgia', serif; font-size: 22px; letter-spacing: 0.5px; }
@@ -219,9 +200,8 @@
   .tpl-elegant .sign-line { font-family: 'Playfair Display', serif; font-style: italic; }
   .tpl-elegant .footer-grid h4 { font-family: 'Playfair Display', serif; font-style: italic; text-transform: none; letter-spacing: 0.5px; font-size: 10.5px; }
   .tpl-elegant .footer-grid { border-top: 1px solid var(--accent); }
-
   .tpl-corporate .inv-header { background: var(--accent); color: #fff; padding: 14px 16px; margin: -10mm -12mm 14px -12mm; display: flex; justify-content: space-between; align-items: center; }
-  .tpl-corporate .inv-header .inv-biz-name { color: #fff; font-size: 20px; letter-spacing: 0.5px; }
+  .tpl-corporate .inv-header .inv-biz-name { color: #fff; font-size: 20px; }
   .tpl-corporate .inv-header .inv-biz-info { color: rgba(255,255,255,0.85); }
   .tpl-corporate .inv-header .inv-biz-info .biz-line strong { color: #fff; }
   .tpl-corporate .inv-header .inv-h1 { font-size: 22px; color: #fff; letter-spacing: 3px; }
@@ -231,7 +211,6 @@
   .tpl-corporate .inv-table td { padding: 7px 8px; }
   .tpl-corporate .totals-row.grand { background: var(--accent-soft); padding: 8px 10px; margin-top: 6px; border: none; border-radius: 4px; }
   .tpl-corporate .inv-details-title { text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px; }
-
   .tpl-compact { padding: 8mm 10mm; font-size: 10px; }
   .tpl-compact .inv-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--accent); margin-bottom: 8px; }
   .tpl-compact .inv-h1 { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
@@ -252,7 +231,6 @@
   .tpl-compact .inv-party-name { font-size: 11px; }
   .tpl-compact .inv-party-info { font-size: 9px; }
   .tpl-compact .inv-details-title { font-size: 11px; margin-bottom: 3px; }
-
   .tpl-rounded { padding: 12mm 12mm; }
   .tpl-rounded .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; background: var(--accent-soft); border-radius: 14px; margin-bottom: 14px; }
   .tpl-rounded .inv-h1 { font-size: 24px; color: var(--accent); letter-spacing: 1.5px; }
@@ -267,7 +245,6 @@
   .tpl-rounded .footer-grid { background: var(--accent-soft); padding: 12px 14px; border-radius: 10px; border-top: none; margin-top: 14px; }
   .tpl-rounded .footer-grid h4 { color: var(--accent); }
   .tpl-rounded .sign-line { border-top: 1.5px solid var(--accent); }
-
   .tpl-gst-detailed .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 12px; border-bottom: 3px double var(--accent); margin-bottom: 12px; }
   .tpl-gst-detailed .inv-h1 { font-size: 24px; color: var(--accent); letter-spacing: 2px; }
   .tpl-gst-detailed .inv-biz-name { font-size: 18px; }
@@ -294,7 +271,6 @@
   .gst-detail-hsn td:first-child { text-align: left; font-weight: 700; color: #065f46; }
   .gst-detail-hsn tr:last-child td { border-bottom: none; }
   .gst-detail-hsn tr.total-row { background: #d1fae5; font-weight: 800; }
-
   .tpl-gst-lite { padding: 12mm 14mm; }
   .tpl-gst-lite .inv-header { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-start; }
   .tpl-gst-lite .inv-h1 { font-size: 26px; color: var(--accent); letter-spacing: 3px; font-weight: 700; }
@@ -310,22 +286,18 @@
   .gst-lite-hsn-table td { padding: 5px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 9.5px; }
   .gst-lite-hsn-table td:first-child { text-align: left; font-weight: 700; color: #075985; }
   .gst-lite-hsn-table tr:last-child td { border-bottom: none; }
-
   @media print {
     @page { size: A4 portrait; margin: 0; }
     html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 210mm !important; height: 297mm !important; overflow: hidden !important; }
     body * { visibility: hidden; }
     #invoicePreview, #invoicePreview * { visibility: visible; }
-    #invoicePreview { position: fixed !important; top: 0 !important; left: 0 !important; width: 210mm !important; height: 297mm !important; max-height: 297mm !important; min-height: 297mm !important; padding: 10mm 12mm !important; margin: 0 !important; box-shadow: none !important; overflow: hidden !important; page-break-after: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+    #invoicePreview { position: fixed !important; top: 0 !important; left: 0 !important; width: 210mm !important; height: 297mm !important; padding: 10mm 12mm !important; margin: 0 !important; box-shadow: none !important; overflow: hidden !important; }
     #invoicePreview.tpl-modern { padding: 0 !important; }
-    #invoicePreview.tpl-modern .inv-wrap { height: 297mm !important; min-height: 297mm !important; max-height: 297mm !important; margin: 0 !important; overflow: hidden !important; }
     #invoicePreview.tpl-corporate { padding-top: 0 !important; }
-    #invoicePreview.tpl-corporate .inv-header { margin-top: 0 !important; }
-    .inv-header, .inv-table, .totals-wrap, .words-box, .footer-grid, .inv-details-box, .computer-gen-line, .gst-info-bar, .rate-summary-grid, .gst-detail-hsn, .gst-lite-summary, .custom-text-top, .custom-text-middle, .inv-biz-info { page-break-inside: avoid !important; break-inside: avoid !important; }
     .no-print { display: none !important; }
     body { overflow: hidden !important; }
   }
-  .print-warning { position: fixed; top: 70px; right: 20px; background: #fef3c7; color: #92400e; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #fcd34d; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; }
+  .print-warning { position: fixed; top: 70px; right: 20px; background: #fef3c7; color: #92400e; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #fcd34d; z-index: 100; display: none; }
   .print-warning.show { display: block; }
 </style>
 </head>
@@ -338,8 +310,7 @@
       <p>10 templates · GST ready · Custom text · PDF export</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-      <label style="font-size:11px;color:rgba(255,255,255,0.8);">Document:</label>
-      <select id="docTypeSelect" onchange="changeDocType()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#0a1e3f;">
+      <select id="docTypeSelect" onchange="changeDocType()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;background:#fff;color:#0a1e3f;">
         <option value="Tax Invoice">📄 Tax Invoice</option>
         <option value="Credit Note">🔴 Credit Note</option>
         <option value="Debit Note">🟡 Debit Note</option>
@@ -347,8 +318,7 @@
         <option value="Estimate">📝 Estimate</option>
         <option value="Quotation">💬 Quotation</option>
       </select>
-      <label style="font-size:11px;color:rgba(255,255,255,0.8);">Template:</label>
-      <select id="templateSelect" onchange="changeTemplate()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#0a1e3f;">
+      <select id="templateSelect" onchange="changeTemplate()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;background:#fff;color:#0a1e3f;">
         <option value="classic">🎨 Classic</option>
         <option value="modern">✨ Modern</option>
         <option value="minimal">◻️ Minimal</option>
@@ -360,7 +330,7 @@
         <option value="gst-detailed">🔬 GST Detailed</option>
         <option value="gst-lite">⚡ GST Lite</option>
       </select>
-      <a href="index.html" style="padding:8px 14px;background:rgba(255,255,255,0.15);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">← Back to Portfolio</a>
+      <a href="index.html" style="padding:8px 14px;background:rgba(255,255,255,0.15);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">← Back</a>
     </div>
   </div>
 </div>
@@ -373,10 +343,9 @@
   <input type="file" id="loadFile" accept=".json" style="display:none" onchange="loadJSON(event)">
   <button class="btn btn-ghost" onclick="clearAll()">🗑️ Clear Form</button>
   <button class="btn btn-ghost" style="color:#dc2626;" onclick="nukeEverything()">💥 Reset Everything</button>
-  <span style="margin-left:auto;font-size:11px;color:#94a3b8;">Data auto-saved locally</span>
 </div>
 
-<div class="print-warning" id="printWarning">⚠️ Content thoda zyada hai — auto-scale ho raha hai</div>
+<div class="print-warning" id="printWarning">⚠️ Auto-scaling to fit page</div>
 
 <div class="layout">
   <aside class="no-print" autocomplete="off">
@@ -406,37 +375,25 @@
         <span>▼</span>
       </div>
       <div class="panel-body" id="customBody">
-        <div class="field">
-          <label>Custom Text</label>
-          <input id="ctText" placeholder="।। जय श्री श्याम ।।" autocomplete="off" oninput="sync()">
-        </div>
-        <div class="field">
-          <label>Position</label>
+        <div class="field"><label>Custom Text</label><input id="ctText" placeholder="।। जय श्री श्याम ।।" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Position</label>
           <select id="ctPosition" onchange="sync()">
-            <option value="top">Top (header ke upar)</option>
-            <option value="middle">Middle (items ke niche)</option>
-            <option value="both">Top + Middle (dono)</option>
-            <option value="off">Off (band karo)</option>
+            <option value="top">Top</option>
+            <option value="middle">Middle</option>
+            <option value="both">Top + Middle</option>
+            <option value="off">Off</option>
           </select>
         </div>
         <div class="grid2">
-          <div class="field">
-            <label>Color</label>
-            <input type="color" id="ctColor" value="#d97706" oninput="sync()">
-          </div>
-          <div class="field">
-            <label>Size</label>
+          <div class="field"><label>Color</label><input type="color" id="ctColor" value="#d97706" oninput="sync()"></div>
+          <div class="field"><label>Size</label>
             <select id="ctSize" onchange="sync()">
               <option value="14px">Small</option>
               <option value="18px" selected>Medium</option>
               <option value="22px">Large</option>
               <option value="26px">X-Large</option>
-              <option value="32px">XX-Large</option>
             </select>
           </div>
-        </div>
-        <div style="font-size:10px;color:#94a3b8;margin-top:4px;line-height:1.5;">
-          💡 Examples: <code>।। जय श्री श्याम ।।</code> · <code>🚩 जय श्री राम 🚩</code> · <code>🙏 Radhe Radhe 🙏</code>
         </div>
       </div>
     </div>
@@ -444,17 +401,17 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'bizBody')">🏢 Your Business <span>▼</span></div>
       <div class="panel-body" id="bizBody">
-        <div class="field"><label>Business Name</label><input id="bName" placeholder="Your Company Name" autocomplete="off" oninput="sync()"></div>
-        <div class="field"><label>Reg Address</label><textarea id="bAddr" rows="2" placeholder="Village, Tehsil, City, State - PIN" autocomplete="off" oninput="sync()"></textarea></div>
+        <div class="field"><label>Business Name</label><input id="bName" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Reg Address</label><textarea id="bAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
         <div class="grid2">
-          <div class="field"><label>GSTIN</label><input id="bGstin" placeholder="27ABCDE1234F1Z5" autocomplete="off" oninput="autoPanFromGstin(); sync()"></div>
-          <div class="field"><label>PAN</label><input id="bPan" placeholder="ABCDE1234F" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>GSTIN</label><input id="bGstin" autocomplete="off" oninput="autoPanFromGstin(); sync()"></div>
+          <div class="field"><label>PAN</label><input id="bPan" autocomplete="off" oninput="sync()"></div>
         </div>
         <div class="grid2">
-          <div class="field"><label>Email</label><input id="bEmail" placeholder="you@business.com" autocomplete="off" oninput="sync()"></div>
-          <div class="field"><label>Phone</label><input id="bPhone" placeholder="+91 98765 43210" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>Email</label><input id="bEmail" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>Phone</label><input id="bPhone" autocomplete="off" oninput="sync()"></div>
         </div>
-        <div class="field"><label>Additional Info <span style="text-transform:none;letter-spacing:0;font-weight:500;color:#94a3b8;">(extra line)</span></label><textarea id="bExtra" rows="2" placeholder="e.g. Alt Phone: 99887 76655 · Website: example.com" autocomplete="off" oninput="sync()"></textarea></div>
+        <div class="field"><label>Additional Info</label><textarea id="bExtra" rows="2" placeholder="Extra line — e.g. Website, alt phone" autocomplete="off" oninput="sync()"></textarea></div>
         <button class="btn btn-warning btn-sm" style="width:100%;justify-content:center;margin-top:6px;" onclick="saveBusinessProfile()">💾 Save This Business Detail</button>
       </div>
     </div>
@@ -462,12 +419,12 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'cliBody')">👤 Bill To (Client) <span>▼</span></div>
       <div class="panel-body" id="cliBody">
-        <div class="field"><label>Client Name</label><input id="cName" placeholder="Client / Company Name" autocomplete="off" oninput="sync()"></div>
-        <div class="field"><label>Address</label><textarea id="cAddr" rows="2" placeholder="Client address" autocomplete="off" oninput="sync()"></textarea></div>
-        <div class="field"><label>GSTIN</label><input id="cGstin" placeholder="Client GSTIN (if any)" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Client Name</label><input id="cName" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Address</label><textarea id="cAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
+        <div class="field"><label>GSTIN</label><input id="cGstin" autocomplete="off" oninput="sync()"></div>
         <div class="grid2">
-          <div class="field"><label>Email</label><input id="cEmail" placeholder="client@email.com" autocomplete="off" oninput="sync()"></div>
-          <div class="field"><label>Phone</label><input id="cPhone" placeholder="Client phone" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>Email</label><input id="cEmail" autocomplete="off" oninput="sync()"></div>
+          <div class="field"><label>Phone</label><input id="cPhone" autocomplete="off" oninput="sync()"></div>
         </div>
       </div>
     </div>
@@ -479,12 +436,11 @@
           <div class="field"><label id="mNoLabel">Invoice No.</label><input id="mNo" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Date</label><input id="mDate" type="date" autocomplete="off" oninput="sync()"></div>
         </div>
-        <div class="field"><label>Place of Supply</label><input id="mPlace" placeholder="Jaipur, RJ" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Place of Supply</label><input id="mPlace" autocomplete="off" oninput="sync()"></div>
         <div class="details-section">
           <div class="details-heading"><span>Details</span></div>
           <div id="detailsContainer"></div>
           <button class="btn btn-success btn-sm" style="margin-top:6px;width:100%;justify-content:center;" onclick="addDetail()">➕ Add Line</button>
-          <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.4;">💡 Tip: <strong>Label : Value</strong> format me likho</div>
         </div>
       </div>
     </div>
@@ -492,21 +448,17 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'itemsBody')">📦 Line Items <span>▼</span></div>
       <div class="panel-body" id="itemsBody" style="padding:12px;">
-        <div class="items-scroll-wrap">
-          <div class="items-scroll">
-            <div class="items-inner">
-              <div class="item-row" style="padding-bottom:4px;">
-                <div class="item-label">Description</div>
-                <div class="item-label">HSN/SAC</div>
-                <div class="item-label">Qty</div>
-                <div class="item-label">Rate</div>
-                <div class="item-label">GST%</div>
-                <div></div>
-              </div>
-              <div id="itemsContainer"></div>
-            </div>
+        <div class="items-scroll-wrap"><div class="items-scroll"><div class="items-inner">
+          <div class="item-row" style="padding-bottom:4px;">
+            <div class="item-label">Description</div>
+            <div class="item-label">HSN</div>
+            <div class="item-label">Qty</div>
+            <div class="item-label">Rate</div>
+            <div class="item-label">GST%</div>
+            <div></div>
           </div>
-        </div>
+          <div id="itemsContainer"></div>
+        </div></div></div>
         <button class="btn btn-success btn-sm" style="margin-top:10px;width:100%;justify-content:center;" onclick="addItem()">➕ Add Item</button>
       </div>
     </div>
@@ -514,29 +466,26 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'totBody')">💰 Tax Type <span>▼</span></div>
       <div class="panel-body" id="totBody">
-        <div class="field">
-          <label>Tax Type</label>
-          <select id="taxType" onchange="sync()">
-            <option value="cgst-sgst">CGST + SGST (Intra-state)</option>
-            <option value="igst">IGST (Inter-state)</option>
-            <option value="none">No GST</option>
-          </select>
-        </div>
+        <select id="taxType" onchange="sync()" style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;">
+          <option value="cgst-sgst">CGST + SGST (Intra-state)</option>
+          <option value="igst">IGST (Inter-state)</option>
+          <option value="none">No GST</option>
+        </select>
       </div>
     </div>
     
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'bankBody')">🏦 Bank Details <span>▼</span></div>
       <div class="panel-body" id="bankBody">
-        <div class="field"><label>Account Holder Name</label><input id="bkHolder" placeholder="e.g. Tarun Prajapat" autocomplete="off" oninput="sync()"></div>
-        <div class="field"><label>Bank Name</label><input id="bkName" placeholder="e.g. Bank of Baroda" autocomplete="off" oninput="sync()"></div>
-        <div class="field"><label>Account Number</label><input id="bkAc" placeholder="e.g. 33930200000505" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Account Holder</label><input id="bkHolder" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Bank Name</label><input id="bkName" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Account Number</label><input id="bkAc" autocomplete="off" oninput="sync()"></div>
         <div class="field" style="margin-bottom:6px;">
           <label>IFSC Code</label>
-          <input id="bkIfsc" placeholder="e.g. BARB0BANDIK" maxlength="11" style="text-transform:uppercase;" autocomplete="off" oninput="onIfscInput(this.value); sync()">
+          <input id="bkIfsc" maxlength="11" style="text-transform:uppercase;" autocomplete="off" oninput="onIfscInput(this.value); sync()">
           <div id="ifscStatus" class="ifsc-status idle"></div>
         </div>
-        <div class="field"><label>Branch Name (auto-filled)</label><input id="bkBranch" placeholder="Branch will appear here..." readonly></div>
+        <div class="field"><label>Branch (auto)</label><input id="bkBranch" readonly></div>
         <div class="field"><label>Account Type</label>
           <select id="bkType" onchange="sync()">
             <option value="">— Select —</option>
@@ -546,9 +495,9 @@
             <option value="Overdraft">Overdraft</option>
           </select>
         </div>
-        <div class="field"><label>UPI ID (optional)</label><input id="bkUpi" placeholder="name@upi" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>UPI ID</label><input id="bkUpi" autocomplete="off" oninput="sync()"></div>
         <div class="bank-preview" id="bankPreview">
-          <div class="bank-preview-row"><span class="lbl">✓ Verified IFSC</span><span class="val" id="bpBank"></span></div>
+          <div class="bank-preview-row"><span class="lbl">✓ Bank</span><span class="val" id="bpBank"></span></div>
           <div class="bank-preview-row"><span class="lbl">Branch</span><span class="val" id="bpBranch"></span></div>
           <div class="bank-preview-row"><span class="lbl">City</span><span class="val" id="bpCity"></span></div>
           <div class="bank-preview-row"><span class="lbl">State</span><span class="val" id="bpState"></span></div>
@@ -561,7 +510,7 @@
       <div class="panel-head" onclick="togglePanel(this, 'termsBody')">📝 Terms & Notes <span>▼</span></div>
       <div class="panel-body" id="termsBody">
         <div class="field"><label>Terms & Conditions</label><textarea id="terms" rows="3" autocomplete="off" oninput="sync()"></textarea></div>
-        <div class="field"><label>Notes</label><textarea id="notes" rows="2" placeholder="Any additional notes..." autocomplete="off" oninput="sync()"></textarea></div>
+        <div class="field"><label>Notes</label><textarea id="notes" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
       </div>
     </div>
   </aside>
@@ -575,16 +524,11 @@
 
 <script>
 const state = {
-  docType: 'Tax Invoice',
-  template: 'classic',
-  taxType: 'cgst-sgst',
-  items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }],
-  details: [''],
+  docType: 'Tax Invoice', template: 'classic', taxType: 'cgst-sgst',
+  items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }], details: [''],
   business: {}, client: {}, meta: {}, bank: {}, terms:'', notes:'',
-  customText: '।। जय श्री श्याम ।।',
-  customTextPosition: 'top',
-  customTextColor: '#d97706',
-  customTextSize: '18px'
+  customText: '।। जय श्री श्याम ।।', customTextPosition: 'top',
+  customTextColor: '#d97706', customTextSize: '18px'
 };
 
 let history = [];
@@ -598,7 +542,6 @@ const fmt = n => '₹ ' + (Math.round((Number(n)||0) * 100) / 100).toLocaleStrin
 const fmtDate = d => { if (!d) return '—'; const dt = new Date(d); if (isNaN(dt)) return d; return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); };
 
 function getLabels(docType) {
-  const dt = docType || 'Tax Invoice';
   const map = {
     'Credit Note': { title: 'Credit Note', noLabel: 'Credit Note No.', dateLabel: 'Date', detailsTitle: 'Credit Note Details', panelTitle: '📅 Credit Note Details' },
     'Debit Note': { title: 'Debit Note', noLabel: 'Debit Note No.', dateLabel: 'Date', detailsTitle: 'Debit Note Details', panelTitle: '📅 Debit Note Details' },
@@ -606,7 +549,7 @@ function getLabels(docType) {
     'Estimate': { title: 'Estimate', noLabel: 'Estimate No.', dateLabel: 'Date', detailsTitle: 'Estimate Details', panelTitle: '📅 Estimate Details' },
     'Quotation': { title: 'Quotation', noLabel: 'Quotation No.', dateLabel: 'Date', detailsTitle: 'Quotation Details', panelTitle: '📅 Quotation Details' }
   };
-  return map[dt] || { title: 'Tax Invoice', noLabel: 'Invoice No.', dateLabel: 'Date', detailsTitle: 'Invoice Details', panelTitle: '📅 Invoice Details' };
+  return map[docType] || { title: 'Tax Invoice', noLabel: 'Invoice No.', dateLabel: 'Date', detailsTitle: 'Invoice Details', panelTitle: '📅 Invoice Details' };
 }
 
 function disableAutofill() {
@@ -621,7 +564,7 @@ function disableAutofill() {
 function showToast(msg, type) {
   const t = $('toast');
   t.textContent = msg;
-  t.className = 'toast' + (type === 'blue' ? ' toast-blue' : type === 'red' ? ' toast-red' : type === 'purple' ? ' toast-purple' : type === 'saffron' ? ' toast-saffron' : '');
+  t.className = 'toast' + (type ? ' toast-' + type : '');
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
@@ -635,7 +578,7 @@ function autoPanFromGstin() {
   else if (gstin.length === 0) panField.value = '';
 }
 
-function changeDocType() { state.docType = $('docTypeSelect').value; updateLabels(); localStorage.setItem('invoiceState', JSON.stringify(state)); render(); showToast('✓ Document type: ' + state.docType, 'blue'); }
+function changeDocType() { state.docType = $('docTypeSelect').value; updateLabels(); localStorage.setItem('invoiceState', JSON.stringify(state)); render(); showToast('✓ ' + state.docType, 'blue'); }
 function updateLabels() {
   const labels = getLabels(state.docType);
   if ($('mNoLabel')) $('mNoLabel').textContent = labels.noLabel;
@@ -645,45 +588,39 @@ function updateLabels() {
 function updateCustomBadge() {
   const badge = $('customBadge'); if (!badge) return;
   const pos = state.customTextPosition;
-  if (pos === 'off' || !state.customText) { badge.textContent = 'OFF'; badge.style.background = '#94a3b8'; }
-  else if (pos === 'both') { badge.textContent = 'TOP+MID'; badge.style.background = '#d97706'; }
-  else if (pos === 'top') { badge.textContent = 'TOP'; badge.style.background = '#d97706'; }
-  else if (pos === 'middle') { badge.textContent = 'MIDDLE'; badge.style.background = '#d97706'; }
+  const map = { off: ['OFF', '#94a3b8'], top: ['TOP', '#d97706'], middle: ['MIDDLE', '#d97706'], both: ['TOP+MID', '#d97706'] };
+  if (map[pos]) { badge.textContent = map[pos][0]; badge.style.background = map[pos][1]; }
 }
 
 function saveProfilesToLS() { try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); } catch (e) {} }
 
 function saveBusinessProfile() {
   const name = $('bName').value.trim(); const gstin = $('bGstin').value.trim();
-  if (!name) { showToast('⚠️ Business Name required to save', 'red'); return; }
-  const existingIdx = profiles.findIndex(p => p.name.toLowerCase() === name.toLowerCase() && (p.gstin || '') === gstin);
+  if (!name) { showToast('⚠️ Business Name required', 'red'); return; }
+  const idx = profiles.findIndex(p => p.name.toLowerCase() === name.toLowerCase() && (p.gstin || '') === gstin);
   const profile = {
-    id: existingIdx >= 0 ? profiles[existingIdx].id : ('prof_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6)),
+    id: idx >= 0 ? profiles[idx].id : ('prof_' + Date.now()),
     savedAt: new Date().toISOString(),
     name, addr: $('bAddr').value, gstin, pan: $('bPan').value.trim(),
-    email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(),
-    extra: $('bExtra').value
+    email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(), extra: $('bExtra').value
   };
-  if (existingIdx >= 0) { profiles[existingIdx] = profile; showToast('✓ Business detail updated'); }
-  else { profiles.unshift(profile); showToast('✓ Business detail saved'); }
+  if (idx >= 0) { profiles[idx] = profile; showToast('✓ Updated'); } else { profiles.unshift(profile); showToast('✓ Saved'); }
   if (profiles.length > 20) profiles = profiles.slice(0, 20);
   saveProfilesToLS(); renderProfiles();
 }
 
 function renderProfiles() {
   const list = $('profileList'), count = $('profileCount');
-  if (!list || !count) return; count.textContent = profiles.length;
-  if (!profiles.length) { list.innerHTML = `<div class="history-empty"><div class="history-empty-icon">💼</div><div>No saved business details</div></div>`; return; }
+  if (!list) return; count.textContent = profiles.length;
+  if (!profiles.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">💼</div><div>No saved details</div></div>'; return; }
   list.innerHTML = profiles.map(p => {
     const city = (p.addr || '').split('\n')[0].substring(0, 30);
     return `<div class="profile-item" onclick="loadBusinessProfile('${p.id}')">
       <div class="pi-name">${esc(p.name)}</div>
-      <div class="pi-info">${esc(city)}${city ? '' : '—'}</div>
+      <div class="pi-info">${esc(city)}</div>
       <div class="pi-bottom">
         <span class="pi-gst">${p.gstin ? 'GST: ' + esc(p.gstin.substring(0, 8)) + '...' : 'No GSTIN'}</span>
-        <div class="pi-actions" onclick="event.stopPropagation()">
-          <button class="pi-del" onclick="deleteBusinessProfile('${p.id}')" title="Delete">🗑️</button>
-        </div>
+        <div class="pi-actions" onclick="event.stopPropagation()"><button class="pi-del" onclick="deleteBusinessProfile('${p.id}')">🗑️</button></div>
       </div>
     </div>`;
   }).join('');
@@ -693,16 +630,19 @@ function loadBusinessProfile(id) {
   const p = profiles.find(x => x.id === id); if (!p) return;
   const hasData = $('bName').value.trim() || $('bGstin').value.trim();
   const same = ($('bName').value.trim() === p.name) && ($('bGstin').value.trim() === p.gstin);
-  if (hasData && !same) { if (!confirm(`Load "${p.name}"? Current business details will be replaced.`)) return; }
-  $('bName').value = p.name || ''; $('bAddr').value = p.addr || ''; $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
-  $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || ''; $('bExtra').value = p.extra || '';
-  sync(); showToast('✓ Business detail loaded', 'purple'); window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (hasData && !same && !confirm(`Load "${p.name}"?`)) return;
+  $('bName').value = p.name || ''; $('bAddr').value = p.addr || '';
+  $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
+  $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
+  $('bExtra').value = p.extra || '';
+  sync(); showToast('✓ Loaded', 'purple'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function deleteBusinessProfile(id) {
   const p = profiles.find(x => x.id === id); if (!p) return;
-  if (!confirm(`Delete saved business "${p.name}"?`)) return;
-  profiles = profiles.filter(x => x.id !== id); saveProfilesToLS(); renderProfiles(); showToast('🗑️ Business detail deleted');
+  if (!confirm(`Delete "${p.name}"?`)) return;
+  profiles = profiles.filter(x => x.id !== id);
+  saveProfilesToLS(); renderProfiles(); showToast('🗑️ Deleted');
 }
 
 let ifscFetchTimer = null, ifscLastFetched = '', ifscFetchAbort = null;
@@ -714,14 +654,18 @@ function onIfscInput(value) {
   if (ifscFetchTimer) clearTimeout(ifscFetchTimer);
   if (ifscFetchAbort) { try { ifscFetchAbort.abort(); } catch(e){} }
   if (!ifsc) { setIfscStatus('idle', ''); branchField.value = ''; preview.classList.remove('show'); return; }
-  if (ifsc.length < 11) { setIfscStatus('idle', `${ifsc.length}/11 characters`); branchField.value = ''; preview.classList.remove('show'); return; }
+  if (ifsc.length < 11) { setIfscStatus('idle', `${ifsc.length}/11`); branchField.value = ''; preview.classList.remove('show'); return; }
   if (ifscLastFetched === ifsc) return;
-  setIfscStatus('loading', '<span class="spinner"></span> Fetching branch details...'); branchField.value = '';
+  setIfscStatus('loading', '<span class="spinner"></span> Fetching...'); branchField.value = '';
   ifscFetchTimer = setTimeout(() => { fetchBranchFromIFSC(ifsc); }, 500);
 }
 
 async function fetchBranchFromIFSC(ifsc) {
-  const endpoints = [{ url: 'https://ifsc.razorpay.com/' + ifsc }, { url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) }, { url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) }];
+  const endpoints = [
+    { url: 'https://ifsc.razorpay.com/' + ifsc },
+    { url: 'https://corsproxy.io/?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) },
+    { url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://ifsc.razorpay.com/' + ifsc) }
+  ];
   for (const ep of endpoints) {
     try {
       const controller = new AbortController(); ifscFetchAbort = controller;
@@ -731,25 +675,35 @@ async function fetchBranchFromIFSC(ifsc) {
       let data; const text = await res.text();
       try { data = JSON.parse(text); } catch(e) { continue; }
       if (!data) continue;
-      const bank = data.BANK || data.bank || ''; const branch = data.BRANCH || data.branch || ''; const city = data.CITY || data.city || ''; const state_ = data.STATE || data.state || ''; const contact = data.CONTACT || data.contact || data.PHONE || '';
+      const bank = data.BANK || ''; const branch = data.BRANCH || ''; const city = data.CITY || ''; const state_ = data.STATE || ''; const contact = data.CONTACT || '';
       if (bank && branch) {
         $('bkBranch').value = branch; if ($('bkName').value.trim() === '') $('bkName').value = bank;
-        $('bpBank').textContent = bank; $('bpBranch').textContent = branch; $('bpCity').textContent = city || '—'; $('bpState').textContent = state_ || '—'; $('bpContact').textContent = contact || '—';
+        $('bpBank').textContent = bank; $('bpBranch').textContent = branch;
+        $('bpCity').textContent = city || '—'; $('bpState').textContent = state_ || '—';
+        $('bpContact').textContent = contact || '—';
         $('bankPreview').classList.add('show'); ifscLastFetched = ifsc;
-        setIfscStatus('success', `✓ ${bank} · ${city || state_ || 'Branch found'}`);
-        $('bkBranch').classList.add('auto-filled'); setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
+        setIfscStatus('success', `✓ ${bank} · ${city}`);
+        $('bkBranch').classList.add('auto-filled');
+        setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
         sync(); return;
       }
     } catch (err) {}
   }
-  setIfscStatus('error', '✗ Could not fetch — please fill branch manually');
-  $('bkBranch').readOnly = false; $('bkBranch').placeholder = 'Enter branch name manually';
-  $('bankPreview').classList.remove('show'); ifscLastFetched = '';
+  setIfscStatus('error', '✗ Could not fetch');
+  $('bkBranch').readOnly = false;
+  $('bankPreview').classList.remove('show');
 }
 
 function renderItems() {
   const c = $('itemsContainer');
-  c.innerHTML = state.items.map((it, i) => `<div class="item-row"><input placeholder="Item description" value="${esc(it.desc)}" autocomplete="off" oninput="updateItem(${i},'desc',this.value)"><input placeholder="HSN" value="${esc(it.hsn)}" autocomplete="off" oninput="updateItem(${i},'hsn',this.value)"><input type="number" placeholder="1" value="${it.qty}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'qty',this.value)"><input type="number" placeholder="0" value="${it.rate}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'rate',this.value)"><input type="number" placeholder="18" value="${it.gst}" min="0" max="28" step="0.01" autocomplete="off" oninput="updateItem(${i},'gst',this.value)"><button class="btn btn-ghost btn-sm" onclick="removeItem(${i})" title="Remove">✖</button></div>`).join('');
+  c.innerHTML = state.items.map((it, i) => `<div class="item-row">
+    <input placeholder="Item description" value="${esc(it.desc)}" autocomplete="off" oninput="updateItem(${i},'desc',this.value)">
+    <input placeholder="HSN" value="${esc(it.hsn)}" autocomplete="off" oninput="updateItem(${i},'hsn',this.value)">
+    <input type="number" placeholder="1" value="${it.qty}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'qty',this.value)">
+    <input type="number" placeholder="0" value="${it.rate}" min="0" step="0.01" autocomplete="off" oninput="updateItem(${i},'rate',this.value)">
+    <input type="number" placeholder="18" value="${it.gst}" min="0" max="28" step="0.01" autocomplete="off" oninput="updateItem(${i},'gst',this.value)">
+    <button class="btn btn-ghost btn-sm" onclick="removeItem(${i})">✖</button>
+  </div>`).join('');
   disableAutofill();
 }
 function updateItem(i, k, v) { state.items[i][k] = (k === 'desc' || k === 'hsn') ? v : Number(v) || 0; sync(); }
@@ -759,11 +713,14 @@ function removeItem(i) { if (state.items.length === 1) state.items[0] = { desc:'
 function renderDetails() {
   const c = $('detailsContainer');
   if (!state.details || !state.details.length) state.details = [''];
-  c.innerHTML = state.details.map((d, i) => `<div class="detail-row"><input placeholder="e.g. Application Ref. No.: NP-RJJAY26" value="${esc(d)}" autocomplete="off" oninput="updateDetail(${i}, this.value)"><button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})" title="Remove">✖</button></div>`).join('');
+  c.innerHTML = state.details.map((d, i) => `<div class="detail-row">
+    <input placeholder="e.g. Site name: Namma" value="${esc(d)}" autocomplete="off" oninput="updateDetail(${i}, this.value)">
+    <button class="btn btn-ghost btn-sm" onclick="removeDetail(${i})">✖</button>
+  </div>`).join('');
   disableAutofill();
 }
 function updateDetail(i, v) { state.details[i] = v; sync(); }
-function addDetail() { state.details.push(''); renderDetails(); setTimeout(() => { const inputs = $('detailsContainer').querySelectorAll('input'); if (inputs.length) inputs[inputs.length - 1].focus(); }, 50); sync(); }
+function addDetail() { state.details.push(''); renderDetails(); sync(); }
 function removeDetail(i) { if (state.details.length === 1) state.details[0] = ''; else state.details.splice(i, 1); renderDetails(); sync(); }
 
 function sync() {
@@ -776,16 +733,21 @@ function sync() {
   state.customText = $('ctText').value; state.customTextPosition = $('ctPosition').value;
   state.customTextColor = $('ctColor').value; state.customTextSize = $('ctSize').value;
   localStorage.setItem('invoiceState', JSON.stringify(state));
-  updateCustomBadge();
-  render();
+  updateCustomBadge(); render();
 }
 
 function populateForm(s) {
   const b = s.business || {}, c = s.client || {}, m = s.meta || {}, bk = s.bank || {};
-  $('bName').value = b.name || ''; $('bAddr').value = b.addr || ''; $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || ''; $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || ''; $('bExtra').value = b.extra || '';
-  $('cName').value = c.name || ''; $('cAddr').value = c.addr || ''; $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
+  $('bName').value = b.name || ''; $('bAddr').value = b.addr || '';
+  $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || '';
+  $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || '';
+  $('bExtra').value = b.extra || '';
+  $('cName').value = c.name || ''; $('cAddr').value = c.addr || '';
+  $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
   $('mNo').value = m.no || ''; $('mDate').value = m.date || ''; $('mPlace').value = m.place || '';
-  $('bkHolder').value = bk.holder || ''; $('bkName').value = bk.name || ''; $('bkAc').value = bk.ac || ''; $('bkIfsc').value = bk.ifsc || ''; $('bkBranch').value = bk.branch || ''; $('bkType').value = bk.type || ''; $('bkUpi').value = bk.upi || '';
+  $('bkHolder').value = bk.holder || ''; $('bkName').value = bk.name || '';
+  $('bkAc').value = bk.ac || ''; $('bkIfsc').value = bk.ifsc || '';
+  $('bkBranch').value = bk.branch || ''; $('bkType').value = bk.type || ''; $('bkUpi').value = bk.upi || '';
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
   $('taxType').value = s.taxType || 'cgst-sgst';
   $('templateSelect').value = s.template || 'classic';
@@ -806,15 +768,18 @@ function calcTotals() {
     const key = it.hsn || '—';
     if (!hsnSummary[key]) hsnSummary[key] = { taxable:0, rate: it.gst, cgst:0, sgst:0, igst:0, total:0 };
     hsnSummary[key].taxable += amt;
-    if (state.taxType === 'igst') hsnSummary[key].igst += gstAmt; else { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
+    if (state.taxType === 'igst') hsnSummary[key].igst += gstAmt;
+    else { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
     hsnSummary[key].total += amt + gstAmt;
     const rk = Number(it.gst) || 0;
     if (!rateSummary[rk]) rateSummary[rk] = { rate: rk, taxable: 0, cgst: 0, sgst: 0, igst: 0, total: 0, count: 0 };
     rateSummary[rk].taxable += amt; rateSummary[rk].count += 1;
-    if (state.taxType === 'igst') rateSummary[rk].igst += gstAmt; else { rateSummary[rk].cgst += gstAmt/2; rateSummary[rk].sgst += gstAmt/2; }
+    if (state.taxType === 'igst') rateSummary[rk].igst += gstAmt;
+    else { rateSummary[rk].cgst += gstAmt/2; rateSummary[rk].sgst += gstAmt/2; }
     rateSummary[rk].total += gstAmt;
   });
-  const taxable = subtotal; const beforeRound = taxable + totalTax; const rounded = Math.round(beforeRound); const roundOff = rounded - beforeRound;
+  const taxable = subtotal; const beforeRound = taxable + totalTax;
+  const rounded = Math.round(beforeRound); const roundOff = rounded - beforeRound;
   return { subtotal, taxable, totalTax, beforeRound, rounded, roundOff, hsnSummary, rateSummary };
 }
 
@@ -832,51 +797,41 @@ function numToWords(n) {
   return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  BUSINESS INFO — Structured multi-line block
-// ═══════════════════════════════════════════════════════════
 function buildBizInfoHTML(biz) {
   const lines = [];
-  // Line 1: Address
-  if (biz.addr && biz.addr.trim()) {
-    lines.push(`<div class="biz-line"><strong>Reg Address:</strong> ${esc(biz.addr).replace(/\n/g, ', ')}</div>`);
-  }
-  // Line 2: Email + Phone
-  const contactParts = [];
-  if (biz.email && biz.email.trim()) contactParts.push(`<span class="icon">📧</span> ${esc(biz.email)}`);
-  if (biz.phone && biz.phone.trim()) contactParts.push(`<span class="icon">📞</span> ${esc(biz.phone)}`);
-  if (contactParts.length) lines.push(`<div class="biz-line">${contactParts.join('<span class="sep">·</span>')}</div>`);
-  // Line 3: GSTIN + PAN
-  const taxParts = [];
-  if (biz.gstin && biz.gstin.trim()) taxParts.push(`<strong>GSTIN:</strong> ${esc(biz.gstin)}`);
-  if (biz.pan && biz.pan.trim()) taxParts.push(`<strong>PAN:</strong> ${esc(biz.pan)}`);
-  if (taxParts.length) lines.push(`<div class="biz-line">${taxParts.join('<span class="sep">·</span>')}</div>`);
-  // Line 4: Additional Info (extra)
-  if (biz.extra && biz.extra.trim()) {
-    lines.push(`<div class="biz-line">${esc(biz.extra).replace(/\n/g, '<br>')}</div>`);
-  }
+  if (biz.addr && biz.addr.trim()) lines.push(`<div class="biz-line"><strong>Reg Address:</strong> ${esc(biz.addr).replace(/\n/g, ', ')}</div>`);
+  const contact = [];
+  if (biz.email && biz.email.trim()) contact.push(`<span class="icon">📧</span> ${esc(biz.email)}`);
+  if (biz.phone && biz.phone.trim()) contact.push(`<span class="icon">📞</span> ${esc(biz.phone)}`);
+  if (contact.length) lines.push(`<div class="biz-line">${contact.join('<span class="sep">·</span>')}</div>`);
+  const tax = [];
+  if (biz.gstin && biz.gstin.trim()) tax.push(`<strong>GSTIN:</strong> ${esc(biz.gstin)}`);
+  if (biz.pan && biz.pan.trim()) tax.push(`<strong>PAN:</strong> ${esc(biz.pan)}`);
+  if (tax.length) lines.push(`<div class="biz-line">${tax.join('<span class="sep">·</span>')}</div>`);
+  if (biz.extra && biz.extra.trim()) lines.push(`<div class="biz-line">${esc(biz.extra).replace(/\n/g, '<br>')}</div>`);
   return lines.join('');
 }
 
 function buildCustomText(s) {
   if (!s.customText || s.customTextPosition === 'off') return { top: '', middle: '' };
   const style = `color:${s.customTextColor};font-size:${s.customTextSize};`;
-  const topHTML = (s.customTextPosition === 'top' || s.customTextPosition === 'both') ? `<div class="custom-text-top" style="${style}">${esc(s.customText)}</div>` : '';
-  const middleHTML = (s.customTextPosition === 'middle' || s.customTextPosition === 'both') ? `<div class="custom-text-middle" style="${style}">${esc(s.customText)}</div>` : '';
-  return { top: topHTML, middle: middleHTML };
+  return {
+    top: (s.customTextPosition === 'top' || s.customTextPosition === 'both') ? `<div class="custom-text-top" style="${style}">${esc(s.customText)}</div>` : '',
+    middle: (s.customTextPosition === 'middle' || s.customTextPosition === 'both') ? `<div class="custom-text-middle" style="${style}">${esc(s.customText)}</div>` : ''
+  };
 }
 
 function buildCommonBlocks(s, t) {
   const itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate); const gstAmt = amt * num(it.gst) / 100;
-    return `<tr><td class="c" style="font-weight:600;">${i + 1}</td><td>${esc(it.desc) || '<span style="color:#94a3b8;">—</span>'}</td><td class="c">${esc(it.hsn) || '—'}</td><td class="c">${num(it.qty)}</td><td class="r">${fmt(it.rate)}</td><td class="c">${num(it.gst)}%</td><td class="r">${fmt(amt)}</td><td class="r">${fmt(gstAmt)}</td><td class="r" style="font-weight:700;">${fmt(amt + gstAmt)}</td></tr>`;
+    return `<tr><td class="c" style="font-weight:600;">${i + 1}</td><td>${esc(it.desc) || '—'}</td><td class="c">${esc(it.hsn) || '—'}</td><td class="c">${num(it.qty)}</td><td class="r">${fmt(it.rate)}</td><td class="c">${num(it.gst)}%</td><td class="r">${fmt(amt)}</td><td class="r">${fmt(gstAmt)}</td><td class="r" style="font-weight:700;">${fmt(amt + gstAmt)}</td></tr>`;
   }).join('');
   let taxRows = '';
-  if (s.taxType === 'cgst-sgst') { taxRows = `<div class="totals-row"><span class="lbl">CGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div><div class="totals-row"><span class="lbl">SGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div>`; }
-  else if (s.taxType === 'igst') { taxRows = `<div class="totals-row"><span class="lbl">IGST</span><span class="amt">${fmt(t.totalTax)}</span></div>`; }
+  if (s.taxType === 'cgst-sgst') taxRows = `<div class="totals-row"><span class="lbl">CGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div><div class="totals-row"><span class="lbl">SGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div>`;
+  else if (s.taxType === 'igst') taxRows = `<div class="totals-row"><span class="lbl">IGST</span><span class="amt">${fmt(t.totalTax)}</span></div>`;
   const hsnRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td>${fmt(d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
   const hsnTable = `<table class="hsn-table"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total</th></tr></thead><tbody>${hsnRows}</tbody></table>`;
-  const tableBlock = `<table class="inv-table"><thead><tr><th class="c" style="width:6%;">Sr No.</th><th style="width:26%;">Description</th><th class="c" style="width:9%;">HSN/SAC</th><th class="c" style="width:7%;">Qty</th><th class="r" style="width:12%;">Rate</th><th class="c" style="width:7%;">GST%</th><th class="r" style="width:11%;">Amount</th><th class="r" style="width:11%;">Tax</th><th class="r" style="width:11%;">Total</th></tr></thead><tbody>${itemRows}</tbody></table>`;
+  const tableBlock = `<table class="inv-table"><thead><tr><th class="c" style="width:6%;">Sr</th><th style="width:26%;">Description</th><th class="c" style="width:9%;">HSN</th><th class="c" style="width:7%;">Qty</th><th class="r" style="width:12%;">Rate</th><th class="c" style="width:7%;">GST%</th><th class="r" style="width:11%;">Amount</th><th class="r" style="width:11%;">Tax</th><th class="r" style="width:11%;">Total</th></tr></thead><tbody>${itemRows}</tbody></table>`;
   const totalsBlock = `<div class="totals-wrap"><div class="totals-box"><div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div><div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">${fmt(t.taxable)}</span></div>${taxRows}${t.roundOff ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff >= 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}<div class="totals-row grand"><span class="lbl">Grand Total</span><span>${fmt(t.rounded)}</span></div></div></div>`;
   const wordsBlock = `<div class="words-box"><strong>Amount in Words:</strong> ${numToWords(t.rounded)}</div>`;
   return { itemRows, taxRows, hsnTable, tableBlock, totalsBlock, wordsBlock };
@@ -885,40 +840,58 @@ function buildCommonBlocks(s, t) {
 function buildDetailsBox(s, detailsTitle, noLabel, dateLabel) {
   const meta = s.meta || {};
   const validDetails = (s.details || []).filter(d => d && d.trim());
-  const detailsRowsHTML = validDetails.map(d => { const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/); if (m) return `<div class="inv-detail-row"><span class="lbl">${esc(m[1].trim())}:</span> <span class="val">${esc(m[2].trim())}</span></div>`; return `<div class="inv-detail-row"><span class="val">${esc(d)}</span></div>`; }).join('');
-  const hasDetails = validDetails.length > 0;
-  return `<div class="inv-details-box"><div class="inv-details-title">${esc(detailsTitle)}</div><div class="inv-meta-row"><span>${esc(noLabel)}:</span><span>${esc(meta.no) || '—'}</span></div><div class="inv-meta-row"><span>${esc(dateLabel)}:</span><span>${fmtDate(meta.date)}</span></div>${hasDetails ? `<div class="inv-gap"></div>${detailsRowsHTML}<div class="inv-gap"></div>` : ''}<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(meta.place) || '—'}</span></div></div>`;
+  const rowsHTML = validDetails.map(d => {
+    const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
+    if (m) return `<div class="inv-detail-row"><span class="lbl">${esc(m[1].trim())}:</span> <span class="val">${esc(m[2].trim())}</span></div>`;
+    return `<div class="inv-detail-row"><span class="val">${esc(d)}</span></div>`;
+  }).join('');
+  return `<div class="inv-details-box">
+    <div class="inv-details-title">${esc(detailsTitle)}</div>
+    <div class="inv-meta-row"><span>${esc(noLabel)}:</span><span>${esc(meta.no) || '—'}</span></div>
+    <div class="inv-meta-row"><span>${esc(dateLabel)}:</span><span>${fmtDate(meta.date)}</span></div>
+    ${validDetails.length ? `<div class="inv-gap"></div>${rowsHTML}<div class="inv-gap"></div>` : ''}
+    <div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(meta.place) || '—'}</span></div>
+  </div>`;
 }
 
 function buildFooterBlock(s, bizName) {
   const bank = s.bank || {}; const hasBank = bank.name || bank.ac || bank.ifsc;
-  return `<div class="footer-grid"><div>${hasBank ? `<h4>Payment Details</h4>${bank.holder ? `<div class="kv"><strong>A/C Holder:</strong> ${esc(bank.holder)}</div>` : ''}${bank.name ? `<div class="kv"><strong>Bank:</strong> ${esc(bank.name)}</div>` : ''}${bank.ac ? `<div class="kv"><strong>A/C No.:</strong> ${esc(bank.ac)}</div>` : ''}${bank.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(bank.ifsc)}</div>` : ''}${bank.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(bank.branch)}</div>` : ''}${bank.type ? `<div class="kv"><strong>Type:</strong> ${esc(bank.type)}</div>` : ''}${bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(bank.upi)}</div>` : ''}` : ''}${s.terms ? `<h4 style="margin-top:10px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}${s.notes ? `<h4 style="margin-top:8px;">Notes</h4><p>${esc(s.notes).replace(/\n/g, '<br>')}</p>` : ''}</div><div><div class="sign-area"><div class="sign-line">For ${esc(bizName)}</div></div></div></div>`;
+  return `<div class="footer-grid"><div>
+    ${hasBank ? `<h4>Payment Details</h4>${bank.holder ? `<div class="kv"><strong>A/C Holder:</strong> ${esc(bank.holder)}</div>` : ''}${bank.name ? `<div class="kv"><strong>Bank:</strong> ${esc(bank.name)}</div>` : ''}${bank.ac ? `<div class="kv"><strong>A/C No.:</strong> ${esc(bank.ac)}</div>` : ''}${bank.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(bank.ifsc)}</div>` : ''}${bank.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(bank.branch)}</div>` : ''}${bank.type ? `<div class="kv"><strong>Type:</strong> ${esc(bank.type)}</div>` : ''}${bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(bank.upi)}</div>` : ''}` : ''}
+    ${s.terms ? `<h4 style="margin-top:10px;">Terms & Conditions</h4><p>${esc(s.terms).replace(/\n/g, '<br>')}</p>` : ''}
+    ${s.notes ? `<h4 style="margin-top:8px;">Notes</h4><p>${esc(s.notes).replace(/\n/g, '<br>')}</p>` : ''}
+    </div><div><div class="sign-area"><div class="sign-line">For ${esc(bizName)}</div></div></div></div>`;
 }
 
-const GEN_DOC_LINE = `<div class="computer-gen-line">This is a Computer Generated Document</div>`;
+const GEN_DOC = `<div class="computer-gen-line">This is a Computer Generated Document</div>`;
 
 function buildGstDetailedBlocks(t, s) {
-  const rateCards = [0, 5, 12, 18, 28].map(r => {
+  const cards = [0, 5, 12, 18, 28].map(r => {
     const d = t.rateSummary[r]; if (!d) return '';
     const cls = r === 5 ? 'rate-5' : r === 12 ? 'rate-12' : r === 18 ? 'rate-18' : r === 28 ? 'rate-28' : '';
     return `<div class="rate-card ${cls}"><div class="r-label">${r}% GST</div><div class="r-value">${fmt(d.taxable)}</div><div class="r-tax">Tax: ${fmt(d.total)}</div></div>`;
   }).filter(Boolean).join('');
-  const infoBar = `<div class="gst-info-bar"><div class="item"><span class="lbl">Tax Type:</span><span class="val">${s.taxType === 'igst' ? 'IGST' : s.taxType === 'cgst-sgst' ? 'CGST+SGST' : 'No GST'}</span></div><div class="item"><span class="lbl">Place of Supply:</span><span class="val">${esc(s.meta?.place || '—')}</span></div><div class="item"><span class="lbl">HSN Count:</span><span class="val">${Object.keys(t.hsnSummary).length}</span></div><div class="item"><span class="lbl">Total Items:</span><span class="val">${s.items.length}</span></div></div>`;
-  const hsnDetailRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td>${fmt(d.igst)}</td><td style="font-weight:700;">${fmt(d.cgst + d.sgst + d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
-  const totalTaxable = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
-  const totalCgst = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst, 0);
-  const totalSgst = Object.values(t.hsnSummary).reduce((a, d) => a + d.sgst, 0);
-  const totalIgst = Object.values(t.hsnSummary).reduce((a, d) => a + d.igst, 0);
-  const totalTax = totalCgst + totalSgst + totalIgst; const totalWithTax = totalTaxable + totalTax;
-  const hsnDetailTable = `<table class="gst-detail-hsn"><thead><tr><th>HSN/SAC</th><th>Taxable Value</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total Tax</th><th>Total</th></tr></thead><tbody>${hsnDetailRows}<tr class="total-row"><td>TOTAL</td><td>${fmt(totalTaxable)}</td><td>—</td><td>${fmt(totalCgst)}</td><td>${fmt(totalSgst)}</td><td>${fmt(totalIgst)}</td><td>${fmt(totalTax)}</td><td>${fmt(totalWithTax)}</td></tr></tbody></table>`;
-  return { rateCards, infoBar, hsnDetailTable };
+  const infoBar = `<div class="gst-info-bar">
+    <div class="item"><span class="lbl">Tax:</span><span class="val">${s.taxType === 'igst' ? 'IGST' : s.taxType === 'cgst-sgst' ? 'CGST+SGST' : 'None'}</span></div>
+    <div class="item"><span class="lbl">Place:</span><span class="val">${esc(s.meta?.place || '—')}</span></div>
+    <div class="item"><span class="lbl">HSN:</span><span class="val">${Object.keys(t.hsnSummary).length}</span></div>
+    <div class="item"><span class="lbl">Items:</span><span class="val">${s.items.length}</span></div>
+  </div>`;
+  const rows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td>${fmt(d.igst)}</td><td style="font-weight:700;">${fmt(d.cgst + d.sgst + d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
+  const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
+  const tc = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst, 0);
+  const ts = Object.values(t.hsnSummary).reduce((a, d) => a + d.sgst, 0);
+  const ti = Object.values(t.hsnSummary).reduce((a, d) => a + d.igst, 0);
+  const ttx = tc + ts + ti;
+  const table = `<table class="gst-detail-hsn"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Tax</th><th>Total</th></tr></thead><tbody>${rows}<tr class="total-row"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(tc)}</td><td>${fmt(ts)}</td><td>${fmt(ti)}</td><td>${fmt(ttx)}</td><td>${fmt(tt + ttx)}</td></tr></tbody></table>`;
+  return { rateCards: cards, infoBar, hsnDetailTable: table };
 }
 
 function buildGstLiteBlocks(t) {
-  const hsnRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst + d.sgst + d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
-  const totalTaxable = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
-  const totalTax = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst + d.sgst + d.igst, 0);
-  return `<table class="gst-lite-hsn-table"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax Amt</th><th>Total</th></tr></thead><tbody>${hsnRows}<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>${fmt(totalTaxable)}</td><td>—</td><td>${fmt(totalTax)}</td><td>${fmt(totalTaxable + totalTax)}</td></tr></tbody></table>`;
+  const rows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst + d.sgst + d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
+  const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
+  const ttx = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst + d.sgst + d.igst, 0);
+  return `<table class="gst-lite-hsn-table"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax</th><th>Total</th></tr></thead><tbody>${rows}<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(ttx)}</td><td>${fmt(tt + ttx)}</td></tr></tbody></table>`;
 }
 
 function render() {
@@ -933,32 +906,25 @@ function render() {
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
 
   const labels = getLabels(s.docType);
-  const docTitle = labels.title; const noLabel = labels.noLabel; const dateLabel = labels.dateLabel; const detailsTitle = labels.detailsTitle;
-
   const custom = buildCustomText(s);
-  const customTop = custom.top; const customMiddle = custom.middle;
-
   const common = buildCommonBlocks(s, t);
-  const detailsBoxHTML = buildDetailsBox(s, detailsTitle, noLabel, dateLabel);
+  const detailsBoxHTML = buildDetailsBox(s, labels.detailsTitle, labels.noLabel, labels.dateLabel);
   const footerBlock = buildFooterBlock(s, bizName);
-  const genDocLine = GEN_DOC_LINE;
 
   let html = '';
 
   if (s.template === 'classic' || s.template === 'gst') {
-    html = `${customTop}<div class="inv-top-right">Original for Recipient</div>
-      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(docTitle)}</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}${common.totalsBlock}${common.wordsBlock}
-      ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN-wise Tax Summary</h4>${common.hsnTable}</div>` : ''}
-      ${footerBlock}${genDocLine}`;
+    html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(labels.title)}</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}
+      ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN Summary</h4>${common.hsnTable}</div>` : ''}
+      ${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'modern') {
-    const sideLines = [];
-    if (biz.addr) sideLines.push(`<p>${esc(biz.addr).replace(/\n/g, '<br>')}</p>`);
     html = `<div class="inv-wrap"><div class="inv-side">
       <div class="inv-biz-name">${esc(bizName)}</div>
-      ${sideLines.join('')}
+      ${biz.addr ? `<p>${esc(biz.addr).replace(/\n/g, '<br>')}</p>` : ''}
       ${biz.email ? `<h4>Email</h4><p>${esc(biz.email)}</p>` : ''}
       ${biz.phone ? `<h4>Phone</h4><p>${esc(biz.phone)}</p>` : ''}
       ${biz.gstin ? `<h4>GSTIN</h4><p>${esc(biz.gstin)}</p>` : ''}
@@ -966,63 +932,64 @@ function render() {
       ${biz.extra ? `<h4>Info</h4><p>${esc(biz.extra).replace(/\n/g, '<br>')}</p>` : ''}
       ${bank.name ? `<h4>Bank</h4><p>${bank.holder ? esc(bank.holder) + '<br>' : ''}${esc(bank.name)}<br>${esc(bank.ac)}<br>${esc(bank.ifsc)}${bank.branch ? '<br>' + esc(bank.branch) : ''}</p>` : ''}
       </div>
-      <div class="inv-main">${customTop}<div class="inv-top-right">Original for Recipient</div><div class="inv-header"><div class="inv-h1">${esc(docTitle)}</div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${genDocLine}</div></div>`;
+      <div class="inv-main">${custom.top}<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header"><div class="inv-h1">${esc(labels.title)}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}</div></div>`;
   }
   else if (s.template === 'minimal') {
-    html = `${customTop}<div class="inv-top-right">Original for Recipient</div>
-      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(docTitle)}</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Billed To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${genDocLine}`;
+    html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'elegant') {
-    html = `${customTop}<div class="inv-top-right">Original for Recipient</div>
-      <div class="inv-header"><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div><div class="inv-h1">${esc(docTitle)}</div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${genDocLine}`;
+    html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header"><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div><div class="inv-h1">${esc(labels.title)}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'corporate') {
-    html = `${customTop}<div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(docTitle)}</div><div class="inv-sub">Original for Recipient</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${genDocLine}`;
+    html = `${custom.top}<div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(labels.title)}</div><div class="inv-sub">Original for Recipient</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'compact') {
-    html = `${customTop}<div class="inv-top-right">Original for Recipient</div>
-      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(docTitle)}</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${genDocLine}`;
+    html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'rounded') {
-    html = `${customTop}<div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(docTitle)}</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${genDocLine}`;
+    html = `${custom.top}<div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'gst-detailed') {
     const gd = buildGstDetailedBlocks(t, s);
-    html = `${customTop}<div class="inv-top-right">Original for Recipient</div>
-      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(docTitle)}</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">Tax Detailed Format</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${gd.infoBar}${common.tableBlock}${customMiddle}
-      <div class="rate-summary-title">📊 Tax Rate-Wise Summary</div>
-      <div class="rate-summary-grid">${gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;padding:8px;">No data</div>'}</div>
-      <div class="rate-summary-title">📋 HSN-Wise Tax Breakdown</div>
-      ${gd.hsnDetailTable}${common.totalsBlock}${common.wordsBlock}${footerBlock}${genDocLine}`;
+    html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(labels.title)}</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">Tax Detailed</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${gd.infoBar}${common.tableBlock}${custom.middle}
+      <div class="rate-summary-title">📊 Rate-Wise Summary</div>
+      <div class="rate-summary-grid">${gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;">No data</div>'}</div>
+      <div class="rate-summary-title">📋 HSN-Wise Breakdown</div>
+      ${gd.hsnDetailTable}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'gst-lite') {
-    const liteHsnTable = buildGstLiteBlocks(t);
-    html = `${customTop}<div class="inv-top-right">Original for Recipient</div>
-      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(docTitle)}</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">GST Summary Enclosed</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;align-items:flex-start;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliInfo ? '<br>' : ''}${cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
-      ${common.tableBlock}${customMiddle}
-      <div class="gst-lite-summary"><div><div class="rate-summary-title">📋 HSN Summary</div>${liteHsnTable}</div><div>${common.totalsBlock}</div></div>
-      ${common.wordsBlock}${footerBlock}${genDocLine}`;
+    const liteHsn = buildGstLiteBlocks(t);
+    html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
+      <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">GST Summary Enclosed</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      ${common.tableBlock}${custom.middle}
+      <div class="gst-lite-summary"><div><div class="rate-summary-title">📋 HSN Summary</div>${liteHsn}</div><div>${common.totalsBlock}</div></div>
+      ${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
 
   preview.innerHTML = html;
 }
 
-function changeTemplate() { state.template = $('templateSelect').value; localStorage.setItem('invoiceState', JSON.stringify(state)); render(); showToast('✓ Template: ' + $('templateSelect').selectedOptions[0].text, 'blue'); }
+function changeTemplate() { state.template = $('templateSelect').value; localStorage.setItem('invoiceState', JSON.stringify(state)); render(); showToast('✓ ' + $('templateSelect').selectedOptions[0].text, 'blue'); }
 
 function saveHistoryToLS() { try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); } catch (e) { if (history.length > 20) { history = history.slice(0, 20); localStorage.setItem('invoiceHistory', JSON.stringify(history)); } } }
 
@@ -1031,14 +998,10 @@ function saveToHistory() {
   const totals = calcTotals();
   const entry = {
     id: editingHistoryId || ('inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
-    savedAt: new Date().toISOString(),
-    docType: state.docType || 'Tax Invoice',
-    business: JSON.parse(JSON.stringify(state.business)),
-    client: JSON.parse(JSON.stringify(state.client)),
-    meta: JSON.parse(JSON.stringify(state.meta)),
-    items: JSON.parse(JSON.stringify(state.items)),
-    details: JSON.parse(JSON.stringify(state.details || [])),
-    bank: JSON.parse(JSON.stringify(state.bank)),
+    savedAt: new Date().toISOString(), docType: state.docType,
+    business: JSON.parse(JSON.stringify(state.business)), client: JSON.parse(JSON.stringify(state.client)),
+    meta: JSON.parse(JSON.stringify(state.meta)), items: JSON.parse(JSON.stringify(state.items)),
+    details: JSON.parse(JSON.stringify(state.details || [])), bank: JSON.parse(JSON.stringify(state.bank)),
     terms: state.terms, notes: state.notes, taxType: state.taxType, template: state.template,
     customText: state.customText, customTextPosition: state.customTextPosition,
     customTextColor: state.customTextColor, customTextSize: state.customTextSize,
@@ -1054,25 +1017,32 @@ function saveToHistory() {
 }
 
 function getDocTypeBadge(docType) {
-  const dt = docType || 'Tax Invoice';
-  if (dt === 'Credit Note') return '<span class="hi-doctype credit">Credit</span>';
-  if (dt === 'Debit Note') return '<span class="hi-doctype debit">Debit</span>';
-  if (dt === 'Proforma Invoice') return '<span class="hi-doctype proforma">Proforma</span>';
-  if (dt === 'Estimate') return '<span class="hi-doctype proforma">Estimate</span>';
-  if (dt === 'Quotation') return '<span class="hi-doctype proforma">Quote</span>';
+  if (docType === 'Credit Note') return '<span class="hi-doctype credit">Credit</span>';
+  if (docType === 'Debit Note') return '<span class="hi-doctype debit">Debit</span>';
+  if (docType === 'Proforma Invoice') return '<span class="hi-doctype proforma">Proforma</span>';
+  if (docType === 'Estimate') return '<span class="hi-doctype proforma">Estimate</span>';
+  if (docType === 'Quotation') return '<span class="hi-doctype proforma">Quote</span>';
   return '';
 }
 
 function renderHistory() {
   const list = $('historyList'), count = $('historyCount'); count.textContent = history.length;
-  if (!history.length) { list.innerHTML = `<div class="history-empty"><div class="history-empty-icon">📭</div><div>No saved invoices yet</div></div>`; return; }
-  list.innerHTML = history.map(h => { const dateStr = h.invoiceDate ? fmtDate(h.invoiceDate) : fmtDate(h.savedAt); return `<div class="history-item ${h.id === editingHistoryId ? 'selected' : ''}" onclick="loadFromHistory('${h.id}')"><div class="hi-top"><div class="hi-no">${esc(h.invoiceNo)}${getDocTypeBadge(h.docType)}</div><div class="hi-date">${dateStr}</div></div><div class="hi-client">${esc(h.clientName)}</div><div class="hi-bottom"><div class="hi-amount">${fmt(h.total)}</div><div class="hi-actions" onclick="event.stopPropagation()"><button class="hi-del" onclick="deleteFromHistory('${h.id}')" title="Delete">🗑️</button></div></div></div>`; }).join('');
+  if (!history.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">📭</div><div>No saved invoices</div></div>'; return; }
+  list.innerHTML = history.map(h => {
+    const dateStr = h.invoiceDate ? fmtDate(h.invoiceDate) : fmtDate(h.savedAt);
+    return `<div class="history-item ${h.id === editingHistoryId ? 'selected' : ''}" onclick="loadFromHistory('${h.id}')">
+      <div class="hi-top"><div class="hi-no">${esc(h.invoiceNo)}${getDocTypeBadge(h.docType)}</div><div class="hi-date">${dateStr}</div></div>
+      <div class="hi-client">${esc(h.clientName)}</div>
+      <div class="hi-bottom"><div class="hi-amount">${fmt(h.total)}</div>
+        <div class="hi-actions" onclick="event.stopPropagation()"><button class="hi-del" onclick="deleteFromHistory('${h.id}')">🗑️</button></div>
+      </div></div>`;
+  }).join('');
 }
 
 function loadFromHistory(id) {
   const entry = history.find(h => h.id === id); if (!entry) return;
   const hasCurrentData = state.client.name || state.items.some(i => i.desc);
-  if (hasCurrentData && editingHistoryId !== id) { if (!confirm('Load this saved invoice? Current form data will be replaced.')) return; }
+  if (hasCurrentData && editingHistoryId !== id && !confirm('Load this invoice? Current data will be replaced.')) return;
   state.docType = entry.docType || 'Tax Invoice';
   state.business = JSON.parse(JSON.stringify(entry.business));
   state.client = JSON.parse(JSON.stringify(entry.client));
@@ -1087,18 +1057,23 @@ function loadFromHistory(id) {
   if (entry.customTextSize) state.customTextSize = entry.customTextSize;
   editingHistoryId = id;
   populateForm(state); renderItems(); renderDetails(); render(); renderHistory();
-  showToast('✓ Invoice loaded for editing', 'blue'); window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('✓ Loaded', 'blue'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function deleteFromHistory(id) {
   const entry = history.find(h => h.id === id); if (!entry) return;
-  if (!confirm(`Delete invoice "${entry.invoiceNo}"?`)) return;
-  history = history.filter(h => h.id !== id); if (editingHistoryId === id) editingHistoryId = null;
-  saveHistoryToLS(); renderHistory(); showToast('🗑️ Invoice deleted');
+  if (!confirm(`Delete "${entry.invoiceNo}"?`)) return;
+  history = history.filter(h => h.id !== id);
+  if (editingHistoryId === id) editingHistoryId = null;
+  saveHistoryToLS(); renderHistory(); showToast('🗑️ Deleted');
 }
 
 function getNextInvoiceNo() {
-  if (history.length > 0) { const last = history[0].invoiceNo || ''; const match = last.match(/(.*?)(\d+)$/); if (match) { const prefix = match[1]; const n = parseInt(match[2]) + 1; const padLen = match[2].length; return prefix + String(n).padStart(padLen, '0'); } }
+  if (history.length > 0) {
+    const last = history[0].invoiceNo || '';
+    const match = last.match(/(.*?)(\d+)$/);
+    if (match) return match[1] + String(parseInt(match[2]) + 1).padStart(match[2].length, '0');
+  }
   return `INV-${new Date().getFullYear()}-001`;
 }
 
@@ -1113,28 +1088,38 @@ function resetForNextInvoice() {
 
 function prepareForPrint() {
   const el = $('invoicePreview'); if (!el) return;
-  el.style.zoom = ''; el.style.transform = '';
+  el.style.zoom = '';
   const warning = $('printWarning'); if (warning) warning.classList.remove('show');
   void el.offsetHeight;
-  const A4_HEIGHT_PX = 1122, A4_WIDTH_PX = 794;
-  const naturalHeight = el.scrollHeight, naturalWidth = el.scrollWidth;
-  if (naturalHeight > A4_HEIGHT_PX || naturalWidth > A4_WIDTH_PX) {
-    const heightScale = A4_HEIGHT_PX / naturalHeight; const widthScale = A4_WIDTH_PX / naturalWidth;
-    const scale = Math.min(heightScale, widthScale, 1); const safeScale = (scale * 0.97).toFixed(4);
-    el.style.zoom = safeScale; if (warning) warning.classList.add('show'); void el.offsetHeight;
+  const naturalHeight = el.scrollHeight;
+  if (naturalHeight > 1122) {
+    const scale = Math.min(1122 / naturalHeight, 1) * 0.97;
+    el.style.zoom = scale.toFixed(4);
+    if (warning) warning.classList.add('show');
   }
 }
-function resetAfterPrint() { const el = $('invoicePreview'); if (el) { el.style.zoom = ''; el.style.transform = ''; } const warning = $('printWarning'); if (warning) warning.classList.remove('show'); }
+
+function resetAfterPrint() {
+  const el = $('invoicePreview'); if (el) el.style.zoom = '';
+  const warning = $('printWarning'); if (warning) warning.classList.remove('show');
+}
 
 window.addEventListener('beforeprint', prepareForPrint);
-window.addEventListener('afterprint', () => { resetAfterPrint(); if (printHandled) return; printHandled = true; setTimeout(() => { resetForNextInvoice(); showToast('✓ Ready for next invoice'); }, 200); });
 
 let printHandled = false;
+window.addEventListener('afterprint', () => {
+  resetAfterPrint();
+  if (printHandled) return;
+  printHandled = true;
+  setTimeout(() => { resetForNextInvoice(); showToast('✓ Ready for next'); }, 200);
+});
 
 function printAndSave() {
-  const saved = saveToHistory();
-  if (saved) showToast('✓ ' + (state.docType || 'Invoice') + ' saved — opening print'); else { showToast('⚠️ Nothing to save — fill the form first', 'red'); return; }
-  printHandled = false; prepareForPrint(); setTimeout(() => { window.print(); }, 200);
+  if (!saveToHistory()) { showToast('⚠️ Fill the form first', 'red'); return; }
+  showToast('✓ Saved — opening print');
+  printHandled = false;
+  prepareForPrint();
+  setTimeout(() => window.print(), 200);
 }
 
 function loadSample() {
@@ -1144,13 +1129,14 @@ function loadSample() {
   $('bGstin').value = '08KGZPS9518C1ZD'; $('bPan').value = 'KGZPS9518C';
   $('bEmail').value = 'dinesh.saini6095@gmail.com'; $('bPhone').value = '+91 97845 06095';
   $('bExtra').value = 'Alt Phone: +91 90790 12345 · Website: dineshconstruction.in';
-  $('cName').value = 'SURGYAN KANWAR'; $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur\nMeenawala, Jaipur, Rajasthan, Pin Code: 302034';
-  $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
-  $('mNo').value = 'BS/26-27/100'; $('mDate').value = today; $('mPlace').value = '08-Rajasthan'; $('taxType').value = 'cgst-sgst';
-  $('bkHolder').value = 'Dinesh Saini'; $('bkName').value = 'Bank of Baroda'; $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK'; $('bkBranch').value = ''; $('bkType').value = 'Current'; $('bkUpi').value = 'dinesh@barodampay';
+  $('cName').value = 'SURGYAN KANWAR';
+  $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur, Meenawala, Jaipur, Rajasthan, Pin Code: 302034';
+  $('mNo').value = 'BS/26-27/100'; $('mDate').value = today; $('mPlace').value = '08-Rajasthan';
+  $('bkHolder').value = 'Dinesh Saini'; $('bkName').value = 'Bank of Baroda';
+  $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK';
+  $('bkType').value = 'Current'; $('bkUpi').value = 'dinesh@barodampay';
   $('terms').value = 'Payment due within 15 days of invoice date.\nPlease mention invoice number in payment reference.\nInterest @18% p.a. will be charged on overdue payments.';
   $('notes').value = 'Thank you for your business!';
-  $('ctText').value = '।। जय श्री श्याम ।।'; $('ctPosition').value = 'top'; $('ctColor').value = '#d97706'; $('ctSize').value = '18px';
 
   state.items = [
     { desc:'MIS Reporting & Dashboard Setup', hsn:'998313', qty:1, rate:25000, gst:18 },
@@ -1159,43 +1145,51 @@ function loadSample() {
     { desc:'ERP Data Entry & Reconciliation', hsn:'998313', qty:10, rate:800, gst:18 },
     { desc:'Business Advisory Services', hsn:'998311', qty:1, rate:10000, gst:12 }
   ];
-  state.details = ['Application Ref. No. : NP-RJJAY26-14802195', 'Application Date. : 05-09-2026', 'Applied Roof Top Solar Capacity (in kWp) - 3KWP'];
+  state.details = ['Site name: Namma', 'Site Id: IN-12521251', 'Site Ref No.: R/fd/231413'];
   renderItems(); renderDetails(); sync();
   setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
 }
 
 function clearAll() {
   if (!confirm('Clear everything?')) return;
-  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = ''; $('bEmail').value = ''; $('bPhone').value = ''; $('bExtra').value = '';
-  $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
-  $('mNo').value = ''; $('mDate').value = ''; $('mPlace').value = '';
-  $('bkHolder').value = ''; $('bkName').value = ''; $('bkAc').value = ''; $('bkIfsc').value = ''; $('bkBranch').value = ''; $('bkType').value = ''; $('bkUpi').value = '';
-  $('terms').value = ''; $('notes').value = ''; $('taxType').value = 'cgst-sgst'; $('docTypeSelect').value = 'Tax Invoice';
-  state.docType = 'Tax Invoice'; state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
+  ['bName','bAddr','bGstin','bPan','bEmail','bPhone','bExtra',
+   'cName','cAddr','cGstin','cEmail','cPhone',
+   'mNo','mDate','mPlace',
+   'bkHolder','bkName','bkAc','bkIfsc','bkBranch','bkType','bkUpi',
+   'terms','notes'].forEach(id => { const el = $(id); if (el) el.value = ''; });
+  $('taxType').value = 'cgst-sgst'; $('docTypeSelect').value = 'Tax Invoice';
+  state.docType = 'Tax Invoice';
+  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
   editingHistoryId = null;
-  if (typeof setIfscStatus === 'function') setIfscStatus('idle', '');
+  setIfscStatus('idle', '');
   $('bankPreview').classList.remove('show'); ifscLastFetched = '';
-  $('bkBranch').readOnly = true; $('bkBranch').placeholder = 'Branch will appear here...';
-  state.business = {}; state.client = {}; state.meta = {}; state.bank = {}; state.terms = ''; state.notes = '';
-  localStorage.removeItem('invoiceState'); localStorage.setItem('userClearedForm', '1');
-  updateLabels(); updateCustomBadge(); disableAutofill();
+  $('bkBranch').readOnly = true;
+  state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
+  state.terms = ''; state.notes = '';
+  localStorage.removeItem('invoiceState');
+  localStorage.setItem('userClearedForm', '1');
+  updateLabels(); updateCustomBadge();
   renderItems(); renderDetails(); render(); renderHistory();
-  showToast('🗑️ Form fully cleared');
+  showToast('🗑️ Cleared');
 }
 
 function nukeEverything() {
-  if (!confirm('💥 RESET EVERYTHING?\n\nYe sab kuch delete karega:\n• Current form\n• Saved Invoices (📚)\n• Saved Business Details (💼)')) return;
-  if (!confirm('Pakka? Ek aur baar confirm karo.')) return;
-  localStorage.removeItem('invoiceState'); localStorage.removeItem('invoiceHistory'); localStorage.removeItem('businessProfiles'); localStorage.removeItem('userClearedForm');
+  if (!confirm('💥 Reset EVERYTHING? This will delete form + saved invoices + saved business details.')) return;
+  if (!confirm('Pakka?')) return;
+  localStorage.clear();
   history = []; profiles = []; editingHistoryId = null;
   clearAll(); renderProfiles();
-  showToast('💥 Everything reset — fresh start!', 'red');
+  showToast('💥 Everything reset', 'red');
 }
 
 function saveJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ((state.meta.no || 'invoice') + '_' + (state.docType || 'Invoice').replace(/\s+/g, '_') + '.json'); a.click();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = ((state.meta.no || 'invoice') + '_' + state.docType.replace(/\s+/g, '_') + '.json');
+  a.click();
 }
+
 function loadJSON(e) {
   const file = e.target.files[0]; if (!file) return;
   const r = new FileReader();
@@ -1211,15 +1205,15 @@ function loadJSON(e) {
       if (!state.customTextSize) state.customTextSize = '18px';
       populateForm(state); renderItems(); renderDetails(); sync();
       showToast('✓ JSON loaded');
-    } catch (err) { alert('Invalid JSON file: ' + err.message); }
+    } catch (err) { alert('Invalid JSON: ' + err.message); }
   };
   r.readAsText(file); e.target.value = '';
 }
 
 (function init() {
   disableAutofill();
-  try { const s = localStorage.getItem('invoiceHistory'); if (s) history = JSON.parse(s); } catch (e) { history = []; }
-  try { const s = localStorage.getItem('businessProfiles'); if (s) profiles = JSON.parse(s); } catch (e) { profiles = []; }
+  try { const s = localStorage.getItem('invoiceHistory'); if (s) history = JSON.parse(s); } catch (e) {}
+  try { const s = localStorage.getItem('businessProfiles'); if (s) profiles = JSON.parse(s); } catch (e) {}
   const wasCleared = localStorage.getItem('userClearedForm') === '1';
   const saved = localStorage.getItem('invoiceState');
   if (saved && !wasCleared) {
@@ -1241,9 +1235,9 @@ function loadJSON(e) {
     state.details = [''];
   }
   if (!state.details || !state.details.length) state.details = [''];
-  updateLabels(); updateCustomBadge(); renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
+  updateLabels(); updateCustomBadge();
+  renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
 })();
 </script>
-
 </body>
 </html>
