@@ -36,7 +36,7 @@
   .field label { display: block; font-size: 10.5px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
   .field input, .field textarea, .field select { width: 100%; padding: 8px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; background: #fff; transition: all 0.15s; }
   .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-  .field input:read-only { background: #f8fafc; color: #64748b; cursor: not-allowed; }
+  .field input:read-only, .field input:disabled, .field select:disabled { background: #f8fafc; color: #64748b; cursor: not-allowed; }
   .field input.auto-filled { background: #ecfdf5; border-color: #10b981; }
   .field input[type="color"] { padding: 2px; height: 38px; cursor: pointer; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -280,48 +280,22 @@
   .tpl-gst-lite .inv-table td { padding: 6px 8px; font-size: 10px; }
   .tpl-gst-lite .inv-table tr:nth-child(even) td { background: #f8fafc; }
   .gst-lite-summary { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 12px; align-items: start; }
-  /* FIX #3: Prevent totals-box overflow inside GST Lite grid */
-  .gst-lite-summary .totals-box { width: 100%; }
   .gst-lite-hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
   .gst-lite-hsn-table th { background: #e0f2fe; color: #075985; padding: 5px 8px; text-align: right; font-weight: 800; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid #7dd3fc; }
   .gst-lite-hsn-table th:first-child { text-align: left; }
   .gst-lite-hsn-table td { padding: 5px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 9.5px; }
   .gst-lite-hsn-table td:first-child { text-align: left; font-weight: 700; color: #075985; }
   .gst-lite-hsn-table tr:last-child td { border-bottom: none; }
-
-  /* FIX #7: Print CSS — allow multi-page flow instead of forcing single A4 */
   @media print {
     @page { size: A4 portrait; margin: 0; }
-    html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
-    /* Hide everything chrome-y */
-    .app-bar, .toolbar, aside, .print-warning, .toast { display: none !important; }
-    /* Layout collapses to a single block */
-    .layout { display: block !important; padding: 0 !important; margin: 0 !important; max-width: none !important; gap: 0 !important; }
-    main { display: block !important; padding: 0 !important; margin: 0 !important; }
-    /* Invoice can grow beyond one page */
-    #invoicePreview {
-      width: 210mm !important;
-      min-height: 297mm !important;
-      height: auto !important;
-      margin: 0 !important;
-      box-shadow: none !important;
-      overflow: visible !important;
-    }
-    /* Template-specific overrides for print */
+    html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 210mm !important; height: 297mm !important; overflow: hidden !important; }
+    body * { visibility: hidden; }
+    #invoicePreview, #invoicePreview * { visibility: visible; }
+    #invoicePreview { position: fixed !important; top: 0 !important; left: 0 !important; width: 210mm !important; height: 297mm !important; padding: 10mm 12mm !important; margin: 0 !important; box-shadow: none !important; overflow: hidden !important; }
     #invoicePreview.tpl-modern { padding: 0 !important; }
-    #invoicePreview.tpl-modern .inv-wrap { margin: 0 !important; min-height: auto !important; }
-    #invoicePreview.tpl-corporate .inv-header { margin: 0 0 14px 0 !important; }
-    /* Avoid breaking table rows and key blocks across pages */
-    .inv-table tr,
-    .gst-detail-hsn tr,
-    .gst-lite-hsn-table tr,
-    .words-box,
-    .totals-wrap,
-    .footer-grid,
-    .sign-area,
-    .rate-summary-title { page-break-inside: avoid; break-inside: avoid; }
-    .custom-text-top, .custom-text-middle { page-break-after: avoid; break-after: avoid; }
-    .computer-gen-line { page-break-before: avoid; break-before: avoid; }
+    #invoicePreview.tpl-corporate { padding-top: 0 !important; }
+    .no-print { display: none !important; }
+    body { overflow: hidden !important; }
   }
   .print-warning { position: fixed; top: 70px; right: 20px; background: #fef3c7; color: #92400e; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #fcd34d; z-index: 100; display: none; }
   .print-warning.show { display: block; }
@@ -333,7 +307,7 @@
   <div style="max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
       <h1>🧾 Invoice Generator</h1>
-      <p>10 templates · GST ready · Custom text · PDF export</p>
+      <p>10 templates · Auto GST · Custom text · PDF export</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <select id="docTypeSelect" onchange="changeDocType()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;background:#fff;color:#0a1e3f;">
@@ -430,7 +404,7 @@
         <div class="field"><label>Business Name</label><input id="bName" autocomplete="off" oninput="sync()"></div>
         <div class="field"><label>Reg Address</label><textarea id="bAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
         <div class="grid2">
-          <div class="field"><label>GSTIN</label><input id="bGstin" autocomplete="off" oninput="autoPanFromGstin(); sync()"></div>
+          <div class="field"><label>GSTIN</label><input id="bGstin" autocomplete="off" oninput="autoPanFromGstin(); autoTaxFromState(); sync()"></div>
           <div class="field"><label>PAN</label><input id="bPan" autocomplete="off" oninput="sync()"></div>
         </div>
         <div class="grid2">
@@ -447,7 +421,7 @@
       <div class="panel-body" id="cliBody">
         <div class="field"><label>Client Name</label><input id="cName" autocomplete="off" oninput="sync()"></div>
         <div class="field"><label>Address</label><textarea id="cAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
-        <div class="field"><label>GSTIN</label><input id="cGstin" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>GSTIN <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(optional)</span></label><input id="cGstin" autocomplete="off" oninput="autoTaxFromState(); sync()"></div>
         <div class="grid2">
           <div class="field"><label>Email</label><input id="cEmail" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Phone</label><input id="cPhone" autocomplete="off" oninput="sync()"></div>
@@ -462,7 +436,7 @@
           <div class="field"><label id="mNoLabel">Invoice No.</label><input id="mNo" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Date</label><input id="mDate" type="date" autocomplete="off" oninput="sync()"></div>
         </div>
-        <div class="field"><label>Place of Supply</label><input id="mPlace" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Place of Supply <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(state code + name)</span></label><input id="mPlace" placeholder="e.g. 08-Rajasthan" autocomplete="off" oninput="autoTaxFromState(); sync()"></div>
         <div class="details-section">
           <div class="details-heading"><span>Details</span></div>
           <div id="detailsContainer"></div>
@@ -490,13 +464,27 @@
     </div>
     
     <div class="panel">
-      <div class="panel-head" onclick="togglePanel(this, 'totBody')">💰 Tax Type <span>▼</span></div>
+      <div class="panel-head" onclick="togglePanel(this, 'totBody')">💰 Tax & Registration <span>▼</span></div>
       <div class="panel-body" id="totBody">
-        <select id="taxType" onchange="sync()" style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;">
-          <option value="cgst-sgst">CGST + SGST (Intra-state)</option>
-          <option value="igst">IGST (Inter-state)</option>
-          <option value="none">No GST</option>
-        </select>
+        <div class="field">
+          <label>Client Registration</label>
+          <select id="regStatus" onchange="handleRegStatus()" style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;">
+            <option value="registered">✅ Registered (GSTIN available)</option>
+            <option value="unregistered">🚫 Unregistered (Cash / Retail — GST still applies)</option>
+            <option value="nogst">⚪ No GST Applicable (Business unregistered / Exempt)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tax Type</label>
+          <select id="taxType" onchange="sync()" style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;">
+            <option value="cgst-sgst">CGST + SGST (Intra-state)</option>
+            <option value="igst">IGST (Inter-state)</option>
+            <option value="none">No GST</option>
+          </select>
+        </div>
+        <div id="taxHint" style="font-size:10.5px;color:#64748b;margin-top:6px;line-height:1.5;padding:8px 10px;background:#f8fafc;border-radius:6px;border-left:3px solid #cbd5e1;">
+          💡 GSTIN aur Place of Supply daalte hi tax type auto-select ho jayega.
+        </div>
       </div>
     </div>
     
@@ -550,8 +538,8 @@
 
 <script>
 const state = {
-  docType: 'Tax Invoice', template: 'classic', taxType: 'cgst-sgst',
-  items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }], details: [''], 
+  docType: 'Tax Invoice', template: 'classic', taxType: 'cgst-sgst', regStatus: 'registered',
+  items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }], details: [''],
   business: {}, client: {}, meta: {}, bank: {}, terms:'', notes:'',
   customText: '।। जय श्री श्याम ।।', customTextPosition: 'top',
   customTextColor: '#d97706', customTextSize: '18px'
@@ -566,6 +554,15 @@ const num = v => Number(v) || 0;
 const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = n => '₹ ' + (Math.round((Number(n)||0) * 100) / 100).toLocaleString('en-IN', {maximumFractionDigits:2});
 const fmtDate = d => { if (!d) return '—'; const dt = new Date(d); if (isNaN(dt)) return d; return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); };
+
+const STATE_NAMES = {
+  '01':'J&K','02':'HP','03':'Punjab','04':'Chandigarh','05':'Uttarakhand','06':'Haryana',
+  '07':'Delhi','08':'Rajasthan','09':'UP','10':'Bihar','11':'Sikkim','12':'Arunachal',
+  '13':'Nagaland','14':'Manipur','15':'Mizoram','16':'Tripura','17':'Meghalaya','18':'Assam',
+  '19':'WB','20':'Jharkhand','21':'Odisha','22':'Chhattisgarh','23':'MP','24':'Gujarat',
+  '26':'DNH & DD','27':'Maharashtra','29':'Karnataka','30':'Goa','31':'Lakshadweep',
+  '32':'Kerala','33':'TN','34':'Puducherry','35':'A&N','36':'Telangana','37':'AP','38':'Ladakh'
+};
 
 function getLabels(docType) {
   const map = {
@@ -618,6 +615,136 @@ function updateCustomBadge() {
   if (map[pos]) { badge.textContent = map[pos][0]; badge.style.background = map[pos][1]; }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  REGISTRATION STATUS — Auto-set tax type
+// ═══════════════════════════════════════════════════════════
+function handleRegStatus() {
+  const status = $('regStatus').value;
+  const taxType = $('taxType');
+  const hint = $('taxHint');
+  const cGstin = $('cGstin');
+
+  if (status === 'nogst') {
+    taxType.value = 'none';
+    taxType.disabled = true;
+    taxType.style.background = '#f8fafc';
+    taxType.style.color = '#94a3b8';
+    cGstin.disabled = true;
+    cGstin.style.background = '#f8fafc';
+    hint.innerHTML = '⚪ <strong>No GST</strong> — Bill of Supply hoga. Ye tab choose karo jab aap khud unregistered ho, ya service/goods GST-exempt ho.';
+    hint.style.background = '#f1f5f9';
+    hint.style.borderLeftColor = '#64748b';
+    hint.style.color = '#334155';
+  } else if (status === 'unregistered') {
+    taxType.disabled = false;
+    taxType.style.background = '#fff';
+    taxType.style.color = '#0f172a';
+    cGstin.disabled = false;
+    cGstin.style.background = '#fff';
+    hint.innerHTML = '🚫 <strong>Unregistered client</strong> — Client ka GSTIN nahi hai, <strong>par GST phir bhi lagegi</strong> (kyunki aap registered ho). Client ITC claim nahi kar payega. Tax type Place of Supply se decide hoga.';
+    hint.style.background = '#fef2f2';
+    hint.style.borderLeftColor = '#dc2626';
+    hint.style.color = '#991b1b';
+    autoTaxFromState();
+  } else {
+    taxType.disabled = false;
+    taxType.style.background = '#fff';
+    taxType.style.color = '#0f172a';
+    cGstin.disabled = false;
+    cGstin.style.background = '#fff';
+    hint.innerHTML = '✅ <strong>Registered client</strong> — GSTIN daalte hi tax type auto-select ho jayega.';
+    hint.style.background = '#ecfdf5';
+    hint.style.borderLeftColor = '#10b981';
+    hint.style.color = '#065f46';
+    autoTaxFromState();
+  }
+  sync();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  AUTO STATE DETECTION
+//  Registered client: GSTIN se state nikalo
+//  Unregistered client: Place of Supply se state nikalo
+// ═══════════════════════════════════════════════════════════
+function extractStateFromPlace(place) {
+  if (!place) return null;
+  const p = place.trim();
+  // Try "08-Rajasthan" format (code-name)
+  const codeMatch = p.match(/^(\d{2})/);
+  if (codeMatch && STATE_NAMES[codeMatch[1]]) return codeMatch[1];
+  // Try matching state name
+  const lower = p.toLowerCase();
+  for (const [code, name] of Object.entries(STATE_NAMES)) {
+    if (lower.includes(name.toLowerCase())) return code;
+  }
+  return null;
+}
+
+function autoTaxFromState() {
+  const status = $('regStatus').value;
+  const hint = $('taxHint');
+  const taxType = $('taxType');
+
+  if (status === 'nogst') return;
+
+  const bizGstin = ($('bGstin').value || '').trim().toUpperCase();
+  const cliGstin = ($('cGstin').value || '').trim().toUpperCase();
+  const place = ($('mPlace').value || '').trim();
+
+  if (bizGstin.length < 2) {
+    hint.innerHTML = '💡 Apna business GSTIN daalo — tax type auto-detect karne ke liye.';
+    hint.style.background = '#fef3c7';
+    hint.style.borderLeftColor = '#f59e0b';
+    hint.style.color = '#92400e';
+    return;
+  }
+
+  const bizState = bizGstin.substring(0, 2);
+  const bizStateName = STATE_NAMES[bizState] || bizState;
+
+  // Determine client state
+  let cliState = null;
+  let source = '';
+
+  if (status === 'registered' && cliGstin.length >= 2) {
+    cliState = cliGstin.substring(0, 2);
+    source = 'GSTIN';
+  } else if (status === 'unregistered') {
+    cliState = extractStateFromPlace(place);
+    source = 'Place of Supply';
+  } else if (status === 'registered' && cliGstin.length < 2) {
+    hint.innerHTML = `✅ <strong>Registered client</strong> — Client ka GSTIN daalo ya Place of Supply select karo.`;
+    hint.style.background = '#ecfdf5';
+    hint.style.borderLeftColor = '#10b981';
+    hint.style.color = '#065f46';
+    return;
+  }
+
+  if (!cliState) {
+    hint.innerHTML = `💡 Client ka state daalo — ${status === 'unregistered' ? 'Place of Supply field me (e.g. 08-Rajasthan)' : 'Client GSTIN me'}.`;
+    hint.style.background = '#fef3c7';
+    hint.style.borderLeftColor = '#f59e0b';
+    hint.style.color = '#92400e';
+    return;
+  }
+
+  const cliStateName = STATE_NAMES[cliState] || cliState;
+
+  if (bizState === cliState) {
+    taxType.value = 'cgst-sgst';
+    hint.innerHTML = `📍 <strong>Same state</strong> — ${bizStateName} (${bizState}) → ${cliStateName} (${cliState}) <span style="color:#94a3b8;">[via ${source}]</span><br>✅ Auto-selected: <strong>CGST + SGST</strong>`;
+    hint.style.background = '#ecfdf5';
+    hint.style.borderLeftColor = '#10b981';
+    hint.style.color = '#065f46';
+  } else {
+    taxType.value = 'igst';
+    hint.innerHTML = `📍 <strong>Different state</strong> — ${bizStateName} (${bizState}) → ${cliStateName} (${cliState}) <span style="color:#94a3b8;">[via ${source}]</span><br>✅ Auto-selected: <strong>IGST</strong>`;
+    hint.style.background = '#eff6ff';
+    hint.style.borderLeftColor = '#3b82f6';
+    hint.style.color = '#1e40af';
+  }
+}
+
 function saveProfilesToLS() { try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); } catch (e) {} }
 
 function saveBusinessProfile() {
@@ -641,7 +768,7 @@ function renderProfiles() {
   if (!profiles.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">💼</div><div>No saved details</div></div>'; return; }
   list.innerHTML = profiles.map(p => {
     const city = (p.addr || '').split('\n')[0].substring(0, 30);
-    return `<div class="profile-item" role="button" tabindex="0" onclick="loadBusinessProfile('${p.id}')" onkeydown="if(event.key==='Enter')loadBusinessProfile('${p.id}')">
+    return `<div class="profile-item" onclick="loadBusinessProfile('${p.id}')">
       <div class="pi-name">${esc(p.name)}</div>
       <div class="pi-info">${esc(city)}</div>
       <div class="pi-bottom">
@@ -661,6 +788,7 @@ function loadBusinessProfile(id) {
   $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
   $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
   $('bExtra').value = p.extra || '';
+  autoTaxFromState();
   sync(); showToast('✓ Loaded', 'purple'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -680,7 +808,7 @@ function onIfscInput(value) {
   if (ifscFetchTimer) clearTimeout(ifscFetchTimer);
   if (ifscFetchAbort) { try { ifscFetchAbort.abort(); } catch(e){} }
   if (!ifsc) { setIfscStatus('idle', ''); branchField.value = ''; preview.classList.remove('show'); return; }
-  if (ifsc.length < 11) { setIfscStatus('idle', `${ifsc.length}/11 — enter 11-character IFSC`); branchField.value = ''; preview.classList.remove('show'); return; }
+  if (ifsc.length < 11) { setIfscStatus('idle', `${ifsc.length}/11`); branchField.value = ''; preview.classList.remove('show'); return; }
   if (ifscLastFetched === ifsc) return;
   setIfscStatus('loading', '<span class="spinner"></span> Fetching...'); branchField.value = '';
   ifscFetchTimer = setTimeout(() => { fetchBranchFromIFSC(ifsc); }, 500);
@@ -710,15 +838,12 @@ async function fetchBranchFromIFSC(ifsc) {
         $('bankPreview').classList.add('show'); ifscLastFetched = ifsc;
         setIfscStatus('success', `✓ ${bank} · ${city}`);
         $('bkBranch').classList.add('auto-filled');
-        // FIX #5: lock branch again after successful lookup
-        $('bkBranch').readOnly = true;
         setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
         sync(); return;
       }
     } catch (err) {}
   }
   setIfscStatus('error', '✗ Could not fetch');
-  // allow manual entry on failure
   $('bkBranch').readOnly = false;
   $('bankPreview').classList.remove('show');
 }
@@ -754,11 +879,11 @@ function removeDetail(i) { if (state.details.length === 1) state.details[0] = ''
 
 function sync() {
   state.docType = $('docTypeSelect').value;
+  state.regStatus = $('regStatus').value;
   state.business = { name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value, pan: $('bPan').value, email: $('bEmail').value, phone: $('bPhone').value, extra: $('bExtra').value };
   state.client = { name: $('cName').value, addr: $('cAddr').value, gstin: $('cGstin').value, email: $('cEmail').value, phone: $('cPhone').value };
   state.meta = { no: $('mNo').value, date: $('mDate').value, place: $('mPlace').value };
-  // FIX #11: normalize IFSC casing/whitespace in stored state
-  state.bank = { holder: $('bkHolder').value, name: $('bkName').value, ac: $('bkAc').value, ifsc: ($('bkIfsc').value || '').trim().toUpperCase(), branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value };
+  state.bank = { holder: $('bkHolder').value, name: $('bkName').value, ac: $('bkAc').value, ifsc: $('bkIfsc').value, branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value };
   state.terms = $('terms').value; state.notes = $('notes').value; state.taxType = $('taxType').value;
   state.customText = $('ctText').value; state.customTextPosition = $('ctPosition').value;
   state.customTextColor = $('ctColor').value; state.customTextSize = $('ctSize').value;
@@ -779,47 +904,35 @@ function populateForm(s) {
   $('bkAc').value = bk.ac || ''; $('bkIfsc').value = bk.ifsc || '';
   $('bkBranch').value = bk.branch || ''; $('bkType').value = bk.type || ''; $('bkUpi').value = bk.upi || '';
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
+  $('regStatus').value = s.regStatus || 'registered';
   $('taxType').value = s.taxType || 'cgst-sgst';
-  // FIX #6: keep state in sync with form (preview was using stale state.template)
-  state.docType = s.docType || 'Tax Invoice';
-  state.template = s.template || 'classic';
-  $('templateSelect').value = state.template;
-  $('docTypeSelect').value = state.docType;
+  $('templateSelect').value = s.template || 'classic';
+  $('docTypeSelect').value = s.docType || 'Tax Invoice';
   $('ctText').value = s.customText !== undefined ? s.customText : '।। जय श्री श्याम ।।';
   $('ctPosition').value = s.customTextPosition || 'top';
   $('ctColor').value = s.customTextColor || '#d97706';
   $('ctSize').value = s.customTextSize || '18px';
-  // keep state fields in sync too (state.customText etc.)
-  state.customText = $('ctText').value;
-  state.customTextPosition = $('ctPosition').value;
-  state.customTextColor = $('ctColor').value;
-  state.customTextSize = $('ctSize').value;
-  state.taxType = $('taxType').value;
   updateLabels(); updateCustomBadge();
+  handleRegStatus();
 }
 
 function calcTotals() {
   let subtotal = 0, totalTax = 0;
   const hsnSummary = {}; const rateSummary = {};
   state.items.forEach(it => {
-    const amt = num(it.qty) * num(it.rate);
-    // FIX #12: zero out tax when taxType is 'none'
-    const gstAmt = state.taxType === 'none' ? 0 : amt * num(it.gst) / 100;
+    const amt = num(it.qty) * num(it.rate); const gstAmt = amt * num(it.gst) / 100;
     subtotal += amt; totalTax += gstAmt;
-    // FIX #2: key HSN summary on HSN + rate so different rates don't collide
-    const hsnKey = it.hsn || '—';
-    const rateKey = Number(it.gst) || 0;
-    const key = hsnKey + '|' + rateKey;
-    if (!hsnSummary[key]) hsnSummary[key] = { hsn: hsnKey, taxable:0, rate: rateKey, cgst:0, sgst:0, igst:0, total:0 };
+    const key = it.hsn || '—';
+    if (!hsnSummary[key]) hsnSummary[key] = { taxable:0, rate: it.gst, cgst:0, sgst:0, igst:0, total:0 };
     hsnSummary[key].taxable += amt;
     if (state.taxType === 'igst') hsnSummary[key].igst += gstAmt;
-    else if (state.taxType === 'cgst-sgst') { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
+    else { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
     hsnSummary[key].total += amt + gstAmt;
     const rk = Number(it.gst) || 0;
     if (!rateSummary[rk]) rateSummary[rk] = { rate: rk, taxable: 0, cgst: 0, sgst: 0, igst: 0, total: 0, count: 0 };
     rateSummary[rk].taxable += amt; rateSummary[rk].count += 1;
     if (state.taxType === 'igst') rateSummary[rk].igst += gstAmt;
-    else if (state.taxType === 'cgst-sgst') { rateSummary[rk].cgst += gstAmt/2; rateSummary[rk].sgst += gstAmt/2; }
+    else { rateSummary[rk].cgst += gstAmt/2; rateSummary[rk].sgst += gstAmt/2; }
     rateSummary[rk].total += gstAmt;
   });
   const taxable = subtotal; const beforeRound = taxable + totalTax;
@@ -827,34 +940,18 @@ function calcTotals() {
   return { subtotal, taxable, totalTax, beforeRound, rounded, roundOff, hsnSummary, rateSummary };
 }
 
-// FIX #9: robust number-to-words with recursion — works beyond 999 crore
 function numToWords(n) {
-  n = Math.round(Math.abs(n));
-  if (n === 0) return 'Zero Rupees Only';
+  n = Math.round(Math.abs(n)); if (n === 0) return 'Zero Rupees Only';
   const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
   const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
   const two = x => x < 20 ? ones[x] : (tens[Math.floor(x/10)] + (x%10 ? ' ' + ones[x%10] : ''));
   const three = x => x < 100 ? two(x) : (ones[Math.floor(x/100)] + ' Hundred' + (x%100 ? ' ' + two(x%100) : ''));
-  const convert = (n) => {
-    if (n === 0) return '';
-    if (n < 1000) return three(n);
-    const tiers = [
-      { val: 100000000000, name: 'Kharab' },
-      { val: 1000000000, name: 'Arab' },
-      { val: 10000000, name: 'Crore' },
-      { val: 100000, name: 'Lakh' },
-      { val: 1000, name: 'Thousand' }
-    ];
-    for (const t of tiers) {
-      if (n >= t.val) {
-        const q = Math.floor(n / t.val);
-        const r = n % t.val;
-        return convert(q) + ' ' + t.name + (r ? ' ' + convert(r) : '');
-      }
-    }
-    return three(n);
-  };
-  return (convert(n).trim() + ' Rupees Only').replace(/\s+/g, ' ');
+  let out = '';
+  const cr = Math.floor(n / 10000000); n %= 10000000;
+  const lk = Math.floor(n / 100000); n %= 100000;
+  const th = Math.floor(n / 1000); n %= 1000;
+  if (cr) out += three(cr) + ' Crore '; if (lk) out += three(lk) + ' Lakh '; if (th) out += three(th) + ' Thousand '; if (n) out += three(n);
+  return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
 function buildBizInfoHTML(biz) {
@@ -882,29 +979,15 @@ function buildCustomText(s) {
 }
 
 function buildCommonBlocks(s, t) {
-  const isIGST = s.taxType === 'igst';
-  const isNone = s.taxType === 'none';
   const itemRows = s.items.map((it, i) => {
-    const amt = num(it.qty) * num(it.rate);
-    const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
+    const amt = num(it.qty) * num(it.rate); const gstAmt = amt * num(it.gst) / 100;
     return `<tr><td class="c" style="font-weight:600;">${i + 1}</td><td>${esc(it.desc) || '—'}</td><td class="c">${esc(it.hsn) || '—'}</td><td class="c">${num(it.qty)}</td><td class="r">${fmt(it.rate)}</td><td class="c">${num(it.gst)}%</td><td class="r">${fmt(amt)}</td><td class="r">${fmt(gstAmt)}</td><td class="r" style="font-weight:700;">${fmt(amt + gstAmt)}</td></tr>`;
   }).join('');
   let taxRows = '';
   if (s.taxType === 'cgst-sgst') taxRows = `<div class="totals-row"><span class="lbl">CGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div><div class="totals-row"><span class="lbl">SGST</span><span class="amt">${fmt(t.totalTax/2)}</span></div>`;
   else if (s.taxType === 'igst') taxRows = `<div class="totals-row"><span class="lbl">IGST</span><span class="amt">${fmt(t.totalTax)}</span></div>`;
-  // FIX #8: hide CGST/SGST/IGST columns in HSN table based on tax type
-  const hsnHead = isIGST
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>IGST</th><th>Total</th>'
-    : isNone
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>Total</th>'
-    : '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>Total</th>';
-  const hsnRows = Object.values(t.hsnSummary).map(d => {
-    const base = `<td>${esc(d.hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td>`;
-    if (isIGST) return `<tr>${base}<td>${fmt(d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-    if (isNone) return `<tr>${base}<td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-    return `<tr>${base}<td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-  }).join('');
-  const hsnTable = `<table class="hsn-table"><thead><tr>${hsnHead}</tr></thead><tbody>${hsnRows}</tbody></table>`;
+  const hsnRows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td>${fmt(d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
+  const hsnTable = `<table class="hsn-table"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total</th></tr></thead><tbody>${hsnRows}</tbody></table>`;
   const tableBlock = `<table class="inv-table"><thead><tr><th class="c" style="width:6%;">Sr</th><th style="width:26%;">Description</th><th class="c" style="width:9%;">HSN</th><th class="c" style="width:7%;">Qty</th><th class="r" style="width:12%;">Rate</th><th class="c" style="width:7%;">GST%</th><th class="r" style="width:11%;">Amount</th><th class="r" style="width:11%;">Tax</th><th class="r" style="width:11%;">Total</th></tr></thead><tbody>${itemRows}</tbody></table>`;
   const totalsBlock = `<div class="totals-wrap"><div class="totals-box"><div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div><div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">${fmt(t.taxable)}</span></div>${taxRows}${t.roundOff ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff >= 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}<div class="totals-row grand"><span class="lbl">Grand Total</span><span>${fmt(t.rounded)}</span></div></div></div>`;
   const wordsBlock = `<div class="words-box"><strong>Amount in Words:</strong> ${numToWords(t.rounded)}</div>`;
@@ -940,66 +1023,32 @@ function buildFooterBlock(s, bizName) {
 const GEN_DOC = `<div class="computer-gen-line">This is a Computer Generated Document</div>`;
 
 function buildGstDetailedBlocks(t, s) {
-  const isIGST = s.taxType === 'igst';
-  const isNone = s.taxType === 'none';
   const cards = [0, 5, 12, 18, 28].map(r => {
     const d = t.rateSummary[r]; if (!d) return '';
     const cls = r === 5 ? 'rate-5' : r === 12 ? 'rate-12' : r === 18 ? 'rate-18' : r === 28 ? 'rate-28' : '';
     return `<div class="rate-card ${cls}"><div class="r-label">${r}% GST</div><div class="r-value">${fmt(d.taxable)}</div><div class="r-tax">Tax: ${fmt(d.total)}</div></div>`;
   }).filter(Boolean).join('');
   const infoBar = `<div class="gst-info-bar">
-    <div class="item"><span class="lbl">Tax:</span><span class="val">${isIGST ? 'IGST' : isNone ? 'None' : 'CGST+SGST'}</span></div>
+    <div class="item"><span class="lbl">Tax:</span><span class="val">${s.taxType === 'igst' ? 'IGST' : s.taxType === 'cgst-sgst' ? 'CGST+SGST' : 'None'}</span></div>
     <div class="item"><span class="lbl">Place:</span><span class="val">${esc(s.meta?.place || '—')}</span></div>
     <div class="item"><span class="lbl">HSN:</span><span class="val">${Object.keys(t.hsnSummary).length}</span></div>
     <div class="item"><span class="lbl">Items:</span><span class="val">${s.items.length}</span></div>
   </div>`;
-  // FIX #8: conditional columns
-  const hsnHead = isIGST
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>IGST</th><th>Tax</th><th>Total</th>'
-    : isNone
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>Total</th>'
-    : '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>Tax</th><th>Total</th>';
-  const rows = Object.values(t.hsnSummary).map(d => {
-    const base = `<td>${esc(d.hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td>`;
-    const taxSum = d.cgst + d.sgst + d.igst;
-    if (isIGST) return `<tr>${base}<td>${fmt(d.igst)}</td><td>${fmt(taxSum)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-    if (isNone) return `<tr>${base}<td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-    return `<tr>${base}<td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td>${fmt(taxSum)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-  }).join('');
+  const rows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst)}</td><td>${fmt(d.sgst)}</td><td>${fmt(d.igst)}</td><td style="font-weight:700;">${fmt(d.cgst + d.sgst + d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
   const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
   const tc = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst, 0);
   const ts = Object.values(t.hsnSummary).reduce((a, d) => a + d.sgst, 0);
   const ti = Object.values(t.hsnSummary).reduce((a, d) => a + d.igst, 0);
   const ttx = tc + ts + ti;
-  let totalRow;
-  if (isIGST) totalRow = `<tr class="total-row"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(ti)}</td><td>${fmt(ttx)}</td><td>${fmt(tt + ttx)}</td></tr>`;
-  else if (isNone) totalRow = `<tr class="total-row"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(tt)}</td></tr>`;
-  else totalRow = `<tr class="total-row"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(tc)}</td><td>${fmt(ts)}</td><td>${fmt(ttx)}</td><td>${fmt(tt + ttx)}</td></tr>`;
-  const table = `<table class="gst-detail-hsn"><thead><tr>${hsnHead}</tr></thead><tbody>${rows}${totalRow}</tbody></table>`;
+  const table = `<table class="gst-detail-hsn"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Tax</th><th>Total</th></tr></thead><tbody>${rows}<tr class="total-row"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(tc)}</td><td>${fmt(ts)}</td><td>${fmt(ti)}</td><td>${fmt(ttx)}</td><td>${fmt(tt + ttx)}</td></tr></tbody></table>`;
   return { rateCards: cards, infoBar, hsnDetailTable: table };
 }
 
-function buildGstLiteBlocks(t, s) {
-  const isIGST = s.taxType === 'igst';
-  const isNone = s.taxType === 'none';
-  const hsnHead = isIGST
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>IGST</th><th>Total</th>'
-    : isNone
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Total</th>'
-    : '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax</th><th>Total</th>';
-  const rows = Object.values(t.hsnSummary).map(d => {
-    const base = `<td>${esc(d.hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td>`;
-    const taxSum = d.cgst + d.sgst + d.igst;
-    if (isIGST) return `<tr>${base}<td>${fmt(d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-    if (isNone) return `<tr>${base}<td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-    return `<tr>${base}<td>${fmt(taxSum)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`;
-  }).join('');
+function buildGstLiteBlocks(t) {
+  const rows = Object.entries(t.hsnSummary).map(([hsn, d]) => `<tr><td>${esc(hsn)}</td><td>${fmt(d.taxable)}</td><td>${d.rate}%</td><td>${fmt(d.cgst + d.sgst + d.igst)}</td><td style="font-weight:700;">${fmt(d.total)}</td></tr>`).join('');
   const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
   const ttx = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst + d.sgst + d.igst, 0);
-  const totalRow = isNone
-    ? `<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(tt)}</td></tr>`
-    : `<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(ttx)}</td><td>${fmt(tt + ttx)}</td></tr>`;
-  return `<table class="gst-lite-hsn-table"><thead><tr>${hsnHead}</tr></thead><tbody>${rows}${totalRow}</tbody></table>`;
+  return `<table class="gst-lite-hsn-table"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax</th><th>Total</th></tr></thead><tbody>${rows}<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>${fmt(tt)}</td><td>—</td><td>${fmt(ttx)}</td><td>${fmt(tt + ttx)}</td></tr></tbody></table>`;
 }
 
 function render() {
@@ -1012,6 +1061,7 @@ function render() {
   const bizInfoHTML = buildBizInfoHTML(biz);
   const cliName = cli.name || 'Client Name';
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
+  const cliGstinLine = cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : (s.regStatus === 'unregistered' ? '<em style="color:#94a3b8;">Unregistered</em>' : '');
 
   const labels = getLabels(s.docType);
   const custom = buildCustomText(s);
@@ -1024,7 +1074,7 @@ function render() {
   if (s.template === 'classic' || s.template === 'gst') {
     html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(labels.title)}</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}
       ${s.template === 'gst' ? `<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN Summary</h4>${common.hsnTable}</div>` : ''}
       ${footerBlock}${GEN_DOC}`;
@@ -1042,42 +1092,42 @@ function render() {
       </div>
       <div class="inv-main">${custom.top}<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header"><div class="inv-h1">${esc(labels.title)}</div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}</div></div>`;
   }
   else if (s.template === 'minimal') {
     html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'elegant') {
     html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header"><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div><div class="inv-h1">${esc(labels.title)}</div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'corporate') {
     html = `${custom.top}<div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(labels.title)}</div><div class="inv-sub">Original for Recipient</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'compact') {
     html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'rounded') {
     html = `${custom.top}<div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'gst-detailed') {
     const gd = buildGstDetailedBlocks(t, s);
     html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div class="inv-title-box"><div class="inv-h1">${esc(labels.title)}</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">Tax Detailed</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${gd.infoBar}${common.tableBlock}${custom.middle}
       <div class="rate-summary-title">📊 Rate-Wise Summary</div>
       <div class="rate-summary-grid">${gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;">No data</div>'}</div>
@@ -1085,10 +1135,10 @@ function render() {
       ${gd.hsnDetailTable}${common.totalsBlock}${common.wordsBlock}${footerBlock}${GEN_DOC}`;
   }
   else if (s.template === 'gst-lite') {
-    const liteHsn = buildGstLiteBlocks(t, s);
+    const liteHsn = buildGstLiteBlocks(t);
     html = `${custom.top}<div class="inv-top-right">Original for Recipient</div>
       <div class="inv-header"><div><div class="inv-biz-name">${esc(bizName)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div><div style="text-align:right;"><div class="inv-h1">${esc(labels.title)}</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">GST Summary Enclosed</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cli.gstin ? '<br>GSTIN: ' + esc(cli.gstin) : ''}</div></div><div>${detailsBoxHTML}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">${esc(cliName)}</div><div class="inv-party-info">${esc(cliInfo)}${cliGstinLine ? '<br>' + cliGstinLine : ''}</div></div><div>${detailsBoxHTML}</div></div>
       ${common.tableBlock}${custom.middle}
       <div class="gst-lite-summary"><div><div class="rate-summary-title">📋 HSN Summary</div>${liteHsn}</div><div>${common.totalsBlock}</div></div>
       ${common.wordsBlock}${footerBlock}${GEN_DOC}`;
@@ -1106,7 +1156,7 @@ function saveToHistory() {
   const totals = calcTotals();
   const entry = {
     id: editingHistoryId || ('inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
-    savedAt: new Date().toISOString(), docType: state.docType,
+    savedAt: new Date().toISOString(), docType: state.docType, regStatus: state.regStatus,
     business: JSON.parse(JSON.stringify(state.business)), client: JSON.parse(JSON.stringify(state.client)),
     meta: JSON.parse(JSON.stringify(state.meta)), items: JSON.parse(JSON.stringify(state.items)),
     details: JSON.parse(JSON.stringify(state.details || [])), bank: JSON.parse(JSON.stringify(state.bank)),
@@ -1138,7 +1188,7 @@ function renderHistory() {
   if (!history.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">📭</div><div>No saved invoices</div></div>'; return; }
   list.innerHTML = history.map(h => {
     const dateStr = h.invoiceDate ? fmtDate(h.invoiceDate) : fmtDate(h.savedAt);
-    return `<div class="history-item ${h.id === editingHistoryId ? 'selected' : ''}" role="button" tabindex="0" onclick="loadFromHistory('${h.id}')" onkeydown="if(event.key==='Enter')loadFromHistory('${h.id}')">
+    return `<div class="history-item ${h.id === editingHistoryId ? 'selected' : ''}" onclick="loadFromHistory('${h.id}')">
       <div class="hi-top"><div class="hi-no">${esc(h.invoiceNo)}${getDocTypeBadge(h.docType)}</div><div class="hi-date">${dateStr}</div></div>
       <div class="hi-client">${esc(h.clientName)}</div>
       <div class="hi-bottom"><div class="hi-amount">${fmt(h.total)}</div>
@@ -1152,6 +1202,7 @@ function loadFromHistory(id) {
   const hasCurrentData = state.client.name || state.items.some(i => i.desc);
   if (hasCurrentData && editingHistoryId !== id && !confirm('Load this invoice? Current data will be replaced.')) return;
   state.docType = entry.docType || 'Tax Invoice';
+  state.regStatus = entry.regStatus || 'registered';
   state.business = JSON.parse(JSON.stringify(entry.business));
   state.client = JSON.parse(JSON.stringify(entry.client));
   state.meta = JSON.parse(JSON.stringify(entry.meta));
@@ -1194,17 +1245,14 @@ function resetForNextInvoice() {
   renderItems(); renderDetails(); sync(); renderHistory();
 }
 
-// FIX #7: only zoom when the overflow is small (multi-page overflow flows naturally)
 function prepareForPrint() {
   const el = $('invoicePreview'); if (!el) return;
   el.style.zoom = '';
   const warning = $('printWarning'); if (warning) warning.classList.remove('show');
   void el.offsetHeight;
   const naturalHeight = el.scrollHeight;
-  const pageHeight = 1122;
-  const overflowRatio = naturalHeight / pageHeight;
-  if (naturalHeight > pageHeight && overflowRatio < 1.15) {
-    const scale = Math.min(pageHeight / naturalHeight, 1) * 0.98;
+  if (naturalHeight > 1122) {
+    const scale = Math.min(1122 / naturalHeight, 1) * 0.97;
     el.style.zoom = scale.toFixed(4);
     if (warning) warning.classList.add('show');
   }
@@ -1215,22 +1263,20 @@ function resetAfterPrint() {
   const warning = $('printWarning'); if (warning) warning.classList.remove('show');
 }
 
-// FIX #1: only reset the form after a print that WE initiated
-let pendingReset = false;
-
 window.addEventListener('beforeprint', prepareForPrint);
 
+let printHandled = false;
 window.addEventListener('afterprint', () => {
   resetAfterPrint();
-  if (!pendingReset) return;
-  pendingReset = false;
+  if (printHandled) return;
+  printHandled = true;
   setTimeout(() => { resetForNextInvoice(); showToast('✓ Ready for next'); }, 200);
 });
 
 function printAndSave() {
   if (!saveToHistory()) { showToast('⚠️ Fill the form first', 'red'); return; }
   showToast('✓ Saved — opening print');
-  pendingReset = true;
+  printHandled = false;
   prepareForPrint();
   setTimeout(() => window.print(), 200);
 }
@@ -1244,7 +1290,9 @@ function loadSample() {
   $('bExtra').value = 'Alt Phone: +91 90790 12345 · Website: dineshconstruction.in';
   $('cName').value = 'SURGYAN KANWAR';
   $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur, Meenawala, Jaipur, Rajasthan, Pin Code: 302034';
+  $('cGstin').value = '';
   $('mNo').value = 'BS/26-27/100'; $('mDate').value = today; $('mPlace').value = '08-Rajasthan';
+  $('regStatus').value = 'unregistered';
   $('bkHolder').value = 'Dinesh Saini'; $('bkName').value = 'Bank of Baroda';
   $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK';
   $('bkType').value = 'Current'; $('bkUpi').value = 'dinesh@barodampay';
@@ -1259,20 +1307,22 @@ function loadSample() {
     { desc:'Business Advisory Services', hsn:'998311', qty:1, rate:10000, gst:12 }
   ];
   state.details = ['Site name: Namma', 'Site Id: IN-12521251', 'Site Ref No.: R/fd/231413'];
-  renderItems(); renderDetails(); sync();
+  renderItems(); renderDetails();
+  handleRegStatus();
+  sync();
   setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
 }
 
-// FIX #4: allow clearAll to skip its own confirm when called from nukeEverything
-function clearAll(skipConfirm) {
-  if (!skipConfirm && !confirm('Clear everything?')) return;
+function clearAll() {
+  if (!confirm('Clear everything?')) return;
   ['bName','bAddr','bGstin','bPan','bEmail','bPhone','bExtra',
    'cName','cAddr','cGstin','cEmail','cPhone',
    'mNo','mDate','mPlace',
    'bkHolder','bkName','bkAc','bkIfsc','bkBranch','bkType','bkUpi',
    'terms','notes'].forEach(id => { const el = $(id); if (el) el.value = ''; });
   $('taxType').value = 'cgst-sgst'; $('docTypeSelect').value = 'Tax Invoice';
-  state.docType = 'Tax Invoice';
+  $('regStatus').value = 'registered';
+  state.docType = 'Tax Invoice'; state.regStatus = 'registered';
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
   editingHistoryId = null;
   setIfscStatus('idle', '');
@@ -1283,6 +1333,7 @@ function clearAll(skipConfirm) {
   localStorage.removeItem('invoiceState');
   localStorage.setItem('userClearedForm', '1');
   updateLabels(); updateCustomBadge();
+  handleRegStatus();
   renderItems(); renderDetails(); render(); renderHistory();
   showToast('🗑️ Cleared');
 }
@@ -1292,18 +1343,15 @@ function nukeEverything() {
   if (!confirm('Pakka?')) return;
   localStorage.clear();
   history = []; profiles = []; editingHistoryId = null;
-  clearAll(true); // skip the inner confirm
-  renderProfiles();
+  clearAll(); renderProfiles();
   showToast('💥 Everything reset', 'red');
 }
 
 function saveJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
-  // FIX #4: sanitize filename (invoice numbers often contain / or : )
-  const safeNo = (state.meta.no || 'invoice').replace(/[\\/:*?"<>|]/g, '-');
   a.href = URL.createObjectURL(blob);
-  a.download = safeNo + '_' + state.docType.replace(/\s+/g, '_') + '.json';
+  a.download = ((state.meta.no || 'invoice') + '_' + state.docType.replace(/\s+/g, '_') + '.json');
   a.click();
 }
 
@@ -1316,7 +1364,7 @@ function loadJSON(e) {
       Object.assign(state, data);
       if (!state.details) state.details = [''];
       if (!state.docType) state.docType = 'Tax Invoice';
-      if (!state.template) state.template = 'classic';
+      if (!state.regStatus) state.regStatus = 'registered';
       if (state.customText === undefined) state.customText = '।। जय श्री श्याम ।।';
       if (!state.customTextPosition) state.customTextPosition = 'top';
       if (!state.customTextColor) state.customTextColor = '#d97706';
@@ -1340,7 +1388,7 @@ function loadJSON(e) {
       Object.assign(state, data);
       if (!state.details) state.details = [''];
       if (!state.docType) state.docType = 'Tax Invoice';
-      if (!state.template) state.template = 'classic';
+      if (!state.regStatus) state.regStatus = 'registered';
       if (state.customText === undefined) state.customText = '।। जय श्री श्याम ।।';
       if (!state.customTextPosition) state.customTextPosition = 'top';
       if (!state.customTextColor) state.customTextColor = '#d97706';
