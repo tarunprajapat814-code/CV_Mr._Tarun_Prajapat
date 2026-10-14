@@ -73,10 +73,151 @@
     .field-input { background: #fff !important; border: none; font-weight: 500; }
     .total-row { background: #f0f0f0 !important; color: #000 !important; }
     .regime-box { page-break-inside: avoid; }
+    #lockScreen { display: none !important; }
   }
+
+  /* ═══════════════════════════════════════════
+     PASSWORD LOCK
+     ═══════════════════════════════════════════ */
+  #lockScreen {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #0a1e3f 0%, #0e4944 100%);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 99999;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  #lockScreen.hidden { display: none; }
+  .lock-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 40px 36px;
+    border-radius: 20px;
+    max-width: 380px; width: 90%;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  }
+  .lock-icon { font-size: 56px; margin-bottom: 12px; }
+  .lock-box h2 { color: #fff; font-size: 22px; margin-bottom: 6px; font-weight: 700; }
+  .lock-box p { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 20px; }
+  .lock-box input[type="password"] {
+    width: 100%; padding: 12px 16px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+  }
+  .lock-box input[type="password"]:focus { border-color: #e5b236; box-shadow: 0 0 0 3px rgba(229,178,54,0.2); }
+  .lock-box input[type="password"]::placeholder { color: rgba(255,255,255,0.4); letter-spacing: 0; }
+  .lock-box button {
+    width: 100%; padding: 12px;
+    background: linear-gradient(135deg, #e5b236, #d99b1d);
+    color: #0a1e3f;
+    font-weight: 700; font-size: 15px;
+    border: none; border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .lock-box button:hover { transform: translateY(-2px); }
+  #lockError { color: #fca5a5; font-size: 13px; margin-top: 10px; min-height: 18px; font-weight: 500; }
+  .remember-label {
+    display: flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    margin-top: 16px;
+    cursor: pointer;
+    justify-content: center;
+  }
+  .remember-label input { accent-color: #e5b236; cursor: pointer; }
+  .btn-lock {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1.5px solid #fcd34d;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+  .btn-lock:hover { background: #fde68a; }
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════
+     PASSWORD LOCK
+     ═══════════════════════════════════════════ -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>Protected Area</h2>
+    <p>Enter password to continue</p>
+    <input type="password" id="lockPwd" placeholder="Password" autocomplete="new-password">
+    <button type="button" onclick="unlockApp()">Unlock</button>
+    <div id="lockError"></div>
+    <label class="remember-label">
+      <input type="checkbox" id="rememberMe"> Remember for 7 days on this device
+    </label>
+    <div style="color: rgba(255,255,255,0.35); font-size: 11px; margin-top: 14px;">By Tarun Prajapat</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const _p = atob('VGFydW5AMjAyNg=='); // Default: Tarun@2026
+  const SESSION_KEY = 'itrUnlocked';
+  const REMEMBER_KEY = 'itrUnlockedTill';
+  const REMEMBER_DAYS = 7;
+
+  window.unlockApp = function() {
+    const pwd = document.getElementById('lockPwd').value;
+    if (pwd === _p) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      if (document.getElementById('rememberMe').checked) {
+        localStorage.setItem(REMEMBER_KEY, String(Date.now() + REMEMBER_DAYS * 86400000));
+      }
+      document.getElementById('lockScreen').classList.add('hidden');
+      document.body.style.overflow = '';
+    } else {
+      document.getElementById('lockError').textContent = '❌ Wrong password — try again';
+      document.getElementById('lockPwd').value = '';
+      document.getElementById('lockPwd').focus();
+    }
+  };
+  document.getElementById('lockPwd').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') window.unlockApp();
+  });
+  function isUnlocked() {
+    if (sessionStorage.getItem(SESSION_KEY) === '1') return true;
+    const till = localStorage.getItem(REMEMBER_KEY);
+    return till && Date.now() < Number(till);
+  }
+  if (isUnlocked()) {
+    document.getElementById('lockScreen').classList.add('hidden');
+  } else {
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('lockPwd').focus(), 200);
+  }
+  window.lockApp = function() {
+    if (!confirm('🔒 Lock this app now?')) return;
+    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(REMEMBER_KEY);
+    location.reload();
+  };
+})();
+</script>
 
 <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 shadow-lg no-print">
   <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
@@ -164,16 +305,11 @@
         <button class="btn btn-outline" onclick="clearAll()">🗑️ Clear All</button>
       </div>
 
-      <!-- Progress -->
       <div id="progressArea" class="mt-4" style="display:none;">
         <div class="text-sm text-gray-700 font-semibold" id="progressText">Processing...</div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       </div>
-
-      <!-- Status -->
       <div id="parseStatus" class="mt-3 text-sm"></div>
-
-      <!-- Extracted Fields Summary -->
       <div id="extractedSummary" class="mt-4" style="display:none;"></div>
     </div>
   </div>
@@ -496,6 +632,7 @@
     <button class="btn btn-outline" onclick="window.print()">🖨️ Print</button>
     <button class="btn btn-outline" onclick="exportJSON()">💾 Save JSON</button>
     <button class="btn btn-outline" onclick="exportITRJSON()">📤 Export ITR JSON</button>
+    <button class="btn-lock" onclick="lockApp()">🔒 Lock</button>
   </div>
 
   <footer class="text-center text-gray-500 text-xs py-6">
@@ -540,7 +677,6 @@ const num = id => Number(document.getElementById(id)?.value) || 0;
 const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
 const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 
-// Global extracted buffer
 let extractedBuffer = {};
 
 function toggleSection(id) { document.getElementById(id).classList.toggle('open'); }
@@ -555,9 +691,7 @@ function updateFormVisibility() {
 }
 document.getElementById('itrForm').addEventListener('change', () => { updateFormVisibility(); recalc(); });
 
-// ═══════════════════════════════════════════════════════════
-//  HOUSE PROPERTY
-// ═══════════════════════════════════════════════════════════
+// HOUSE PROPERTY
 let hpCount = 0;
 function addHouseProperty(data = {}) {
   hpCount++;
@@ -614,9 +748,7 @@ function calcHP() {
   return total;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CAPITAL GAINS
-// ═══════════════════════════════════════════════════════════
+// CAPITAL GAINS
 function addSTCG(data={}) {
   const row = `<tr>
     <td><select class="stcg-type"><option>Equity111A</option><option>DebtMF</option><option>OtherAssets</option></select></td>
@@ -675,9 +807,7 @@ function calcCG() {
   return total;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  FOREIGN
-// ═══════════════════════════════════════════════════════════
+// FOREIGN
 function addFSI(data={}) {
   const row = `<tr>
     <td><input class="fsi-country border rounded px-1 py-0.5 text-xs w-full" value="${data.country||''}"></td>
@@ -712,9 +842,7 @@ function calcForeign() {
   return total;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  TAX SLABS
-// ═══════════════════════════════════════════════════════════
+// TAX SLABS
 function taxOldRegime(income) {
   return calcSlabs(income, [
     {min:0, max:250000, rate:0},
@@ -762,9 +890,7 @@ function calcRebate(tax, income, regime) {
   return 0;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  MASTER RECALC
-// ═══════════════════════════════════════════════════════════
+// MASTER RECALC
 function recalc() {
   const salary = Math.max(0, num('s_gross') - num('s_allowances') - num('s_stdDed') - num('s_profTax') - num('s_entAllow'));
   setText('s_total', fmt(salary));
@@ -782,7 +908,6 @@ function recalc() {
   const dedTotal = num('d_80c') + num('d_80ccd1b') + num('d_80d') + num('d_80e') + num('d_80g') + num('d_80tta') + num('d_80ttb') + num('d_80u') + num('d_80gg') + num('d_other');
   setText('ded_total', fmt(dedTotal));
 
-  // OLD
   const oldTI = Math.max(0, gti - dedTotal);
   const oldTaxCalc = taxOldRegime(oldTI);
   const oldTax = oldTaxCalc.tax;
@@ -801,7 +926,6 @@ function recalc() {
   oldSlabHTML += '</tbody></table>';
   document.getElementById('oldSlabBreakdown').innerHTML = oldSlabHTML;
 
-  // NEW
   const newDed = num('d_80u');
   const newTI = Math.max(0, gti - newDed);
   const newTaxCalc = taxNewRegime(newTI);
@@ -855,9 +979,7 @@ document.addEventListener('input', e => {
 document.getElementById('regime').addEventListener('change', recalc);
 document.getElementById('ay').addEventListener('change', () => { document.getElementById('print_ay').textContent = document.getElementById('ay').value; });
 
-// ═══════════════════════════════════════════════════════════
-//  PROGRESS HELPERS
-// ═══════════════════════════════════════════════════════════
+// PROGRESS HELPERS
 function showProgress(text, pct) {
   document.getElementById('progressArea').style.display = 'block';
   document.getElementById('progressText').textContent = text;
@@ -867,9 +989,7 @@ function hideProgress() {
   setTimeout(() => { document.getElementById('progressArea').style.display = 'none'; }, 800);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  PDF PARSING — Form 16 / 26AS / AIS / Computation
-// ═══════════════════════════════════════════════════════════
+// PDF PARSING
 async function handlePDFUpload(event) {
   const files = Array.from(event.target.files || []);
   if (!files.length) return;
@@ -887,7 +1007,6 @@ async function handlePDFUpload(event) {
         showProgress(`📄 ${file.name} — page ${p}/${pdf.numPages}`, ((i + p/pdf.numPages)/files.length)*100);
         const page = await pdf.getPage(p);
         const content = await page.getTextContent();
-        // Preserve line breaks — items have transform matrix; use Y coordinate to detect new lines
         let lastY = null;
         let lineText = '';
         content.items.forEach(item => {
@@ -902,7 +1021,6 @@ async function handlePDFUpload(event) {
         fullText += lineText.trim() + '\n';
       }
 
-      // Detect doc type and parse
       const detected = detectDocType(fullText, file.name);
       showProgress(`🔍 Detected: ${detected} — extracting fields...`, 80);
       const extracted = extractFields(fullText, detected);
@@ -916,11 +1034,8 @@ async function handlePDFUpload(event) {
   showProgress('✅ Extraction complete', 100);
   hideProgress();
 
-  // Store and show preview
   extractedBuffer = allExtracted;
   showExtractedPreview();
-
-  // Auto-apply if user confirms — but let's just auto-apply for convenience
   applyExtracted(true);
 }
 
@@ -938,15 +1053,12 @@ function detectDocType(text, filename) {
 
 function extractFields(text, docType) {
   const out = {};
-  // Normalize — but preserve some line structure
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const flat = text.replace(/\s+/g, ' ');
 
-  // ──── Personal info ────
   const panMatch = flat.match(/\b([A-Z]{5}[0-9]{4}[A-Z])\b/);
   if (panMatch) out.p_pan = panMatch[1];
 
-  // Name — try multiple patterns
   const namePatterns = [
     /Name\s+of\s+(?:the\s+)?Employee[:\s]+([A-Z][A-Za-z\s.]+?)(?=\s+(?:PAN|Address|Father|Designation|TAN|Sr\.|$))/i,
     /Name\s+of\s+(?:the\s+)?Assessee[:\s]+([A-Z][A-Za-z\s.]+?)(?=\s+(?:PAN|Address|Father|$))/i,
@@ -958,27 +1070,21 @@ function extractFields(text, docType) {
     if (m) { out.p_name = m[1].trim().replace(/\s+/g, ' '); break; }
   }
 
-  // DOB
   const dobMatch = flat.match(/(?:Date\s+of\s+Birth|DOB)[:\s]*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/i);
   if (dobMatch) out.p_dob = dobMatch[1];
 
-  // Aadhaar
   const aadhaarMatch = flat.match(/(?:Aadhaar|Aadhar)[^\d]*(\d{4}\s?\d{4}\s?\d{4})/i);
   if (aadhaarMatch) out.p_aadhaar = aadhaarMatch[1];
 
-  // Email
   const emailMatch = flat.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);
   if (emailMatch) out.p_email = emailMatch[0];
 
-  // Mobile
   const mobMatch = flat.match(/(?:Mobile|Phone|Contact)[^\d]*([6-9]\d{9})/i);
   if (mobMatch) out.p_mobile = mobMatch[1];
 
-  // TAN
   const tanMatch = flat.match(/\b([A-Z]{4}[0-9]{5}[A-Z])\b/);
   if (tanMatch) out.p_tan = tanMatch[1];
 
-  // Employer name
   const empPatterns = [
     /Name\s+and\s+address\s+of\s+(?:the\s+)?(?:Employer|Deductor)[:\s]+([A-Z][A-Za-z\s.&,]+?)(?=\s+(?:TAN|PAN|Address|Sr\.|$))/i,
     /Employer[:\s]+([A-Z][A-Za-z\s.&,]+?)(?=\s+(?:TAN|PAN|$))/i,
@@ -988,12 +1094,9 @@ function extractFields(text, docType) {
     if (m) { out.p_employer = m[1].trim().replace(/\s+/g, ' ').substring(0, 80); break; }
   }
 
-  // ──── Salary ────
-  // Gross Salary (17(1))
   const grossMatch = flat.match(/(?:Gross\s+Salary|Salary\s+as\s+per\s+(?:section\s+)?17\(1\)|Total\s+Gross\s+Salary)[^\d₹Rs.]*([\d,]+(?:\.\d{1,2})?)/i);
   if (grossMatch) out.s_gross = parseNum(grossMatch[1]);
 
-  // Alternative — aggregate of salary components
   if (!out.s_gross) {
     const basicMatch = flat.match(/Basic\s+(?:Salary|Pay)[^\d₹Rs.]*([\d,]+(?:\.\d{1,2})?)/i);
     const hraMatch = flat.match(/(?:HRA|House\s+Rent\s+Allowance)[^\d₹Rs.]*([\d,]+(?:\.\d{1,2})?)/i);
@@ -1006,19 +1109,15 @@ function extractFields(text, docType) {
     }
   }
 
-  // Standard Deduction
   const sdMatch = flat.match(/Standard\s+Deduction[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (sdMatch) out.s_stdDed = parseNum(sdMatch[1]);
 
-  // Professional Tax
   const ptMatch = flat.match(/(?:Professional\s+Tax|Tax\s+on\s+employment)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (ptMatch) out.s_profTax = parseNum(ptMatch[1]);
 
-  // HRA Exemption
   const hraExMatch = flat.match(/(?:HRA\s+Exempt|House\s+Rent\s+Allowance\s+Exempt)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (hraExMatch) out.s_allowances = parseNum(hraExMatch[1]);
 
-  // ──── Chapter VI-A ────
   const c80cMatch = flat.match(/80\s*C[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
   if (c80cMatch) out.d_80c = parseNum(c80cMatch[1]);
 
@@ -1037,7 +1136,6 @@ function extractFields(text, docType) {
   const c80eMatch = flat.match(/80\s*E[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/);
   if (c80eMatch) out.d_80e = parseNum(c80eMatch[1]);
 
-  // ──── Taxes Paid / TDS ────
   const tdsMatch = flat.match(/(?:Total\s+TDS|Tax\s+Deducted\s+at\s+Source|TDS\s+Deducted|Total\s+Tax\s+Deducted)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (tdsMatch) out.tp_tds = parseNum(tdsMatch[1]);
 
@@ -1050,7 +1148,6 @@ function extractFields(text, docType) {
   const selfMatch = flat.match(/(?:Self[- ]?Assessment\s+Tax)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (selfMatch) out.tp_self = parseNum(selfMatch[1]);
 
-  // ──── Income from Other Sources ────
   const sbIntMatch = flat.match(/(?:Interest\s+from\s+Savings|Savings\s+Bank\s+Interest|Interest\s+on\s+Savings)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (sbIntMatch) out.os_sb = parseNum(sbIntMatch[1]);
 
@@ -1063,23 +1160,19 @@ function extractFields(text, docType) {
   const refundIntMatch = flat.match(/(?:Interest\s+on\s+(?:Income\s+Tax\s+)?Refund)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (refundIntMatch) out.os_refund = parseNum(refundIntMatch[1]);
 
-  // ──── AIS specific ────
   if (docType === 'AIS') {
-    // AIS has TDS/TCS by different sections
     const tdsSections = flat.matchAll(/(?:TDS|Tax\s+Deducted)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/gi);
     let totalTDS = 0;
     for (const m of tdsSections) totalTDS += parseNum(m[1]);
     if (totalTDS > 0 && !out.tp_tds) out.tp_tds = totalTDS;
   }
 
-  // ──── Capital Gains ────
   const stcgMatch = flat.match(/(?:Short[- ]?Term\s+Capital\s+Gains?|STCG)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (stcgMatch) out._stcg = parseNum(stcgMatch[1]);
 
   const ltcgMatch = flat.match(/(?:Long[- ]?Term\s+Capital\s+Gains?|LTCG)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (ltcgMatch) out._ltcg = parseNum(ltcgMatch[1]);
 
-  // ──── Foreign Income ────
   const fsiMatch = flat.match(/(?:Foreign\s+(?:Source\s+)?Income)[^\d₹Rs.\-]*([\d,]+(?:\.\d{1,2})?)/i);
   if (fsiMatch) out._fsi = parseNum(fsiMatch[1]);
 
@@ -1098,7 +1191,6 @@ function mergeExtracted(a, b) {
   const out = {...a};
   for (const k in b) {
     if (b[k] && (typeof b[k] === 'string' ? b[k].length : b[k] > 0)) {
-      // For numeric fields, sum if duplicate
       if (['tp_tds','tp_tcs','tp_self','os_sb','os_fd','os_div','os_refund'].includes(k) && out[k]) {
         out[k] = Number(out[k]) + Number(b[k]);
       } else {
@@ -1109,9 +1201,6 @@ function mergeExtracted(a, b) {
   return out;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  PREVIEW + APPLY
-// ═══════════════════════════════════════════════════════════
 function showExtractedPreview() {
   const content = document.getElementById('previewContent');
   if (Object.keys(extractedBuffer).length === 0) {
@@ -1147,7 +1236,7 @@ function applyExtracted(silent = false) {
   let applied = 0;
 
   for (const k in extractedBuffer) {
-    if (k.startsWith('_')) continue; // internal flags
+    if (k.startsWith('_')) continue;
     const el = document.getElementById(k);
     if (el && extractedBuffer[k]) {
       el.value = extractedBuffer[k];
@@ -1157,19 +1246,9 @@ function applyExtracted(silent = false) {
     }
   }
 
-  // Handle STCG/LTCG aggregates — add as rows
-  if (extractedBuffer._stcg && extractedBuffer._stcg > 0) {
-    addSTCG({salePrice: extractedBuffer._stcg, cost: 0, expenses: 0});
-    applied++;
-  }
-  if (extractedBuffer._ltcg && extractedBuffer._ltcg > 0) {
-    addLTCG({salePrice: extractedBuffer._ltcg, cost: 0, exemption: 0});
-    applied++;
-  }
-  if (extractedBuffer._fsi && extractedBuffer._fsi > 0) {
-    addFSI({country: 'Detected', incomeType: 'Foreign Income', income: extractedBuffer._fsi, foreignTaxPaid: extractedBuffer.f_ftcPaid || 0});
-    applied++;
-  }
+  if (extractedBuffer._stcg && extractedBuffer._stcg > 0) { addSTCG({salePrice: extractedBuffer._stcg, cost: 0, expenses: 0}); applied++; }
+  if (extractedBuffer._ltcg && extractedBuffer._ltcg > 0) { addLTCG({salePrice: extractedBuffer._ltcg, cost: 0, exemption: 0}); applied++; }
+  if (extractedBuffer._fsi && extractedBuffer._fsi > 0) { addFSI({country: 'Detected', incomeType: 'Foreign Income', income: extractedBuffer._fsi, foreignTaxPaid: extractedBuffer.f_ftcPaid || 0}); applied++; }
 
   recalc();
   if (!silent) {
@@ -1180,9 +1259,6 @@ function applyExtracted(silent = false) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  IMAGE OCR
-// ═══════════════════════════════════════════════════════════
 async function handleImageUpload(event) {
   const files = Array.from(event.target.files || []);
   if (!files.length) return;
@@ -1211,9 +1287,6 @@ async function handleImageUpload(event) {
   showExtractedPreview();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  JSON UPLOAD
-// ═══════════════════════════════════════════════════════════
 async function handleJSONUpload(event) {
   const files = Array.from(event.target.files || []);
   if (!files.length) return;
@@ -1327,9 +1400,6 @@ function parseJSONInput() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  AIS DECRYPT
-// ═══════════════════════════════════════════════════════════
 function openAISDecryptModal() { document.getElementById('aisModal').classList.add('show'); }
 function closeAISModal() { document.getElementById('aisModal').classList.remove('show'); }
 
@@ -1384,9 +1454,6 @@ function extractFromAIS(ais) {
   applyExtracted(true);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CLEAR / SAMPLE
-// ═══════════════════════════════════════════════════════════
 function clearAll() {
   if (!confirm('Clear all data?')) return;
   document.querySelectorAll('input, textarea, select').forEach(el => {
@@ -1427,9 +1494,6 @@ function loadSampleData() {
   document.getElementById('parseStatus').innerHTML = '<span class="pill pill-green">✅ Sample data loaded</span>';
 }
 
-// ═══════════════════════════════════════════════════════════
-//  EXPORTS
-// ═══════════════════════════════════════════════════════════
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
