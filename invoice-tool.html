@@ -154,6 +154,8 @@
   .footer-grid .kv strong { color: var(--text); font-weight: 600; }
   .sign-area { margin-top: 18px; text-align: right; padding-top: 6px; }
   .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
+  .sign-auth { font-size: 10px; font-weight: 700; color: var(--text); margin-top: 22px; letter-spacing: 0.3px; }
+  .tpl-elegant .sign-auth { font-family: 'Playfair Display', serif; font-style: italic; }
   .computer-gen-line { text-align: center; font-size: 9px; color: #94a3b8; font-style: italic; letter-spacing: 0.4px; font-weight: 400; margin-top: 14px; padding-top: 6px; }
   .custom-text-top { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 4px 0 10px 0; margin-bottom: 10px; border-bottom: 1px dashed currentColor; line-height: 1.3; }
   .custom-text-middle { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 10px 0 4px 0; margin-top: 10px; margin-bottom: 8px; border-top: 1px dashed currentColor; line-height: 1.3; }
@@ -1009,7 +1011,6 @@ function loadBusinessProfile(id) {
   $('bExtra').value = p.extra || '';
   state.business.logo = sanitizeLogo(p.logo || '');
   updateLogoPreview();
-  // Restore bank details if present in this profile
   if (p.bank) {
     $('bkHolder').value = p.bank.holder || '';
     $('bkName').value = p.bank.name || '';
@@ -1321,7 +1322,7 @@ function buildFooterBlock(s, bizName) {
       (bank.upi ? '<div class="kv"><strong>UPI:</strong> ' + esc(bank.upi) + '</div>' : '') : '') +
     (s.terms ? '<h4 style="margin-top:10px;">Terms & Conditions</h4><p>' + esc(s.terms).replace(/\n/g, '<br>') + '</p>' : '') +
     (s.notes ? '<h4 style="margin-top:8px;">Notes</h4><p>' + esc(s.notes).replace(/\n/g, '<br>') + '</p>' : '') +
-    '</div><div><div class="sign-area"><div class="sign-line">For ' + esc(bizName) + '</div></div></div></div>';
+    '</div><div><div class="sign-area"><div class="sign-line">For ' + esc(bizName) + '</div><div class="sign-auth">Authorized Signatory</div></div></div></div>';
 }
 
 const GEN_DOC = '<div class="computer-gen-line">This is a Computer Generated Document</div>';
