@@ -675,6 +675,21 @@
 <div class="toast" id="toast">✓ Saved</div>
 
 <script>
+const ORIGINAL_TITLE = document.title;
+
+const TEMPLATE_NAMES = {
+  'classic': 'Classic',
+  'modern': 'Modern',
+  'minimal': 'Minimal',
+  'gst': 'GST Pro',
+  'elegant': 'Elegant',
+  'corporate': 'Corporate',
+  'compact': 'Compact',
+  'rounded': 'Rounded',
+  'gst-detailed': 'GST Detailed',
+  'gst-lite': 'GST Lite'
+};
+
 const state = {
   docType: 'Tax Invoice', template: 'classic', taxType: 'cgst-sgst', regStatus: 'registered',
   items: [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }], details: [''],
@@ -1620,7 +1635,18 @@ function resetForNextInvoice() {
   renderItems(); renderDetails(); sync(); renderHistory();
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   PRINT — sets PDF filename based on Invoice No. + Template name
+   ═══════════════════════════════════════════════════════════════ */
 function prepareForPrint() {
+  // Set document.title so that "Save as PDF" uses it as the filename
+  const invNo = (state.meta.no || 'Invoice').replace(/[\\/:*?"<>|]/g, '-').trim();
+  const tplName = TEMPLATE_NAMES[state.template] || 'Classic';
+  const docType = (state.docType || 'Invoice').replace(/[\\/:*?"<>|]/g, '-');
+  const safeInvNo = invNo || 'Invoice';
+  // Format: {InvoiceNo}_{DocumentType}_{TemplateName}
+  document.title = safeInvNo + '_' + docType.replace(/\s+/g, '') + '_' + tplName;
+
   const el = $('invoicePreview'); if (!el) return;
   el.style.zoom = '';
   const warning = $('printWarning'); if (warning) warning.classList.remove('show');
@@ -1636,6 +1662,7 @@ function prepareForPrint() {
 }
 
 function resetAfterPrint() {
+  document.title = ORIGINAL_TITLE;   // restore browser tab title
   const el = $('invoicePreview'); if (el) el.style.zoom = '';
   const warning = $('printWarning'); if (warning) warning.classList.remove('show');
 }
