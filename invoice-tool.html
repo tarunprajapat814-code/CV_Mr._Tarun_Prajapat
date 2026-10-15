@@ -301,6 +301,7 @@
   .inv-logo-corporate { max-height: 55px; max-width: 140px; object-fit: contain; display: block; background: #fff; padding: 3px 6px; border-radius: 6px; }
   .inv-logo-elegant { max-height: 70px; max-width: 180px; object-fit: contain; display: block; margin: 0 auto 8px auto; }
   .inv-logo-wrap { display: flex; align-items: center; gap: 14px; }
+  .panel-head .panel-hint { font-size: 9px; opacity: 0.6; text-transform: none; letter-spacing: 0; font-weight: 500; margin-left: auto; margin-right: 8px; }
 
   @media print {
     @page { size: A4 portrait; margin: 0; }
@@ -544,7 +545,7 @@
           <div class="field"><label>Phone</label><input id="bPhone" autocomplete="off" oninput="sync()"></div>
         </div>
         <div class="field"><label>Additional Info</label><textarea id="bExtra" rows="2" placeholder="Extra line — e.g. Website, alt phone" autocomplete="off" oninput="sync()"></textarea></div>
-        <button class="btn btn-warning btn-sm" style="width:100%;justify-content:center;margin-top:6px;" onclick="saveBusinessProfile()">💾 Save This Business Detail</button>
+        <button class="btn btn-warning btn-sm" style="width:100%;justify-content:center;margin-top:6px;" onclick="saveBusinessProfile()">💾 Save Business + Bank Details</button>
       </div>
     </div>
 
@@ -621,7 +622,10 @@
     </div>
 
     <div class="panel">
-      <div class="panel-head" onclick="togglePanel(this, 'bankBody')">🏦 Bank Details <span>▼</span></div>
+      <div class="panel-head" onclick="togglePanel(this, 'bankBody')">
+        <span style="display:flex;align-items:center;gap:6px;">🏦 Bank Details <span class="panel-hint">(profile me save hoga)</span></span>
+        <span>▼</span>
+      </div>
       <div class="panel-body" id="bankBody">
         <div class="field"><label>Account Holder</label><input id="bkHolder" autocomplete="off" oninput="sync()"></div>
         <div class="field"><label>Bank Name</label><input id="bkName" autocomplete="off" oninput="sync()"></div>
@@ -961,9 +965,18 @@ function saveBusinessProfile() {
     name, addr: $('bAddr').value, gstin, pan: $('bPan').value.trim(),
     email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(), extra: $('bExtra').value,
     logo: sanitizeLogo((state.business && state.business.logo) || ''),
-    regStatus: $('regStatus').value
+    regStatus: $('regStatus').value,
+    bank: {
+      holder: $('bkHolder').value,
+      name: $('bkName').value,
+      ac: $('bkAc').value,
+      ifsc: ($('bkIfsc').value || '').trim().toUpperCase(),
+      branch: $('bkBranch').value,
+      type: $('bkType').value,
+      upi: $('bkUpi').value
+    }
   };
-  if (idx >= 0) { profiles[idx] = profile; showToast('✓ Updated'); } else { profiles.unshift(profile); showToast('✓ Saved'); }
+  if (idx >= 0) { profiles[idx] = profile; showToast('✓ Updated (Business + Bank)'); } else { profiles.unshift(profile); showToast('✓ Saved (Business + Bank)'); }
   if (profiles.length > 20) profiles = profiles.slice(0, 20);
   saveProfilesToLS(); renderProfiles();
 }
@@ -974,11 +987,12 @@ function renderProfiles() {
   if (!profiles.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">💼</div><div>No saved details</div></div>'; return; }
   list.innerHTML = profiles.map(p => {
     const city = (p.addr || '').split('\n')[0].substring(0, 30);
+    const hasBank = p.bank && (p.bank.name || p.bank.ac || p.bank.ifsc);
     return '<div class="profile-item" role="button" tabindex="0" onclick="loadBusinessProfile(\'' + p.id + '\')" onkeydown="if(event.key===\'Enter\')loadBusinessProfile(\'' + p.id + '\')">' +
       '<div class="pi-name">' + esc(p.name) + '</div>' +
       '<div class="pi-info">' + esc(city) + '</div>' +
       '<div class="pi-bottom">' +
-        '<span class="pi-gst">' + (p.gstin ? 'GST: ' + esc(p.gstin.substring(0, 8)) + '...' : 'No GSTIN') + '</span>' +
+        '<span class="pi-gst">' + (p.gstin ? 'GST: ' + esc(p.gstin.substring(0, 8)) + '...' : 'No GSTIN') + (hasBank ? ' · 🏦' : '') + '</span>' +
         '<div class="pi-actions" onclick="event.stopPropagation()"><button class="pi-del" onclick="deleteBusinessProfile(\'' + p.id + '\')">🗑️</button></div>' +
       '</div></div>';
   }).join('');
@@ -988,16 +1002,29 @@ function loadBusinessProfile(id) {
   const p = profiles.find(x => x.id === id); if (!p) return;
   const hasData = $('bName').value.trim() || $('bGstin').value.trim();
   const same = ($('bName').value.trim() === p.name) && ($('bGstin').value.trim() === p.gstin);
-  if (hasData && !same && !confirm('Load "' + p.name + '"?')) return;
+  if (hasData && !same && !confirm('Load "' + p.name + '" (Business + Bank)?')) return;
   $('bName').value = p.name || ''; $('bAddr').value = p.addr || '';
   $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
   $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
   $('bExtra').value = p.extra || '';
   state.business.logo = sanitizeLogo(p.logo || '');
   updateLogoPreview();
+  // Restore bank details if present in this profile
+  if (p.bank) {
+    $('bkHolder').value = p.bank.holder || '';
+    $('bkName').value = p.bank.name || '';
+    $('bkAc').value = p.bank.ac || '';
+    $('bkIfsc').value = p.bank.ifsc || '';
+    $('bkBranch').value = p.bank.branch || '';
+    $('bkType').value = p.bank.type || '';
+    $('bkUpi').value = p.bank.upi || '';
+    ifscLastFetched = p.bank.ifsc || '';
+    if (p.bank.branch) $('bkBranch').readOnly = true;
+    setIfscStatus('idle', '');
+  }
   if (p.regStatus) $('regStatus').value = p.regStatus;
   handleRegStatus();
-  sync(); showToast('✓ Loaded', 'purple'); window.scrollTo({ top: 0, behavior: 'smooth' });
+  sync(); showToast('✓ Loaded (Business + Bank)', 'purple'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function deleteBusinessProfile(id) {
