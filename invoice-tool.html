@@ -112,6 +112,13 @@
   .tpl-rounded { --accent: #7c3aed; --accent-soft: #ede9fe; --accent-text: #fff; }
   .tpl-gst-detailed { --accent: #065f46; --accent-soft: #d1fae5; --accent-text: #fff; }
   .tpl-gst-lite { --accent: #0369a1; --accent-soft: #e0f2fe; --accent-text: #fff; }
+  .tpl-bold { --accent: #0f172a; --accent-soft: #fef3c7; --accent-text: #fff; --text: #0f172a; }
+  .tpl-executive { --accent: #1e3a5f; --accent-soft: #fdf6e3; --accent-text: #c9a961; --text: #0f172a; }
+  .tpl-wave { --accent: #0e7490; --accent-soft: #cffafe; --accent-text: #fff; }
+  .tpl-split { --accent: #7c2d12; --accent-soft: #fef3c7; --accent-text: #fff; }
+  .tpl-standard { --accent: #111827; --accent-soft: #f3f4f6; --accent-text: #fff; }
+  .tpl-freelancer { --accent: #6366f1; --accent-soft: #ede9fe; --accent-text: #fff; }
+
   .inv-h1 { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1.5px; }
   .inv-biz-name { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; letter-spacing: 0.2px; }
   .inv-biz-info { margin-top: 5px; font-size: 10px; color: var(--muted); line-height: 1.5; }
@@ -156,10 +163,12 @@
   .sign-line { border-top: 1px solid var(--text); display: inline-block; padding-top: 5px; font-size: 10px; min-width: 160px; font-weight: 600; }
   .sign-auth { font-size: 10px; font-weight: 700; color: var(--text); margin-top: 22px; letter-spacing: 0.3px; }
   .tpl-elegant .sign-auth { font-family: 'Playfair Display', serif; font-style: italic; }
+  .tpl-executive .sign-auth { font-family: 'Playfair Display', serif; color: #1e3a5f; }
   .computer-gen-line { text-align: center; font-size: 9px; color: #94a3b8; font-style: italic; letter-spacing: 0.4px; font-weight: 400; margin-top: 14px; padding-top: 6px; }
   .custom-text-top { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 4px 0 10px 0; margin-bottom: 10px; border-bottom: 1px dashed currentColor; line-height: 1.3; }
   .custom-text-middle { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 10px 0 4px 0; margin-top: 10px; margin-bottom: 8px; border-top: 1px dashed currentColor; line-height: 1.3; }
   .tpl-elegant .custom-text-top, .tpl-elegant .custom-text-middle { font-family: 'Playfair Display', serif; letter-spacing: 3px; }
+
   .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
   .tpl-classic .inv-title-box { text-align: right; }
   .tpl-classic .inv-title-box .inv-h1 { font-size: 26px; color: var(--accent); }
@@ -289,6 +298,102 @@
   .gst-lite-hsn-table td { padding: 5px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 9.5px; }
   .gst-lite-hsn-table td:first-child { text-align: left; font-weight: 700; color: #075985; }
   .gst-lite-hsn-table tr:last-child td { border-bottom: none; }
+
+  /* ═══ NEW TEMPLATE: BOLD ═══ */
+  .tpl-bold { padding: 0; }
+  .tpl-bold .inv-header-band { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 22px 24px; margin: -10mm -12mm 18px -12mm; border-bottom: 4px solid #f59e0b; }
+  .tpl-bold .inv-biz-name { font-size: 24px; color: #fff; font-weight: 800; letter-spacing: 0.3px; }
+  .tpl-bold .inv-biz-info { color: rgba(255,255,255,0.75); margin-top: 6px; }
+  .tpl-bold .inv-biz-info .biz-line strong { color: #f59e0b; }
+  .tpl-bold .inv-h1 { font-size: 28px; color: #f59e0b; letter-spacing: 3px; }
+  .tpl-bold .inv-table th { background: #0f172a; padding: 10px 7px; font-size: 8.5px; letter-spacing: 0.4px; }
+  .tpl-bold .inv-table td { padding: 7px; font-size: 10.5px; }
+  .tpl-bold .totals-row.grand { background: #f59e0b; color: #fff; padding: 9px 12px; border: none; border-radius: 4px; margin-top: 6px; }
+  .tpl-bold .totals-row.grand .lbl { color: #fff; }
+  .tpl-bold .words-box { background: #fef3c7; border-left: 4px solid #f59e0b; }
+  .tpl-bold .words-box strong { color: #b45309; }
+  .tpl-bold .inv-table th.r { color: #fff; }
+
+  /* ═══ NEW TEMPLATE: EXECUTIVE ═══ */
+  .tpl-executive { padding: 0; font-family: 'Georgia', 'Playfair Display', serif; }
+  .tpl-executive .inv-header-band { background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%); color: #fff; padding: 26px 24px; margin: -10mm -12mm 18px -12mm; border-bottom: 3px solid #c9a961; position: relative; }
+  .tpl-executive .inv-biz-name { font-family: 'Playfair Display', serif; font-size: 26px; color: #fff; letter-spacing: 0.5px; }
+  .tpl-executive .inv-biz-info { color: rgba(255,255,255,0.75); }
+  .tpl-executive .inv-biz-info .biz-line strong { color: #c9a961; }
+  .tpl-executive .inv-h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: #c9a961; letter-spacing: 5px; text-transform: uppercase; }
+  .tpl-executive .inv-table th { background: #1e3a5f; color: #c9a961; padding: 10px 8px; letter-spacing: 0.8px; font-size: 8.5px; }
+  .tpl-executive .inv-table td { padding: 8px 10px; font-size: 10px; }
+  .tpl-executive .inv-table { border: 1px solid #c9a961; }
+  .tpl-executive .totals-row.grand { border-top: 3px double #c9a961; border-bottom: 3px double #c9a961; color: #1e3a5f; padding: 8px 0; margin-top: 6px; }
+  .tpl-executive .words-box { background: #fdf6e3; border-left: 3px solid #c9a961; }
+  .tpl-executive .words-box strong { color: #7c5a1a; }
+  .tpl-executive .inv-details-title { font-family: 'Playfair Display', serif; font-style: italic; color: #1e3a5f; }
+  .tpl-executive .footer-grid h4 { color: #1e3a5f; }
+
+  /* ═══ NEW TEMPLATE: WAVE ═══ */
+  .tpl-wave { padding: 0; }
+  .tpl-wave .inv-wave-top { background: linear-gradient(135deg, #0e7490 0%, #14b8a6 100%); margin: -10mm -12mm 0 -12mm; padding: 24px 24px 34px 24px; color: #fff; position: relative; overflow: hidden; }
+  .tpl-wave .inv-wave-top::after { content: ''; position: absolute; bottom: -1px; left: -5%; right: -5%; height: 30px; background: #fff; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+  .tpl-wave .inv-wave-content { position: relative; z-index: 2; }
+  .tpl-wave .inv-biz-name { font-size: 22px; color: #fff; font-weight: 800; }
+  .tpl-wave .inv-biz-info { color: rgba(255,255,255,0.85); }
+  .tpl-wave .inv-biz-info .biz-line strong { color: #fef3c7; }
+  .tpl-wave .inv-h1 { font-size: 26px; color: #fff; letter-spacing: 2px; }
+  .tpl-wave .wave-body { padding-top: 12px; }
+  .tpl-wave .inv-table th { background: #0e7490; padding: 8px 6px; font-size: 8.5px; }
+  .tpl-wave .inv-table td { padding: 7px; }
+  .tpl-wave .totals-row.grand { background: linear-gradient(135deg, #ecfeff, #cffafe); padding: 10px 12px; border: none; border-radius: 10px; color: #0e7490; border-top: none; }
+  .tpl-wave .words-box { background: #ecfeff; }
+
+  /* ═══ NEW TEMPLATE: SPLIT ═══ */
+  .tpl-split { padding: 0; }
+  .tpl-split .inv-split-header { display: grid; grid-template-columns: 1fr 1fr; margin: -10mm -12mm 18px -12mm; min-height: 120px; }
+  .tpl-split .inv-split-left { background: linear-gradient(135deg, #7c2d12 0%, #b45309 100%); color: #fff; padding: 22px 20px; display: flex; flex-direction: column; justify-content: center; }
+  .tpl-split .inv-split-right { background: #fef3c7; color: #7c2d12; padding: 22px 20px; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right; }
+  .tpl-split .inv-biz-name { font-size: 20px; color: #fff; }
+  .tpl-split .inv-biz-info { color: rgba(255,255,255,0.85); }
+  .tpl-split .inv-biz-info .biz-line strong { color: #fef3c7; }
+  .tpl-split .inv-h1 { font-size: 24px; color: #7c2d12; letter-spacing: 2px; }
+  .tpl-split .inv-split-right .inv-sub { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; color: rgba(124,45,18,0.7); }
+  .tpl-split .inv-table th { background: #7c2d12; padding: 8px 6px; }
+  .tpl-split .totals-row.grand { background: #fef3c7; padding: 8px 12px; color: #7c2d12; border: none; border-radius: 4px; }
+  .tpl-split .words-box { background: #fef3c7; }
+
+  /* ═══ NEW TEMPLATE: STANDARD ═══ */
+  .tpl-standard { padding: 12mm 12mm; }
+  .tpl-standard .inv-header { border: 2px solid #111827; padding: 12px 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+  .tpl-standard .inv-biz-name { font-size: 20px; font-weight: 800; }
+  .tpl-standard .inv-biz-info { font-size: 9.5px; }
+  .tpl-standard .inv-h1 { font-size: 22px; letter-spacing: 2px; text-transform: uppercase; }
+  .tpl-standard .inv-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .tpl-standard .inv-box { border: 1.5px solid #111827; padding: 8px 10px; min-height: 100px; font-size: 10px; }
+  .tpl-standard .inv-box-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #111827; padding-bottom: 3px; margin-bottom: 6px; font-weight: 800; }
+  .tpl-standard .inv-box-detail-row { display: flex; justify-content: space-between; padding: 2px 0; font-size: 10px; }
+  .tpl-standard .inv-box-detail-row .lbl { color: #475569; }
+  .tpl-standard .inv-box-detail-row .val { font-weight: 700; }
+  .tpl-standard .inv-table { border: 1.5px solid #111827; margin: 0 0 10px 0; }
+  .tpl-standard .inv-table th { background: #111827; padding: 7px 5px; border-right: 1px solid #fff; font-size: 8px; }
+  .tpl-standard .inv-table th:last-child { border-right: none; }
+  .tpl-standard .inv-table td { border: 1px solid #d1d5db; padding: 5px 7px; font-size: 10px; }
+  .tpl-standard .inv-table tr:last-child td { border-bottom: 1.5px solid #111827; }
+  .tpl-standard .totals-box { border: 1.5px solid #111827; width: 300px; padding: 0; }
+  .tpl-standard .totals-row { padding: 5px 10px; border-bottom: 1px solid #d1d5db; font-size: 10.5px; }
+  .tpl-standard .totals-row.grand { background: #111827; color: #fff; padding: 8px 12px; border: none; margin-top: 0; }
+  .tpl-standard .totals-row.grand .lbl { color: #fff; }
+  .tpl-standard .words-box { background: transparent; border: 1.5px solid #111827; border-radius: 0; margin-top: 10px; }
+
+  /* ═══ NEW TEMPLATE: FREELANCER ═══ */
+  .tpl-freelancer { padding: 12mm 12mm; }
+  .tpl-freelancer .inv-header { display: flex; align-items: center; gap: 16px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 2px solid #e0e7ff; }
+  .tpl-freelancer .inv-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Poppins', sans-serif; flex-shrink: 0; box-shadow: 0 4px 14px rgba(99,102,241,0.35); text-transform: uppercase; }
+  .tpl-freelancer .inv-h1 { font-size: 22px; color: #6366f1; letter-spacing: 1px; }
+  .tpl-freelancer .inv-biz-name { font-size: 20px; }
+  .tpl-freelancer .inv-table th { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 8px 7px; }
+  .tpl-freelancer .inv-table td { padding: 7px; }
+  .tpl-freelancer .totals-row.grand { background: #ede9fe; padding: 10px 12px; color: #6366f1; border: none; border-radius: 10px; }
+  .tpl-freelancer .words-box { background: #ede9fe; border-radius: 10px; }
+  .tpl-freelancer .footer-grid { background: #f8fafc; padding: 12px 14px; border-radius: 10px; border-top: none; }
+
   .logo-upload-wrap { display: flex; gap: 10px; align-items: center; padding: 10px; background: #f8fafc; border-radius: 8px; border: 1.5px dashed #cbd5e1; }
   .logo-preview { width: 90px; height: 66px; background: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; flex-shrink: 0; overflow: hidden; padding: 4px; }
   .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
@@ -302,6 +407,7 @@
   .inv-logo-side { max-height: 60px; max-width: 150px; object-fit: contain; display: block; margin: 0 auto 10px auto; background: rgba(255,255,255,0.9); padding: 4px; border-radius: 6px; }
   .inv-logo-corporate { max-height: 55px; max-width: 140px; object-fit: contain; display: block; background: #fff; padding: 3px 6px; border-radius: 6px; }
   .inv-logo-elegant { max-height: 70px; max-width: 180px; object-fit: contain; display: block; margin: 0 auto 8px auto; }
+  .inv-logo-light { max-height: 55px; max-width: 140px; object-fit: contain; display: block; background: rgba(255,255,255,0.95); padding: 4px 8px; border-radius: 6px; }
   .inv-logo-wrap { display: flex; align-items: center; gap: 14px; }
   .panel-head .panel-hint { font-size: 9px; opacity: 0.6; text-transform: none; letter-spacing: 0; font-weight: 500; margin-left: auto; margin-right: 8px; }
 
@@ -315,6 +421,10 @@
     #invoicePreview.tpl-modern { padding: 0 !important; }
     #invoicePreview.tpl-modern .inv-wrap { margin: 0 !important; min-height: auto !important; }
     #invoicePreview.tpl-corporate .inv-header { margin: 0 0 14px 0 !important; }
+    #invoicePreview.tpl-bold .inv-header-band,
+    #invoicePreview.tpl-executive .inv-header-band,
+    #invoicePreview.tpl-wave .inv-wave-top,
+    #invoicePreview.tpl-split .inv-split-header { margin: 0 0 16px 0 !important; }
     .inv-table tr, .gst-detail-hsn tr, .gst-lite-hsn-table tr,
     .words-box, .totals-wrap, .footer-grid, .sign-area,
     .rate-summary-title { page-break-inside: avoid; break-inside: avoid; }
@@ -425,7 +535,7 @@
   <div style="max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
       <h1>🧾 Invoice Generator</h1>
-      <p>10 templates · Logo · Auto GST · Custom text · PDF export</p>
+      <p>16 templates · Logo · Auto GST · Custom text · PDF export</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <select id="docTypeSelect" onchange="changeDocType()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;background:#fff;color:#0a1e3f;">
@@ -447,6 +557,12 @@
         <option value="rounded">🎯 Rounded</option>
         <option value="gst-detailed">🔬 GST Detailed</option>
         <option value="gst-lite">⚡ GST Lite</option>
+        <option value="bold">🔲 Bold</option>
+        <option value="executive">🏛️ Executive</option>
+        <option value="wave">🌊 Wave</option>
+        <option value="split">🎭 Split</option>
+        <option value="standard">📋 Standard</option>
+        <option value="freelancer">💼 Freelancer</option>
       </select>
       <a href="index.html" style="padding:8px 14px;background:rgba(255,255,255,0.15);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">← Back</a>
     </div>
@@ -681,13 +797,19 @@ const TEMPLATE_NAMES = {
   'classic': 'Classic',
   'modern': 'Modern',
   'minimal': 'Minimal',
-  'gst': 'GST Pro',
+  'gst': 'GSTPro',
   'elegant': 'Elegant',
   'corporate': 'Corporate',
   'compact': 'Compact',
   'rounded': 'Rounded',
-  'gst-detailed': 'GST Detailed',
-  'gst-lite': 'GST Lite'
+  'gst-detailed': 'GSTDetailed',
+  'gst-lite': 'GSTLite',
+  'bold': 'Bold',
+  'executive': 'Executive',
+  'wave': 'Wave',
+  'split': 'Split',
+  'standard': 'Standard',
+  'freelancer': 'Freelancer'
 };
 
 const state = {
@@ -838,7 +960,7 @@ function updateLogoPreview() {
 function getLogoHTML(size) {
   const logo = sanitizeLogo((state.business && state.business.logo) || '');
   if (!logo) return '';
-  const cls = size === 'side' ? 'inv-logo-side' : size === 'corporate' ? 'inv-logo-corporate' : size === 'elegant' ? 'inv-logo-elegant' : 'inv-logo-img';
+  const cls = size === 'side' ? 'inv-logo-side' : size === 'corporate' ? 'inv-logo-corporate' : size === 'elegant' ? 'inv-logo-elegant' : size === 'light' ? 'inv-logo-light' : 'inv-logo-img';
   return '<img src="' + esc(logo) + '" alt="Logo" class="' + cls + '">';
 }
 
@@ -1404,6 +1526,25 @@ function buildGstLiteBlocks(t, s) {
   return '<table class="gst-lite-hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table>';
 }
 
+// Standard template — special "boxed" layout
+function buildStandardBlocks(s, labels, cliName, cliInfo, cliGstinLine) {
+  const meta = s.meta || {};
+  const validDetails = (s.details || []).filter(d => d && d.trim());
+  const detailRows = validDetails.map(d => {
+    const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
+    if (m) return '<div class="inv-box-detail-row"><span class="lbl">' + esc(m[1].trim()) + ':</span><span class="val">' + esc(m[2].trim()) + '</span></div>';
+    return '<div class="inv-box-detail-row"><span class="val">' + esc(d) + '</span></div>';
+  }).join('');
+  const billToBox = '<div class="inv-box"><div class="inv-box-label">Bill To</div><div style="font-weight:800;font-size:11px;margin-bottom:3px;">' + esc(cliName) + '</div><div style="font-size:9.5px;color:#475569;line-height:1.4;">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div>';
+  const invInfoBox = '<div class="inv-box"><div class="inv-box-label">' + esc(labels.detailsTitle) + '</div>' +
+    '<div class="inv-box-detail-row"><span class="lbl">' + esc(labels.noLabel) + ':</span><span class="val">' + (esc(meta.no) || '—') + '</span></div>' +
+    '<div class="inv-box-detail-row"><span class="lbl">Date:</span><span class="val">' + fmtDate(meta.date) + '</span></div>' +
+    '<div class="inv-box-detail-row"><span class="lbl">Place of Supply:</span><span class="val">' + (esc(meta.place) || '—') + '</span></div>' +
+    detailRows +
+  '</div>';
+  return { billToBox, invInfoBox };
+}
+
 function render() {
   const s = state;
   const preview = $('invoicePreview');
@@ -1420,12 +1561,16 @@ function render() {
   const logoSide = getLogoHTML('side');
   const logoCorporate = getLogoHTML('corporate');
   const logoElegant = getLogoHTML('elegant');
+  const logoLight = getLogoHTML('light');
 
   const labels = getLabels(s.docType);
   const custom = buildCustomText(s);
   const common = buildCommonBlocks(s, t);
   const detailsBoxHTML = buildDetailsBox(s, labels.detailsTitle, labels.noLabel, labels.dateLabel);
   const footerBlock = buildFooterBlock(s, bizName);
+
+  // Freelancer avatar — first letter of biz name
+  const firstLetter = (bizName || 'Y').trim().charAt(0).toUpperCase();
 
   let html = '';
 
@@ -1501,6 +1646,61 @@ function render() {
       common.tableBlock + custom.middle +
       '<div class="gst-lite-summary"><div><div class="rate-summary-title">📋 HSN Summary</div>' + liteHsn + '</div><div>' + common.totalsBlock + '</div></div>' +
       common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'bold') {
+    html = custom.top +
+      '<div class="inv-header-band"><div style="display:flex;justify-content:space-between;align-items:center;gap:20px;">' +
+        '<div style="flex:1;">' + (logoLight ? '<div style="margin-bottom:10px;">' + logoLight + '</div>' : '') + '<div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div>' +
+        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:6px;font-weight:600;">Original for Recipient</div></div>' +
+      '</div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'executive') {
+    html = custom.top +
+      '<div class="inv-header-band"><div style="display:flex;justify-content:space-between;align-items:center;gap:20px;">' +
+        '<div style="flex:1;">' + (logoLight ? '<div style="margin-bottom:10px;">' + logoLight + '</div>' : '') + '<div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div>' +
+        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:9px;letter-spacing:2px;color:rgba(201,169,97,0.85);text-transform:uppercase;margin-top:6px;font-weight:600;font-family:Georgia,serif;">Original for Recipient</div></div>' +
+      '</div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'wave') {
+    html = custom.top +
+      '<div class="inv-wave-top"><div class="inv-wave-content" style="display:flex;justify-content:space-between;align-items:center;gap:20px;">' +
+        '<div style="flex:1;">' + (logoLight ? '<div style="margin-bottom:10px;">' + logoLight + '</div>' : '') + '<div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div>' +
+        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
+      '</div></div>' +
+      '<div class="wave-body">' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+        common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC +
+      '</div>';
+  }
+  else if (s.template === 'split') {
+    html = custom.top +
+      '<div class="inv-split-header">' +
+        '<div class="inv-split-left">' + (logoLight ? '<div style="margin-bottom:10px;">' + logoLight + '</div>' : '') + '<div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div>' +
+        '<div class="inv-split-right"><div class="inv-h1">' + esc(labels.title) + '</div><div class="inv-sub">Original for Recipient</div></div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'standard') {
+    const sb = buildStandardBlocks(s, labels, cliName, cliInfo, cliGstinLine);
+    html = custom.top +
+      '<div class="inv-header"><div style="display:flex;align-items:center;gap:14px;">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
+      '<div class="inv-boxes">' + sb.billToBox + sb.invInfoBox + '</div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'freelancer') {
+    html = custom.top +
+      '<div class="inv-header">' +
+        '<div class="inv-avatar">' + (logoInline ? '<img src="' + esc(sanitizeLogo((s.business && s.business.logo) || '')) + '" alt="Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' : esc(firstLetter)) + '</div>' +
+        '<div style="flex:1;"><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div>' +
+        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
   }
 
   preview.innerHTML = html;
@@ -1635,16 +1835,11 @@ function resetForNextInvoice() {
   renderItems(); renderDetails(); sync(); renderHistory();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   PRINT — sets PDF filename based on Invoice No. + Template name
-   ═══════════════════════════════════════════════════════════════ */
 function prepareForPrint() {
-  // Set document.title so that "Save as PDF" uses it as the filename
   const invNo = (state.meta.no || 'Invoice').replace(/[\\/:*?"<>|]/g, '-').trim();
   const tplName = TEMPLATE_NAMES[state.template] || 'Classic';
   const docType = (state.docType || 'Invoice').replace(/[\\/:*?"<>|]/g, '-');
   const safeInvNo = invNo || 'Invoice';
-  // Format: {InvoiceNo}_{DocumentType}_{TemplateName}
   document.title = safeInvNo + '_' + docType.replace(/\s+/g, '') + '_' + tplName;
 
   const el = $('invoicePreview'); if (!el) return;
@@ -1662,7 +1857,7 @@ function prepareForPrint() {
 }
 
 function resetAfterPrint() {
-  document.title = ORIGINAL_TITLE;   // restore browser tab title
+  document.title = ORIGINAL_TITLE;
   const el = $('invoicePreview'); if (el) el.style.zoom = '';
   const warning = $('printWarning'); if (warning) warning.classList.remove('show');
 }
