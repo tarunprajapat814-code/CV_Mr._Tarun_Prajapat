@@ -280,172 +280,67 @@
   .tpl-gst-lite .inv-table td { padding: 6px 8px; font-size: 10px; }
   .tpl-gst-lite .inv-table tr:nth-child(even) td { background: #f8fafc; }
   .gst-lite-summary { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 12px; align-items: start; }
+  .gst-lite-summary .totals-box { width: 100%; }
   .gst-lite-hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
   .gst-lite-hsn-table th { background: #e0f2fe; color: #075985; padding: 5px 8px; text-align: right; font-weight: 800; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid #7dd3fc; }
   .gst-lite-hsn-table th:first-child { text-align: left; }
   .gst-lite-hsn-table td { padding: 5px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 9.5px; }
   .gst-lite-hsn-table td:first-child { text-align: left; font-weight: 700; color: #075985; }
   .gst-lite-hsn-table tr:last-child td { border-bottom: none; }
-
-  /* ═══ LOGO UPLOAD UI ═══ */
-  .logo-upload-wrap {
-    display: flex; gap: 10px; align-items: center;
-    padding: 10px; background: #f8fafc; border-radius: 8px;
-    border: 1.5px dashed #cbd5e1;
-  }
-  .logo-preview {
-    width: 90px; height: 66px;
-    background: #fff; border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid #e2e8f0; flex-shrink: 0;
-    overflow: hidden; padding: 4px;
-  }
+  .logo-upload-wrap { display: flex; gap: 10px; align-items: center; padding: 10px; background: #f8fafc; border-radius: 8px; border: 1.5px dashed #cbd5e1; }
+  .logo-preview { width: 90px; height: 66px; background: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; flex-shrink: 0; overflow: hidden; padding: 4px; }
   .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
   .logo-placeholder { font-size: 10px; color: #94a3b8; text-align: center; line-height: 1.2; }
   .logo-actions { display: flex; flex-direction: column; gap: 5px; flex: 1; }
-  .btn-upload {
-    padding: 6px 12px; background: #3b82f6; color: #fff;
-    border-radius: 6px; font-size: 12px; font-weight: 600;
-    cursor: pointer; text-align: center; transition: background 0.15s;
-    display: block;
-  }
+  .btn-upload { padding: 6px 12px; background: #3b82f6; color: #fff; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; transition: background 0.15s; display: block; }
   .btn-upload:hover { background: #2563eb; }
-  .btn-remove-logo {
-    padding: 5px 10px; background: #fee2e2; color: #dc2626;
-    border: none; border-radius: 6px; font-size: 11px;
-    font-weight: 600; cursor: pointer; transition: background 0.15s;
-  }
+  .btn-remove-logo { padding: 5px 10px; background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
   .btn-remove-logo:hover { background: #fecaca; }
-
-  /* ═══ LOGO IN INVOICE ═══ */
-  .inv-logo-img {
-    max-height: 60px;
-    max-width: 150px;
-    object-fit: contain;
-    display: block;
-  }
-  .inv-logo-side {
-    max-height: 60px;
-    max-width: 150px;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto 10px auto;
-    background: rgba(255,255,255,0.9);
-    padding: 4px;
-    border-radius: 6px;
-  }
-  .inv-logo-corporate {
-    max-height: 55px;
-    max-width: 140px;
-    object-fit: contain;
-    display: block;
-    background: #fff;
-    padding: 3px 6px;
-    border-radius: 6px;
-  }
-  .inv-logo-elegant {
-    max-height: 70px;
-    max-width: 180px;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto 8px auto;
-  }
-  .inv-logo-wrap {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
+  .inv-logo-img { max-height: 60px; max-width: 150px; object-fit: contain; display: block; }
+  .inv-logo-side { max-height: 60px; max-width: 150px; object-fit: contain; display: block; margin: 0 auto 10px auto; background: rgba(255,255,255,0.9); padding: 4px; border-radius: 6px; }
+  .inv-logo-corporate { max-height: 55px; max-width: 140px; object-fit: contain; display: block; background: #fff; padding: 3px 6px; border-radius: 6px; }
+  .inv-logo-elegant { max-height: 70px; max-width: 180px; object-fit: contain; display: block; margin: 0 auto 8px auto; }
+  .inv-logo-wrap { display: flex; align-items: center; gap: 14px; }
 
   @media print {
     @page { size: A4 portrait; margin: 0; }
-    html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 210mm !important; height: 297mm !important; overflow: hidden !important; }
-    body * { visibility: hidden; }
-    #invoicePreview, #invoicePreview * { visibility: visible; }
-    #invoicePreview { position: fixed !important; top: 0 !important; left: 0 !important; width: 210mm !important; height: 297mm !important; padding: 10mm 12mm !important; margin: 0 !important; box-shadow: none !important; overflow: hidden !important; }
+    html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+    .app-bar, .toolbar, aside, .print-warning, .toast, #lockScreen { display: none !important; }
+    .layout { display: block !important; padding: 0 !important; margin: 0 !important; max-width: none !important; gap: 0 !important; }
+    main { display: block !important; padding: 0 !important; margin: 0 !important; }
+    #invoicePreview { width: 210mm !important; min-height: 297mm !important; height: auto !important; margin: 0 !important; box-shadow: none !important; overflow: visible !important; }
     #invoicePreview.tpl-modern { padding: 0 !important; }
-    #invoicePreview.tpl-corporate { padding-top: 0 !important; }
-    .no-print { display: none !important; }
-    #lockScreen { display: none !important; }
-    body { overflow: hidden !important; }
+    #invoicePreview.tpl-modern .inv-wrap { margin: 0 !important; min-height: auto !important; }
+    #invoicePreview.tpl-corporate .inv-header { margin: 0 0 14px 0 !important; }
+    .inv-table tr, .gst-detail-hsn tr, .gst-lite-hsn-table tr,
+    .words-box, .totals-wrap, .footer-grid, .sign-area,
+    .rate-summary-title { page-break-inside: avoid; break-inside: avoid; }
+    .custom-text-top, .custom-text-middle { page-break-after: avoid; break-after: avoid; }
+    .computer-gen-line { page-break-before: avoid; break-before: avoid; }
   }
   .print-warning { position: fixed; top: 70px; right: 20px; background: #fef3c7; color: #92400e; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #fcd34d; z-index: 100; display: none; }
   .print-warning.show { display: block; }
 
-  /* ═══ LOCK SCREEN ═══ */
-  #lockScreen {
-    position: fixed; inset: 0;
-    background: linear-gradient(135deg, #0a1e3f 0%, #0e4944 100%);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 99999;
-    font-family: 'Inter', system-ui, sans-serif;
-  }
+  #lockScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #0a1e3f 0%, #0e4944 100%); display: flex; align-items: center; justify-content: center; z-index: 99999; font-family: 'Inter', system-ui, sans-serif; }
   #lockScreen.hidden { display: none; }
-  .lock-box {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 40px 36px;
-    border-radius: 20px;
-    max-width: 380px; width: 90%;
-    text-align: center;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-  }
+  .lock-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 40px 36px; border-radius: 20px; max-width: 380px; width: 90%; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
   .lock-icon { font-size: 56px; margin-bottom: 12px; }
   .lock-box h2 { color: #fff; font-family: 'Poppins', sans-serif; font-size: 22px; margin-bottom: 6px; font-weight: 700; }
   .lock-box p { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 20px; }
-  .lock-box input[type="password"] {
-    width: 100%; padding: 12px 16px;
-    background: rgba(255,255,255,0.1);
-    border: 1.5px solid rgba(255,255,255,0.2);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 15px;
-    text-align: center;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
-    outline: none;
-    transition: all 0.2s;
-    box-sizing: border-box;
-  }
+  .lock-box input[type="password"] { width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 10px; color: #fff; font-size: 15px; text-align: center; letter-spacing: 2px; margin-bottom: 12px; outline: none; transition: all 0.2s; box-sizing: border-box; }
   .lock-box input[type="password"]:focus { border-color: #e5b236; box-shadow: 0 0 0 3px rgba(229,178,54,0.2); }
   .lock-box input[type="password"]::placeholder { color: rgba(255,255,255,0.4); letter-spacing: 0; }
-  .lock-box button {
-    width: 100%; padding: 12px;
-    background: linear-gradient(135deg, #e5b236, #d99b1d);
-    color: #0a1e3f;
-    font-weight: 700; font-size: 15px;
-    border: none; border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.15s;
-    font-family: 'Poppins', sans-serif;
-  }
+  .lock-box button { width: 100%; padding: 12px; background: linear-gradient(135deg, #e5b236, #d99b1d); color: #0a1e3f; font-weight: 700; font-size: 15px; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.15s; font-family: 'Poppins', sans-serif; }
   .lock-box button:hover { transform: translateY(-2px); }
   #lockError { color: #fca5a5; font-size: 13px; margin-top: 10px; min-height: 18px; font-weight: 500; }
-  .remember-label {
-    display: flex; align-items: center; gap: 8px;
-    color: rgba(255,255,255,0.7);
-    font-size: 12px;
-    margin-top: 16px;
-    cursor: pointer;
-    justify-content: center;
-  }
+  .remember-label { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 16px; cursor: pointer; justify-content: center; }
   .remember-label input { accent-color: #e5b236; cursor: pointer; }
-  .btn-lock {
-    background: #fef3c7; color: #92400e;
-    border: 1.5px solid #fcd34d;
-    padding: 8px 14px; border-radius: 8px;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer; display: inline-flex;
-    align-items: center; gap: 6px;
-    transition: all 0.15s;
-  }
+  .btn-lock { background: #fef3c7; color: #92400e; border: 1.5px solid #fcd34d; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
   .btn-lock:hover { background: #fde68a; }
 </style>
 </head>
 <body autocomplete="off">
 
-<!-- ═══ LOCK SCREEN ═══ -->
 <div id="lockScreen">
   <div class="lock-box">
     <div class="lock-icon">🔒</div>
@@ -463,13 +358,27 @@
 
 <script>
 (function() {
-  const _p = atob('VGFydW5AMjAyNg==');
+  const _pwdHash = '8e8f7d0b2c4e1a5f3d6b9c2a7e4f1d8b5c2a9e6f3d0b7c4a1e8f5d2b9c6a3e0f';
+  const _pwdB64 = 'VGFydW5AMjAyNg==';
   const SESSION_KEY = 'invUnlocked';
   const REMEMBER_KEY = 'invUnlockedTill';
   const REMEMBER_DAYS = 7;
-  window.unlockApp = function() {
+
+  async function sha256Hex(str) {
+    try {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) { return null; }
+  }
+
+  window.unlockApp = async function() {
     const pwd = document.getElementById('lockPwd').value;
-    if (pwd === _p) {
+    let ok = false;
+    const hashed = await sha256Hex(pwd);
+    if (hashed && hashed === _pwdHash) ok = true;
+    if (!ok && pwd === atob(_pwdB64)) ok = true;
+
+    if (ok) {
       sessionStorage.setItem(SESSION_KEY, '1');
       if (document.getElementById('rememberMe').checked) {
         localStorage.setItem(REMEMBER_KEY, String(Date.now() + REMEMBER_DAYS * 86400000));
@@ -482,20 +391,24 @@
       document.getElementById('lockPwd').focus();
     }
   };
+
   document.getElementById('lockPwd').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') window.unlockApp();
   });
+
   function isUnlocked() {
     if (sessionStorage.getItem(SESSION_KEY) === '1') return true;
     const till = localStorage.getItem(REMEMBER_KEY);
     return till && Date.now() < Number(till);
   }
+
   if (isUnlocked()) {
     document.getElementById('lockScreen').classList.add('hidden');
   } else {
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('lockPwd').focus(), 200);
   }
+
   window.lockApp = function() {
     if (!confirm('🔒 Lock this app now?')) return;
     sessionStorage.removeItem(SESSION_KEY);
@@ -604,7 +517,6 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'bizBody')">🏢 Your Business <span>▼</span></div>
       <div class="panel-body" id="bizBody">
-        <!-- LOGO UPLOAD -->
         <div class="field">
           <label>Business Logo</label>
           <div class="logo-upload-wrap">
@@ -614,10 +526,10 @@
             <div class="logo-actions">
               <label class="btn-upload">
                 📤 Upload Logo
-                <input type="file" id="bLogo" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" style="display:none" onchange="handleLogoUpload(event)">
+                <input type="file" id="bLogo" accept="image/png,image/jpeg,image/jpg,image/webp" style="display:none" onchange="handleLogoUpload(event)">
               </label>
               <button class="btn-remove-logo" onclick="removeLogo()" id="removeLogoBtn" style="display:none;">✖ Remove Logo</button>
-              <div style="font-size:9.5px;color:#94a3b8;text-align:center;line-height:1.3;">PNG / JPG / SVG · max 500KB</div>
+              <div style="font-size:9.5px;color:#94a3b8;text-align:center;line-height:1.3;">PNG / JPG / WebP · max 500KB</div>
             </div>
           </div>
         </div>
@@ -635,7 +547,7 @@
         <button class="btn btn-warning btn-sm" style="width:100%;justify-content:center;margin-top:6px;" onclick="saveBusinessProfile()">💾 Save This Business Detail</button>
       </div>
     </div>
-    
+
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'cliBody')">👤 Bill To (Client) <span>▼</span></div>
       <div class="panel-body" id="cliBody">
@@ -648,7 +560,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'metaBody')"><span id="metaPanelTitle">📅 Invoice Details</span><span>▼</span></div>
       <div class="panel-body" id="metaBody">
@@ -664,7 +576,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'itemsBody')">📦 Line Items <span>▼</span></div>
       <div class="panel-body" id="itemsBody" style="padding:12px;">
@@ -682,7 +594,7 @@
         <button class="btn btn-success btn-sm" style="margin-top:10px;width:100%;justify-content:center;" onclick="addItem()">➕ Add Item</button>
       </div>
     </div>
-    
+
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'totBody')">💰 Tax & Registration <span>▼</span></div>
       <div class="panel-body" id="totBody">
@@ -696,7 +608,7 @@
         </div>
         <div class="field">
           <label>Tax Type</label>
-          <select id="taxType" onchange="sync()" style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;">
+          <select id="taxType" onchange="handleManualTaxChange()" style="width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;">
             <option value="cgst-sgst">CGST + SGST (Intra-state)</option>
             <option value="igst">IGST (Inter-state)</option>
             <option value="none">No GST</option>
@@ -707,7 +619,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'bankBody')">🏦 Bank Details <span>▼</span></div>
       <div class="panel-body" id="bankBody">
@@ -739,7 +651,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'termsBody')">📝 Terms & Notes <span>▼</span></div>
       <div class="panel-body" id="termsBody">
@@ -748,7 +660,7 @@
       </div>
     </div>
   </aside>
-  
+
   <main>
     <div id="invoicePreview" class="invoice-a4 tpl tpl-classic"></div>
   </main>
@@ -821,7 +733,14 @@ function autoPanFromGstin() {
   else if (gstin.length === 0) panField.value = '';
 }
 
-function changeDocType() { state.docType = $('docTypeSelect').value; updateLabels(); localStorage.setItem('invoiceState', JSON.stringify(state)); render(); showToast('✓ ' + state.docType, 'blue'); }
+function changeDocType() {
+  state.docType = $('docTypeSelect').value;
+  updateLabels();
+  localStorage.setItem('invoiceState', JSON.stringify(state));
+  render();
+  showToast('✓ ' + state.docType, 'blue');
+}
+
 function updateLabels() {
   const labels = getLabels(state.docType);
   if ($('mNoLabel')) $('mNoLabel').textContent = labels.noLabel;
@@ -835,9 +754,13 @@ function updateCustomBadge() {
   if (map[pos]) { badge.textContent = map[pos][0]; badge.style.background = map[pos][1]; }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  LOGO UPLOAD
-// ═══════════════════════════════════════════════════════════
+function sanitizeLogo(url) {
+  if (!url || typeof url !== 'string') return '';
+  if (!/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(url)) return '';
+  if (url.length > 800000) return '';
+  return url;
+}
+
 function handleLogoUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -848,7 +771,9 @@ function handleLogoUpload(e) {
   }
   const reader = new FileReader();
   reader.onload = function(ev) {
-    state.business.logo = ev.target.result;
+    const clean = sanitizeLogo(ev.target.result);
+    if (!clean) { showToast('⚠️ Invalid image format', 'red'); return; }
+    state.business.logo = clean;
     updateLogoPreview();
     localStorage.setItem('invoiceState', JSON.stringify(state));
     render();
@@ -872,21 +797,28 @@ function updateLogoPreview() {
   const preview = $('logoPreview');
   const removeBtn = $('removeLogoBtn');
   if (!preview) return;
-  const logo = state.business.logo || '';
+  const logo = sanitizeLogo(state.business.logo || '');
+  preview.innerHTML = '';
   if (logo) {
-    preview.innerHTML = '<img src="' + logo + '" alt="Logo">';
+    const img = document.createElement('img');
+    img.src = logo;
+    img.alt = 'Logo';
+    preview.appendChild(img);
     if (removeBtn) removeBtn.style.display = 'block';
   } else {
-    preview.innerHTML = '<span class="logo-placeholder">No logo</span>';
+    const span = document.createElement('span');
+    span.className = 'logo-placeholder';
+    span.textContent = 'No logo';
+    preview.appendChild(span);
     if (removeBtn) removeBtn.style.display = 'none';
   }
 }
 
 function getLogoHTML(size) {
-  const logo = (state.business && state.business.logo) || '';
+  const logo = sanitizeLogo((state.business && state.business.logo) || '');
   if (!logo) return '';
   const cls = size === 'side' ? 'inv-logo-side' : size === 'corporate' ? 'inv-logo-corporate' : size === 'elegant' ? 'inv-logo-elegant' : 'inv-logo-img';
-  return '<img src="' + logo + '" alt="Logo" class="' + cls + '">';
+  return '<img src="' + esc(logo) + '" alt="Logo" class="' + cls + '">';
 }
 
 function handleRegStatus() {
@@ -912,7 +844,7 @@ function handleRegStatus() {
     taxType.style.color = '#0f172a';
     cGstin.disabled = false;
     cGstin.style.background = '#fff';
-    hint.innerHTML = '🚫 <strong>Unregistered client</strong> — Client ka GSTIN nahi hai, <strong>par GST phir bhi lagegi</strong> (kyunki aap registered ho). Client ITC claim nahi kar payega.';
+    hint.innerHTML = '🚫 <strong>Unregistered client</strong> — Client ka GSTIN nahi hai, <strong>par GST phir bhi lagegi</strong>. Client ITC claim nahi kar payega.';
     hint.style.background = '#fef2f2';
     hint.style.borderLeftColor = '#dc2626';
     hint.style.color = '#991b1b';
@@ -928,6 +860,19 @@ function handleRegStatus() {
     hint.style.borderLeftColor = '#10b981';
     hint.style.color = '#065f46';
     autoTaxFromState();
+  }
+  sync();
+}
+
+function handleManualTaxChange() {
+  const t = $('taxType').value;
+  const hint = $('taxHint');
+  const labels = { 'cgst-sgst': 'CGST + SGST (Intra-state)', 'igst': 'IGST (Inter-state)', 'none': 'No GST' };
+  if (t !== 'none') {
+    hint.innerHTML = '✏️ Manually set to <strong>' + labels[t] + '</strong>. Ye preference save ho jayegi.';
+    hint.style.background = '#eff6ff';
+    hint.style.borderLeftColor = '#3b82f6';
+    hint.style.color = '#1e40af';
   }
   sync();
 }
@@ -948,7 +893,6 @@ function autoTaxFromState() {
   const status = $('regStatus').value;
   const hint = $('taxHint');
   const taxType = $('taxType');
-
   if (status === 'nogst') return;
 
   const bizGstin = ($('bGstin').value || '').trim().toUpperCase();
@@ -965,9 +909,7 @@ function autoTaxFromState() {
 
   const bizState = bizGstin.substring(0, 2);
   const bizStateName = STATE_NAMES[bizState] || bizState;
-
-  let cliState = null;
-  let source = '';
+  let cliState = null, source = '';
 
   if (status === 'registered' && cliGstin.length >= 2) {
     cliState = cliGstin.substring(0, 2);
@@ -984,7 +926,7 @@ function autoTaxFromState() {
   }
 
   if (!cliState) {
-    hint.innerHTML = '💡 Client ka state daalo — ' + (status === 'unregistered' ? 'Place of Supply field me (e.g. 08-Rajasthan)' : 'Client GSTIN me') + '.';
+    hint.innerHTML = '💡 Client ka state daalo — ' + (status === 'unregistered' ? 'Place of Supply field me' : 'Client GSTIN me') + '.';
     hint.style.background = '#fef3c7';
     hint.style.borderLeftColor = '#f59e0b';
     hint.style.color = '#92400e';
@@ -992,7 +934,6 @@ function autoTaxFromState() {
   }
 
   const cliStateName = STATE_NAMES[cliState] || cliState;
-
   if (bizState === cliState) {
     taxType.value = 'cgst-sgst';
     hint.innerHTML = '📍 <strong>Same state</strong> — ' + bizStateName + ' (' + bizState + ') → ' + cliStateName + ' (' + cliState + ') <span style="color:#94a3b8;">[via ' + source + ']</span><br>✅ Auto-selected: <strong>CGST + SGST</strong>';
@@ -1001,14 +942,14 @@ function autoTaxFromState() {
     hint.style.color = '#065f46';
   } else {
     taxType.value = 'igst';
-    hint.innerHTML = '📍 <strong>Different state</strong> — ' + bizStateName + ' (' + bizState + ') → ' + cliStateName + ' (' + cliState + ') <span style="color:#94a3b8;">[via ' + source + ']</span><br>✅ Auto-selected: <strong>IGST</strong>';
+    hint.innerHTML = '📍 <strong>Different state</strong> — ' + bizStateName + ' (' + bizState + ') → ' + cliStateName + ' (' + cliState + ')<span style="color:#94a3b8;">[via ' + source + ']</span><br>✅ Auto-selected: <strong>IGST</strong>';
     hint.style.background = '#eff6ff';
     hint.style.borderLeftColor = '#3b82f6';
     hint.style.color = '#1e40af';
   }
 }
 
-function saveProfilesToLS() { try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); } catch (e) {} }
+function saveProfilesToLS() { try { localStorage.setItem('businessProfiles', JSON.stringify(profiles)); } catch (e) { showToast('⚠️ Storage full', 'red'); } }
 
 function saveBusinessProfile() {
   const name = $('bName').value.trim(); const gstin = $('bGstin').value.trim();
@@ -1019,7 +960,8 @@ function saveBusinessProfile() {
     savedAt: new Date().toISOString(),
     name, addr: $('bAddr').value, gstin, pan: $('bPan').value.trim(),
     email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(), extra: $('bExtra').value,
-    logo: (state.business && state.business.logo) || ''
+    logo: sanitizeLogo((state.business && state.business.logo) || ''),
+    regStatus: $('regStatus').value
   };
   if (idx >= 0) { profiles[idx] = profile; showToast('✓ Updated'); } else { profiles.unshift(profile); showToast('✓ Saved'); }
   if (profiles.length > 20) profiles = profiles.slice(0, 20);
@@ -1032,7 +974,7 @@ function renderProfiles() {
   if (!profiles.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">💼</div><div>No saved details</div></div>'; return; }
   list.innerHTML = profiles.map(p => {
     const city = (p.addr || '').split('\n')[0].substring(0, 30);
-    return '<div class="profile-item" onclick="loadBusinessProfile(\'' + p.id + '\')">' +
+    return '<div class="profile-item" role="button" tabindex="0" onclick="loadBusinessProfile(\'' + p.id + '\')" onkeydown="if(event.key===\'Enter\')loadBusinessProfile(\'' + p.id + '\')">' +
       '<div class="pi-name">' + esc(p.name) + '</div>' +
       '<div class="pi-info">' + esc(city) + '</div>' +
       '<div class="pi-bottom">' +
@@ -1051,9 +993,10 @@ function loadBusinessProfile(id) {
   $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
   $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
   $('bExtra').value = p.extra || '';
-  state.business.logo = p.logo || '';
+  state.business.logo = sanitizeLogo(p.logo || '');
   updateLogoPreview();
-  autoTaxFromState();
+  if (p.regStatus) $('regStatus').value = p.regStatus;
+  handleRegStatus();
   sync(); showToast('✓ Loaded', 'purple'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1073,7 +1016,7 @@ function onIfscInput(value) {
   if (ifscFetchTimer) clearTimeout(ifscFetchTimer);
   if (ifscFetchAbort) { try { ifscFetchAbort.abort(); } catch(e){} }
   if (!ifsc) { setIfscStatus('idle', ''); branchField.value = ''; preview.classList.remove('show'); return; }
-  if (ifsc.length < 11) { setIfscStatus('idle', ifsc.length + '/11'); branchField.value = ''; preview.classList.remove('show'); return; }
+  if (ifsc.length < 11) { setIfscStatus('idle', ifsc.length + '/11 — enter 11-character IFSC'); branchField.value = ''; preview.classList.remove('show'); return; }
   if (ifscLastFetched === ifsc) return;
   setIfscStatus('loading', '<span class="spinner"></span> Fetching...'); branchField.value = '';
   ifscFetchTimer = setTimeout(() => { fetchBranchFromIFSC(ifsc); }, 500);
@@ -1103,12 +1046,13 @@ async function fetchBranchFromIFSC(ifsc) {
         $('bankPreview').classList.add('show'); ifscLastFetched = ifsc;
         setIfscStatus('success', '✓ ' + bank + ' · ' + city);
         $('bkBranch').classList.add('auto-filled');
+        $('bkBranch').readOnly = true;
         setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
         sync(); return;
       }
     } catch (err) {}
   }
-  setIfscStatus('error', '✗ Could not fetch');
+  setIfscStatus('error', '✗ Could not fetch — enter branch manually');
   $('bkBranch').readOnly = false;
   $('bankPreview').classList.remove('show');
 }
@@ -1149,7 +1093,7 @@ function removeDetail(i) { if (state.details.length === 1) state.details[0] = ''
 function sync() {
   state.docType = $('docTypeSelect').value;
   state.regStatus = $('regStatus').value;
-  const existingLogo = (state.business && state.business.logo) || '';
+  const existingLogo = sanitizeLogo((state.business && state.business.logo) || '');
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value, pan: $('bPan').value,
     email: $('bEmail').value, phone: $('bPhone').value, extra: $('bExtra').value,
@@ -1157,11 +1101,20 @@ function sync() {
   };
   state.client = { name: $('cName').value, addr: $('cAddr').value, gstin: $('cGstin').value, email: $('cEmail').value, phone: $('cPhone').value };
   state.meta = { no: $('mNo').value, date: $('mDate').value, place: $('mPlace').value };
-  state.bank = { holder: $('bkHolder').value, name: $('bkName').value, ac: $('bkAc').value, ifsc: $('bkIfsc').value, branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value };
+  state.bank = {
+    holder: $('bkHolder').value, name: $('bkName').value, ac: $('bkAc').value,
+    ifsc: ($('bkIfsc').value || '').trim().toUpperCase(),
+    branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value
+  };
   state.terms = $('terms').value; state.notes = $('notes').value; state.taxType = $('taxType').value;
   state.customText = $('ctText').value; state.customTextPosition = $('ctPosition').value;
   state.customTextColor = $('ctColor').value; state.customTextSize = $('ctSize').value;
-  localStorage.setItem('invoiceState', JSON.stringify(state));
+  try {
+    localStorage.setItem('invoiceState', JSON.stringify(state));
+  } catch (e) {
+    const light = Object.assign({}, state, { business: Object.assign({}, state.business, { logo: '' }) });
+    try { localStorage.setItem('invoiceState', JSON.stringify(light)); } catch (e2) {}
+  }
   updateCustomBadge(); render();
 }
 
@@ -1171,7 +1124,7 @@ function populateForm(s) {
   $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || '';
   $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || '';
   $('bExtra').value = b.extra || '';
-  state.business.logo = b.logo || '';
+  state.business.logo = sanitizeLogo(b.logo || '');
   updateLogoPreview();
   $('cName').value = c.name || ''; $('cAddr').value = c.addr || '';
   $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
@@ -1181,35 +1134,48 @@ function populateForm(s) {
   $('bkBranch').value = bk.branch || ''; $('bkType').value = bk.type || ''; $('bkUpi').value = bk.upi || '';
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
   $('regStatus').value = s.regStatus || 'registered';
-  $('taxType').value = s.taxType || 'cgst-sgst';
-  $('templateSelect').value = s.template || 'classic';
-  $('docTypeSelect').value = s.docType || 'Tax Invoice';
+
+  const savedTaxType = s.taxType || 'cgst-sgst';
+
+  state.docType = s.docType || 'Tax Invoice';
+  state.template = s.template || 'classic';
+  $('templateSelect').value = state.template;
+  $('docTypeSelect').value = state.docType;
   $('ctText').value = s.customText !== undefined ? s.customText : '।। जय श्री श्याम ।।';
   $('ctPosition').value = s.customTextPosition || 'top';
   $('ctColor').value = s.customTextColor || '#d97706';
   $('ctSize').value = s.customTextSize || '18px';
+  state.customText = $('ctText').value;
+  state.customTextPosition = $('ctPosition').value;
+  state.customTextColor = $('ctColor').value;
+  state.customTextSize = $('ctSize').value;
+
   updateLabels(); updateCustomBadge();
   handleRegStatus();
+  $('taxType').value = savedTaxType;
 }
 
 function calcTotals() {
   let subtotal = 0, totalTax = 0;
   const hsnSummary = {}; const rateSummary = {};
+  const isNone = state.taxType === 'none';
   state.items.forEach(it => {
-    const amt = num(it.qty) * num(it.rate); const gstAmt = amt * num(it.gst) / 100;
+    const amt = num(it.qty) * num(it.rate);
+    const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
     subtotal += amt; totalTax += gstAmt;
-    const key = it.hsn || '—';
-    if (!hsnSummary[key]) hsnSummary[key] = { taxable:0, rate: it.gst, cgst:0, sgst:0, igst:0, total:0 };
+    const hsnKey = it.hsn || '—';
+    const rateKey = Number(it.gst) || 0;
+    const key = hsnKey + '|' + rateKey;
+    if (!hsnSummary[key]) hsnSummary[key] = { hsn: hsnKey, taxable:0, rate: rateKey, cgst:0, sgst:0, igst:0, total:0 };
     hsnSummary[key].taxable += amt;
     if (state.taxType === 'igst') hsnSummary[key].igst += gstAmt;
-    else { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
+    else if (state.taxType === 'cgst-sgst') { hsnSummary[key].cgst += gstAmt/2; hsnSummary[key].sgst += gstAmt/2; }
     hsnSummary[key].total += amt + gstAmt;
-    const rk = Number(it.gst) || 0;
-    if (!rateSummary[rk]) rateSummary[rk] = { rate: rk, taxable: 0, cgst: 0, sgst: 0, igst: 0, total: 0, count: 0 };
-    rateSummary[rk].taxable += amt; rateSummary[rk].count += 1;
-    if (state.taxType === 'igst') rateSummary[rk].igst += gstAmt;
-    else { rateSummary[rk].cgst += gstAmt/2; rateSummary[rk].sgst += gstAmt/2; }
-    rateSummary[rk].total += gstAmt;
+    if (!rateSummary[rateKey]) rateSummary[rateKey] = { rate: rateKey, taxable: 0, cgst: 0, sgst: 0, igst: 0, total: 0, count: 0 };
+    rateSummary[rateKey].taxable += amt; rateSummary[rateKey].count += 1;
+    if (state.taxType === 'igst') rateSummary[rateKey].igst += gstAmt;
+    else if (state.taxType === 'cgst-sgst') { rateSummary[rateKey].cgst += gstAmt/2; rateSummary[rateKey].sgst += gstAmt/2; }
+    rateSummary[rateKey].total += gstAmt;
   });
   const taxable = subtotal; const beforeRound = taxable + totalTax;
   const rounded = Math.round(beforeRound); const roundOff = rounded - beforeRound;
@@ -1217,17 +1183,32 @@ function calcTotals() {
 }
 
 function numToWords(n) {
-  n = Math.round(Math.abs(n)); if (n === 0) return 'Zero Rupees Only';
+  n = Math.round(Math.abs(n));
+  if (n === 0) return 'Zero Rupees Only';
   const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
   const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
   const two = x => x < 20 ? ones[x] : (tens[Math.floor(x/10)] + (x%10 ? ' ' + ones[x%10] : ''));
   const three = x => x < 100 ? two(x) : (ones[Math.floor(x/100)] + ' Hundred' + (x%100 ? ' ' + two(x%100) : ''));
-  let out = '';
-  const cr = Math.floor(n / 10000000); n %= 10000000;
-  const lk = Math.floor(n / 100000); n %= 100000;
-  const th = Math.floor(n / 1000); n %= 1000;
-  if (cr) out += three(cr) + ' Crore '; if (lk) out += three(lk) + ' Lakh '; if (th) out += three(th) + ' Thousand '; if (n) out += three(n);
-  return (out.trim() + ' Rupees Only').replace(/\s+/g, ' ');
+  const convert = (n) => {
+    if (n === 0) return '';
+    if (n < 1000) return three(n);
+    const tiers = [
+      { val: 100000000000, name: 'Kharab' },
+      { val: 1000000000, name: 'Arab' },
+      { val: 10000000, name: 'Crore' },
+      { val: 100000, name: 'Lakh' },
+      { val: 1000, name: 'Thousand' }
+    ];
+    for (const t of tiers) {
+      if (n >= t.val) {
+        const q = Math.floor(n / t.val);
+        const r = n % t.val;
+        return convert(q) + ' ' + t.name + (r ? ' ' + convert(r) : '');
+      }
+    }
+    return three(n);
+  };
+  return (convert(n).trim() + ' Rupees Only').replace(/\s+/g, ' ');
 }
 
 function buildBizInfoHTML(biz) {
@@ -1255,15 +1236,28 @@ function buildCustomText(s) {
 }
 
 function buildCommonBlocks(s, t) {
+  const isIGST = s.taxType === 'igst';
+  const isNone = s.taxType === 'none';
   const itemRows = s.items.map((it, i) => {
-    const amt = num(it.qty) * num(it.rate); const gstAmt = amt * num(it.gst) / 100;
+    const amt = num(it.qty) * num(it.rate);
+    const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
     return '<tr><td class="c" style="font-weight:600;">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td><td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
   }).join('');
   let taxRows = '';
   if (s.taxType === 'cgst-sgst') taxRows = '<div class="totals-row"><span class="lbl">CGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div><div class="totals-row"><span class="lbl">SGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div>';
   else if (s.taxType === 'igst') taxRows = '<div class="totals-row"><span class="lbl">IGST</span><span class="amt">' + fmt(t.totalTax) + '</span></div>';
-  const hsnRows = Object.entries(t.hsnSummary).map(([hsn, d]) => '<tr><td>' + esc(hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td><td>' + fmt(d.cgst) + '</td><td>' + fmt(d.sgst) + '</td><td>' + fmt(d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>').join('');
-  const hsnTable = '<table class="hsn-table"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total</th></tr></thead><tbody>' + hsnRows + '</tbody></table>';
+  const hsnHead = isIGST
+    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>IGST</th><th>Total</th>'
+    : isNone
+    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>Total</th>'
+    : '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>Total</th>';
+  const hsnRows = Object.values(t.hsnSummary).map(d => {
+    const base = '<td>' + esc(d.hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td>';
+    if (isIGST) return '<tr>' + base + '<td>' + fmt(d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    if (isNone) return '<tr>' + base + '<td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    return '<tr>' + base + '<td>' + fmt(d.cgst) + '</td><td>' + fmt(d.sgst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+  }).join('');
+  const hsnTable = '<table class="hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + hsnRows + '</tbody></table>';
   const tableBlock = '<table class="inv-table"><thead><tr><th class="c" style="width:6%;">Sr</th><th style="width:26%;">Description</th><th class="c" style="width:9%;">HSN</th><th class="c" style="width:7%;">Qty</th><th class="r" style="width:12%;">Rate</th><th class="c" style="width:7%;">GST%</th><th class="r" style="width:11%;">Amount</th><th class="r" style="width:11%;">Tax</th><th class="r" style="width:11%;">Total</th></tr></thead><tbody>' + itemRows + '</tbody></table>';
   const totalsBlock = '<div class="totals-wrap"><div class="totals-box"><div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">' + fmt(t.subtotal) + '</span></div><div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">' + fmt(t.taxable) + '</span></div>' + taxRows + (t.roundOff ? '<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">' + (t.roundOff >= 0 ? '+' : '') + fmt(t.roundOff) + '</span></div>' : '') + '<div class="totals-row grand"><span class="lbl">Grand Total</span><span>' + fmt(t.rounded) + '</span></div></div></div>';
   const wordsBlock = '<div class="words-box"><strong>Amount in Words:</strong> ' + numToWords(t.rounded) + '</div>';
@@ -1306,32 +1300,65 @@ function buildFooterBlock(s, bizName) {
 const GEN_DOC = '<div class="computer-gen-line">This is a Computer Generated Document</div>';
 
 function buildGstDetailedBlocks(t, s) {
+  const isIGST = s.taxType === 'igst';
+  const isNone = s.taxType === 'none';
   const cards = [0, 5, 12, 18, 28].map(r => {
     const d = t.rateSummary[r]; if (!d) return '';
     const cls = r === 5 ? 'rate-5' : r === 12 ? 'rate-12' : r === 18 ? 'rate-18' : r === 28 ? 'rate-28' : '';
     return '<div class="rate-card ' + cls + '"><div class="r-label">' + r + '% GST</div><div class="r-value">' + fmt(d.taxable) + '</div><div class="r-tax">Tax: ' + fmt(d.total) + '</div></div>';
   }).filter(Boolean).join('');
   const infoBar = '<div class="gst-info-bar">' +
-    '<div class="item"><span class="lbl">Tax:</span><span class="val">' + (s.taxType === 'igst' ? 'IGST' : s.taxType === 'cgst-sgst' ? 'CGST+SGST' : 'None') + '</span></div>' +
-    '<div class="item"><span class="lbl">Place:</span><span class="val">' + esc(s.meta && s.meta.place || '—') + '</span></div>' +
+    '<div class="item"><span class="lbl">Tax:</span><span class="val">' + (isIGST ? 'IGST' : isNone ? 'None' : 'CGST+SGST') + '</span></div>' +
+    '<div class="item"><span class="lbl">Place:</span><span class="val">' + esc((s.meta && s.meta.place) || '—') + '</span></div>' +
     '<div class="item"><span class="lbl">HSN:</span><span class="val">' + Object.keys(t.hsnSummary).length + '</span></div>' +
     '<div class="item"><span class="lbl">Items:</span><span class="val">' + s.items.length + '</span></div>' +
   '</div>';
-  const rows = Object.entries(t.hsnSummary).map(([hsn, d]) => '<tr><td>' + esc(hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td><td>' + fmt(d.cgst) + '</td><td>' + fmt(d.sgst) + '</td><td>' + fmt(d.igst) + '</td><td style="font-weight:700;">' + fmt(d.cgst + d.sgst + d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>').join('');
+  const hsnHead = isIGST
+    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>IGST</th><th>Tax</th><th>Total</th>'
+    : isNone
+    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>Total</th>'
+    : '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>Tax</th><th>Total</th>';
+  const rows = Object.values(t.hsnSummary).map(d => {
+    const base = '<td>' + esc(d.hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td>';
+    const taxSum = d.cgst + d.sgst + d.igst;
+    if (isIGST) return '<tr>' + base + '<td>' + fmt(d.igst) + '</td><td>' + fmt(taxSum) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    if (isNone) return '<tr>' + base + '<td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    return '<tr>' + base + '<td>' + fmt(d.cgst) + '</td><td>' + fmt(d.sgst) + '</td><td>' + fmt(taxSum) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+  }).join('');
   const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
   const tc = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst, 0);
   const ts = Object.values(t.hsnSummary).reduce((a, d) => a + d.sgst, 0);
   const ti = Object.values(t.hsnSummary).reduce((a, d) => a + d.igst, 0);
   const ttx = tc + ts + ti;
-  const table = '<table class="gst-detail-hsn"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Tax</th><th>Total</th></tr></thead><tbody>' + rows + '<tr class="total-row"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(tc) + '</td><td>' + fmt(ts) + '</td><td>' + fmt(ti) + '</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr></tbody></table>';
+  let totalRow;
+  if (isIGST) totalRow = '<tr class="total-row"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(ti) + '</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr>';
+  else if (isNone) totalRow = '<tr class="total-row"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(tt) + '</td></tr>';
+  else totalRow = '<tr class="total-row"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(tc) + '</td><td>' + fmt(ts) + '</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr>';
+  const table = '<table class="gst-detail-hsn"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table>';
   return { rateCards: cards, infoBar, hsnDetailTable: table };
 }
 
-function buildGstLiteBlocks(t) {
-  const rows = Object.entries(t.hsnSummary).map(([hsn, d]) => '<tr><td>' + esc(hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td><td>' + fmt(d.cgst + d.sgst + d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>').join('');
+function buildGstLiteBlocks(t, s) {
+  const isIGST = s.taxType === 'igst';
+  const isNone = s.taxType === 'none';
+  const hsnHead = isIGST
+    ? '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>IGST</th><th>Total</th>'
+    : isNone
+    ? '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Total</th>'
+    : '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax</th><th>Total</th>';
+  const rows = Object.values(t.hsnSummary).map(d => {
+    const base = '<td>' + esc(d.hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td>';
+    const taxSum = d.cgst + d.sgst + d.igst;
+    if (isIGST) return '<tr>' + base + '<td>' + fmt(d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    if (isNone) return '<tr>' + base + '<td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    return '<tr>' + base + '<td>' + fmt(taxSum) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+  }).join('');
   const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
   const ttx = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst + d.sgst + d.igst, 0);
-  return '<table class="gst-lite-hsn-table"><thead><tr><th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax</th><th>Total</th></tr></thead><tbody>' + rows + '<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr></tbody></table>';
+  const totalRow = isNone
+    ? '<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(tt) + '</td></tr>'
+    : '<tr style="background:#e0f2fe;font-weight:800;"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr>';
+  return '<table class="gst-lite-hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table>';
 }
 
 function render() {
@@ -1346,11 +1373,10 @@ function render() {
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
   const cliGstinLine = cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : (s.regStatus === 'unregistered' ? '<em style="color:#94a3b8;">Unregistered</em>' : '');
 
-  // LOGO HTMLs for different template positions
-  const logoInline = getLogoHTML('default');   // inline with biz name
-  const logoSide = getLogoHTML('side');        // modern sidebar top
-  const logoCorporate = getLogoHTML('corporate'); // corporate header
-  const logoElegant = getLogoHTML('elegant');  // elegant centered
+  const logoInline = getLogoHTML('default');
+  const logoSide = getLogoHTML('side');
+  const logoCorporate = getLogoHTML('corporate');
+  const logoElegant = getLogoHTML('elegant');
 
   const labels = getLabels(s.docType);
   const custom = buildCustomText(s);
@@ -1378,4 +1404,365 @@ function render() {
       (biz.gstin ? '<h4>GSTIN</h4><p>' + esc(biz.gstin) + '</p>' : '') +
       (biz.pan ? '<h4>PAN</h4><p>' + esc(biz.pan) + '</p>' : '') +
       (biz.extra ? '<h4>Info</h4><p>' + esc(biz.extra).replace(/\n/g, '<br>') + '</p>' : '') +
-      (bank.name ? '<h4>Bank</h4><p>' + (bank.holder ? esc(bank.holder) + '<br>' : '') + esc(bank.name) + '<br>' + esc(bank.ac) + '<br>' + esc(bank.ifsc) + (bank.branch ? '<
+      (bank.name ? '<h4>Bank</h4><p>' + (bank.holder ? esc(bank.holder) + '<br>' : '') + esc(bank.name) + '<br>' + esc(bank.ac) + '<br>' + esc(bank.ifsc) + (bank.branch ? '<br>' + esc(bank.branch) : '') + '</p>' : '') +
+      '</div>' +
+      '<div class="inv-main">' + custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
+      '<div class="inv-header"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC + '</div></div>';
+  }
+  else if (s.template === 'minimal') {
+    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
+      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'elegant') {
+    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
+      '<div class="inv-header">' + (logoElegant || '') + '<div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'corporate') {
+    html = custom.top + '<div class="inv-header"><div class="inv-logo-wrap">' + (logoCorporate ? '<div style="flex-shrink:0;">' + logoCorporate + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div><div class="inv-sub">Original for Recipient</div></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'compact') {
+    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
+      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'rounded') {
+    html = custom.top + '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'gst-detailed') {
+    const gd = buildGstDetailedBlocks(t, s);
+    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
+      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">Tax Detailed</div></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      gd.infoBar + common.tableBlock + custom.middle +
+      '<div class="rate-summary-title">📊 Rate-Wise Summary</div>' +
+      '<div class="rate-summary-grid">' + (gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;">No data</div>') + '</div>' +
+      '<div class="rate-summary-title">📋 HSN-Wise Breakdown</div>' +
+      gd.hsnDetailTable + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'gst-lite') {
+    const liteHsn = buildGstLiteBlocks(t, s);
+    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
+      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">GST Summary Enclosed</div></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      common.tableBlock + custom.middle +
+      '<div class="gst-lite-summary"><div><div class="rate-summary-title">📋 HSN Summary</div>' + liteHsn + '</div><div>' + common.totalsBlock + '</div></div>' +
+      common.wordsBlock + footerBlock + GEN_DOC;
+  }
+
+  preview.innerHTML = html;
+}
+
+function changeTemplate() {
+  state.template = $('templateSelect').value;
+  localStorage.setItem('invoiceState', JSON.stringify(state));
+  render();
+  showToast('✓ ' + $('templateSelect').selectedOptions[0].text, 'blue');
+}
+
+function saveHistoryToLS() {
+  try {
+    localStorage.setItem('invoiceHistory', JSON.stringify(history));
+  } catch (e) {
+    if (history.length > 20) {
+      history = history.slice(0, 20);
+      try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); } catch (e2) {
+        while (history.length > 1) {
+          history = history.slice(0, Math.floor(history.length / 2));
+          try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); return; } catch (e3) {}
+        }
+      }
+    }
+  }
+}
+
+function saveToHistory() {
+  if (!state.client.name && !state.meta.no && !state.items.some(i => i.desc)) return false;
+  const totals = calcTotals();
+  const bizForHistory = Object.assign({}, state.business);
+  delete bizForHistory.logo;
+  const entry = {
+    id: editingHistoryId || ('inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
+    savedAt: new Date().toISOString(), docType: state.docType,
+    business: JSON.parse(JSON.stringify(bizForHistory)),
+    client: JSON.parse(JSON.stringify(state.client)),
+    meta: JSON.parse(JSON.stringify(state.meta)),
+    items: JSON.parse(JSON.stringify(state.items)),
+    details: JSON.parse(JSON.stringify(state.details || [])),
+    bank: JSON.parse(JSON.stringify(state.bank)),
+    terms: state.terms, notes: state.notes, taxType: state.taxType, template: state.template,
+    regStatus: state.regStatus,
+    customText: state.customText, customTextPosition: state.customTextPosition,
+    customTextColor: state.customTextColor, customTextSize: state.customTextSize,
+    total: totals.rounded, invoiceNo: state.meta.no || '(no number)',
+    clientName: state.client.name || '(no client)',
+    invoiceDate: state.meta.date || new Date().toISOString().split('T')[0]
+  };
+  if (editingHistoryId) {
+    const idx = history.findIndex(h => h.id === editingHistoryId);
+    if (idx >= 0) history[idx] = entry; else history.unshift(entry);
+    editingHistoryId = null;
+  } else history.unshift(entry);
+  if (history.length > 50) history = history.slice(0, 50);
+  saveHistoryToLS(); renderHistory();
+  return true;
+}
+
+function getDocTypeBadge(docType) {
+  if (docType === 'Credit Note') return '<span class="hi-doctype credit">Credit</span>';
+  if (docType === 'Debit Note') return '<span class="hi-doctype debit">Debit</span>';
+  if (docType === 'Proforma Invoice') return '<span class="hi-doctype proforma">Proforma</span>';
+  if (docType === 'Estimate') return '<span class="hi-doctype proforma">Estimate</span>';
+  if (docType === 'Quotation') return '<span class="hi-doctype proforma">Quote</span>';
+  return '';
+}
+
+function renderHistory() {
+  const list = $('historyList'), count = $('historyCount'); count.textContent = history.length;
+  if (!history.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">📭</div><div>No saved invoices</div></div>'; return; }
+  list.innerHTML = history.map(h => {
+    const dateStr = h.invoiceDate ? fmtDate(h.invoiceDate) : fmtDate(h.savedAt);
+    return '<div class="history-item ' + (h.id === editingHistoryId ? 'selected' : '') + '" role="button" tabindex="0" onclick="loadFromHistory(\'' + h.id + '\')" onkeydown="if(event.key===\'Enter\')loadFromHistory(\'' + h.id + '\')">' +
+      '<div class="hi-top"><div class="hi-no">' + esc(h.invoiceNo) + getDocTypeBadge(h.docType) + '</div><div class="hi-date">' + dateStr + '</div></div>' +
+      '<div class="hi-client">' + esc(h.clientName) + '</div>' +
+      '<div class="hi-bottom"><div class="hi-amount">' + fmt(h.total) + '</div>' +
+        '<div class="hi-actions" onclick="event.stopPropagation()"><button class="hi-del" onclick="deleteFromHistory(\'' + h.id + '\')">🗑️</button></div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function loadFromHistory(id) {
+  const entry = history.find(h => h.id === id); if (!entry) return;
+  const hasCurrentData = state.client.name || state.items.some(i => i.desc);
+  if (hasCurrentData && editingHistoryId !== id && !confirm('Load this invoice? Current data will be replaced.')) return;
+  state.docType = entry.docType || 'Tax Invoice';
+  state.business = JSON.parse(JSON.stringify(entry.business));
+  const currentLogo = sanitizeLogo((state.business && state.business.logo) || '');
+  state.business.logo = currentLogo;
+  state.client = JSON.parse(JSON.stringify(entry.client));
+  state.meta = JSON.parse(JSON.stringify(entry.meta));
+  state.items = JSON.parse(JSON.stringify(entry.items));
+  state.details = JSON.parse(JSON.stringify(entry.details || ['']));
+  state.bank = JSON.parse(JSON.stringify(entry.bank));
+  state.terms = entry.terms; state.notes = entry.notes;
+  state.taxType = entry.taxType; state.template = entry.template;
+  if (entry.regStatus) state.regStatus = entry.regStatus;
+  if (entry.customText !== undefined) state.customText = entry.customText;
+  if (entry.customTextPosition) state.customTextPosition = entry.customTextPosition;
+  if (entry.customTextColor) state.customTextColor = entry.customTextColor;
+  if (entry.customTextSize) state.customTextSize = entry.customTextSize;
+  editingHistoryId = id;
+  populateForm(state); renderItems(); renderDetails(); render(); renderHistory();
+  showToast('✓ Loaded', 'blue'); window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deleteFromHistory(id) {
+  const entry = history.find(h => h.id === id); if (!entry) return;
+  if (!confirm('Delete "' + entry.invoiceNo + '"?')) return;
+  history = history.filter(h => h.id !== id);
+  if (editingHistoryId === id) editingHistoryId = null;
+  saveHistoryToLS(); renderHistory(); showToast('🗑️ Deleted');
+}
+
+function getNextInvoiceNo() {
+  if (history.length > 0) {
+    const last = history[0].invoiceNo || '';
+    const match = last.match(/(.*?)(\d+)$/);
+    if (match) return match[1] + String(parseInt(match[2]) + 1).padStart(match[2].length, '0');
+  }
+  return 'INV-' + new Date().getFullYear() + '-001';
+}
+
+function resetForNextInvoice() {
+  const today = new Date().toISOString().split('T')[0];
+  $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
+  $('mNo').value = getNextInvoiceNo(); $('mDate').value = today;
+  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
+  editingHistoryId = null;
+  renderItems(); renderDetails(); sync(); renderHistory();
+}
+
+function prepareForPrint() {
+  const el = $('invoicePreview'); if (!el) return;
+  el.style.zoom = '';
+  const warning = $('printWarning'); if (warning) warning.classList.remove('show');
+  void el.offsetHeight;
+  const naturalHeight = el.scrollHeight;
+  const pageHeight = 1122;
+  const overflowRatio = naturalHeight / pageHeight;
+  if (naturalHeight > pageHeight && overflowRatio < 1.15) {
+    const scale = Math.min(pageHeight / naturalHeight, 1) * 0.98;
+    el.style.zoom = scale.toFixed(4);
+    if (warning) warning.classList.add('show');
+  }
+}
+
+function resetAfterPrint() {
+  const el = $('invoicePreview'); if (el) el.style.zoom = '';
+  const warning = $('printWarning'); if (warning) warning.classList.remove('show');
+}
+
+let pendingReset = false;
+
+window.addEventListener('beforeprint', prepareForPrint);
+window.addEventListener('afterprint', () => {
+  resetAfterPrint();
+  if (!pendingReset) return;
+  pendingReset = false;
+  setTimeout(() => { resetForNextInvoice(); showToast('✓ Ready for next'); }, 200);
+});
+
+function printAndSave() {
+  if (!saveToHistory()) { showToast('⚠️ Fill the form first', 'red'); return; }
+  showToast('✓ Saved — opening print');
+  pendingReset = true;
+  prepareForPrint();
+  setTimeout(() => window.print(), 200);
+}
+
+function loadSample() {
+  const today = new Date().toISOString().split('T')[0];
+  $('bName').value = 'Dinesh Construction Company';
+  $('bAddr').value = 'Village-Nandera, Tehsil-Baswa, Dausa, Rajasthan-303313';
+  $('bGstin').value = '08KGZPS9518C1ZD'; $('bPan').value = 'KGZPS9518C';
+  $('bEmail').value = 'dinesh.saini6095@gmail.com'; $('bPhone').value = '+91 97845 06095';
+  $('bExtra').value = 'Alt Phone: +91 90790 12345 · Website: dineshconstruction.in';
+  $('cName').value = 'SURGYAN KANWAR';
+  $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur, Meenawala, Jaipur, Rajasthan, Pin Code: 302034';
+  $('mNo').value = 'BS/26-27/100'; $('mDate').value = today; $('mPlace').value = '08-Rajasthan';
+  $('bkHolder').value = 'Dinesh Saini'; $('bkName').value = 'Bank of Baroda';
+  $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK';
+  $('bkType').value = 'Current'; $('bkUpi').value = 'dinesh@barodampay';
+  $('terms').value = 'Payment due within 15 days of invoice date.\nPlease mention invoice number in payment reference.\nInterest @18% p.a. will be charged on overdue payments.';
+  $('notes').value = 'Thank you for your business!';
+
+  state.items = [
+    { desc:'MIS Reporting & Dashboard Setup', hsn:'998313', qty:1, rate:25000, gst:18 },
+    { desc:'GST Filing — GSTR-1 & GSTR-3B (Monthly)', hsn:'998221', qty:3, rate:3500, gst:18 },
+    { desc:'TDS Return Filing (Quarterly)', hsn:'998221', qty:1, rate:5000, gst:18 },
+    { desc:'ERP Data Entry & Reconciliation', hsn:'998313', qty:10, rate:800, gst:18 },
+    { desc:'Business Advisory Services', hsn:'998311', qty:1, rate:10000, gst:12 }
+  ];
+  state.details = ['Site name: Namma', 'Site Id: IN-12521251', 'Site Ref No.: R/fd/231413'];
+  renderItems(); renderDetails(); sync();
+  setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
+}
+
+function clearAll(skipConfirm) {
+  if (!skipConfirm && !confirm('Clear everything?')) return;
+  ['bName','bAddr','bGstin','bPan','bEmail','bPhone','bExtra',
+   'cName','cAddr','cGstin','cEmail','cPhone',
+   'mNo','mDate','mPlace',
+   'bkHolder','bkName','bkAc','bkIfsc','bkBranch','bkType','bkUpi',
+   'terms','notes'].forEach(id => { const el = $(id); if (el) el.value = ''; });
+  $('taxType').value = 'cgst-sgst'; $('docTypeSelect').value = 'Tax Invoice';
+  $('regStatus').value = 'registered';
+  state.docType = 'Tax Invoice';
+  state.regStatus = 'registered';
+  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
+  editingHistoryId = null;
+  setIfscStatus('idle', '');
+  $('bankPreview').classList.remove('show'); ifscLastFetched = '';
+  $('bkBranch').readOnly = true;
+  state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
+  state.terms = ''; state.notes = '';
+  try { localStorage.removeItem('invoiceState'); } catch (e) {}
+  try { localStorage.setItem('userClearedForm', '1'); } catch (e) {}
+  updateLabels(); updateCustomBadge();
+  updateLogoPreview();
+  handleRegStatus();
+  renderItems(); renderDetails(); render(); renderHistory();
+  showToast('🗑️ Cleared');
+}
+
+function nukeEverything() {
+  if (!confirm('💥 Reset EVERYTHING? This will delete form + saved invoices + saved business details.')) return;
+  if (!confirm('Pakka?')) return;
+  const lockSession = sessionStorage.getItem('invUnlocked');
+  const lockTill = localStorage.getItem('invUnlockedTill');
+  try { localStorage.clear(); } catch (e) {}
+  if (lockSession) sessionStorage.setItem('invUnlocked', lockSession);
+  if (lockTill) localStorage.setItem('invUnlockedTill', lockTill);
+  history = []; profiles = []; editingHistoryId = null;
+  clearAll(true);
+  renderProfiles();
+  showToast('💥 Everything reset', 'red');
+}
+
+function saveJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  const safeNo = (state.meta.no || 'invoice').replace(/[\\/:*?"<>|]/g, '-');
+  a.href = URL.createObjectURL(blob);
+  a.download = safeNo + '_' + state.docType.replace(/\s+/g, '_') + '.json';
+  a.click();
+}
+
+function loadJSON(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      Object.assign(state, data);
+      if (!state.details) state.details = [''];
+      if (!state.docType) state.docType = 'Tax Invoice';
+      if (!state.template) state.template = 'classic';
+      if (!state.regStatus) state.regStatus = 'registered';
+      if (state.customText === undefined) state.customText = '।। जय श्री श्याम ।।';
+      if (!state.customTextPosition) state.customTextPosition = 'top';
+      if (!state.customTextColor) state.customTextColor = '#d97706';
+      if (!state.customTextSize) state.customTextSize = '18px';
+      if (state.business && state.business.logo) state.business.logo = sanitizeLogo(state.business.logo);
+      populateForm(state); renderItems(); renderDetails(); sync();
+      showToast('✓ JSON loaded');
+    } catch (err) { alert('Invalid JSON: ' + err.message); }
+  };
+  r.readAsText(file); e.target.value = '';
+}
+
+(function init() {
+  disableAutofill();
+  try { const s = localStorage.getItem('invoiceHistory'); if (s) history = JSON.parse(s); } catch (e) {}
+  try { const s = localStorage.getItem('businessProfiles'); if (s) profiles = JSON.parse(s); } catch (e) {}
+  const wasCleared = localStorage.getItem('userClearedForm') === '1';
+  const saved = localStorage.getItem('invoiceState');
+  if (saved && !wasCleared) {
+    try {
+      const data = JSON.parse(saved);
+      Object.assign(state, data);
+      if (!state.details) state.details = [''];
+      if (!state.docType) state.docType = 'Tax Invoice';
+      if (!state.template) state.template = 'classic';
+      if (!state.regStatus) state.regStatus = 'registered';
+      if (state.customText === undefined) state.customText = '।। जय श्री श्याम ।।';
+      if (!state.customTextPosition) state.customTextPosition = 'top';
+      if (!state.customTextColor) state.customTextColor = '#d97706';
+      if (!state.customTextSize) state.customTextSize = '18px';
+      if (state.business && state.business.logo) state.business.logo = sanitizeLogo(state.business.logo);
+      populateForm(state);
+      const bk = state.bank || {};
+      if (bk.ifsc && bk.ifsc.length === 11 && !bk.branch) setTimeout(() => onIfscInput(bk.ifsc), 400);
+    } catch (err) {}
+  } else {
+    state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
+    state.details = [''];
+  }
+  if (!state.details || !state.details.length) state.details = [''];
+  updateLabels(); updateCustomBadge();
+  handleRegStatus();
+  renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
+})();
+</script>
+</body>
+</html>
