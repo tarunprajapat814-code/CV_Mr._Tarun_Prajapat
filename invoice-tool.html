@@ -299,7 +299,6 @@
   .gst-lite-hsn-table td:first-child { text-align: left; font-weight: 700; color: #075985; }
   .gst-lite-hsn-table tr:last-child td { border-bottom: none; }
 
-  /* ═══ NEW TEMPLATE: BOLD ═══ */
   .tpl-bold { padding: 0; }
   .tpl-bold .inv-header-band { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 22px 24px; margin: -10mm -12mm 18px -12mm; border-bottom: 4px solid #f59e0b; }
   .tpl-bold .inv-biz-name { font-size: 24px; color: #fff; font-weight: 800; letter-spacing: 0.3px; }
@@ -314,7 +313,6 @@
   .tpl-bold .words-box strong { color: #b45309; }
   .tpl-bold .inv-table th.r { color: #fff; }
 
-  /* ═══ NEW TEMPLATE: EXECUTIVE ═══ */
   .tpl-executive { padding: 0; font-family: 'Georgia', 'Playfair Display', serif; }
   .tpl-executive .inv-header-band { background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%); color: #fff; padding: 26px 24px; margin: -10mm -12mm 18px -12mm; border-bottom: 3px solid #c9a961; position: relative; }
   .tpl-executive .inv-biz-name { font-family: 'Playfair Display', serif; font-size: 26px; color: #fff; letter-spacing: 0.5px; }
@@ -330,7 +328,6 @@
   .tpl-executive .inv-details-title { font-family: 'Playfair Display', serif; font-style: italic; color: #1e3a5f; }
   .tpl-executive .footer-grid h4 { color: #1e3a5f; }
 
-  /* ═══ NEW TEMPLATE: WAVE ═══ */
   .tpl-wave { padding: 0; }
   .tpl-wave .inv-wave-top { background: linear-gradient(135deg, #0e7490 0%, #14b8a6 100%); margin: -10mm -12mm 0 -12mm; padding: 24px 24px 34px 24px; color: #fff; position: relative; overflow: hidden; }
   .tpl-wave .inv-wave-top::after { content: ''; position: absolute; bottom: -1px; left: -5%; right: -5%; height: 30px; background: #fff; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
@@ -345,7 +342,6 @@
   .tpl-wave .totals-row.grand { background: linear-gradient(135deg, #ecfeff, #cffafe); padding: 10px 12px; border: none; border-radius: 10px; color: #0e7490; border-top: none; }
   .tpl-wave .words-box { background: #ecfeff; }
 
-  /* ═══ NEW TEMPLATE: SPLIT ═══ */
   .tpl-split { padding: 0; }
   .tpl-split .inv-split-header { display: grid; grid-template-columns: 1fr 1fr; margin: -10mm -12mm 18px -12mm; min-height: 120px; }
   .tpl-split .inv-split-left { background: linear-gradient(135deg, #7c2d12 0%, #b45309 100%); color: #fff; padding: 22px 20px; display: flex; flex-direction: column; justify-content: center; }
@@ -359,7 +355,6 @@
   .tpl-split .totals-row.grand { background: #fef3c7; padding: 8px 12px; color: #7c2d12; border: none; border-radius: 4px; }
   .tpl-split .words-box { background: #fef3c7; }
 
-  /* ═══ NEW TEMPLATE: STANDARD ═══ */
   .tpl-standard { padding: 12mm 12mm; }
   .tpl-standard .inv-header { border: 2px solid #111827; padding: 12px 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
   .tpl-standard .inv-biz-name { font-size: 20px; font-weight: 800; }
@@ -382,10 +377,9 @@
   .tpl-standard .totals-row.grand .lbl { color: #fff; }
   .tpl-standard .words-box { background: transparent; border: 1.5px solid #111827; border-radius: 0; margin-top: 10px; }
 
-  /* ═══ NEW TEMPLATE: FREELANCER ═══ */
   .tpl-freelancer { padding: 12mm 12mm; }
   .tpl-freelancer .inv-header { display: flex; align-items: center; gap: 16px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 2px solid #e0e7ff; }
-  .tpl-freelancer .inv-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Poppins', sans-serif; flex-shrink: 0; box-shadow: 0 4px 14px rgba(99,102,241,0.35); text-transform: uppercase; }
+  .tpl-freelancer .inv-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Poppins', sans-serif; flex-shrink: 0; box-shadow: 0 4px 14px rgba(99,102,241,0.35); text-transform: uppercase; overflow: hidden; }
   .tpl-freelancer .inv-h1 { font-size: 22px; color: #6366f1; letter-spacing: 1px; }
   .tpl-freelancer .inv-biz-name { font-size: 20px; }
   .tpl-freelancer .inv-table th { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 8px 7px; }
@@ -648,7 +642,7 @@
                 <input type="file" id="bLogo" accept="image/png,image/jpeg,image/jpg,image/webp" style="display:none" onchange="handleLogoUpload(event)">
               </label>
               <button class="btn-remove-logo" onclick="removeLogo()" id="removeLogoBtn" style="display:none;">✖ Remove Logo</button>
-              <div style="font-size:9.5px;color:#94a3b8;text-align:center;line-height:1.3;">PNG / JPG / WebP · max 500KB</div>
+              <div style="font-size:9.5px;color:#94a3b8;text-align:center;line-height:1.3;">PNG / JPG / WebP · max 5MB</div>
             </div>
           </div>
         </div>
@@ -900,25 +894,25 @@ function updateCustomBadge() {
 function sanitizeLogo(url) {
   if (!url || typeof url !== 'string') return '';
   if (!/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(url)) return '';
-  if (url.length > 800000) return '';
+  if (url.length > 8000000) return ''; // 8M chars ≈ 6MB binary ≈ 5MB upload limit
   return url;
 }
 
 function handleLogoUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 500 * 1024) {
-    showToast('⚠️ Logo must be under 500KB', 'red');
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('⚠️ Logo must be under 5MB', 'red');
     e.target.value = '';
     return;
   }
   const reader = new FileReader();
   reader.onload = function(ev) {
     const clean = sanitizeLogo(ev.target.result);
-    if (!clean) { showToast('⚠️ Invalid image format', 'red'); return; }
+    if (!clean) { showToast('⚠️ Invalid image format or too large', 'red'); return; }
     state.business.logo = clean;
     updateLogoPreview();
-    localStorage.setItem('invoiceState', JSON.stringify(state));
+    try { localStorage.setItem('invoiceState', JSON.stringify(state)); } catch (err) {}
     render();
     showToast('✓ Logo uploaded', 'blue');
   };
@@ -931,7 +925,7 @@ function removeLogo() {
   if (!confirm('Remove logo?')) return;
   state.business.logo = '';
   updateLogoPreview();
-  localStorage.setItem('invoiceState', JSON.stringify(state));
+  try { localStorage.setItem('invoiceState', JSON.stringify(state)); } catch (err) {}
   render();
   showToast('🗑️ Logo removed');
 }
@@ -1526,7 +1520,6 @@ function buildGstLiteBlocks(t, s) {
   return '<table class="gst-lite-hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table>';
 }
 
-// Standard template — special "boxed" layout
 function buildStandardBlocks(s, labels, cliName, cliInfo, cliGstinLine) {
   const meta = s.meta || {};
   const validDetails = (s.details || []).filter(d => d && d.trim());
@@ -1569,7 +1562,6 @@ function render() {
   const detailsBoxHTML = buildDetailsBox(s, labels.detailsTitle, labels.noLabel, labels.dateLabel);
   const footerBlock = buildFooterBlock(s, bizName);
 
-  // Freelancer avatar — first letter of biz name
   const firstLetter = (bizName || 'Y').trim().charAt(0).toUpperCase();
 
   let html = '';
