@@ -105,7 +105,6 @@
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.toast-blue { background: #3b82f6; } .toast.toast-red { background: #dc2626; } .toast.toast-purple { background: #8b5cf6; } .toast.toast-saffron { background: #d97706; }
 
-  /* ═══ THEME COLOR PICKER ═══ */
   .theme-section-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .theme-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
   .theme-swatch { aspect-ratio: 1; border-radius: 4px; cursor: pointer; border: 1.5px solid rgba(0,0,0,0.12); transition: all 0.12s; position: relative; }
@@ -336,6 +335,17 @@
   .inv-logo-wrap { display: flex; align-items: center; gap: 14px; }
   .panel-head .panel-hint { font-size: 9px; opacity: 0.6; text-transform: none; letter-spacing: 0; font-weight: 500; margin-left: auto; margin-right: 8px; }
 
+  /* ═══ BILL TO 2-COLUMN LAYOUT ═══ */
+  .bill-to-wrap { display: grid; gap: 14px; align-items: flex-start; }
+  .bill-to-wrap.has-gstin { grid-template-columns: 1.35fr 1fr; }
+  .bill-to-gstin-label { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 3px; }
+  .bill-to-gstin-value { font-size: 10px; font-weight: 700; color: var(--text); word-break: break-all; line-height: 1.35; }
+  .bill-to-gstin-state { font-size: 9.5px; color: var(--accent); font-weight: 600; margin-top: 2px; }
+
+  .client-state-hint { font-size: 10.5px; margin-top: 4px; min-height: 15px; line-height: 1.35; font-weight: 600; }
+  .client-state-hint.success { color: #059669; }
+  .client-state-hint.empty { color: #94a3b8; }
+
   @media print {
     @page { size: A4 portrait; margin: 0; }
     html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
@@ -456,7 +466,7 @@
   <div style="max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
       <h1>🧾 Invoice Generator</h1>
-      <p>11 templates · Theme Colors · Logo · Auto GST · Full Backup · PDF export</p>
+      <p>11 templates · State Auto-detect · Theme Colors · Logo · Full Backup</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <select id="docTypeSelect" onchange="changeDocType()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;background:#fff;color:#0a1e3f;">
@@ -488,7 +498,7 @@
 <div class="toolbar no-print">
   <button class="btn btn-primary" onclick="loadSample()">⚡ Load Sample</button>
   <button class="btn btn-success" onclick="printAndSave()">📄 Print / Save PDF</button>
-  <button class="btn btn-outline" onclick="saveJSON()">💾 Full Backup (Profiles + History)</button>
+  <button class="btn btn-outline" onclick="saveJSON()">💾 Full Backup</button>
   <button class="btn btn-outline" onclick="document.getElementById('loadFile').click()">📂 Restore Backup</button>
   <input type="file" id="loadFile" accept=".json" style="display:none" onchange="loadJSON(event)">
   <button class="btn btn-ghost" onclick="clearAll()">🗑️ Clear Form</button>
@@ -617,7 +627,11 @@
       <div class="panel-body" id="cliBody">
         <div class="field"><label>Client Name</label><input id="cName" autocomplete="off" oninput="sync()"></div>
         <div class="field"><label>Address</label><textarea id="cAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
-        <div class="field"><label>GSTIN <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(optional)</span></label><input id="cGstin" autocomplete="off" oninput="autoTaxFromState(); sync()"></div>
+        <div class="field">
+          <label>GSTIN <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <input id="cGstin" maxlength="15" style="text-transform:uppercase;" autocomplete="off" oninput="onClientGstinInput(this.value)">
+          <div id="cGstinStateHint" class="client-state-hint empty"></div>
+        </div>
         <div class="grid2">
           <div class="field"><label>Email</label><input id="cEmail" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Phone</label><input id="cPhone" autocomplete="off" oninput="sync()"></div>
@@ -632,7 +646,11 @@
           <div class="field"><label id="mNoLabel">Invoice No.</label><input id="mNo" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Date</label><input id="mDate" type="date" autocomplete="off" oninput="sync()"></div>
         </div>
-        <div class="field"><label>Place of Supply <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(state code + name)</span></label><input id="mPlace" placeholder="e.g. 08-Rajasthan" autocomplete="off" oninput="autoTaxFromState(); sync()"></div>
+        <div class="field">
+          <label>Place of Supply <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(auto from client GSTIN)</span></label>
+          <input id="mPlace" placeholder="e.g. 08-Rajasthan" autocomplete="off" oninput="autoTaxFromState(); sync()">
+          <div id="mPlaceHint" class="client-state-hint empty"></div>
+        </div>
         <div class="details-section">
           <div class="details-heading"><span>Details</span></div>
           <div id="detailsContainer"></div>
@@ -794,6 +812,82 @@ const STATE_NAMES = {
   '26':'DNH & DD','27':'Maharashtra','29':'Karnataka','30':'Goa','31':'Lakshadweep',
   '32':'Kerala','33':'TN','34':'Puducherry','35':'A&N','36':'Telangana','37':'AP','38':'Ladakh'
 };
+
+/* ═══ GSTIN → STATE UTILITIES ═══ */
+function getStateFromGSTIN(gstin) {
+  if (!gstin || typeof gstin !== 'string') return null;
+  const clean = gstin.trim().toUpperCase();
+  if (clean.length < 2) return null;
+  const code = clean.substring(0, 2);
+  if (!/^\d{2}$/.test(code)) return null;
+  const name = STATE_NAMES[code];
+  if (name) return { code: code, name: name };
+  return null;
+}
+
+function updateClientStateHint() {
+  const el = $('cGstinStateHint');
+  if (!el) return;
+  const gstin = ($('cGstin').value || '').trim().toUpperCase();
+  if (!gstin) {
+    el.className = 'client-state-hint empty';
+    el.innerHTML = '';
+    return;
+  }
+  const info = getStateFromGSTIN(gstin);
+  if (info) {
+    el.className = 'client-state-hint success';
+    el.innerHTML = '📍 State detected: <strong>' + info.code + ' - ' + info.name + '</strong>' + (gstin.length < 15 ? ' <span style="color:#94a3b8;font-weight:500;">(' + gstin.length + '/15)</span>' : '');
+  } else {
+    el.className = 'client-state-hint empty';
+    el.innerHTML = gstin.length >= 2 ? '<span style="color:#94a3b8;">Enter valid GSTIN (starts with state code 01-38)</span>' : '';
+  }
+}
+
+function updatePlaceOfSupplyHint() {
+  const el = $('mPlaceHint');
+  if (!el) return;
+  const place = ($('mPlace').value || '').trim();
+  if (!place) {
+    el.className = 'client-state-hint empty';
+    el.innerHTML = '';
+    return;
+  }
+  const code = place.match(/^(\d{2})/);
+  if (code && STATE_NAMES[code[1]]) {
+    el.className = 'client-state-hint success';
+    el.innerHTML = '📍 <strong>' + code[1] + ' - ' + STATE_NAMES[code[1]] + '</strong>';
+  } else {
+    el.className = 'client-state-hint empty';
+    el.innerHTML = '';
+  }
+}
+
+function onClientGstinInput(value) {
+  // Uppercase input
+  const inp = $('cGstin');
+  if (inp) inp.value = (value || '').toUpperCase();
+
+  // Update hint
+  updateClientStateHint();
+
+  // Auto-fill Place of Supply from client GSTIN
+  const info = getStateFromGSTIN(inp.value);
+  if (info) {
+    const newPlace = info.code + '-' + info.name;
+    if ($('mPlace').value !== newPlace) {
+      $('mPlace').value = newPlace;
+      updatePlaceOfSupplyHint();
+      // Flash effect
+      $('mPlace').classList.add('auto-filled');
+      setTimeout(() => $('mPlace').classList.remove('auto-filled'), 1500);
+    }
+  }
+
+  // Trigger tax type auto-detect
+  autoTaxFromState();
+  sync();
+}
 
 /* ═══ COLOR UTILITIES ═══ */
 function lightenColor(hex, percent) {
@@ -1391,6 +1485,8 @@ function populateForm(s) {
   updateLabels(); updateCustomBadge(); updateColorPickerUI();
   handleRegStatus();
   $('taxType').value = savedTaxType;
+  updateClientStateHint();
+  updatePlaceOfSupplyHint();
 }
 
 function calcTotals() {
@@ -1502,6 +1598,40 @@ function buildCommonBlocks(s, t) {
   return { itemRows, taxRows, hsnTable, tableBlock, totalsBlock, wordsBlock };
 }
 
+/* ═══ BILL TO BLOCK — 2-column layout with GSTIN column ═══ */
+function buildBillToBlock(cli, cliName, cliInfo) {
+  const gstin = (cli.gstin || '').trim();
+  const hasGstin = gstin.length > 0;
+  const stateInfo = hasGstin ? getStateFromGSTIN(gstin) : null;
+
+  let gstinCol = '';
+  if (hasGstin) {
+    gstinCol = '<div>' +
+      '<div class="bill-to-gstin-label">GSTIN</div>' +
+      '<div class="bill-to-gstin-value">' + esc(gstin) + '</div>' +
+      (stateInfo ? '<div class="bill-to-gstin-state">' + stateInfo.code + ' - ' + esc(stateInfo.name) + '</div>' : '') +
+    '</div>';
+  }
+
+  return '<div>' +
+    '<div class="inv-party-label">Bill To</div>' +
+    '<div class="bill-to-wrap' + (hasGstin ? ' has-gstin' : '') + '">' +
+      '<div>' +
+        '<div class="inv-party-name">' + esc(cliName) + '</div>' +
+        (cliInfo ? '<div class="inv-party-info">' + esc(cliInfo) + '</div>' : '') +
+      '</div>' +
+      gstinCol +
+    '</div>' +
+  '</div>';
+}
+
+function buildBillToAndDetails(s, cli, cliName, cliInfo, detailsBoxHTML) {
+  return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;">' +
+    buildBillToBlock(cli, cliName, cliInfo) +
+    '<div>' + detailsBoxHTML + '</div>' +
+  '</div>';
+}
+
 function buildDetailsBox(s, detailsTitle, noLabel, dateLabel) {
   const meta = s.meta || {};
   const validDetails = (s.details || []).filter(d => d && d.trim());
@@ -1598,7 +1728,7 @@ function buildGstLiteBlocks(t, s) {
   return '<table class="gst-lite-hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table>';
 }
 
-function buildStandardBlocks(s, labels, cliName, cliInfo, cliGstinLine) {
+function buildStandardBlocks(s, labels, cliName, cliInfo, cli) {
   const meta = s.meta || {};
   const validDetails = (s.details || []).filter(d => d && d.trim());
   const detailRows = validDetails.map(d => {
@@ -1606,7 +1736,25 @@ function buildStandardBlocks(s, labels, cliName, cliInfo, cliGstinLine) {
     if (m) return '<div class="inv-box-detail-row"><span class="lbl">' + esc(m[1].trim()) + ':</span><span class="val">' + esc(m[2].trim()) + '</span></div>';
     return '<div class="inv-box-detail-row"><span class="val">' + esc(d) + '</span></div>';
   }).join('');
-  const billToBox = '<div class="inv-box"><div class="inv-box-label">Bill To</div><div style="font-weight:800;font-size:11px;margin-bottom:3px;">' + esc(cliName) + '</div><div style="font-size:9.5px;color:#475569;line-height:1.4;">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div>';
+
+  const gstin = (cli.gstin || '').trim();
+  const stateInfo = gstin ? getStateFromGSTIN(gstin) : null;
+
+  const billToBox = '<div class="inv-box"><div class="inv-box-label">Bill To</div>' +
+    '<div style="display:grid;grid-template-columns:' + (gstin ? '1.35fr 1fr' : '1fr') + ';gap:12px;align-items:flex-start;">' +
+      '<div>' +
+        '<div style="font-weight:800;font-size:11px;margin-bottom:3px;">' + esc(cliName) + '</div>' +
+        (cliInfo ? '<div style="font-size:9.5px;color:#475569;line-height:1.4;">' + esc(cliInfo) + '</div>' : '') +
+      '</div>' +
+      (gstin ?
+        '<div>' +
+          '<div class="bill-to-gstin-label">GSTIN</div>' +
+          '<div class="bill-to-gstin-value">' + esc(gstin) + '</div>' +
+          (stateInfo ? '<div class="bill-to-gstin-state">' + stateInfo.code + ' - ' + esc(stateInfo.name) + '</div>' : '') +
+        '</div>' : '') +
+    '</div>' +
+  '</div>';
+
   const invInfoBox = '<div class="inv-box"><div class="inv-box-label">' + esc(labels.detailsTitle) + '</div>' +
     '<div class="inv-box-detail-row"><span class="lbl">' + esc(labels.noLabel) + ':</span><span class="val">' + (esc(meta.no) || '—') + '</span></div>' +
     '<div class="inv-box-detail-row"><span class="lbl">Date:</span><span class="val">' + fmtDate(meta.date) + '</span></div>' +
@@ -1628,7 +1776,6 @@ function render() {
   const bizInfoHTML = buildBizInfoHTML(biz);
   const cliName = cli.name || 'Client Name';
   const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
-  const cliGstinLine = cli.gstin ? 'GSTIN: ' + esc(cli.gstin) : (s.regStatus === 'unregistered' ? '<em style="color:#94a3b8;">Unregistered</em>' : '');
 
   const logoInline = getLogoHTML('default');
   const logoSide = getLogoHTML('side');
@@ -1638,6 +1785,7 @@ function render() {
   const custom = buildCustomText(s);
   const common = buildCommonBlocks(s, t);
   const detailsBoxHTML = buildDetailsBox(s, labels.detailsTitle, labels.noLabel, labels.dateLabel);
+  const billToAndDetails = buildBillToAndDetails(s, cli, cliName, cliInfo, detailsBoxHTML);
   const footerBlock = buildFooterBlock(s, bizName);
 
   const firstLetter = (bizName || 'Y').trim().charAt(0).toUpperCase();
@@ -1647,7 +1795,7 @@ function render() {
   if (s.template === 'classic' || s.template === 'gst') {
     html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
       '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock +
       (s.template === 'gst' ? '<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN Summary</h4>' + common.hsnTable + '</div>' : '') +
       footerBlock + GEN_DOC;
@@ -1666,36 +1814,36 @@ function render() {
       '</div>' +
       '<div class="inv-main">' + custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
       '<div class="inv-header"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC + '</div></div>';
   }
   else if (s.template === 'minimal') {
     html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
       '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
   }
   else if (s.template === 'corporate') {
     html = custom.top + '<div class="inv-header"><div class="inv-logo-wrap">' + (logoCorporate ? '<div style="flex-shrink:0;">' + logoCorporate + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div><div class="inv-sub">Original for Recipient</div></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
   }
   else if (s.template === 'compact') {
     html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
       '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
   }
   else if (s.template === 'rounded') {
     html = custom.top + '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
   }
   else if (s.template === 'gst-detailed') {
     const gd = buildGstDetailedBlocks(t, s);
     html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
       '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">Tax Detailed</div></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       gd.infoBar + common.tableBlock + custom.middle +
       '<div class="rate-summary-title">📊 Rate-Wise Summary</div>' +
       '<div class="rate-summary-grid">' + (gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;">No data</div>') + '</div>' +
@@ -1706,13 +1854,13 @@ function render() {
     const liteHsn = buildGstLiteBlocks(t, s);
     html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
       '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">GST Summary Enclosed</div></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle +
       '<div class="gst-lite-summary"><div><div class="rate-summary-title">📋 HSN Summary</div>' + liteHsn + '</div><div>' + common.totalsBlock + '</div></div>' +
       common.wordsBlock + footerBlock + GEN_DOC;
   }
   else if (s.template === 'standard') {
-    const sb = buildStandardBlocks(s, labels, cliName, cliInfo, cliGstinLine);
+    const sb = buildStandardBlocks(s, labels, cliName, cliInfo, cli);
     html = custom.top +
       '<div class="inv-header"><div style="display:flex;align-items:center;gap:14px;">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
       '<div class="inv-boxes">' + sb.billToBox + sb.invInfoBox + '</div>' +
@@ -1725,7 +1873,7 @@ function render() {
         '<div style="flex:1;"><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div>' +
         '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
       '</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;"><div><div class="inv-party-label">Bill To</div><div class="inv-party-name">' + esc(cliName) + '</div><div class="inv-party-info">' + esc(cliInfo) + (cliGstinLine ? '<br>' + cliGstinLine : '') + '</div></div><div>' + detailsBoxHTML + '</div></div>' +
+      billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
   }
 
@@ -1859,6 +2007,7 @@ function resetForNextInvoice() {
   $('mNo').value = getNextInvoiceNo(); $('mDate').value = today;
   state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
   editingHistoryId = null;
+  updateClientStateHint();
   renderItems(); renderDetails(); sync(); renderHistory();
 }
 
@@ -1916,6 +2065,7 @@ function loadSample() {
   $('bExtra').value = 'Alt Phone: +91 90790 12345 · Website: dineshconstruction.in';
   $('cName').value = 'SURGYAN KANWAR';
   $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur, Meenawala, Jaipur, Rajasthan, Pin Code: 302034';
+  $('cGstin').value = '08AHVPG8733E1ZY';
   $('mNo').value = 'BS/26-27/100'; $('mDate').value = today; $('mPlace').value = '08-Rajasthan';
   $('bkHolder').value = 'Dinesh Saini'; $('bkName').value = 'Bank of Baroda';
   $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK';
@@ -1931,6 +2081,8 @@ function loadSample() {
     { desc:'Business Advisory Services', hsn:'998311', qty:1, rate:10000, gst:12 }
   ];
   state.details = ['Site name: Namma', 'Site Id: IN-12521251', 'Site Ref No.: R/fd/231413'];
+  updateClientStateHint();
+  updatePlaceOfSupplyHint();
   renderItems(); renderDetails(); sync();
   setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
 }
@@ -1957,6 +2109,8 @@ function clearAll(skipConfirm) {
   try { localStorage.setItem('userClearedForm', '1'); } catch (e) {}
   updateLabels(); updateCustomBadge();
   updateLogoPreview();
+  updateClientStateHint();
+  updatePlaceOfSupplyHint();
   handleRegStatus();
   renderItems(); renderDetails(); render(); renderHistory();
   showToast('🗑️ Cleared');
@@ -1969,14 +2123,13 @@ function nukeEverything() {
   const lockTill = localStorage.getItem('invUnlockedTill');
   try { localStorage.clear(); } catch (e) {}
   if (lockSession) sessionStorage.setItem('invUnlocked', lockSession);
-  if (lockTill) localStorage.setItem('invUnlockedTill', lockTill);
+  if (lockTill) sessionStorage.setItem('invUnlockedTill', lockTill);
   history = []; profiles = []; editingHistoryId = null;
   clearAll(true);
   renderProfiles();
   showToast('💥 Everything reset', 'red');
 }
 
-/* ═══ FULL BACKUP — state + profiles + history ═══ */
 function saveJSON() {
   const payload = {
     _meta: {
@@ -2006,7 +2159,6 @@ function loadJSON(e) {
     try {
       const data = JSON.parse(ev.target.result);
 
-      // New backup format
       if (data.state && typeof data.state === 'object' && !data.business && !data.items) {
         const nProf = Array.isArray(data.profiles) ? data.profiles.length : 0;
         const nHist = Array.isArray(data.history) ? data.history.length : 0;
@@ -2024,7 +2176,6 @@ function loadJSON(e) {
         renderHistory();
         Object.assign(state, data.state);
       } else {
-        // Legacy format
         Object.assign(state, data);
       }
 
@@ -2079,6 +2230,8 @@ function loadJSON(e) {
   renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
   buildColorGrids();
   updateColorPickerUI();
+  updateClientStateHint();
+  updatePlaceOfSupplyHint();
 })();
 </script>
 </body>
