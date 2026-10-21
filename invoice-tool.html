@@ -88,19 +88,17 @@
   .history-item .hi-doctype.proforma { background: #dbeafe; color: #1e40af; }
   .history-empty { text-align: center; padding: 24px 12px; color: #94a3b8; font-size: 12px; }
   .history-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
-  .profile-item { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border: 1.5px solid #d8b4fe; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
-  .profile-item:hover { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-color: #a855f7; transform: translateX(2px); }
-  .profile-item .pi-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .profile-item .pi-logo { width: 42px; height: 42px; border-radius: 8px; background: rgba(255,255,255,0.9); border: 1.5px solid #d8b4fe; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; font-size: 17px; font-weight: 800; color: #6b21a8; text-transform: uppercase; }
-  .profile-item .pi-logo.has-logo { padding: 3px; background: #fff; }
+
+  /* ═══ COMPACT SAVED PROFILE CSS ═══ */
+  .profile-item { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; margin-bottom: 6px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .profile-item:hover { background: #eff6ff; border-color: #3b82f6; transform: translateX(2px); }
+  .profile-item .pi-left { display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1; }
+  .profile-item .pi-logo { width: 28px; height: 28px; border-radius: 6px; background: #fff; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 800; color: #475569; text-transform: uppercase; overflow: hidden; }
   .profile-item .pi-logo img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-  .profile-item .pi-header-text { flex: 1; min-width: 0; }
-  .profile-item .pi-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; color: #6b21a8; margin-bottom: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .profile-item .pi-info { font-size: 10.5px; color: #9333ea; margin-bottom: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .profile-item .pi-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .profile-item .pi-gst { font-size: 10px; font-weight: 700; color: #6b21a8; background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 999px; }
-  .profile-item .pi-actions button { width: 24px; height: 24px; border-radius: 6px; border: none; cursor: pointer; font-size: 11px; }
-  .profile-item .pi-del { background: #fee2e2; color: #dc2626; }
+  .profile-item .pi-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; color: #0f172a; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .profile-item .pi-del { width: 24px; height: 24px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; background: #fee2e2; color: #dc2626; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .profile-item .pi-del:hover { background: #fecaca; }
+
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #059669; color: #fff; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(5,150,105,0.35); z-index: 1000; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; display: flex; align-items: center; gap: 8px; }
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.toast-blue { background: #3b82f6; } .toast.toast-red { background: #dc2626; } .toast.toast-purple { background: #8b5cf6; } .toast.toast-saffron { background: #d97706; }
@@ -322,7 +320,6 @@
   .tpl-freelancer .words-box { background: var(--accent-soft); border-radius: 10px; }
   .tpl-freelancer .footer-grid { background: #f8fafc; padding: 12px 14px; border-radius: 10px; border-top: none; }
 
-  /* ═══ PREMIUM HSN ═══ */
   .tpl-premium-hsn { padding: 15mm 15mm; }
   .tpl-premium-hsn .inv-header { background: var(--accent); color: #fff; padding: 24px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
   .tpl-premium-hsn .inv-biz-name { color: #fff; font-size: 24px; font-weight: 800; }
@@ -1290,7 +1287,10 @@ function saveBusinessProfile() {
   };
   const extras = (logo ? ' + Logo' : '');
   if (idx >= 0) { profiles[idx] = profile; showToast('✓ Updated (Business + Bank' + extras + ')'); } else { profiles.unshift(profile); showToast('✓ Saved (Business + Bank' + extras + ')'); }
-  if (profiles.length > 20) profiles = profiles.slice(0, 20);
+  
+  // Increased limit from 20 to 50
+  if (profiles.length > 50) profiles = profiles.slice(0, 50);
+  
   saveProfilesToLS(); renderProfiles();
 }
 
@@ -1298,25 +1298,20 @@ function renderProfiles() {
   const list = $('profileList'), count = $('profileCount');
   if (!list) return; count.textContent = profiles.length;
   if (!profiles.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">💼</div><div>No saved details</div></div>'; return; }
+  
   list.innerHTML = profiles.map(p => {
-    const city = (p.addr || '').split('\n')[0].substring(0, 30);
-    const hasBank = p.bank && (p.bank.name || p.bank.ac || p.bank.ifsc);
     const logo = sanitizeLogo(p.logo || '');
-    const logoInner = logo
-      ? '<img src="' + esc(logo) + '" alt="Logo">'
+    const logoInner = logo 
+      ? '<img src="' + esc(logo) + '" alt="Logo">' 
       : esc((p.name || '?').trim().charAt(0).toUpperCase());
-    return '<div class="profile-item" role="button" tabindex="0" onclick="loadBusinessProfile(\'' + p.id + '\')" onkeydown="if(event.key===\'Enter\')loadBusinessProfile(\'' + p.id + '\')">' +
-      '<div class="pi-header">' +
-        '<div class="pi-logo' + (logo ? ' has-logo' : '') + '">' + logoInner + '</div>' +
-        '<div class="pi-header-text">' +
-          '<div class="pi-name">' + esc(p.name) + '</div>' +
-          '<div class="pi-info">' + esc(city) + '</div>' +
-        '</div>' +
+      
+    return '<div class="profile-item" role="button" tabindex="0" onclick="loadBusinessProfile(\'' + p.id + '\')" onkeydown="if(event.key===\'Enter\')loadBusinessProfile(\'' + p.id + '\')" title="Load ' + esc(p.name) + '">' +
+      '<div class="pi-left">' +
+        '<div class="pi-logo">' + logoInner + '</div>' +
+        '<div class="pi-name">' + esc(p.name) + '</div>' +
       '</div>' +
-      '<div class="pi-bottom">' +
-        '<span class="pi-gst">' + (p.gstin ? 'GST: ' + esc(p.gstin.substring(0, 8)) + '...' : 'No GSTIN') + (hasBank ? ' · 🏦' : '') + (logo ? ' · 🎨' : '') + '</span>' +
-        '<div class="pi-actions" onclick="event.stopPropagation()"><button class="pi-del" onclick="deleteBusinessProfile(\'' + p.id + '\')">🗑️</button></div>' +
-      '</div></div>';
+      '<button class="pi-del" onclick="event.stopPropagation(); deleteBusinessProfile(\'' + p.id + '\')" title="Delete Profile">🗑️</button>' +
+    '</div>';
   }).join('');
 }
 
