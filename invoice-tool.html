@@ -134,6 +134,8 @@
   .tpl-corporate-hsn { --accent: #1e3a8a; --accent-soft: #eff6ff; --accent-text: #fff; }
   .tpl-spacious { --accent: #334155; --accent-soft: #f8fafc; --accent-text: #fff; }
   .tpl-minimal-pro { --accent: #000000; --accent-soft: #ffffff; --accent-text: #ffffff; }
+  .tpl-gst-executive { --accent: #0f172a; --accent-soft: #f1f5f9; --accent-text: #fff; }
+  .tpl-gst-analytical { --accent: #0369a1; --accent-soft: #e0f2fe; --accent-text: #fff; }
 
   .inv-h1 { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1.5px; }
   .inv-biz-name { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; letter-spacing: 0.2px; }
@@ -325,71 +327,49 @@
   .tpl-freelancer .words-box { background: var(--accent-soft); border-radius: 10px; }
   .tpl-freelancer .footer-grid { background: #f8fafc; padding: 12px 14px; border-radius: 10px; border-top: none; }
 
-  /* ═══ 4 NEW FULL-PAGE TEMPLATES ═══ */
+  /* ═══ NEW PREMIUM TEMPLATES ═══ */
 
-  /* 1. Premium HSN */
-  .tpl-premium-hsn { padding: 15mm 15mm; }
-  .tpl-premium-hsn .inv-header { background: var(--accent); color: #fff; padding: 24px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-  .tpl-premium-hsn .inv-biz-name { color: #fff; font-size: 24px; font-weight: 800; }
-  .tpl-premium-hsn .inv-biz-info { color: rgba(255,255,255,0.8); margin-top: 6px; }
-  .tpl-premium-hsn .inv-biz-info .biz-line strong { color: #fff; }
-  .tpl-premium-hsn .inv-h1 { color: #fff; font-size: 32px; letter-spacing: 3px; text-transform: uppercase; }
-  .tpl-premium-hsn .inv-table { margin: 20px 0; }
-  .tpl-premium-hsn .inv-table th { padding: 12px 10px; font-size: 9.5px; }
-  .tpl-premium-hsn .inv-table td { padding: 12px 10px; font-size: 11px; }
-  .tpl-premium-hsn .totals-box { width: 340px; }
-  .tpl-premium-hsn .totals-row { padding: 8px 0; font-size: 12px; }
-  .tpl-premium-hsn .totals-row.grand { font-size: 16px; padding-top: 12px; }
-  .tpl-premium-hsn .footer-grid { margin-top: auto; padding-top: 20px; font-size: 11px; }
-  .tpl-premium-hsn .hsn-summary-wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; margin-top: 10px; }
-  .tpl-premium-hsn .hsn-table { font-size: 10px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  .tpl-premium-hsn .hsn-table th { padding: 8px; font-size: 9px; background: var(--accent-soft); color: var(--accent); }
-  .tpl-premium-hsn .hsn-table td { padding: 8px; }
+  /* 1. GST Executive */
+  .tpl-gst-executive { padding: 12mm 12mm; }
+  .tpl-gst-executive .inv-header { display: flex; justify-content: space-between; align-items: center; padding: 24px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 12px; border-bottom: 4px solid #0ea5e9; margin-bottom: 24px; color: #fff; }
+  .tpl-gst-executive .inv-biz-name { font-size: 24px; color: #fff; }
+  .tpl-gst-executive .inv-biz-info { color: rgba(255,255,255,0.75); }
+  .tpl-gst-executive .inv-biz-info .biz-line strong { color: #0ea5e9; }
+  .tpl-gst-executive .inv-h1 { font-size: 28px; color: #0ea5e9; letter-spacing: 2px; }
+  .tpl-gst-executive .inv-table { margin: 20px 0; }
+  .tpl-gst-executive .inv-table th { background: #0f172a; padding: 10px 8px; font-size: 9px; }
+  .tpl-gst-executive .inv-table td { padding: 10px 8px; font-size: 10.5px; }
+  .tpl-gst-executive .gst-info-bar { background: #f0f9ff; border-left: 4px solid #0ea5e9; }
+  .tpl-gst-executive .gst-info-bar .item .lbl { color: #0369a1; }
+  .tpl-gst-executive .rate-card { background: #f0f9ff; border-color: #bae6fd; }
+  .tpl-gst-executive .totals-box { width: 320px; }
+  .tpl-gst-executive .totals-row { padding: 8px 0; font-size: 11px; }
+  .tpl-gst-executive .totals-row.grand { background: #0ea5e9; color: #fff; padding: 10px 12px; border-radius: 4px; border: none; margin-top: 8px; }
+  .tpl-gst-executive .totals-row.grand .lbl { color: #fff; }
+  .tpl-gst-executive .footer-grid { margin-top: auto; padding-top: 20px; border-top: 2px solid #e2e8f0; }
 
-  /* 2. Corporate HSN */
-  .tpl-corporate-hsn { padding: 0; display: flex; flex-direction: column; }
-  .tpl-corporate-hsn .inv-header { background: #1e293b; color: #fff; padding: 30px 20mm; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; }
-  .tpl-corporate-hsn .inv-biz-name { color: #fff; font-size: 26px; }
-  .tpl-corporate-hsn .inv-biz-info { color: rgba(255,255,255,0.8); }
-  .tpl-corporate-hsn .inv-biz-info .biz-line strong { color: #fff; }
-  .tpl-corporate-hsn .inv-h1 { color: #fff; font-size: 28px; letter-spacing: 2px; }
-  .tpl-corporate-hsn .inv-body { padding: 15mm 20mm; flex: 1; display: flex; flex-direction: column; }
-  .tpl-corporate-hsn .inv-table { margin: 20px 0; }
-  .tpl-corporate-hsn .inv-table th { padding: 12px 8px; font-size: 9px; }
-  .tpl-corporate-hsn .inv-table td { padding: 12px 8px; font-size: 11px; border-bottom: 1.5px solid #e2e8f0; }
-  .tpl-corporate-hsn .totals-box { width: 100%; }
-  .tpl-corporate-hsn .totals-row { padding: 8px 12px; font-size: 11.5px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-  .tpl-corporate-hsn .totals-row.grand { background: #1e293b; color: #fff; font-size: 15px; padding: 12px; border: none; margin-top: 4px; }
-  .tpl-corporate-hsn .totals-row.grand .lbl { color: #fff; }
-  .tpl-corporate-hsn .footer-grid { margin-top: auto; padding-top: 20px; font-size: 11px; }
-
-  /* 3. Spacious (No HSN) */
-  .tpl-spacious { padding: 20mm 18mm; }
-  .tpl-spacious .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 2px dashed var(--accent); margin-bottom: 24px; }
-  .tpl-spacious .inv-biz-name { font-size: 26px; letter-spacing: 1px; }
-  .tpl-spacious .inv-h1 { font-size: 28px; color: var(--accent); font-weight: 300; letter-spacing: 4px; }
-  .tpl-spacious .inv-table { margin: 24px 0; }
-  .tpl-spacious .inv-table th { background: transparent; color: var(--accent); border-bottom: 2px solid var(--accent); padding: 12px 8px; font-size: 10px; }
-  .tpl-spacious .inv-table td { padding: 16px 8px; font-size: 12px; border-bottom: 1px solid #f1f5f9; }
-  .tpl-spacious .totals-box { width: 320px; }
-  .tpl-spacious .totals-row { padding: 10px 0; font-size: 12px; border-bottom: 1px dashed var(--line); }
-  .tpl-spacious .totals-row.grand { font-size: 16px; border-top: 3px solid var(--accent); }
-  .tpl-spacious .footer-grid { margin-top: auto; padding-top: 30px; border-top: 1px solid var(--line); }
-
-  /* 4. Minimal Pro (No HSN) */
-  .tpl-minimal-pro { padding: 15mm 15mm; font-family: 'Playfair Display', serif; }
-  .tpl-minimal-pro .inv-header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 20px; border-bottom: 2px solid #000; margin-bottom: 20px; }
-  .tpl-minimal-pro .inv-biz-name { font-size: 32px; font-weight: 700; letter-spacing: 1px; }
-  .tpl-minimal-pro .inv-biz-info { font-family: 'Inter', sans-serif; font-size: 10px; }
-  .tpl-minimal-pro .inv-h1 { font-size: 36px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase; }
-  .tpl-minimal-pro .inv-table { margin: 20px 0; }
-  .tpl-minimal-pro .inv-table th { background: #000; color: #fff; padding: 10px 8px; font-family: 'Inter', sans-serif; font-size: 9px; }
-  .tpl-minimal-pro .inv-table td { padding: 14px 8px; font-family: 'Inter', sans-serif; font-size: 11px; border-bottom: 1px solid #e5e5e5; }
-  .tpl-minimal-pro .totals-box { width: 300px; }
-  .tpl-minimal-pro .totals-row { padding: 8px 0; font-family: 'Inter', sans-serif; font-size: 11px; border-bottom: 1px solid #e5e5e5; }
-  .tpl-minimal-pro .totals-row.grand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; background: #000; color: #fff; padding: 12px; border: none; margin-top: 8px; }
-  .tpl-minimal-pro .totals-row.grand .lbl { color: #fff; }
-  .tpl-minimal-pro .footer-grid { margin-top: auto; padding-top: 24px; border-top: 2px solid #000; }
+  /* 2. GST Analytical */
+  .tpl-gst-analytical { padding: 12mm 12mm; }
+  .tpl-gst-analytical .inv-header { background: #0369a1; color: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+  .tpl-gst-analytical .inv-biz-name { font-size: 22px; color: #fff; }
+  .tpl-gst-analytical .inv-biz-info { color: rgba(255,255,255,0.85); }
+  .tpl-gst-analytical .inv-biz-info .biz-line strong { color: #fff; }
+  .tpl-gst-analytical .inv-h1 { font-size: 26px; color: #fff; letter-spacing: 1.5px; }
+  .tpl-gst-analytical .inv-table { margin: 16px 0; border: 1.5px solid #0369a1; }
+  .tpl-gst-analytical .inv-table th { background: #0369a1; padding: 10px 8px; font-size: 9px; }
+  .tpl-gst-analytical .inv-table td { padding: 10px 8px; font-size: 10.5px; border-bottom: 1px solid #e2e8f0; }
+  .tpl-gst-analytical .inv-table tr:nth-child(even) td { background: #f8fafc; }
+  .tpl-gst-analytical .gst-info-bar { background: #f8fafc; border-left: 4px solid #0369a1; border: 1px solid #e2e8f0; border-left-width: 4px; }
+  .tpl-gst-analytical .gst-info-bar .item .lbl { color: #0369a1; }
+  .tpl-gst-analytical .rate-card { background: #f0f9ff; border-color: #7dd3fc; }
+  .tpl-gst-analytical .gst-detail-hsn { border: 1.5px solid #0369a1; }
+  .tpl-gst-analytical .gst-detail-hsn th { background: #e0f2fe; border-bottom: 2px solid #0369a1; }
+  .tpl-gst-analytical .totals-box { width: 320px; border: 1.5px solid #0369a1; border-radius: 6px; padding: 0; }
+  .tpl-gst-analytical .totals-row { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; font-size: 11px; }
+  .tpl-gst-analytical .totals-row.grand { background: #0369a1; color: #fff; padding: 12px; border: none; border-radius: 0 0 4px 4px; margin-top: 0; }
+  .tpl-gst-analytical .totals-row.grand .lbl { color: #fff; }
+  .tpl-gst-analytical .words-box { background: transparent; border: 1.5px solid #0369a1; border-radius: 6px; }
+  .tpl-gst-analytical .footer-grid { margin-top: auto; padding-top: 20px; border-top: 2px solid #e2e8f0; }
 
   .logo-upload-wrap { display: flex; gap: 10px; align-items: center; padding: 10px; background: #f8fafc; border-radius: 8px; border: 1.5px dashed #cbd5e1; }
   .logo-preview { width: 90px; height: 66px; background: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; flex-shrink: 0; overflow: hidden; padding: 4px; }
@@ -425,9 +405,7 @@
     .layout { display: block !important; padding: 0 !important; margin: 0 !important; max-width: none !important; gap: 0 !important; }
     main { display: block !important; padding: 0 !important; margin: 0 !important; }
     #invoicePreview { width: 210mm !important; min-height: 297mm !important; height: 297mm !important; margin: 0 !important; box-shadow: none !important; overflow: hidden !important; }
-    #invoicePreview.tpl-modern, #invoicePreview.tpl-corporate-hsn, #invoicePreview.tpl-premium-hsn { padding: 0 !important; }
-    #invoicePreview.tpl-corporate-hsn .inv-body { padding: 10mm 15mm !important; }
-    #invoicePreview.tpl-premium-hsn { padding: 10mm 12mm !important; }
+    #invoicePreview.tpl-modern, #invoicePreview.tpl-corporate-hsn, #invoicePreview.tpl-premium-hsn, #invoicePreview.tpl-gst-executive, #invoicePreview.tpl-gst-analytical { padding: 10mm 12mm !important; }
     #invoicePreview.tpl-modern .inv-wrap { margin: 0 !important; height: 100% !important; }
     .inv-table tr, .gst-detail-hsn tr, .gst-lite-hsn-table tr,
     .words-box, .totals-wrap, .footer-grid, .sign-area,
@@ -539,7 +517,7 @@
   <div style="max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
       <h1>🧾 Invoice Generator</h1>
-      <p>15 templates · Full Page · State Auto-detect · Theme Colors · Full Backup</p>
+      <p>17 templates · Full Page · State Auto-detect · Theme Colors · Full Backup</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <select id="docTypeSelect" onchange="changeDocType()" style="padding:8px 12px;border-radius:8px;border:none;font-size:13px;font-weight:600;background:#fff;color:#0a1e3f;">
@@ -566,6 +544,8 @@
         <option value="corporate-hsn">🏢 Corporate HSN</option>
         <option value="spacious">📐 Spacious</option>
         <option value="minimal-pro">⚪ Minimal Pro</option>
+        <option value="gst-executive">📈 GST Executive</option>
+        <option value="gst-analytical">🧮 GST Analytical</option>
       </select>
       <a href="index.html" style="padding:8px 14px;background:rgba(255,255,255,0.15);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">← Back</a>
     </div>
@@ -838,7 +818,8 @@ const TEMPLATE_NAMES = {
   'corporate': 'Corporate', 'compact': 'Compact', 'rounded': 'Rounded',
   'gst-detailed': 'GSTDetailed', 'gst-lite': 'GSTLite', 'standard': 'Standard',
   'freelancer': 'Freelancer', 'premium-hsn': 'PremiumHSN', 'corporate-hsn': 'CorporateHSN',
-  'spacious': 'Spacious', 'minimal-pro': 'MinimalPro'
+  'spacious': 'Spacious', 'minimal-pro': 'MinimalPro',
+  'gst-executive': 'GSTExecutive', 'gst-analytical': 'GSTAnalytical'
 };
 
 const COLOR_NAMES = {
@@ -1997,6 +1978,36 @@ function render() {
       '<div class="inv-header"><div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
       billToAndDetails +
       common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'gst-executive') {
+    const gd = buildGstDetailedBlocks(t, s);
+    html = custom.top +
+      '<div class="inv-header">' +
+        '<div style="display:flex;align-items:center;gap:20px;">' + (logoInline ? '<div style="flex-shrink:0;background:#fff;padding:8px;border-radius:8px;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div>' +
+        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
+      '</div>' +
+      billToAndDetails +
+      gd.infoBar + common.tableBlock + custom.middle +
+      '<div style="display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start;margin-top:14px;">' +
+        '<div><div class="rate-summary-title">📊 Rate-Wise Summary</div><div class="rate-summary-grid">' + (gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;">No data</div>') + '</div>' +
+        '<div class="rate-summary-title">📋 HSN-Wise Breakdown</div>' + gd.hsnDetailTable + '</div>' +
+        '<div>' + common.totalsBlock + '</div>' +
+      '</div>' +
+      common.wordsBlock + footerBlock + GEN_DOC;
+  }
+  else if (s.template === 'gst-analytical') {
+    const gd = buildGstDetailedBlocks(t, s);
+    html = custom.top +
+      '<div class="inv-header">' +
+        '<div style="display:flex;align-items:center;gap:20px;">' + (logoInline ? '<div style="flex-shrink:0;background:#fff;padding:8px;border-radius:8px;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div>' +
+        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
+      '</div>' +
+      billToAndDetails +
+      gd.infoBar + common.tableBlock + custom.middle +
+      '<div class="rate-summary-title">📊 Detailed Tax Breakdown</div>' +
+      '<div class="rate-summary-grid">' + (gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;">No data</div>') + '</div>' +
+      '<div class="rate-summary-title">📋 HSN-Wise Summary</div>' +
+      gd.hsnDetailTable + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
   }
 
   preview.innerHTML = html;
