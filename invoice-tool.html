@@ -1749,21 +1749,33 @@ function buildFooterBlock(s, bizName) {
     '</div><div><div class="sign-area"><div class="sign-line">For ' + esc(bizName) + '</div><div class="sign-auth">Authorized Signatory</div></div></div></div>';
 }
 
-// ═══ REPLACED GEN_DOC WITH ACCOUNTING SOFTWARE LOGO ═══
+// ═══ REPLACED GEN_DOC WITH YOUR EXACT IMAGE (SVG RECREATION) ═══
 const GEN_DOC = `
-<div class="brand-footer" style="display:flex; justify-content:flex-end; align-items:center; margin-top: 15px; page-break-inside: avoid; break-inside: avoid;">
-  <div style="text-align:right; margin-right: 8px;">
-    <div style="font-size: 8px; font-family: 'Inter', sans-serif; color: #555; font-weight: 600; letter-spacing: 0.5px;">Generated For Free On</div>
-    <div style="font-size: 18px; font-family: 'Playfair Display', serif; font-weight: 800; color: #000; letter-spacing: -0.5px; line-height: 1.1;">Accounting Software</div>
-  </div>
-  <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-     <svg width="35" height="35" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="45" cy="45" r="40" fill="#c1272d" />
-        <text x="45" y="68" font-family="'Playfair Display', serif" font-size="60" font-weight="bold" fill="#fff" text-anchor="middle">P</text>
-        <rect x="75" y="60" width="10" height="35" fill="#c1272d"/>
-        <rect x="88" y="40" width="10" height="55" fill="#000"/>
-     </svg>
-  </div>
+<div class="brand-footer" style="display:flex; justify-content:flex-end; align-items:center; margin-top: 15px; page-break-inside: avoid; break-inside: avoid; width: 100%;">
+  <svg width="180" height="50" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
+      <!-- P Circle -->
+      <circle cx="25" cy="20" r="18" fill="#C1272D" />
+      <text x="25" y="30" font-family="'Playfair Display', serif" font-size="28" fill="#fff" text-anchor="middle" font-weight="bold">P</text>
+      <!-- Pin -->
+      <polygon points="12,36 25,36 25,48 12,42" fill="#000"/>
+      <polygon points="25,36 38,36 25,45" fill="#C1272D"/>
+      <polygon points="25,36 38,36 25,42" fill="#000"/>
+      
+      <!-- Text -->
+      <text x="55" y="16" font-family="'Inter', sans-serif" font-size="8" fill="#333" font-weight="600">Generated For Free On</text>
+      <text x="55" y="32" font-family="'Playfair Display', serif" font-size="18" fill="#000" font-weight="bold">Accounting Software</text>
+      
+      <!-- Arrow & Bars -->
+      <rect x="55" y="38" width="4" height="8" fill="#000"/>
+      <rect x="61" y="35" width="4" height="11" fill="#000"/>
+      <rect x="67" y="31" width="4" height="15" fill="#000"/>
+      <path d="M 55 38 L 72 25 L 74 28 L 67 33 Z" fill="#C1272D"/>
+      
+      <!-- Right Side Bars -->
+      <rect x="160" y="30" width="4" height="16" fill="#C1272D"/>
+      <rect x="166" y="18" width="4" height="28" fill="#000"/>
+      <rect x="172" y="24" width="4" height="22" fill="#C1272D"/>
+  </svg>
 </div>`;
 
 function buildGstDetailedBlocks(t, s) {
