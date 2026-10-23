@@ -1186,7 +1186,7 @@ function getLogoHTML(size) {
   const logo = sanitizeLogo((state.business && state.business.logo) || '');
   if (!logo) return '';
   const cls = size === 'side' ? 'inv-logo-side' : size === 'corporate' ? 'inv-logo-corporate' : 'inv-logo-img';
-  return '<img src="' + logo + '" alt="Logo" class="' + cls + '">'; // Removed esc() for data URI
+  return '<img src="' + logo + '" alt="Logo" class="' + cls + '">';
 }
 
 function handleRegStatus() {
@@ -1212,6 +1212,8 @@ function handleRegStatus() {
     taxType.style.color = '#0f172a';
     cGstin.disabled = false;
     cGstin.style.background = '#fff';
+    // ✅ FIX: reset stuck 'none' value
+    if (taxType.value === 'none') taxType.value = 'cgst-sgst';
     hint.innerHTML = '🚫 <strong>Unregistered client</strong> — Client ka GSTIN nahi hai, <strong>par GST phir bhi lagegi</strong>. Client ITC claim nahi kar payega.';
     hint.style.background = '#fef2f2';
     hint.style.borderLeftColor = '#dc2626';
@@ -1223,6 +1225,8 @@ function handleRegStatus() {
     taxType.style.color = '#0f172a';
     cGstin.disabled = false;
     cGstin.style.background = '#fff';
+    // ✅ FIX: reset stuck 'none' value
+    if (taxType.value === 'none') taxType.value = 'cgst-sgst';
     hint.innerHTML = '✅ <strong>Registered client</strong> — GSTIN daalte hi tax type auto-select ho jayega.';
     hint.style.background = '#ecfdf5';
     hint.style.borderLeftColor = '#10b981';
@@ -1358,7 +1362,7 @@ function renderProfiles() {
   list.innerHTML = profiles.map(p => {
     const logo = sanitizeLogo(p.logo || '');
     const logoInner = logo 
-      ? '<img src="' + logo + '" alt="Logo">' // removed esc for data uri
+      ? '<img src="' + logo + '" alt="Logo">'
       : esc((p.name || '?').trim().charAt(0).toUpperCase());
     const pid = String(p.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
       
@@ -1391,8 +1395,9 @@ function loadBusinessProfile(id) {
     $('bkBranch').value = p.bank.branch || '';
     $('bkType').value = p.bank.type || '';
     $('bkUpi').value = p.bank.upi || '';
-    ifscLastFetched = ''; // Fix for blocking manual re-entry
-    if (p.bank.branch) $('bkBranch').readOnly = true;
+    ifscLastFetched = '';
+    // ✅ FIX: always set readOnly based on branch presence
+    $('bkBranch').readOnly = !!p.bank.branch;
     setIfscStatus('idle', '');
   }
   if (p.regStatus) $('regStatus').value = p.regStatus;
@@ -1447,7 +1452,7 @@ async function fetchBranchFromIFSC(ifsc) {
         $('bpCity').textContent = city || '—'; $('bpState').textContent = state_ || '—';
         $('bpContact').textContent = contact || '—';
         $('bankPreview').classList.add('show'); ifscLastFetched = ifsc;
-        setIfscStatus('success', '✓ ' + esc(bank) + ' · ' + esc(city)); // XSS Fix
+        setIfscStatus('success', '✓ ' + esc(bank) + ' · ' + esc(city));
         $('bkBranch').classList.add('auto-filled');
         $('bkBranch').readOnly = true;
         setTimeout(() => $('bkBranch').classList.remove('auto-filled'), 2000);
@@ -1562,7 +1567,6 @@ function populateForm(s) {
   updateLabels(); updateCustomBadge(); updateColorPickerUI();
   handleRegStatus();
   
-  // Only apply saved tax type if status is not 'nogst'
   if ($('regStatus').value !== 'nogst') {
      $('taxType').value = savedTaxType;
   }
@@ -1675,7 +1679,9 @@ function buildCommonBlocks(s, t) {
   }).join('');
   const hsnTable = '<table class="hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + hsnRows + '</tbody></table>';
   const tableBlock = '<table class="inv-table"><thead><tr><th class="c" style="width:6%;">Sr. No.</th><th style="width:25%;">Description of Goods/Service</th><th class="c" style="width:10%;">HSN/SAC Code</th><th class="c" style="width:7%;">Quantity</th><th class="r" style="width:10%;">Rate</th><th class="c" style="width:6%;">GST%</th><th class="r" style="width:12%;">Taxable Amount</th><th class="r" style="width:12%;">Total Tax</th><th class="r" style="width:12%;">Total Amount</th></tr></thead><tbody>' + itemRows + '</tbody></table>';
-  const totalsBlock = '<div class="totals-wrap"><div class="totals-box"><div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">' + fmt(t.subtotal) + '</span></div><div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">' + fmt(t.taxable) + '</span></div>' + taxRows + (t.roundOff ? '<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">' + (t.roundOff >= 0 ? '+' : '') + fmt(t.roundOff) + '</span></div>' : '') + '<div class="totals-row grand"><span class="lbl">Grand Total</span><span>' + fmt(t.rounded) + '</span></div></div></div>';
+  // ✅ FIX: negative round-off display
+  const roundOffHTML = t.roundOff ? '<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">' + (t.roundOff >= 0 ? '+' : '-') + fmt(Math.abs(t.roundOff)) + '</span></div>' : '';
+  const totalsBlock = '<div class="totals-wrap"><div class="totals-box"><div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">' + fmt(t.subtotal) + '</span></div><div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">' + fmt(t.taxable) + '</span></div>' + taxRows + roundOffHTML + '<div class="totals-row grand"><span class="lbl">Grand Total</span><span>' + fmt(t.rounded) + '</span></div></div></div>';
   const wordsBlock = '<div class="words-box"><strong>Amount in Words:</strong> ' + numToWords(t.rounded) + '</div>';
   return { itemRows, taxRows, hsnTable, tableBlock, totalsBlock, wordsBlock };
 }
@@ -1749,29 +1755,23 @@ function buildFooterBlock(s, bizName) {
     '</div><div><div class="sign-area"><div class="sign-line">For ' + esc(bizName) + '</div><div class="sign-auth">Authorized Signatory</div></div></div></div>';
 }
 
-// ═══ REPLACED GEN_DOC WITH YOUR EXACT IMAGE (SVG RECREATION) ═══
 const GEN_DOC = `
 <div class="brand-footer" style="display:flex; justify-content:flex-end; align-items:center; margin-top: 15px; page-break-inside: avoid; break-inside: avoid; width: 100%;">
   <svg width="180" height="50" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
-      <!-- P Circle -->
       <circle cx="25" cy="20" r="18" fill="#C1272D" />
       <text x="25" y="30" font-family="'Playfair Display', serif" font-size="28" fill="#fff" text-anchor="middle" font-weight="bold">P</text>
-      <!-- Pin -->
       <polygon points="12,36 25,36 25,48 12,42" fill="#000"/>
       <polygon points="25,36 38,36 25,45" fill="#C1272D"/>
       <polygon points="25,36 38,36 25,42" fill="#000"/>
       
-      <!-- Text -->
       <text x="55" y="16" font-family="'Inter', sans-serif" font-size="8" fill="#333" font-weight="600">Generated For Free On</text>
       <text x="55" y="32" font-family="'Playfair Display', serif" font-size="18" fill="#000" font-weight="bold">Accounting Software</text>
       
-      <!-- Arrow & Bars -->
       <rect x="55" y="38" width="4" height="8" fill="#000"/>
       <rect x="61" y="35" width="4" height="11" fill="#000"/>
       <rect x="67" y="31" width="4" height="15" fill="#000"/>
       <path d="M 55 38 L 72 25 L 74 28 L 67 33 Z" fill="#C1272D"/>
       
-      <!-- Right Side Bars -->
       <rect x="160" y="30" width="4" height="16" fill="#C1272D"/>
       <rect x="166" y="18" width="4" height="28" fill="#000"/>
       <rect x="172" y="24" width="4" height="22" fill="#C1272D"/>
@@ -2036,7 +2036,8 @@ function render() {
     } else if (s.taxType === 'igst') {
       midRows += '<div class="tot-row"><span>IGST</span><span>' + fmt(t.totalTax) + '</span></div>';
     }
-    if (t.roundOff) midRows += '<div class="tot-row"><span>Round off</span><span>' + (t.roundOff >= 0 ? '+' : '') + fmt(t.roundOff) + '</span></div>';
+    // ✅ FIX: negative round-off display
+    if (t.roundOff) midRows += '<div class="tot-row"><span>Round off</span><span>' + (t.roundOff >= 0 ? '+' : '-') + fmt(Math.abs(t.roundOff)) + '</span></div>';
     midRows += '<div class="tot-row total"><span>Total</span><span>' + fmt(t.rounded) + '</span></div>';
 
     const totalRowTable = '<tr>' +
@@ -2211,10 +2212,14 @@ function loadFromHistory(id) {
   const entry = history.find(h => h.id === id); if (!entry) return;
   const hasCurrentData = state.client.name || state.items.some(i => i.desc);
   if (hasCurrentData && editingHistoryId !== id && !confirm('Load this invoice? Current data will be replaced.')) return;
+
+  // ✅ FIX: capture logo BEFORE overwriting business
+  const currentLogo = sanitizeLogo((state.business && state.business.logo) || '');
+
   state.docType = entry.docType || 'Tax Invoice';
   state.business = JSON.parse(JSON.stringify(entry.business));
-  const currentLogo = sanitizeLogo((state.business && state.business.logo) || '');
   state.business.logo = currentLogo;
+
   state.client = JSON.parse(JSON.stringify(entry.client));
   state.meta = JSON.parse(JSON.stringify(entry.meta));
   state.items = JSON.parse(JSON.stringify(entry.items));
@@ -2331,6 +2336,8 @@ function loadSample() {
     { desc:'Business Advisory Services', hsn:'998311', qty:1, rate:10000, gst:12 }
   ];
   state.details = ['Site name: Namma', 'Site Id: IN-12521251', 'Site Ref No.: R/fd/231413'];
+  // ✅ FIX: reset editing id
+  editingHistoryId = null;
   updateClientStateHint();
   updatePlaceOfSupplyHint();
   renderItems(); renderDetails(); sync();
@@ -2356,7 +2363,6 @@ function clearAll(skipConfirm) {
   state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
   state.terms = ''; state.notes = '';
   try { localStorage.removeItem('invoiceState'); } catch (e) {}
-  try { localStorage.setItem('userClearedForm', '1'); } catch (e) {}
   updateLabels(); updateCustomBadge();
   updateLogoPreview();
   updateClientStateHint();
@@ -2374,7 +2380,7 @@ function nukeEverything() {
   try { localStorage.clear(); } catch (e) {}
   if (lockSession) sessionStorage.setItem('invUnlocked', lockSession);
   if (lockTill) {
-    sessionStorage.setItem('invUnlockedTill', lockTill);
+    // ✅ FIX: only localStorage needed (isUnlocked reads from localStorage only)
     localStorage.setItem('invUnlockedTill', lockTill);
   }
   history = []; profiles = []; editingHistoryId = null;
@@ -2443,6 +2449,8 @@ function loadJSON(e) {
       if (!state.customTextSize) state.customTextSize = '18px';
       if (!state.accentColor) state.accentColor = '';
       if (state.business && state.business.logo) state.business.logo = sanitizeLogo(state.business.logo);
+      // ✅ FIX: reset editing id so next save creates new entry, not overwriting old one
+      editingHistoryId = null;
       populateForm(state); renderItems(); renderDetails(); sync();
       showToast('✓ Backup loaded — Profiles + Logo + History restored', 'purple');
     } catch (err) { alert('Invalid JSON: ' + err.message); }
@@ -2454,9 +2462,9 @@ function loadJSON(e) {
   disableAutofill();
   try { const s = localStorage.getItem('invoiceHistory'); if (s) history = JSON.parse(s); } catch (e) {}
   try { const s = localStorage.getItem('businessProfiles'); if (s) profiles = JSON.parse(s); } catch (e) {}
-  const wasCleared = localStorage.getItem('userClearedForm') === '1';
+  // ✅ FIX: removed userClearedForm flag logic (redundant + causes data loss)
   const saved = localStorage.getItem('invoiceState');
-  if (saved && !wasCleared) {
+  if (saved) {
     try {
       const data = JSON.parse(saved);
       Object.assign(state, data);
