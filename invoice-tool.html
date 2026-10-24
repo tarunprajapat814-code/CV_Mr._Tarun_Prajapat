@@ -420,7 +420,6 @@
     .words-box, .totals-wrap, .footer-grid, .sign-area,
     .rate-summary-title { page-break-inside: avoid; break-inside: avoid; }
     .custom-text-top, .custom-text-middle { page-break-after: avoid; break-after: avoid; }
-    .brand-footer { page-break-before: avoid; break-before: avoid; page-break-inside: avoid; break-inside: avoid; }
   }
   .print-warning { position: fixed; top: 70px; right: 20px; background: #fef3c7; color: #92400e; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #fcd34d; z-index: 100; display: none; }
   .print-warning.show { display: block; }
@@ -1755,28 +1754,7 @@ function buildFooterBlock(s, bizName) {
     '</div><div><div class="sign-area"><div class="sign-line">For ' + esc(bizName) + '</div><div class="sign-auth">Authorized Signatory</div></div></div></div>';
 }
 
-const GEN_DOC = `
-<div class="brand-footer" style="display:flex; justify-content:flex-end; align-items:center; margin-top: 15px; page-break-inside: avoid; break-inside: avoid; width: 100%;">
-  <svg width="180" height="50" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="25" cy="20" r="18" fill="#C1272D" />
-      <text x="25" y="30" font-family="'Playfair Display', serif" font-size="28" fill="#fff" text-anchor="middle" font-weight="bold">P</text>
-      <polygon points="12,36 25,36 25,48 12,42" fill="#000"/>
-      <polygon points="25,36 38,36 25,45" fill="#C1272D"/>
-      <polygon points="25,36 38,36 25,42" fill="#000"/>
-      
-      <text x="55" y="16" font-family="'Inter', sans-serif" font-size="8" fill="#333" font-weight="600">Generated For Free On</text>
-      <text x="55" y="32" font-family="'Playfair Display', serif" font-size="18" fill="#000" font-weight="bold">Accounting Software</text>
-      
-      <rect x="55" y="38" width="4" height="8" fill="#000"/>
-      <rect x="61" y="35" width="4" height="11" fill="#000"/>
-      <rect x="67" y="31" width="4" height="15" fill="#000"/>
-      <path d="M 55 38 L 72 25 L 74 28 L 67 33 Z" fill="#C1272D"/>
-      
-      <rect x="160" y="30" width="4" height="16" fill="#C1272D"/>
-      <rect x="166" y="18" width="4" height="28" fill="#000"/>
-      <rect x="172" y="24" width="4" height="22" fill="#C1272D"/>
-  </svg>
-</div>`;
+const GEN_DOC = '';
 
 function buildGstDetailedBlocks(t, s) {
   const isIGST = s.taxType === 'igst';
