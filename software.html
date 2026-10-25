@@ -604,7 +604,7 @@ tbody tr:last-child td{border-bottom:0}
           <div class="card" style="margin-top:16px"><div class="card-head"><h2>Stats</h2></div><div class="card-body" id="dataStats"></div></div>
         </section>
 
-         <!-- SETTINGS -->
+        <!-- SETTINGS -->
         <section class="section" id="page-settings">
           <div class="page-head"><div><h1>Company Setup</h1><p>Manage your business details, logo, and invoice settings.</p></div></div>
           
@@ -671,11 +671,6 @@ tbody tr:last-child td{border-bottom:0}
               <button type="submit" class="btn primary" style="padding: 10px 24px; font-size: 14px;">💾 Save All Settings</button>
             </div>
           </form>
-        </section>
-                </div>
-              </form>
-            </div>
-          </div>
         </section>
 
       </div>
@@ -845,12 +840,19 @@ let vouchers=load('tp_vouchers',[]);
 let invoices=load('tp_invoices',[]);
 let parties=load('tp_parties',[]);
 let company=load('tp_company_obj',{
-  name:'', gstin:'', state:'Rajasthan', fy:'2026–27', 
-  address:'', phone:'', email:'', website:'', logo:'',
-  bank:'', account:'', ifsc:'', upi:'', 
+  name:'Your Company',gstin:'',state:'Rajasthan',fy:'2026–27',booksStart:'2026-04-01',
+  address:'',phone:'',email:'',website:'',logo:'',
+  bank:'',account:'',ifsc:'',upi:'', 
   invPrefix:'INV/', defaultTerms:'1. Goods once sold will not be taken back.\n2. Payment due within 15 days.',
   generatorPath:'invoice-generator.html'
 });
+
+// FORCE RESET PATH IF OLD ONE EXISTS
+if(company.generatorPath === 'invoice-tool.html' || !company.generatorPath){
+  company.generatorPath = 'invoice-generator.html';
+  localStorage.setItem('tp_company_obj', JSON.stringify(company));
+}
+
 let deleteTargetId=null;
 let lastInvoiceId=null;
 let appInitialized=false;
@@ -1162,27 +1164,64 @@ function openInvoiceGenerator() {
   }
   window._invoiceGenerator = genWindow;
   
-  // Send parties data to generator
+  // Data sync with generator (includes company details, logo, bank, terms)
   setTimeout(() => {
-    genWindow.postMessage({ type: 'SYNC_PARTIES', data: parties }, '*');
+    if (genWindow && !genWindow.closed) {
+      genWindow.postMessage({ 
+        type: 'SYNC_DATA', 
+        parties: parties,
+        company: company 
+      }, '*');
+    }
   }, 1500);
   
   toast('🎨 Invoice Generator opened. Save karo to TP me aa jayega.', 'info');
 }
 
 window.addEventListener('message', (event) => {
-  if (!event.data || event.data.type !== 'INVOICE_SAVE_TO_TP') return;
-  const inv = event.data.data;
-  if (!inv) return;
-  try {
-    saveExternalInvoiceToTP(inv);
-  } catch (e) {
-    console.error('Save error:', e);
-    toast('Error: ' + e.message, 'error');
+  // Handle Invoice Save
+  if (event.data && event.data.type === 'INVOICE_SAVE_TO_TP') {
+    const inv = event.data.data;
+    if (!inv) return;
+    try {
+      saveExternalInvoiceToTP(inv);
+    } catch (e) {
+      console.error('Save error:', e);
+      toast('Error: ' + e.message, 'error');
+    }
+  }
+  
+  // Handle Generator Ready (Robust syncing)
+  if (event.data && event.data.type === 'GENERATOR_READY') {
+    if (window._invoiceGenerator && !window._invoiceGenerator.closed) {
+      window._invoiceGenerator.postMessage({ 
+        type: 'SYNC_DATA', 
+        parties: parties,
+        company: company 
+      }, '*');
+    }
   }
 });
 
 function saveExternalInvoiceToTP(inv) {
+  // Auto-create party if not exists
+  if (inv.party && inv.party !== 'Cash Customer') {
+    const existingParty = parties.find(p => p.name.toLowerCase() === inv.party.toLowerCase());
+    if (!existingParty) {
+      parties.push({
+        id: 'party_' + Date.now(),
+        name: inv.party,
+        phone: inv.partyPhone || '',
+        gstin: inv.partyGstin || '',
+        email: inv.partyEmail || '',
+        address: inv.partyAddress || ''
+      });
+      persist();
+      renderParties();
+      updateVoucherPartyDropdown();
+    }
+  }
+
   // Duplicate check
   const existingInvoice = invoices.find(i => i.number === inv.number);
   if (existingInvoice) {
@@ -1354,7 +1393,7 @@ function buildInvoiceHTML(inv){
   <div class="invoice-preview">
     <div class="inv-header">
       <div class="inv-brand">
-        <div class="inv-logo">${esc((c.name||'T').charAt(0).toUpperCase())}</div>
+        ${c.logo ? `<img src="${c.logo}" style="height:50px; max-width:120px; object-fit:contain; margin-right:12px;">` : `<div class="inv-logo">${esc((c.name||'T').charAt(0).toUpperCase())}</div>`}
         <div class="inv-brand-text">
           <h2>${esc(c.name)}</h2>
           <p>${c.address?esc(c.address)+'<br>':''}${c.gstin?'GSTIN: '+esc(c.gstin)+'<br>':''}${c.phone?'📞 '+esc(c.phone):''}${c.email?' · ✉️ '+esc(c.email):''}</p>
@@ -1775,34 +1814,81 @@ function loadDemoData(){
 }
 
 /* ============ SETTINGS ============ */
+document.getElementById('companyLogo').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    if (file.size > 50 * 1024) {
+      toast('Logo 50KB se chhota hona chahiye!', 'error');
+      this.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const base64 = evt.target.result;
+      company.logo = base64;
+      document.getElementById('logoPreview').innerHTML = `<img src="${base64}" style="max-width:100%; max-height:100%; object-fit:contain;">`;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
 document.getElementById('settingsForm').addEventListener('submit',e=>{
   e.preventDefault();
-  company={
-    name:document.getElementById('companyName').value.trim()||'Your Company',
-    gstin:document.getElementById('companyGstin').value.trim(),
-    state:document.getElementById('companyState').value,
-    fy:document.getElementById('companyFY').value,
-    booksStart:company.booksStart||'2026-04-01',
-    address:document.getElementById('companyAddress').value.trim(),
-    phone:document.getElementById('companyPhone').value.trim(),
-    email:document.getElementById('companyEmail').value.trim(),
-    bank:document.getElementById('companyBank').value.trim(),
-    account:document.getElementById('companyAccount').value.trim(),
-    ifsc:document.getElementById('companyIfsc').value.trim(),
-    upi:document.getElementById('companyUpi').value.trim(),
-    invPrefix:company.invPrefix||'INV',
-    generatorPath:document.getElementById('generatorPath').value.trim()||'invoice-generator.html'
+  company = {
+    ...company,
+    name: document.getElementById('companyName').value.trim() || 'Your Company',
+    gstin: document.getElementById('companyGstin').value.trim().toUpperCase(),
+    state: document.getElementById('companyState').value,
+    fy: document.getElementById('companyFY').value,
+    address: document.getElementById('companyAddress').value.trim(),
+    phone: document.getElementById('companyPhone').value.trim(),
+    email: document.getElementById('companyEmail').value.trim(),
+    website: document.getElementById('companyWebsite').value.trim(),
+    bank: document.getElementById('companyBank').value.trim(),
+    account: document.getElementById('companyAccount').value.trim(),
+    ifsc: document.getElementById('companyIfsc').value.trim().toUpperCase(),
+    upi: document.getElementById('companyUpi').value.trim(),
+    invPrefix: document.getElementById('companyInvPrefix').value.trim() || 'INV/',
+    defaultTerms: document.getElementById('companyTerms').value.trim(),
+    generatorPath: document.getElementById('generatorPath').value.trim() || 'invoice-generator.html'
   };
-  persist();applyCompanyUI();toast('Saved','success');
+  persist();
+  applyCompanyUI();
+  toast('Company Settings Saved Successfully!', 'success');
 });
+
 function applyCompanyUI(){
   const el=document.getElementById('sideCompany');if(el)el.textContent=company.name;
   const pl=document.getElementById('plCompany');if(pl)pl.textContent=company.name;
   const tf=document.getElementById('trialFY');if(tf)tf.textContent='FY '+company.fy;
   const pf=document.getElementById('plFY');if(pf)pf.textContent='FY '+company.fy;
-  const ids=['companyName','companyGstin','companyState','companyFY','companyAddress','companyPhone','companyEmail','companyBank','companyAccount','companyIfsc','companyUpi','generatorPath'];
-  const keys=['name','gstin','state','fy','address','phone','email','bank','account','ifsc','upi','generatorPath'];
-  ids.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.value=company[keys[i]]||'';});
+  
+  const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
+  setVal('companyName', company.name);
+  setVal('companyGstin', company.gstin);
+  setVal('companyState', company.state);
+  setVal('companyFY', company.fy);
+  setVal('companyAddress', company.address);
+  setVal('companyPhone', company.phone);
+  setVal('companyEmail', company.email);
+  setVal('companyWebsite', company.website);
+  setVal('companyBank', company.bank);
+  setVal('companyAccount', company.account);
+  setVal('companyIfsc', company.ifsc);
+  setVal('companyUpi', company.upi);
+  setVal('companyInvPrefix', company.invPrefix || 'INV/');
+  setVal('companyTerms', company.defaultTerms || '');
+  setVal('generatorPath', company.generatorPath);
+
+  const logoPrev = document.getElementById('logoPreview');
+  if (logoPrev) {
+    if (company.logo) {
+      logoPrev.innerHTML = `<img src="${company.logo}" style="max-width:100%; max-height:100%; object-fit:contain;">`;
+    } else {
+      logoPrev.innerHTML = '<span style="font-size:10px; color:var(--muted);">No Logo</span>';
+    }
+  }
+  
   const fs=document.getElementById('fySelect');if(fs)fs.value='FY '+company.fy;
 }
 
