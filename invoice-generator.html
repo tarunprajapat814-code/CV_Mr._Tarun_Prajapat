@@ -2371,15 +2371,93 @@ function loadJSON(e) {
   updateClientStateHint();
   updatePlaceOfSupplyHint();
 })();// ==========================================
-// SYNC PARTIES FROM TP ACCOUNTING
+// SYNC DATA FROM TP ACCOUNTING (Parties + Company + Logo)
 // ==========================================
 let syncedParties = [];
 
 window.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SYNC_PARTIES') {
-    syncedParties = event.data.data || [];
+  if (event.data && event.data.type === 'SYNC_DATA') {
+    
+    // 1. Sync Parties
+    syncedParties = event.data.parties || [];
     populatePartyDropdown();
+    
+    // 2. Sync Company Details
+    const comp = event.data.company;
+    if (comp) {
+      if (comp.name && document.getElementById('bName')) document.getElementById('bName').value = comp.name;
+      if (comp.gstin && document.getElementById('bGstin')) document.getElementById('bGstin').value = comp.gstin;
+      if (comp.address && document.getElementById('bAddr')) document.getElementById('bAddr').value = comp.address;
+      if (comp.phone && document.getElementById('bPhone')) document.getElementById('bPhone').value = comp.phone;
+      if (comp.email && document.getElementById('bEmail')) document.getElementById('bEmail').value = comp.email;
+      
+      // Bank details
+      if (comp.bank && document.getElementById('bkName')) document.getElementById('bkName').value = comp.bank;
+      if (comp.account && document.getElementById('bkAc')) document.getElementById('bkAc').value = comp.account;
+      if (comp.ifsc && document.getElementById('bkIfsc')) document.getElementById('bkIfsc').value = comp.ifsc;
+      if (comp.upi && document.getElementById('bkUpi')) document.getElementById('bkUpi').value = comp.upi;
+      
+      // Terms
+      if (comp.defaultTerms && document.getElementById('terms')) document.getElementById('terms').value = comp.defaultTerms;
+
+      // Logo load karein
+      if (comp.logo) {
+        state.business.logo = comp.logo; 
+        if (typeof updateLogoPreview === 'function') updateLogoPreview();
+      }
+      
+      if (typeof sync === 'function') sync();
+    }
   }
+});
+
+function populatePartyDropdown() {
+  const select = document.getElementById('cName');
+  if (!select) return;
+  
+  select.innerHTML = '<option value="">-- Select Party --</option>';
+  syncedParties.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name + (p.phone ? ` (${p.phone})` : '');
+    select.appendChild(opt);
+  });
+}
+
+function onClientSelect(partyId) {
+  if (!partyId) {
+    document.getElementById('cGstin').value = '';
+    document.getElementById('cAddr').value = '';
+    document.getElementById('cPhone').value = '';
+    document.getElementById('cEmail').value = '';
+    return;
+  }
+
+  const p = syncedParties.find(x => x.id === partyId);
+  if (p) {
+    document.getElementById('cGstin').value = p.gstin || '';
+    document.getElementById('cAddr').value = p.address || '';
+    document.getElementById('cPhone').value = p.phone || '';
+    document.getElementById('cEmail').value = p.email || '';
+    document.getElementById('cNameManual').value = p.name;
+    
+    if (typeof onClientGstinInput === 'function') onClientGstinInput(p.gstin || '');
+    if (typeof sync === 'function') sync();
+    if (typeof showToast === 'function') showToast('✓ Party details auto-filled!', 'blue');
+  }
+}
+
+function onManualClientType(val) {
+  if (val) {
+    document.getElementById('cName').value = '';
+    if (typeof sync === 'function') sync();
+  }
+}
+
+// GENERATOR READY SIGNAL (Taaki Software ko pata chale ki generator khul gaya hai)
+if (window.opener) {
+  window.opener.postMessage({ type: 'GENERATOR_READY' }, '*');
+}
 });
 
 function populatePartyDropdown() {
