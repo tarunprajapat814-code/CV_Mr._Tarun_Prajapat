@@ -604,32 +604,74 @@ tbody tr:last-child td{border-bottom:0}
           <div class="card" style="margin-top:16px"><div class="card-head"><h2>Stats</h2></div><div class="card-body" id="dataStats"></div></div>
         </section>
 
-        <!-- SETTINGS -->
+         <!-- SETTINGS -->
         <section class="section" id="page-settings">
-          <div class="page-head"><div><h1>Company Setup</h1></div></div>
+          <div class="page-head"><div><h1>Company Setup</h1><p>Manage your business details, logo, and invoice settings.</p></div></div>
+          
           <div class="alert info"><span class="ic">💡</span><div><b>Invoice Generator Path:</b> Neeche field me apni invoice-generator.html ka path dalein (e.g. <code>invoice-generator.html</code>).</div></div>
-          <div class="form-card">
-            <div class="form-head">🏢 Company Information</div>
-            <div class="form-body">
-              <form id="settingsForm">
+          
+          <form id="settingsForm">
+            <!-- Company Details -->
+            <div class="form-card" style="margin-bottom: 20px;">
+              <div class="form-head">🏢 Company Details</div>
+              <div class="form-body">
                 <div class="form-grid">
-                  <div class="field"><label>Company Name</label><input id="companyName" required></div>
-                  <div class="field"><label>GSTIN</label><input id="companyGstin" maxlength="15"></div>
+                  <div class="field" style="grid-column: span 2;">
+                    <label>Company Logo (Invoice par dikhega)</label>
+                    <div style="display:flex; gap:15px; align-items:center;">
+                      <div id="logoPreview" style="width:80px; height:80px; border:1px dashed var(--line); border-radius:var(--radius); display:grid; place-items:center; overflow:hidden; background:var(--panel-alt);">
+                        <span style="font-size:10px; color:var(--muted);">No Logo</span>
+                      </div>
+                      <div>
+                        <input type="file" id="companyLogo" accept="image/png, image/jpeg" style="font-size:12px; margin-bottom:5px;">
+                        <div style="font-size:11px; color:var(--danger);">Max size: 50KB (PNG/JPG)</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field"><label>Company Name *</label><input id="companyName" required></div>
+                  <div class="field"><label>GSTIN</label><input id="companyGstin" maxlength="15" placeholder="08XXXXXXXXXXXXX"></div>
                   <div class="field"><label>State</label><select id="companyState"><option>Rajasthan</option><option>Delhi</option><option>Haryana</option><option>UP</option><option>Gujarat</option><option>Maharashtra</option></select></div>
                   <div class="field"><label>Financial Year</label><select id="companyFY"><option>2026–27</option><option>2025–26</option></select></div>
-                  <div class="field"><label>Address</label><input id="companyAddress"></div>
+                  <div class="field" style="grid-column: span 2;"><label>Full Address</label><input id="companyAddress" placeholder="Shop No, Street, City, Pincode"></div>
                   <div class="field"><label>Phone</label><input id="companyPhone"></div>
-                  <div class="field"><label>Email</label><input id="companyEmail"></div>
-                  <div class="field"><label>Bank Name</label><input id="companyBank"></div>
-                  <div class="field"><label>Bank A/C</label><input id="companyAccount"></div>
-                  <div class="field"><label>IFSC</label><input id="companyIfsc"></div>
-                  <div class="field"><label>UPI ID</label><input id="companyUpi"></div>
-                  <div class="field" style="grid-column:span 2"><label>🎨 Invoice Generator Path</label><input id="generatorPath" placeholder="invoice-generator.html" value="invoice-generator.html"><small style="color:var(--muted);font-size:11px">Same folder: <code>invoice-generator.html</code> · Subfolder: <code>./tools/invoice-generator.html</code></small></div>
+                  <div class="field"><label>Email</label><input id="companyEmail" type="email"></div>
+                  <div class="field" style="grid-column: span 2;"><label>Website (Optional)</label><input id="companyWebsite"></div>
                 </div>
-                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:24px;flex-wrap:wrap">
-                  <button type="button" class="btn danger" onclick="clearAllData()">🗑 Clear Data</button>
-                  <button type="button" class="btn" onclick="loadDemoData()">📊 Demo</button>
-                  <button type="submit" class="btn primary">💾 Save</button>
+              </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="form-card" style="margin-bottom: 20px;">
+              <div class="form-head">🏦 Bank Details (Invoice Footer ke liye)</div>
+              <div class="form-body">
+                <div class="form-grid">
+                  <div class="field"><label>Bank Name</label><input id="companyBank" placeholder="e.g. State Bank of India"></div>
+                  <div class="field"><label>Account Number</label><input id="companyAccount"></div>
+                  <div class="field"><label>IFSC Code</label><input id="companyIfsc" maxlength="11"></div>
+                  <div class="field"><label>UPI ID</label><input id="companyUpi" placeholder="e.g. business@upi"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Invoice Settings -->
+            <div class="form-card">
+              <div class="form-head">⚙️ Invoice & Software Settings</div>
+              <div class="form-body">
+                <div class="form-grid">
+                  <div class="field"><label>Invoice Number Prefix</label><input id="companyInvPrefix" value="INV/"><small style="color:var(--muted);font-size:11px">Example: INV/001</small></div>
+                  <div class="field" style="grid-column: span 2"><label>🎨 Invoice Generator Path</label><input id="generatorPath" placeholder="invoice-generator.html" value="invoice-generator.html"><small style="color:var(--muted);font-size:11px">Same folder: <code>invoice-generator.html</code></small></div>
+                  <div class="field" style="grid-column: span 3;"><label>Default Terms & Conditions</label><textarea id="companyTerms" rows="3" placeholder="1. Goods once sold will not be taken back.&#10;2. Payment due within 15 days."></textarea></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:24px;flex-wrap:wrap">
+              <button type="button" class="btn danger" onclick="clearAllData()">🗑 Clear Data</button>
+              <button type="button" class="btn" onclick="loadDemoData()">📊 Load Demo</button>
+              <button type="submit" class="btn primary" style="padding: 10px 24px; font-size: 14px;">💾 Save All Settings</button>
+            </div>
+          </form>
+        </section>
                 </div>
               </form>
             </div>
@@ -803,8 +845,10 @@ let vouchers=load('tp_vouchers',[]);
 let invoices=load('tp_invoices',[]);
 let parties=load('tp_parties',[]);
 let company=load('tp_company_obj',{
-  name:'Your Company',gstin:'',state:'Rajasthan',fy:'2026–27',booksStart:'2026-04-01',
-  address:'',phone:'',email:'',bank:'',account:'',ifsc:'',upi:'',invPrefix:'INV',
+  name:'', gstin:'', state:'Rajasthan', fy:'2026–27', 
+  address:'', phone:'', email:'', website:'', logo:'',
+  bank:'', account:'', ifsc:'', upi:'', 
+  invPrefix:'INV/', defaultTerms:'1. Goods once sold will not be taken back.\n2. Payment due within 15 days.',
   generatorPath:'invoice-generator.html'
 });
 let deleteTargetId=null;
