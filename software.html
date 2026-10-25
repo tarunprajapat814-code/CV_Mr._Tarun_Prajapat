@@ -429,7 +429,7 @@ tbody tr:last-child td{border-bottom:0}
                 <button class="quick-btn purchase" onclick="setVoucher('Purchase')"><div class="ic">↙</div><div><b>Purchase</b><small>Bill entry</small></div></button>
                 <button class="quick-btn receipt" onclick="setVoucher('Receipt')"><div class="ic">↓</div><div><b>Receipt</b><small>Money in</small></div></button>
                 <button class="quick-btn payment" onclick="setVoucher('Payment')"><div class="ic">↑</div><div><b>Payment</b><small>Money out</small></div></button>
-                <button class="quick-btn journal" onclick="setVoucher('Journal')"><div class="ic">⇄</div><div><b>Journal</b><small>Adjustment</small></div></button>
+                <div class="quick-btn journal" onclick="setVoucher('Journal')"><div class="ic">⇄</div><div><b>Journal</b><small>Adjustment</small></div></div>
               </div></div>
             </div>
             <div class="card">
@@ -629,13 +629,19 @@ tbody tr:last-child td{border-bottom:0}
                     </div>
                   </div>
                   <div class="field"><label>Company Name *</label><input id="companyName" required></div>
+                  
                   <div class="field"><label>GSTIN</label><input id="companyGstin" maxlength="15" placeholder="08XXXXXXXXXXXXX"></div>
+                  <div class="field"><label>PAN No. (Auto)</label><input id="companyPan" maxlength="10" placeholder="ABCDE1234F"></div>
+                  <div class="field"><label>Udyam Registration No.</label><input id="companyUdyam" placeholder="UDYAM-RJ-XX-XXXXXXX"></div>
+
                   <div class="field"><label>State</label><select id="companyState"><option>Rajasthan</option><option>Delhi</option><option>Haryana</option><option>UP</option><option>Gujarat</option><option>Maharashtra</option></select></div>
                   <div class="field"><label>Financial Year</label><select id="companyFY"><option>2026–27</option><option>2025–26</option></select></div>
-                  <div class="field" style="grid-column: span 2;"><label>Full Address</label><input id="companyAddress" placeholder="Shop No, Street, City, Pincode"></div>
                   <div class="field"><label>Phone</label><input id="companyPhone"></div>
+                  
+                  <div class="field" style="grid-column: span 2;"><label>Full Address</label><input id="companyAddress" placeholder="Shop No, Street, City, Pincode"></div>
                   <div class="field"><label>Email</label><input id="companyEmail" type="email"></div>
-                  <div class="field" style="grid-column: span 2;"><label>Website (Optional)</label><input id="companyWebsite"></div>
+                  
+                  <div class="field" style="grid-column: span 3;"><label>Website (Optional)</label><input id="companyWebsite"></div>
                 </div>
               </div>
             </div>
@@ -648,7 +654,8 @@ tbody tr:last-child td{border-bottom:0}
                   <div class="field"><label>Bank Name</label><input id="companyBank" placeholder="e.g. State Bank of India"></div>
                   <div class="field"><label>Account Number</label><input id="companyAccount"></div>
                   <div class="field"><label>IFSC Code</label><input id="companyIfsc" maxlength="11"></div>
-                  <div class="field"><label>UPI ID</label><input id="companyUpi" placeholder="e.g. business@upi"></div>
+                  
+                  <div class="field" style="grid-column: span 3;"><label>Branch Name (Auto-fetched from IFSC)</label><input id="companyBranch" placeholder="e.g. Main Branch"></div>
                 </div>
               </div>
             </div>
@@ -840,9 +847,9 @@ let vouchers=load('tp_vouchers',[]);
 let invoices=load('tp_invoices',[]);
 let parties=load('tp_parties',[]);
 let company=load('tp_company_obj',{
-  name:'Your Company',gstin:'',state:'Rajasthan',fy:'2026–27',booksStart:'2026-04-01',
-  address:'',phone:'',email:'',website:'',logo:'',
-  bank:'',account:'',ifsc:'',upi:'', 
+  name:'Your Company', gstin:'', pan:'', udyam:'', state:'Rajasthan', fy:'2026–27', booksStart:'2026-04-01',
+  address:'', phone:'', email:'', website:'', logo:'',
+  bank:'', account:'', ifsc:'', branch:'', 
   invPrefix:'INV/', defaultTerms:'1. Goods once sold will not be taken back.\n2. Payment due within 15 days.',
   generatorPath:'invoice-generator.html'
 });
@@ -1164,7 +1171,7 @@ function openInvoiceGenerator() {
   }
   window._invoiceGenerator = genWindow;
   
-  // Data sync with generator (includes company details, logo, bank, terms)
+  // Data sync with generator (includes company details, logo, bank, terms, PAN, Udyam, Branch)
   setTimeout(() => {
     if (genWindow && !genWindow.closed) {
       genWindow.postMessage({ 
@@ -1179,7 +1186,6 @@ function openInvoiceGenerator() {
 }
 
 window.addEventListener('message', (event) => {
-  // Handle Invoice Save
   if (event.data && event.data.type === 'INVOICE_SAVE_TO_TP') {
     const inv = event.data.data;
     if (!inv) return;
@@ -1191,7 +1197,6 @@ window.addEventListener('message', (event) => {
     }
   }
   
-  // Handle Generator Ready (Robust syncing)
   if (event.data && event.data.type === 'GENERATOR_READY') {
     if (window._invoiceGenerator && !window._invoiceGenerator.closed) {
       window._invoiceGenerator.postMessage({ 
@@ -1204,7 +1209,6 @@ window.addEventListener('message', (event) => {
 });
 
 function saveExternalInvoiceToTP(inv) {
-  // Auto-create party if not exists
   if (inv.party && inv.party !== 'Cash Customer') {
     const existingParty = parties.find(p => p.name.toLowerCase() === inv.party.toLowerCase());
     if (!existingParty) {
@@ -1222,7 +1226,6 @@ function saveExternalInvoiceToTP(inv) {
     }
   }
 
-  // Duplicate check
   const existingInvoice = invoices.find(i => i.number === inv.number);
   if (existingInvoice) {
     if (!confirm(`Invoice ${inv.number} already exists.\n\nOverwrite?`)) return;
@@ -1231,7 +1234,6 @@ function saveExternalInvoiceToTP(inv) {
     if (oldVoucher) vouchers = vouchers.filter(v => v.id !== oldVoucher.id);
   }
 
-  // Update company if seller info provided
   if (inv.sellerName && company.name !== inv.sellerName) {
     company.name = inv.sellerName;
     if (inv.sellerGstin) company.gstin = inv.sellerGstin;
@@ -1241,7 +1243,6 @@ function saveExternalInvoiceToTP(inv) {
     applyCompanyUI();
   }
 
-  // Create voucher
   const voucherId = uid();
   const lines = [];
   lines.push({ ledger: 'Sundry Debtors', debit: Number(inv.total) || 0, credit: 0 });
@@ -1267,7 +1268,6 @@ function saveExternalInvoiceToTP(inv) {
   };
   vouchers.push(voucher);
 
-  // Create invoice record
   const invoice = {
     id: uid(), number: inv.number, date: inv.date,
     voucherId: voucher.id, voucherNo: voucher.no,
@@ -1396,7 +1396,7 @@ function buildInvoiceHTML(inv){
         ${c.logo ? `<img src="${c.logo}" style="height:50px; max-width:120px; object-fit:contain; margin-right:12px;">` : `<div class="inv-logo">${esc((c.name||'T').charAt(0).toUpperCase())}</div>`}
         <div class="inv-brand-text">
           <h2>${esc(c.name)}</h2>
-          <p>${c.address?esc(c.address)+'<br>':''}${c.gstin?'GSTIN: '+esc(c.gstin)+'<br>':''}${c.phone?'📞 '+esc(c.phone):''}${c.email?' · ✉️ '+esc(c.email):''}</p>
+          <p>${c.address?esc(c.address)+'<br>':''}${c.gstin?'GSTIN: '+esc(c.gstin)+'<br>':''}${c.pan?'PAN: '+esc(c.pan)+'<br>':''}${c.udyam?'Udyam: '+esc(c.udyam)+'<br>':''}${c.phone?'📞 '+esc(c.phone):''}${c.email?' · ✉️ '+esc(c.email):''}</p>
         </div>
       </div>
       <div class="inv-title-box">
@@ -1429,7 +1429,7 @@ function buildInvoiceHTML(inv){
       </div>
     </div>
     <div class="inv-amount-words"><b>Amount in Words</b>${amountInWords(inv.total)}</div>
-    ${c.bank||c.account?`<div class="inv-bank"><h4>Bank Details</h4>${c.bank?'Bank: <b>'+esc(c.bank)+'</b><br>':''}${c.account?'A/C: <b>'+esc(c.account)+'</b><br>':''}${c.ifsc?'IFSC: <b>'+esc(c.ifsc)+'</b><br>':''}${c.upi?'UPI: <b>'+esc(c.upi)+'</b>':''}</div>`:''}
+    ${c.bank||c.account?`<div class="inv-bank"><h4>Bank Details</h4>${c.bank?'Bank: <b>'+esc(c.bank)+'</b><br>':''}${c.branch?'Branch: <b>'+esc(c.branch)+'</b><br>':''}${c.account?'A/C: <b>'+esc(c.account)+'</b><br>':''}${c.ifsc?'IFSC: <b>'+esc(c.ifsc)+'</b>':''}</div>`:''}
     <div class="inv-footer">
       <div class="inv-notes"><b>Terms & Conditions:</b><br>${inv.terms?esc(inv.terms).replace(/\n/g,'<br>'):'1. Goods once sold will not be taken back.<br>2. Payment due within 15 days.<br>3. Subject to '+esc(c.state||'Rajasthan')+' jurisdiction.'}<br><br>Thank you for your business!</div>
       <div class="inv-sign-box"><div class="inv-sign-line">For ${esc(c.name)}<br><small style="font-weight:400;color:#64748b">Authorized Signatory</small></div></div>
@@ -1832,12 +1832,55 @@ document.getElementById('companyLogo').addEventListener('change', function(e) {
   }
 });
 
+// GSTIN to PAN Auto-fill Logic
+document.getElementById('companyGstin').addEventListener('input', function(e) {
+  let gstin = this.value.toUpperCase();
+  this.value = gstin;
+  if (gstin.length >= 12) {
+    document.getElementById('companyPan').value = gstin.substring(2, 12);
+  } else {
+    document.getElementById('companyPan').value = '';
+  }
+});
+
+// IFSC to Branch Auto-fetch Logic
+let ifscTimeout;
+document.getElementById('companyIfsc').addEventListener('input', function(e) {
+  let ifsc = this.value.toUpperCase();
+  this.value = ifsc;
+  
+  clearTimeout(ifscTimeout);
+  if (ifsc.length === 11) {
+    ifscTimeout = setTimeout(async () => {
+      try {
+        const res = await fetch('https://ifsc.razorpay.com/' + ifsc);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.BANK && !document.getElementById('companyBank').value) {
+            document.getElementById('companyBank').value = data.BANK;
+          }
+          if (data.BRANCH) {
+            document.getElementById('companyBranch').value = data.BRANCH;
+          }
+          toast('Branch details fetched!', 'success');
+        }
+      } catch (err) {
+        console.log('IFSC fetch failed');
+      }
+    }, 800); // 800ms debounce
+  } else {
+    document.getElementById('companyBranch').value = '';
+  }
+});
+
 document.getElementById('settingsForm').addEventListener('submit',e=>{
   e.preventDefault();
   company = {
     ...company,
     name: document.getElementById('companyName').value.trim() || 'Your Company',
     gstin: document.getElementById('companyGstin').value.trim().toUpperCase(),
+    pan: document.getElementById('companyPan').value.trim().toUpperCase(),
+    udyam: document.getElementById('companyUdyam').value.trim(),
     state: document.getElementById('companyState').value,
     fy: document.getElementById('companyFY').value,
     address: document.getElementById('companyAddress').value.trim(),
@@ -1847,7 +1890,7 @@ document.getElementById('settingsForm').addEventListener('submit',e=>{
     bank: document.getElementById('companyBank').value.trim(),
     account: document.getElementById('companyAccount').value.trim(),
     ifsc: document.getElementById('companyIfsc').value.trim().toUpperCase(),
-    upi: document.getElementById('companyUpi').value.trim(),
+    branch: document.getElementById('companyBranch').value.trim(),
     invPrefix: document.getElementById('companyInvPrefix').value.trim() || 'INV/',
     defaultTerms: document.getElementById('companyTerms').value.trim(),
     generatorPath: document.getElementById('generatorPath').value.trim() || 'invoice-generator.html'
@@ -1866,6 +1909,8 @@ function applyCompanyUI(){
   const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
   setVal('companyName', company.name);
   setVal('companyGstin', company.gstin);
+  setVal('companyPan', company.pan);
+  setVal('companyUdyam', company.udyam);
   setVal('companyState', company.state);
   setVal('companyFY', company.fy);
   setVal('companyAddress', company.address);
@@ -1875,7 +1920,7 @@ function applyCompanyUI(){
   setVal('companyBank', company.bank);
   setVal('companyAccount', company.account);
   setVal('companyIfsc', company.ifsc);
-  setVal('companyUpi', company.upi);
+  setVal('companyBranch', company.branch);
   setVal('companyInvPrefix', company.invPrefix || 'INV/');
   setVal('companyTerms', company.defaultTerms || '');
   setVal('generatorPath', company.generatorPath);
