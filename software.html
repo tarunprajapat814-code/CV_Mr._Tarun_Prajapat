@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TP Accounting — V9 + Party Master</title>
+<title>TP Accounting — V10 (Multi-Company)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -112,7 +112,8 @@ a{color:var(--primary);text-decoration:none}
 .sidebar{background:linear-gradient(180deg,#0f172a 0%,#1e293b 100%);padding:20px 12px;color:#cbd5e1;display:flex;flex-direction:column;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto}
 .side-company{padding:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);margin-bottom:16px}
 .side-company small{display:block;color:#94a3b8;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;margin-bottom:6px}
-.side-company b{font-size:13px;color:#f1f5f9;display:block;margin-bottom:4px;font-weight:600}
+.side-company select{background:transparent;border:0;color:#f1f5f9;font-size:13px;font-weight:600;width:100%;outline:none;cursor:pointer;margin-bottom:4px}
+.side-company select option{color:#0f172a}
 .side-company .fy{font-size:11px;color:#94a3b8}
 .nav-section{padding:0 8px;margin-top:20px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;font-weight:700;margin-bottom:6px}
 .nav-btn{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:var(--radius);color:#cbd5e1;font-size:13px;font-weight:500;text-align:left;margin-bottom:2px;transition:var(--transition)}
@@ -382,7 +383,9 @@ tbody tr:last-child td{border-bottom:0}
     <aside class="sidebar" id="sidebar">
       <div class="side-company">
         <small>Active Company</small>
-        <b id="sideCompany">Your Company</b>
+        <select id="companySwitcher" onchange="switchCompany(this.value)">
+          <!-- Options populated by JS -->
+        </select>
         <div class="fy"><select style="background:transparent;border:0;color:#94a3b8;font-size:11px" id="fySelect" onchange="changeFY(this.value)"><option>FY 2026–27</option><option>FY 2025–26</option></select></div>
       </div>
       <div class="nav-section">Main</div>
@@ -657,11 +660,14 @@ tbody tr:last-child td{border-bottom:0}
                   
                   <div class="field" style="grid-column: span 3;"><label>Branch Name (Auto-fetched from IFSC)</label><input id="companyBranch" placeholder="e.g. Main Branch"></div>
                 </div>
+                <div style="font-size:12px; color:var(--muted); margin-top:10px;">
+                  <i>* Account Holder Name automatically aapke Company Name ({document.getElementById('companyName')?.value || 'Your Company'}) se merge ho jayega.</i>
+                </div>
               </div>
             </div>
 
             <!-- Invoice Settings -->
-            <div class="form-card">
+            <div class="form-card" style="margin-bottom: 20px;">
               <div class="form-head">⚙️ Invoice & Software Settings</div>
               <div class="form-body">
                 <div class="form-grid">
@@ -671,10 +677,22 @@ tbody tr:last-child td{border-bottom:0}
                 </div>
               </div>
             </div>
+            
+            <!-- Add New Company -->
+            <div class="form-card" style="margin-bottom: 20px; border: 2px solid var(--primary);">
+              <div class="form-head" style="background:var(--primary-light); color:var(--primary);">➕ Add New Company (Multi-Company Support)</div>
+              <div class="form-body">
+                <div class="form-grid" style="grid-template-columns: 1fr auto; align-items: end;">
+                  <div class="field"><label>New Company Name</label><input id="newCompanyName" placeholder="e.g. Sharma Traders Pvt Ltd"></div>
+                  <button type="button" class="btn primary" style="height: 38px;" onclick="addNewCompany()">Create & Switch</button>
+                </div>
+                <div style="font-size:11px; color:var(--muted); margin-top:8px;">Nayi company banate hi software us company par switch ho jayega. Har company ka apna alag data hoga.</div>
+              </div>
+            </div>
 
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:24px;flex-wrap:wrap">
-              <button type="button" class="btn danger" onclick="clearAllData()">🗑 Clear Data</button>
-              <button type="button" class="btn" onclick="loadDemoData()">📊 Load Demo</button>
+              <button type="button" class="btn danger" onclick="clearAllData()">🗑 Clear Current Company Data</button>
+              <button type="button" class="btn" onclick="loadDemoData()">📊 Load Demo in Current Company</button>
               <button type="submit" class="btn primary" style="padding: 10px 24px; font-size: 14px;">💾 Save All Settings</button>
             </div>
           </form>
@@ -819,7 +837,22 @@ function toggleUserMenu(e){e.stopPropagation();document.getElementById('userDrop
 function closeUserMenu(){document.getElementById('userDropdown').classList.remove('show');}
 document.addEventListener('click',()=>closeUserMenu());
 
-/* ============ STATE ============ */
+/* ============ MULTI-COMPANY DATA SETUP ============ */
+// 1. Get active company ID or default to c1
+const activeCompanyId = localStorage.getItem('tp_active_company_id') || 'c1';
+
+// 2. Load companies list
+let companiesList = load('tp_companies', [{
+  id: 'c1', name: 'Your Company', gstin: '', pan: '', udyam: '', state: 'Rajasthan', fy: '2026–27', booksStart: '2026-04-01',
+  address: '', phone: '', email: '', website: '', logo: '', bank: '', account: '', ifsc: '', branch: '',
+  invPrefix: 'INV/', defaultTerms: '1. Goods once sold will not be taken back.\n2. Payment due within 15 days.', generatorPath: 'invoice-generator.html'
+}]);
+
+// 3. Find active company object
+let company = companiesList.find(c => c.id === activeCompanyId) || companiesList[0];
+if (company.id !== activeCompanyId) localStorage.setItem('tp_active_company_id', company.id);
+
+// 4. Load company-specific data
 const titles={home:'Dashboard',parties:'Party Master',vouchers:'Voucher Entry',invoices:'Invoices',daybook:'Day Book',masters:'Ledgers',ledger:'Ledger',trial:'Trial Balance',pl:'P&L',bs:'Balance Sheet',gst:'GST',excel:'Excel',backup:'Backup',settings:'Setup'};
 const defaultLedgers=[
 {name:'Cash',group:'Cash-in-Hand',nature:'Asset'},
@@ -842,22 +875,24 @@ const defaultLedgers=[
 {name:'Loan from Bank',group:'Loans',nature:'Liability'}
 ];
 
-let ledgers=load('tp_ledgers',JSON.parse(JSON.stringify(defaultLedgers)));
-let vouchers=load('tp_vouchers',[]);
-let invoices=load('tp_invoices',[]);
-let parties=load('tp_parties',[]);
-let company=load('tp_company_obj',{
-  name:'Your Company', gstin:'', pan:'', udyam:'', state:'Rajasthan', fy:'2026–27', booksStart:'2026-04-01',
-  address:'', phone:'', email:'', website:'', logo:'',
-  bank:'', account:'', ifsc:'', branch:'', 
-  invPrefix:'INV/', defaultTerms:'1. Goods once sold will not be taken back.\n2. Payment due within 15 days.',
-  generatorPath:'invoice-generator.html'
-});
+// MIGRATION LOGIC: Move old keys to new company-specific keys if they exist
+if (localStorage.getItem('tp_ledgers') && !localStorage.getItem(`tp_ledgers_${company.id}`)) {
+    ['tp_ledgers', 'tp_vouchers', 'tp_invoices', 'tp_parties'].forEach(k => {
+        const val = localStorage.getItem(k);
+        if (val) {
+            localStorage.setItem(`${k}_${company.id}`, val);
+            localStorage.removeItem(k);
+        }
+    });
+}
 
-// FORCE RESET PATH IF OLD ONE EXISTS
+let ledgers = load(`tp_ledgers_${company.id}`, JSON.parse(JSON.stringify(defaultLedgers)));
+let vouchers = load(`tp_vouchers_${company.id}`, []);
+let invoices = load(`tp_invoices_${company.id}`, []);
+let parties = load(`tp_parties_${company.id}`, []);
+
 if(company.generatorPath === 'invoice-tool.html' || !company.generatorPath){
   company.generatorPath = 'invoice-generator.html';
-  localStorage.setItem('tp_company_obj', JSON.stringify(company));
 }
 
 let deleteTargetId=null;
@@ -867,15 +902,42 @@ let appInitialized=false;
 function load(k,fb){try{const x=localStorage.getItem(k);return x?JSON.parse(x):fb}catch(e){return fb}}
 function persist(){
   try{
-    localStorage.setItem('tp_ledgers',JSON.stringify(ledgers));
-    localStorage.setItem('tp_vouchers',JSON.stringify(vouchers));
-    localStorage.setItem('tp_invoices',JSON.stringify(invoices));
-    localStorage.setItem('tp_parties',JSON.stringify(parties));
-    localStorage.setItem('tp_company_obj',JSON.stringify(company));
+    localStorage.setItem(`tp_ledgers_${company.id}`, JSON.stringify(ledgers));
+    localStorage.setItem(`tp_vouchers_${company.id}`, JSON.stringify(vouchers));
+    localStorage.setItem(`tp_invoices_${company.id}`, JSON.stringify(invoices));
+    localStorage.setItem(`tp_parties_${company.id}`, JSON.stringify(parties));
+    
+    // Save companies list
+    const idx = companiesList.findIndex(c => c.id === company.id);
+    if (idx >= 0) companiesList[idx] = company;
+    localStorage.setItem('tp_companies', JSON.stringify(companiesList));
+    
     setSaveState('saved','Saved');
     updateSideInfo();updateInvBadge();
   }catch(e){setSaveState('error','Storage full');toast('Storage full!','error');}
 }
+
+function switchCompany(id) {
+  localStorage.setItem('tp_active_company_id', id);
+  window.location.reload();
+}
+
+function addNewCompany() {
+  const name = document.getElementById('newCompanyName').value.trim();
+  if (!name) { toast('Company Name required', 'error'); return; }
+  
+  const newId = 'c_' + Date.now();
+  const newComp = {
+    id: newId, name: name, gstin: '', pan: '', udyam: '', state: 'Rajasthan', fy: '2026–27', booksStart: '2026-04-01',
+    address: '', phone: '', email: '', website: '', logo: '', bank: '', account: '', ifsc: '', branch: '',
+    invPrefix: 'INV/', defaultTerms: '1. Goods once sold will not be taken back.\n2. Payment due within 15 days.', generatorPath: 'invoice-generator.html'
+  };
+  
+  companiesList.push(newComp);
+  localStorage.setItem('tp_companies', JSON.stringify(companiesList));
+  switchCompany(newId);
+}
+
 function setSaveState(state,text){const b=document.getElementById('saveBadge');if(b){b.className='save-badge '+state;document.getElementById('saveText').textContent=text;}}
 function updateSideInfo(){const el=document.getElementById('sideDataInfo');if(el)el.textContent=vouchers.length+' vouchers · '+invoices.length+' invoices';}
 function updateInvBadge(){const b=document.getElementById('invBadge');if(b)b.textContent=invoices.length;}
@@ -1171,12 +1233,10 @@ function openInvoiceGenerator() {
   }
   window._invoiceGenerator = genWindow;
 
-  // Jab generator puri tarah load ho jaye, tab data bhejein
   genWindow.onload = function() {
     genWindow.postMessage({ type: 'SYNC_DATA', parties: parties, company: company }, '*');
   };
 
-  // Backup ke liye 2.5 second baad fir se bhej dein
   setTimeout(() => {
     if (genWindow && !genWindow.closed) {
       genWindow.postMessage({ type: 'SYNC_DATA', parties: parties, company: company }, '*');
@@ -1430,7 +1490,7 @@ function buildInvoiceHTML(inv){
       </div>
     </div>
     <div class="inv-amount-words"><b>Amount in Words</b>${amountInWords(inv.total)}</div>
-    ${c.bank||c.account?`<div class="inv-bank"><h4>Bank Details</h4>${c.bank?'Bank: <b>'+esc(c.bank)+'</b><br>':''}${c.branch?'Branch: <b>'+esc(c.branch)+'</b><br>':''}${c.account?'A/C: <b>'+esc(c.account)+'</b><br>':''}${c.ifsc?'IFSC: <b>'+esc(c.ifsc)+'</b>':''}</div>`:''}
+    ${c.bank||c.account?`<div class="inv-bank"><h4>Bank Details</h4>A/C Holder: <b>${esc(c.name)}</b><br>${c.bank?'Bank: <b>'+esc(c.bank)+'</b><br>':''}${c.branch?'Branch: <b>'+esc(c.branch)+'</b><br>':''}${c.account?'A/C: <b>'+esc(c.account)+'</b><br>':''}${c.ifsc?'IFSC: <b>'+esc(c.ifsc)+'</b>':''}</div>`:''}
     <div class="inv-footer">
       <div class="inv-notes"><b>Terms & Conditions:</b><br>${inv.terms?esc(inv.terms).replace(/\n/g,'<br>'):'1. Goods once sold will not be taken back.<br>2. Payment due within 15 days.<br>3. Subject to '+esc(c.state||'Rajasthan')+' jurisdiction.'}<br><br>Thank you for your business!</div>
       <div class="inv-sign-box"><div class="inv-sign-line">For ${esc(c.name)}<br><small style="font-weight:400;color:#64748b">Authorized Signatory</small></div></div>
@@ -1727,8 +1787,8 @@ function previewCSV(){
   r.readAsText(f);
 }
 function downloadBackup(){
-  const data={version:9,exportedAt:new Date().toISOString(),company,ledgers,vouchers,invoices,parties};
-  download('TP_Backup_'+todayISO()+'.json',JSON.stringify(data,null,2),'application/json');
+  const data={version:10,exportedAt:new Date().toISOString(),company,ledgers,vouchers,invoices,parties};
+  download(`TP_Backup_${company.name.replace(/\s+/g,'_')}_${todayISO()}.json`,JSON.stringify(data,null,2),'application/json');
   toast('Backup downloaded','success');
 }
 function restoreBackup(){
@@ -1738,8 +1798,9 @@ function restoreBackup(){
     try{
       const data=JSON.parse(String(r.result));
       if(!data.ledgers||!data.vouchers)throw new Error('Invalid');
-      if(!confirm('Replace all data?'))return;
-      ledgers=data.ledgers;vouchers=data.vouchers;invoices=data.invoices||[];parties=data.parties||[];company=data.company||company;
+      if(!confirm('Replace all data for THIS company?'))return;
+      ledgers=data.ledgers;vouchers=data.vouchers;invoices=data.invoices||[];parties=data.parties||[];
+      if(data.company) { Object.assign(company, data.company); } // update current company details
       persist();applyCompanyUI();
       renderDashboard();renderMasters();renderInvoices();renderInvoiceStats();renderParties();
       toast('Restored','success');
@@ -1760,7 +1821,7 @@ function renderDataStats(){
     </div>`;
 }
 function clearAllData(){
-  if(!confirm('Delete ALL data?'))return;
+  if(!confirm(`Delete ALL data for ${company.name}?`))return;
   if(!confirm('Sure?'))return;
   vouchers=[];invoices=[];parties=[];ledgers=JSON.parse(JSON.stringify(defaultLedgers));
   persist();renderDashboard();renderMasters();renderInvoices();renderInvoiceStats();renderParties();
@@ -1936,6 +1997,12 @@ function applyCompanyUI(){
   }
   
   const fs=document.getElementById('fySelect');if(fs)fs.value='FY '+company.fy;
+  
+  // Populate company switcher
+  const switcher = document.getElementById('companySwitcher');
+  if (switcher) {
+    switcher.innerHTML = companiesList.map(c => `<option value="${c.id}" ${c.id === company.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
+  }
 }
 
 /* ============ KEYBOARD ============ */
@@ -1983,6 +2050,6 @@ function initApp(){
     initApp();
   }
 })();
-console.log('%c✨ TP Accounting V9 + Party Master','color:#4f46e5;font-size:16px;font-weight:bold');
+console.log('%c✨ TP Accounting V10 (Multi-Company)','color:#4f46e5;font-size:16px;font-weight:bold');
 </script>
 </body></html>
