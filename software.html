@@ -1185,21 +1185,6 @@ function openInvoiceGenerator() {
 
   toast('🎨 Invoice Generator opened.', 'info');
 }
-  window._invoiceGenerator = genWindow;
-  
-  // Data sync with generator (includes company details, logo, bank, terms, PAN, Udyam, Branch)
-  setTimeout(() => {
-    if (genWindow && !genWindow.closed) {
-      genWindow.postMessage({ 
-        type: 'SYNC_DATA', 
-        parties: parties,
-        company: company 
-      }, '*');
-    }
-  }, 1500);
-  
-  toast('🎨 Invoice Generator opened. Save karo to TP me aa jayega.', 'info');
-}
 
 window.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'INVOICE_SAVE_TO_TP') {
