@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TP Accounting — V9 + Invoice Generator</title>
+<title>TP Accounting — V9 + Party Master</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -387,15 +387,16 @@ tbody tr:last-child td{border-bottom:0}
       </div>
       <div class="nav-section">Main</div>
       <button class="nav-btn active" data-page="home"><span class="ic">🏠</span> Dashboard</button>
+      <button class="nav-btn" data-page="parties"><span class="ic">👥</span> Party Master</button>
       <button class="nav-btn" data-page="vouchers"><span class="ic">📝</span> Voucher Entry</button>
       <button class="nav-btn" data-page="invoices"><span class="ic">🧾</span> Invoices <span class="badge" id="invBadge">0</span></button>
       <button class="nav-btn" data-page="daybook"><span class="ic">📖</span> Day Book</button>
-      <button class="nav-btn" data-page="masters"><span class="ic">👥</span> Masters</button>
+      <button class="nav-btn" data-page="masters"><span class="ic">📊</span> Ledgers</button>
       <div class="nav-section">Reports</div>
       <button class="nav-btn" data-page="ledger"><span class="ic">📒</span> Ledger</button>
       <button class="nav-btn" data-page="trial"><span class="ic">⚖️</span> Trial Balance</button>
       <button class="nav-btn" data-page="pl"><span class="ic">📈</span> P&L</button>
-      <button class="nav-btn" data-page="bs"><span class="ic">📊</span> Balance Sheet</button>
+      <button class="nav-btn" data-page="bs"><span class="ic">📉</span> Balance Sheet</button>
       <button class="nav-btn" data-page="gst"><span class="ic">₹</span> GST Reports</button>
       <div class="nav-section">Tools</div>
       <button class="nav-btn highlight" onclick="openInvoiceGenerator()"><span class="ic">🎨</span> Invoice Generator</button>
@@ -415,7 +416,6 @@ tbody tr:last-child td{border-bottom:0}
       </div>
 
       <div class="content">
-
         <!-- DASHBOARD -->
         <section class="section show" id="page-home">
           <div class="page-head"><div><h1 id="welcomeTitle">Dashboard</h1><p>Real-time financial snapshot.</p></div><button class="btn primary lg" onclick="showPage('vouchers')">＋ New Voucher</button></div>
@@ -443,6 +443,25 @@ tbody tr:last-child td{border-bottom:0}
           </div>
         </section>
 
+        <!-- PARTY MASTER -->
+        <section class="section" id="page-parties">
+          <div class="page-head">
+            <div><h1>Party Master</h1><p>Manage your customers and suppliers.</p></div>
+            <button class="btn primary" onclick="openPartyModal()">＋ Add New Party</button>
+          </div>
+          <div class="card">
+            <div class="filter-bar">
+              <input id="partySearch" placeholder="🔍 Search by name, phone, or GSTIN..." style="flex:1;min-width:200px" oninput="renderParties()">
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Party Name</th><th>Phone</th><th>GSTIN</th><th>Address</th><th>Actions</th></tr></thead>
+                <tbody id="partyRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
         <!-- VOUCHERS -->
         <section class="section" id="page-vouchers">
           <div class="page-head"><div><h1>Voucher Entry</h1><p>Manual double-entry posting.</p></div><button class="btn" onclick="showPage('daybook')">📖 Day Book</button></div>
@@ -465,7 +484,7 @@ tbody tr:last-child td{border-bottom:0}
                   <div class="field"><label>Type <span class="req">*</span></label><select id="vType"><option>Sales</option><option>Purchase</option><option>Receipt</option><option>Payment</option><option>Journal</option><option>Contra</option></select></div>
                   <div class="field"><label>Date <span class="req">*</span></label><input type="date" id="vDate" required></div>
                   <div class="field"><label>Voucher No. <span class="req">*</span></label><input id="vNo"></div>
-                  <div class="field"><label>Party</label><input id="vParty"></div>
+                  <div class="field"><label>Party</label><select id="vParty"></select></div>
                   <div class="field"><label>GSTIN</label><input id="vGstin" maxlength="15"></div>
                   <div class="field"><label>Narration</label><input id="vNotes"></div>
                 </div>
@@ -588,7 +607,7 @@ tbody tr:last-child td{border-bottom:0}
         <!-- SETTINGS -->
         <section class="section" id="page-settings">
           <div class="page-head"><div><h1>Company Setup</h1></div></div>
-          <div class="alert info"><span class="ic">💡</span><div><b>Invoice Generator Path:</b> Neeche field me apni invoice-generator.html ka path dalein (e.g. <code>invoice-generator.html</code> ya <code>./tools/invoice-generator.html</code>).</div></div>
+          <div class="alert info"><span class="ic">💡</span><div><b>Invoice Generator Path:</b> Neeche field me apni invoice-generator.html ka path dalein (e.g. <code>invoice-tool.html</code>).</div></div>
           <div class="form-card">
             <div class="form-head">🏢 Company Information</div>
             <div class="form-body">
@@ -605,7 +624,7 @@ tbody tr:last-child td{border-bottom:0}
                   <div class="field"><label>Bank A/C</label><input id="companyAccount"></div>
                   <div class="field"><label>IFSC</label><input id="companyIfsc"></div>
                   <div class="field"><label>UPI ID</label><input id="companyUpi"></div>
-                  <div class="field" style="grid-column:span 2"><label>🎨 Invoice Generator Path</label><input id="generatorPath" placeholder="invoice-generator.html" value="invoice-generator.html"><small style="color:var(--muted);font-size:11px">Same folder: <code>invoice-generator.html</code> · Subfolder: <code>./tools/invoice-generator.html</code></small></div>
+                  <div class="field" style="grid-column:span 2"><label>🎨 Invoice Generator Path</label><input id="generatorPath" placeholder="invoice-tool.html" value="invoice-tool.html"><small style="color:var(--muted);font-size:11px">Same folder: <code>invoice-tool.html</code> · Subfolder: <code>./tools/invoice-tool.html</code></small></div>
                 </div>
                 <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:24px;flex-wrap:wrap">
                   <button type="button" class="btn danger" onclick="clearAllData()">🗑 Clear Data</button>
@@ -647,6 +666,23 @@ tbody tr:last-child td{border-bottom:0}
       <div class="modal-actions" style="justify-content:center;flex-wrap:wrap">
         <button class="btn" onclick="closeSuccessModal()">Continue</button>
         <button class="btn primary" onclick="viewLastInvoice()">👁️ View Invoice</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTY MODAL -->
+  <div class="modal" id="partyModal">
+    <div class="modal-box">
+      <h3>Add / Edit Party</h3>
+      <input type="hidden" id="editPartyId">
+      <div class="field" style="margin-bottom:12px"><label>Party Name *</label><input id="pName" placeholder="e.g. ABC Traders"></div>
+      <div class="field" style="margin-bottom:12px"><label>Phone</label><input id="pPhone" placeholder="+91 98765 43210"></div>
+      <div class="field" style="margin-bottom:12px"><label>GSTIN</label><input id="pGstin" placeholder="27ABCDE1234F1Z5"></div>
+      <div class="field" style="margin-bottom:12px"><label>Email</label><input id="pEmail" placeholder="abc@traders.com"></div>
+      <div class="field" style="margin-bottom:12px"><label>Address</label><textarea id="pAddress" rows="2" placeholder="123, Main Street, City"></textarea></div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closePartyModal()">Cancel</button>
+        <button class="btn primary" onclick="saveParty()">💾 Save Party</button>
       </div>
     </div>
   </div>
@@ -740,7 +776,7 @@ function closeUserMenu(){document.getElementById('userDropdown').classList.remov
 document.addEventListener('click',()=>closeUserMenu());
 
 /* ============ STATE ============ */
-const titles={home:'Dashboard',vouchers:'Voucher Entry',invoices:'Invoices',daybook:'Day Book',masters:'Masters',ledger:'Ledger',trial:'Trial Balance',pl:'P&L',bs:'Balance Sheet',gst:'GST',excel:'Excel',backup:'Backup',settings:'Setup'};
+const titles={home:'Dashboard',parties:'Party Master',vouchers:'Voucher Entry',invoices:'Invoices',daybook:'Day Book',masters:'Ledgers',ledger:'Ledger',trial:'Trial Balance',pl:'P&L',bs:'Balance Sheet',gst:'GST',excel:'Excel',backup:'Backup',settings:'Setup'};
 const defaultLedgers=[
 {name:'Cash',group:'Cash-in-Hand',nature:'Asset'},
 {name:'Bank Account',group:'Bank Accounts',nature:'Asset'},
@@ -765,10 +801,11 @@ const defaultLedgers=[
 let ledgers=load('tp_ledgers',JSON.parse(JSON.stringify(defaultLedgers)));
 let vouchers=load('tp_vouchers',[]);
 let invoices=load('tp_invoices',[]);
+let parties=load('tp_parties',[]);
 let company=load('tp_company_obj',{
   name:'Your Company',gstin:'',state:'Rajasthan',fy:'2026–27',booksStart:'2026-04-01',
   address:'',phone:'',email:'',bank:'',account:'',ifsc:'',upi:'',invPrefix:'INV',
-  generatorPath:'invoice-generator.html'
+  generatorPath:'invoice-tool.html'
 });
 let deleteTargetId=null;
 let lastInvoiceId=null;
@@ -780,6 +817,7 @@ function persist(){
     localStorage.setItem('tp_ledgers',JSON.stringify(ledgers));
     localStorage.setItem('tp_vouchers',JSON.stringify(vouchers));
     localStorage.setItem('tp_invoices',JSON.stringify(invoices));
+    localStorage.setItem('tp_parties',JSON.stringify(parties));
     localStorage.setItem('tp_company_obj',JSON.stringify(company));
     setSaveState('saved','Saved');
     updateSideInfo();updateInvBadge();
@@ -799,6 +837,7 @@ function showPage(p){
   closeSidebar();window.scrollTo({top:0,behavior:'smooth'});
   try{
     if(p==='masters')renderMasters();
+    else if(p==='parties')renderParties();
     else if(p==='ledger'){renderLedgerSelect();renderLedger();}
     else if(p==='trial')renderTrialBalance();
     else if(p==='pl')renderPL();
@@ -848,6 +887,97 @@ function amountInWords(amount){
   let words=numberToWords(rupees)+' Rupees';
   if(paise>0)words+=' and '+numberToWords(paise)+' Paise';
   return words+' Only';
+}
+
+/* ============ PARTY MASTER ============ */
+function renderParties() {
+  const q = (document.getElementById('partySearch').value || '').toLowerCase();
+  const filtered = parties.filter(p => 
+    p.name.toLowerCase().includes(q) || 
+    (p.phone && p.phone.includes(q)) || 
+    (p.gstin && p.gstin.toLowerCase().includes(q))
+  );
+
+  document.getElementById('partyRows').innerHTML = filtered.map(p => `
+    <tr>
+      <td><b>${esc(p.name)}</b></td>
+      <td>${esc(p.phone || '—')}</td>
+      <td>${esc(p.gstin || '—')}</td>
+      <td style="white-space:normal;max-width:250px;font-size:12px;color:var(--muted)">${esc(p.address || '—')}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn sm" onclick="openPartyModal('${p.id}')">✎ Edit</button>
+          <button class="btn sm danger" onclick="deleteParty('${p.id}')">✕</button>
+        </div>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="5"><div class="empty">No parties found. Add your first party!</div></td></tr>';
+}
+
+function openPartyModal(id = null) {
+  document.getElementById('partyModal').classList.add('show');
+  document.getElementById('editPartyId').value = '';
+  ['pName','pPhone','pGstin','pEmail','pAddress'].forEach(x => document.getElementById(x).value = '');
+  
+  if (id) {
+    const p = parties.find(x => x.id === id);
+    if (p) {
+      document.getElementById('editPartyId').value = p.id;
+      document.getElementById('pName').value = p.name;
+      document.getElementById('pPhone').value = p.phone || '';
+      document.getElementById('pGstin').value = p.gstin || '';
+      document.getElementById('pEmail').value = p.email || '';
+      document.getElementById('pAddress').value = p.address || '';
+    }
+  }
+}
+
+function closePartyModal() {
+  document.getElementById('partyModal').classList.remove('show');
+}
+
+function saveParty() {
+  const name = document.getElementById('pName').value.trim();
+  if (!name) { toast('Party name is required', 'error'); return; }
+  
+  const id = document.getElementById('editPartyId').value;
+  const partyData = {
+    id: id || 'party_' + Date.now(),
+    name: name,
+    phone: document.getElementById('pPhone').value.trim(),
+    gstin: document.getElementById('pGstin').value.trim().toUpperCase(),
+    email: document.getElementById('pEmail').value.trim(),
+    address: document.getElementById('pAddress').value.trim()
+  };
+
+  if (id) {
+    const idx = parties.findIndex(x => x.id === id);
+    if (idx >= 0) parties[idx] = partyData;
+  } else {
+    parties.push(partyData);
+  }
+
+  persist();
+  renderParties();
+  updateVoucherPartyDropdown();
+  closePartyModal();
+  toast('Party saved successfully!', 'success');
+}
+
+function deleteParty(id) {
+  if (!confirm('Delete this party?')) return;
+  parties = parties.filter(x => x.id !== id);
+  persist();
+  renderParties();
+  updateVoucherPartyDropdown();
+  toast('Party deleted', 'success');
+}
+
+function updateVoucherPartyDropdown() {
+  const sel = document.getElementById('vParty');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">-- Select Party --</option>' + 
+    parties.map(p => `<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('');
 }
 
 /* ============ VOUCHER ENTRY ============ */
@@ -956,11 +1086,16 @@ document.getElementById('voucherForm').addEventListener('submit',e=>{
   const type=document.getElementById('vType').value;
   const no=document.getElementById('vNo').value.trim()||nextNo(type);
   if(vouchers.some(v=>v.no===no&&v.id!==editId)){toast('Number exists','error');return;}
+  
+  const selectedPartyName = document.getElementById('vParty').value;
+  const selectedParty = parties.find(p => p.name === selectedPartyName);
+  const partyGstin = selectedParty ? selectedParty.gstin : document.getElementById('vGstin').value.trim();
+
   if(editId){
     const idx=vouchers.findIndex(v=>v.id===editId);
-    if(idx>=0){vouchers[idx]={...vouchers[idx],date:document.getElementById('vDate').value,no,type,party:document.getElementById('vParty').value.trim(),gstin:document.getElementById('vGstin').value.trim(),notes:document.getElementById('vNotes').value.trim(),lines,drTotal:sums.dr,crTotal:sums.cr};toast('Updated','success');}
+    if(idx>=0){vouchers[idx]={...vouchers[idx],date:document.getElementById('vDate').value,no,type,party:selectedPartyName,gstin:partyGstin,notes:document.getElementById('vNotes').value.trim(),lines,drTotal:sums.dr,crTotal:sums.cr};toast('Updated','success');}
   }else{
-    vouchers.push({id:uid(),date:document.getElementById('vDate').value,no,type,party:document.getElementById('vParty').value.trim(),gstin:document.getElementById('vGstin').value.trim(),notes:document.getElementById('vNotes').value.trim(),lines,drTotal:sums.dr,crTotal:sums.cr,source:'manual',createdAt:new Date().toISOString()});
+    vouchers.push({id:uid(),date:document.getElementById('vDate').value,no,type,party:selectedPartyName,gstin:partyGstin,notes:document.getElementById('vNotes').value.trim(),lines,drTotal:sums.dr,crTotal:sums.cr,source:'manual',createdAt:new Date().toISOString()});
     toast('Saved','success');
   }
   persist();resetVoucherForm();renderDashboard();renderDaybook();
@@ -975,13 +1110,19 @@ document.getElementById('voucherForm').addEventListener('reset',()=>setTimeout(r
 
 /* ============ INVOICE GENERATOR INTEGRATION ============ */
 function openInvoiceGenerator() {
-  const path = company.generatorPath || 'invoice-generator.html';
+  const path = company.generatorPath || 'invoice-tool.html';
   const genWindow = window.open(path, 'TPInvoiceGenerator', 'width=1400,height=900,scrollbars=yes');
   if (!genWindow) {
     toast('Popup blocked! Allow popups and try again.', 'error');
     return;
   }
   window._invoiceGenerator = genWindow;
+  
+  // Send parties data to generator
+  setTimeout(() => {
+    genWindow.postMessage({ type: 'SYNC_PARTIES', data: parties }, '*');
+  }, 1500);
+  
   toast('🎨 Invoice Generator opened. Save karo to TP me aa jayega.', 'info');
 }
 
@@ -1502,7 +1643,7 @@ function previewCSV(){
   r.readAsText(f);
 }
 function downloadBackup(){
-  const data={version:9,exportedAt:new Date().toISOString(),company,ledgers,vouchers,invoices};
+  const data={version:9,exportedAt:new Date().toISOString(),company,ledgers,vouchers,invoices,parties};
   download('TP_Backup_'+todayISO()+'.json',JSON.stringify(data,null,2),'application/json');
   toast('Backup downloaded','success');
 }
@@ -1514,21 +1655,22 @@ function restoreBackup(){
       const data=JSON.parse(String(r.result));
       if(!data.ledgers||!data.vouchers)throw new Error('Invalid');
       if(!confirm('Replace all data?'))return;
-      ledgers=data.ledgers;vouchers=data.vouchers;invoices=data.invoices||[];company=data.company||company;
+      ledgers=data.ledgers;vouchers=data.vouchers;invoices=data.invoices||[];parties=data.parties||[];company=data.company||company;
       persist();applyCompanyUI();
-      renderDashboard();renderMasters();renderInvoices();renderInvoiceStats();
+      renderDashboard();renderMasters();renderInvoices();renderInvoiceStats();renderParties();
       toast('Restored','success');
     }catch(e){toast('Invalid: '+e.message,'error');}
   };
   r.readAsText(f);
 }
 function renderDataStats(){
-  const json=JSON.stringify({ledgers,vouchers,invoices});
+  const json=JSON.stringify({ledgers,vouchers,invoices,parties});
   const size=(new Blob([json]).size/1024).toFixed(1);
   document.getElementById('dataStats').innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px">
       <div style="text-align:center"><div style="font-size:11px;color:var(--muted)">Vouchers</div><div style="font-size:24px;font-weight:700" class="num">${vouchers.length}</div></div>
       <div style="text-align:center"><div style="font-size:11px;color:var(--muted)">Invoices</div><div style="font-size:24px;font-weight:700" class="num">${invoices.length}</div></div>
+      <div style="text-align:center"><div style="font-size:11px;color:var(--muted)">Parties</div><div style="font-size:24px;font-weight:700" class="num">${parties.length}</div></div>
       <div style="text-align:center"><div style="font-size:11px;color:var(--muted)">Ledgers</div><div style="font-size:24px;font-weight:700" class="num">${ledgers.length}</div></div>
       <div style="text-align:center"><div style="font-size:11px;color:var(--muted)">Size</div><div style="font-size:24px;font-weight:700" class="num">${size} KB</div></div>
     </div>`;
@@ -1536,15 +1678,22 @@ function renderDataStats(){
 function clearAllData(){
   if(!confirm('Delete ALL data?'))return;
   if(!confirm('Sure?'))return;
-  vouchers=[];invoices=[];ledgers=JSON.parse(JSON.stringify(defaultLedgers));
-  persist();renderDashboard();renderMasters();renderInvoices();renderInvoiceStats();
+  vouchers=[];invoices=[];parties=[];ledgers=JSON.parse(JSON.stringify(defaultLedgers));
+  persist();renderDashboard();renderMasters();renderInvoices();renderInvoiceStats();renderParties();
   toast('Cleared','success');
 }
 
 /* ============ DEMO ============ */
 function loadDemoData(){
   if(vouchers.length&&!confirm('Replace with demo?'))return;
-  vouchers=[];invoices=[];
+  vouchers=[];invoices=[];parties=[];
+  
+  // Add demo parties
+  parties = [
+    {id:'p1', name:'ABC Traders', phone:'+91 98765 43210', gstin:'27ABCDE1234F1Z5', email:'abc@traders.com', address:'123 Main St, Mumbai'},
+    {id:'p2', name:'Shree Suppliers', phone:'+91 98765 12345', gstin:'08XYZAB5678G2Z6', email:'shree@supp.com', address:'456 Market, Jaipur'}
+  ];
+
   const demo=[
     {type:'Journal',date:'2026-04-01',party:'Opening',notes:'Opening capital',lines:[{ledger:'Bank Account',debit:200000,credit:0},{ledger:'Capital',debit:0,credit:200000}]},
     {type:'Purchase',date:'2026-05-10',party:'Shree Suppliers',notes:'GST purchase',lines:[{ledger:'Purchase',debit:40000,credit:0},{ledger:'Input CGST',debit:3600,credit:0},{ledger:'Input SGST',debit:3600,credit:0},{ledger:'Sundry Creditors',debit:0,credit:47200}]},
@@ -1577,7 +1726,7 @@ function loadDemoData(){
       });
     }
   });
-  persist();renderDashboard();renderLiveChart();renderMasters();renderDaybook();renderInvoices();renderInvoiceStats();
+  persist();renderDashboard();renderLiveChart();renderMasters();renderDaybook();renderInvoices();renderInvoiceStats();renderParties();updateVoucherPartyDropdown();
   toast('Demo loaded!','success');
 }
 
@@ -1598,7 +1747,7 @@ document.getElementById('settingsForm').addEventListener('submit',e=>{
     ifsc:document.getElementById('companyIfsc').value.trim(),
     upi:document.getElementById('companyUpi').value.trim(),
     invPrefix:company.invPrefix||'INV',
-    generatorPath:document.getElementById('generatorPath').value.trim()||'invoice-generator.html'
+    generatorPath:document.getElementById('generatorPath').value.trim()||'invoice-tool.html'
   };
   persist();applyCompanyUI();toast('Saved','success');
 });
@@ -1630,7 +1779,7 @@ document.addEventListener('keydown',e=>{
     const f=document.getElementById('voucherForm');
     if(f&&document.getElementById('page-vouchers').classList.contains('show'))f.dispatchEvent(new Event('submit',{cancelable:true}));
   }
-  if(e.key==='Escape'){closeInvoiceModal();closeSuccessModal();closeDelModal();closeLedgerModal();}
+  if(e.key==='Escape'){closeInvoiceModal();closeSuccessModal();closeDelModal();closeLedgerModal();closePartyModal();}
 });
 function setVoucher(t){showPage('vouchers');document.getElementById('vType').value=t;document.getElementById('vNo').value=nextNo(t);setSuggestedLines(t);}
 
@@ -1639,6 +1788,7 @@ function initApp(){
   if(appInitialized)return;appInitialized=true;
   applyCompanyUI();renderDashboard();renderLiveChart();renderMasters();
   renderLedgerSelect();renderDaybook();renderInvoices();renderInvoiceStats();
+  renderParties();updateVoucherPartyDropdown();
   resetVoucherForm();
   document.getElementById('ledgerFrom').value=company.booksStart||'2026-04-01';
   document.getElementById('ledgerTo').value=company.fy.startsWith('2026')?'2027-03-31':'2026-03-31';
@@ -1657,6 +1807,6 @@ function initApp(){
     initApp();
   }
 })();
-console.log('%c✨ TP Accounting V9 + Invoice Generator','color:#4f46e5;font-size:16px;font-weight:bold');
+console.log('%c✨ TP Accounting V9 + Party Master','color:#4f46e5;font-size:16px;font-weight:bold');
 </script>
 </body></html>
