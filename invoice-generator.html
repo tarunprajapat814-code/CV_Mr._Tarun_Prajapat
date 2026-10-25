@@ -2411,7 +2411,64 @@ function loadJSON(e) {
    ========================================== */
 let syncedParties = [];
 
+let lastSyncedCompanyId = null;
+
 window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SYNC_DATA') {
+    
+    const comp = event.data.company;
+    
+    // AGAR COMPANY CHANGE HUI HAI TOH PURANA DATA CLEAR KAREIN
+    if (comp && lastSyncedCompanyId && lastSyncedCompanyId !== comp.id) {
+        $('cName').value = ''; 
+        $('cNameManual').value = ''; 
+        $('cAddr').value = ''; 
+        $('cGstin').value = ''; 
+        $('cEmail').value = ''; 
+        $('cPhone').value = '';
+        $('mNo').value = getNextInvoiceNo(); 
+        $('mDate').value = new Date().toISOString().split('T')[0];
+        state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; 
+        state.details = [''];
+        editingHistoryId = null;
+        renderItems(); 
+        renderDetails();
+        showToast('✓ Switched to ' + comp.name, 'blue');
+    }
+    if (comp) lastSyncedCompanyId = comp.id;
+
+    // 1. Sync Parties
+    syncedParties = event.data.parties || [];
+    populatePartyDropdown();
+    
+    // 2. Sync Company Details
+    if (comp) {
+      // FORCE OVERWRITE: Agar nayi company me data nahi hai, to purana data clear ho jaye
+      if (document.getElementById('bName')) document.getElementById('bName').value = comp.name || '';
+      if (document.getElementById('bGstin')) document.getElementById('bGstin').value = comp.gstin || '';
+      if (document.getElementById('bPan')) document.getElementById('bPan').value = comp.pan || '';
+      if (document.getElementById('bUdyam')) document.getElementById('bUdyam').value = comp.udyam || '';
+      if (document.getElementById('bAddr')) document.getElementById('bAddr').value = comp.address || '';
+      if (document.getElementById('bPhone')) document.getElementById('bPhone').value = comp.phone || '';
+      if (document.getElementById('bEmail')) document.getElementById('bEmail').value = comp.email || '';
+      
+      // Bank details
+      if (document.getElementById('bkName')) document.getElementById('bkName').value = comp.bank || '';
+      if (document.getElementById('bkAc')) document.getElementById('bkAc').value = comp.account || '';
+      if (document.getElementById('bkIfsc')) document.getElementById('bkIfsc').value = comp.ifsc || '';
+      if (document.getElementById('bkBranch')) document.getElementById('bkBranch').value = comp.branch || '';
+      
+      // Terms
+      if (document.getElementById('terms')) document.getElementById('terms').value = comp.defaultTerms || '';
+
+      // LOGO LOGIC: Agar nayi company me logo nahi hai, to state se logo clear kar dein
+      state.business.logo = comp.logo || ''; 
+      if (typeof updateLogoPreview === 'function') updateLogoPreview();
+      
+      if (typeof sync === 'function') sync();
+    }
+  }
+});
   if (event.data && event.data.type === 'SYNC_DATA') {
     
     // 1. Sync Parties
