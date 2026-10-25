@@ -579,7 +579,7 @@
           <div class="field"><label>PAN</label><input id="bPan" autocomplete="off" oninput="sync()"></div>
         </div>
         
-        <!-- NEW UDYAM FIELD ADDED HERE -->
+        <!-- UDYAM FIELD -->
         <div class="field"><label>Udyam Registration No.</label><input id="bUdyam" autocomplete="off" oninput="sync()" placeholder="UDYAM-RJ-XX-XXXXXXX"></div>
 
         <div class="grid2">
@@ -773,6 +773,7 @@ const state = {
 let history = [];
 let profiles = [];
 let editingHistoryId = null;
+let lastSyncedCompanyId = null;
 
 const $ = id => document.getElementById(id);
 const num = v => Number(v) || 0;
@@ -1244,7 +1245,7 @@ function saveBusinessProfile() {
     id: idx >= 0 ? profiles[idx].id : ('prof_' + Date.now()),
     savedAt: new Date().toISOString(),
     name, addr: $('bAddr').value, gstin, pan: $('bPan').value.trim(),
-    udyam: $('bUdyam').value.trim(), // <--- Added Udyam
+    udyam: $('bUdyam').value.trim(),
     email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(), extra: $('bExtra').value,
     logo: logo,
     regStatus: $('regStatus').value,
@@ -1291,7 +1292,7 @@ function loadBusinessProfile(id) {
   if (hasData && !same && !confirm('Load "' + p.name + '" (Business + Bank + Logo)?')) return;
   $('bName').value = p.name || ''; $('bAddr').value = p.addr || '';
   $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
-  $('bUdyam').value = p.udyam || ''; // <--- Added Udyam
+  $('bUdyam').value = p.udyam || '';
   $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
   $('bExtra').value = p.extra || '';
   state.business.logo = sanitizeLogo(p.logo || '');
@@ -1412,7 +1413,7 @@ function sync() {
   const existingLogo = sanitizeLogo((state.business && state.business.logo) || '');
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value, pan: $('bPan').value,
-    udyam: $('bUdyam').value, // <--- Added Udyam
+    udyam: $('bUdyam').value,
     email: $('bEmail').value, phone: $('bPhone').value, extra: $('bExtra').value,
     logo: existingLogo
   };
@@ -1447,7 +1448,7 @@ function populateForm(s) {
   const b = s.business || {}, c = s.client || {}, m = s.meta || {}, bk = s.bank || {};
   $('bName').value = b.name || ''; $('bAddr').value = b.addr || '';
   $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || '';
-  $('bUdyam').value = b.udyam || ''; // <--- Added Udyam
+  $('bUdyam').value = b.udyam || '';
   $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || '';
   $('bExtra').value = b.extra || '';
   state.business.logo = sanitizeLogo(b.logo || '');
@@ -1567,7 +1568,7 @@ function buildBizInfoHTML(biz) {
   const tax = [];
   if (biz.gstin && biz.gstin.trim()) tax.push('<strong>GSTIN:</strong> ' + esc(biz.gstin));
   if (biz.pan && biz.pan.trim()) tax.push('<strong>PAN:</strong> ' + esc(biz.pan));
-  if (biz.udyam && biz.udyam.trim()) tax.push('<strong>Udyam:</strong> ' + esc(biz.udyam)); // <--- ADDED UDYAM HERE
+  if (biz.udyam && biz.udyam.trim()) tax.push('<strong>Udyam:</strong> ' + esc(biz.udyam));
   if (tax.length) lines.push('<div class="biz-line">' + tax.join('<span class="sep">·</span>') + '</div>');
   if (biz.extra && biz.extra.trim()) lines.push('<div class="biz-line">' + esc(biz.extra).replace(/\n/g, '<br>') + '</div>');
   return lines.join('');
@@ -2411,8 +2412,6 @@ function loadJSON(e) {
    ========================================== */
 let syncedParties = [];
 
-let lastSyncedCompanyId = null;
-
 window.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SYNC_DATA') {
     
@@ -2464,42 +2463,6 @@ window.addEventListener('message', (event) => {
       // LOGO LOGIC: Agar nayi company me logo nahi hai, to state se logo clear kar dein
       state.business.logo = comp.logo || ''; 
       if (typeof updateLogoPreview === 'function') updateLogoPreview();
-      
-      if (typeof sync === 'function') sync();
-    }
-  }
-});
-  if (event.data && event.data.type === 'SYNC_DATA') {
-    
-    // 1. Sync Parties
-    syncedParties = event.data.parties || [];
-    populatePartyDropdown();
-    
-    // 2. Sync Company Details
-    const comp = event.data.company;
-    if (comp) {
-      if (comp.name && document.getElementById('bName')) document.getElementById('bName').value = comp.name;
-      if (comp.gstin && document.getElementById('bGstin')) document.getElementById('bGstin').value = comp.gstin;
-      if (comp.pan && document.getElementById('bPan')) document.getElementById('bPan').value = comp.pan;
-      if (comp.udyam && document.getElementById('bUdyam')) document.getElementById('bUdyam').value = comp.udyam; // <--- Added Udyam Sync
-      if (comp.address && document.getElementById('bAddr')) document.getElementById('bAddr').value = comp.address;
-      if (comp.phone && document.getElementById('bPhone')) document.getElementById('bPhone').value = comp.phone;
-      if (comp.email && document.getElementById('bEmail')) document.getElementById('bEmail').value = comp.email;
-      
-      // Bank details
-      if (comp.bank && document.getElementById('bkName')) document.getElementById('bkName').value = comp.bank;
-      if (comp.account && document.getElementById('bkAc')) document.getElementById('bkAc').value = comp.account;
-      if (comp.ifsc && document.getElementById('bkIfsc')) document.getElementById('bkIfsc').value = comp.ifsc;
-      if (comp.branch && document.getElementById('bkBranch')) document.getElementById('bkBranch').value = comp.branch;
-      
-      // Terms
-      if (comp.defaultTerms && document.getElementById('terms')) document.getElementById('terms').value = comp.defaultTerms;
-
-      // Logo load karein
-      if (comp.logo) {
-        state.business.logo = comp.logo; 
-        if (typeof updateLogoPreview === 'function') updateLogoPreview();
-      }
       
       if (typeof sync === 'function') sync();
     }
