@@ -591,9 +591,10 @@
     <div class="panel">
       <div class="panel-head" onclick="togglePanel(this, 'cliBody')">👤 Bill To (Client) <span>▼</span></div>
       <div class="panel-body" id="cliBody">
-        <div class="field"><label>Client Name</label><input id="cName" autocomplete="off" oninput="sync()"></div>
-        <div class="field"><label>Address</label><textarea id="cAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
-        <div class="field">
+        <select id="cName" style="width: 100%; padding: 8px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; background: #fff; margin-bottom: 6px;" onchange="onClientSelect(this.value)">
+  <option value="">-- Select Party (Or Type Below) --</option>
+</select>
+<input id="cNameManual" placeholder="Or type Client Name manually" style="width: 100%; padding: 8px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px;" oninput="onManualClientType(this.value)" autocomplete="off">
           <label>GSTIN <span style="font-size:9px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;">(optional)</span></label>
           <input id="cGstin" maxlength="15" style="text-transform:uppercase;" autocomplete="off" oninput="onClientGstinInput(this.value)">
           <div id="cGstinStateHint" class="client-state-hint empty"></div>
@@ -2369,7 +2370,61 @@ function loadJSON(e) {
   updateColorPickerUI();
   updateClientStateHint();
   updatePlaceOfSupplyHint();
-})();
+})();// ==========================================
+// SYNC PARTIES FROM TP ACCOUNTING
+// ==========================================
+let syncedParties = [];
+
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SYNC_PARTIES') {
+    syncedParties = event.data.data || [];
+    populatePartyDropdown();
+  }
+});
+
+function populatePartyDropdown() {
+  const select = document.getElementById('cName');
+  if (!select) return;
+  
+  select.innerHTML = '<option value="">-- Select Party --</option>';
+  syncedParties.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name + (p.phone ? ` (${p.phone})` : '');
+    select.appendChild(opt);
+  });
+}
+
+function onClientSelect(partyId) {
+  if (!partyId) {
+    document.getElementById('cGstin').value = '';
+    document.getElementById('cAddr').value = '';
+    document.getElementById('cPhone').value = '';
+    document.getElementById('cEmail').value = '';
+    return;
+  }
+
+  const p = syncedParties.find(x => x.id === partyId);
+  if (p) {
+    document.getElementById('cGstin').value = p.gstin || '';
+    document.getElementById('cAddr').value = p.address || '';
+    document.getElementById('cPhone').value = p.phone || '';
+    document.getElementById('cEmail').value = p.email || '';
+    document.getElementById('cNameManual').value = p.name;
+    
+    // Trigger GST auto-calculation
+    if (typeof onClientGstinInput === 'function') onClientGstinInput(p.gstin || '');
+    if (typeof sync === 'function') sync();
+    if (typeof showToast === 'function') showToast('✓ Party details auto-filled!', 'blue');
+  }
+}
+
+function onManualClientType(val) {
+  if (val) {
+    document.getElementById('cName').value = ''; // Reset dropdown
+    if (typeof sync === 'function') sync();
+  }
+}
 </script>
 </body>
 </html>
