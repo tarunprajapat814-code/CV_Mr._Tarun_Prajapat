@@ -1400,12 +1400,15 @@ function addDetail() { state.details.push(''); renderDetails(); sync(); }
 function removeDetail(i) { if (state.details.length === 1) state.details[0] = ''; else state.details.splice(i, 1); renderDetails(); sync(); }
 
 function sync() {
- state.bank = {
-    holder: $('bName').value, // <--- Auto set from Business Name
-    name: $('bkName').value, ac: $('bkAc').value,
-    ifsc: ($('bkIfsc').value || '').trim().toUpperCase(),
-    branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value
-  };  
+  state.docType = $('docTypeSelect').value;
+  state.regStatus = $('regStatus').value;
+  const existingLogo = sanitizeLogo((state.business && state.business.logo) || '');
+  state.business = {
+    name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value, pan: $('bPan').value,
+    email: $('bEmail').value, phone: $('bPhone').value, extra: $('bExtra').value,
+    logo: existingLogo
+  };
+  
   let clientName = $('cNameManual').value;
   const selectedPartyId = $('cName').value;
   if (!clientName && selectedPartyId && typeof syncedParties !== 'undefined') {
@@ -1783,6 +1786,19 @@ function render() {
   applyAccentToPreview(preview);
 
   const t = calcTotals();
+  
+  // SAFETY FALLBACK: Direct read from DOM if state is empty
+  if (!s.business || !s.business.name) {
+    s.business = s.business || {};
+    s.business.name = $('bName').value || 'Your Business Name';
+    s.business.addr = $('bAddr').value || '';
+    s.business.gstin = $('bGstin').value || '';
+    s.business.pan = $('bPan').value || '';
+    s.business.email = $('bEmail').value || '';
+    s.business.phone = $('bPhone').value || '';
+    s.business.extra = $('bExtra').value || '';
+  }
+
   const biz = s.business || {}, cli = s.client || {}, meta = s.meta || {}, bank = s.bank || {};
   const bizName = biz.name || 'Your Business Name';
   const bizInfoHTML = buildBizInfoHTML(biz);
@@ -2468,4 +2484,3 @@ if (window.opener) {
 </script>
 </body>
 </html>
- 
