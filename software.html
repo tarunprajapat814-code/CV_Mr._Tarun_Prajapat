@@ -607,7 +607,7 @@ tbody tr:last-child td{border-bottom:0}
         <!-- SETTINGS -->
         <section class="section" id="page-settings">
           <div class="page-head"><div><h1>Company Setup</h1></div></div>
-          <div class="alert info"><span class="ic">💡</span><div><b>Invoice Generator Path:</b> Neeche field me apni invoice-generator.html ka path dalein (e.g. <code>invoice-tool.html</code>).</div></div>
+          <div class="alert info"><span class="ic">💡</span><div><b>Invoice Generator Path:</b> Neeche field me apni invoice-generator.html ka path dalein (e.g. <code>invoice-generator.html</code>).</div></div>
           <div class="form-card">
             <div class="form-head">🏢 Company Information</div>
             <div class="form-body">
@@ -624,7 +624,7 @@ tbody tr:last-child td{border-bottom:0}
                   <div class="field"><label>Bank A/C</label><input id="companyAccount"></div>
                   <div class="field"><label>IFSC</label><input id="companyIfsc"></div>
                   <div class="field"><label>UPI ID</label><input id="companyUpi"></div>
-                  <div class="field" style="grid-column:span 2"><label>🎨 Invoice Generator Path</label><input id="generatorPath" placeholder="invoice-tool.html" value="invoice-tool.html"><small style="color:var(--muted);font-size:11px">Same folder: <code>invoice-tool.html</code> · Subfolder: <code>./tools/invoice-tool.html</code></small></div>
+                  <div class="field" style="grid-column:span 2"><label>🎨 Invoice Generator Path</label><input id="generatorPath" placeholder="invoice-generator.html" value="invoice-generator.html"><small style="color:var(--muted);font-size:11px">Same folder: <code>invoice-tool.html</code> · Subfolder: <code>./tools/invoice-tool.html</code></small></div>
                 </div>
                 <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:24px;flex-wrap:wrap">
                   <button type="button" class="btn danger" onclick="clearAllData()">🗑 Clear Data</button>
@@ -805,7 +805,7 @@ let parties=load('tp_parties',[]);
 let company=load('tp_company_obj',{
   name:'Your Company',gstin:'',state:'Rajasthan',fy:'2026–27',booksStart:'2026-04-01',
   address:'',phone:'',email:'',bank:'',account:'',ifsc:'',upi:'',invPrefix:'INV',
-  generatorPath:'invoice-tool.html'
+  generatorPath:'invoice-generator.html'
 });
 let deleteTargetId=null;
 let lastInvoiceId=null;
@@ -1110,7 +1110,7 @@ document.getElementById('voucherForm').addEventListener('reset',()=>setTimeout(r
 
 /* ============ INVOICE GENERATOR INTEGRATION ============ */
 function openInvoiceGenerator() {
-  const path = company.generatorPath || 'invoice-tool.html';
+  const path = company.generatorPath || 'invoice-generator.html';
   const genWindow = window.open(path, 'TPInvoiceGenerator', 'width=1400,height=900,scrollbars=yes');
   if (!genWindow) {
     toast('Popup blocked! Allow popups and try again.', 'error');
@@ -1747,7 +1747,7 @@ document.getElementById('settingsForm').addEventListener('submit',e=>{
     ifsc:document.getElementById('companyIfsc').value.trim(),
     upi:document.getElementById('companyUpi').value.trim(),
     invPrefix:company.invPrefix||'INV',
-    generatorPath:document.getElementById('generatorPath').value.trim()||'invoice-tool.html'
+    generatorPath:document.getElementById('generatorPath').value.trim()||'invoice-generator.html'
   };
   persist();applyCompanyUI();toast('Saved','success');
 });
