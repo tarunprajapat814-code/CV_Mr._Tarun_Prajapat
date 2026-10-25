@@ -1170,6 +1170,22 @@ function openInvoiceGenerator() {
     return;
   }
   window._invoiceGenerator = genWindow;
+
+  // Jab generator puri tarah load ho jaye, tab data bhejein
+  genWindow.onload = function() {
+    genWindow.postMessage({ type: 'SYNC_DATA', parties: parties, company: company }, '*');
+  };
+
+  // Backup ke liye 2.5 second baad fir se bhej dein
+  setTimeout(() => {
+    if (genWindow && !genWindow.closed) {
+      genWindow.postMessage({ type: 'SYNC_DATA', parties: parties, company: company }, '*');
+    }
+  }, 2500);
+
+  toast('🎨 Invoice Generator opened.', 'info');
+}
+  window._invoiceGenerator = genWindow;
   
   // Data sync with generator (includes company details, logo, bank, terms, PAN, Udyam, Branch)
   setTimeout(() => {
