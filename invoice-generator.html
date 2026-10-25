@@ -573,10 +573,15 @@
         </div>
         <div class="field"><label>Business Name</label><input id="bName" autocomplete="off" oninput="sync()"></div>
         <div class="field"><label>Reg Address</label><textarea id="bAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
+        
         <div class="grid2">
           <div class="field"><label>GSTIN</label><input id="bGstin" maxlength="15" style="text-transform:uppercase;" autocomplete="off" oninput="this.value=this.value.toUpperCase(); autoPanFromGstin(); autoTaxFromState(); sync()"></div>
           <div class="field"><label>PAN</label><input id="bPan" autocomplete="off" oninput="sync()"></div>
         </div>
+        
+        <!-- NEW UDYAM FIELD ADDED HERE -->
+        <div class="field"><label>Udyam Registration No.</label><input id="bUdyam" autocomplete="off" oninput="sync()" placeholder="UDYAM-RJ-XX-XXXXXXX"></div>
+
         <div class="grid2">
           <div class="field"><label>Email</label><input id="bEmail" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Phone</label><input id="bPhone" autocomplete="off" oninput="sync()"></div>
@@ -1239,6 +1244,7 @@ function saveBusinessProfile() {
     id: idx >= 0 ? profiles[idx].id : ('prof_' + Date.now()),
     savedAt: new Date().toISOString(),
     name, addr: $('bAddr').value, gstin, pan: $('bPan').value.trim(),
+    udyam: $('bUdyam').value.trim(), // <--- Added Udyam
     email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(), extra: $('bExtra').value,
     logo: logo,
     regStatus: $('regStatus').value,
@@ -1285,6 +1291,7 @@ function loadBusinessProfile(id) {
   if (hasData && !same && !confirm('Load "' + p.name + '" (Business + Bank + Logo)?')) return;
   $('bName').value = p.name || ''; $('bAddr').value = p.addr || '';
   $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
+  $('bUdyam').value = p.udyam || ''; // <--- Added Udyam
   $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
   $('bExtra').value = p.extra || '';
   state.business.logo = sanitizeLogo(p.logo || '');
@@ -1405,6 +1412,7 @@ function sync() {
   const existingLogo = sanitizeLogo((state.business && state.business.logo) || '');
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value, pan: $('bPan').value,
+    udyam: $('bUdyam').value, // <--- Added Udyam
     email: $('bEmail').value, phone: $('bPhone').value, extra: $('bExtra').value,
     logo: existingLogo
   };
@@ -1439,6 +1447,7 @@ function populateForm(s) {
   const b = s.business || {}, c = s.client || {}, m = s.meta || {}, bk = s.bank || {};
   $('bName').value = b.name || ''; $('bAddr').value = b.addr || '';
   $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || '';
+  $('bUdyam').value = b.udyam || ''; // <--- Added Udyam
   $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || '';
   $('bExtra').value = b.extra || '';
   state.business.logo = sanitizeLogo(b.logo || '');
@@ -1558,6 +1567,7 @@ function buildBizInfoHTML(biz) {
   const tax = [];
   if (biz.gstin && biz.gstin.trim()) tax.push('<strong>GSTIN:</strong> ' + esc(biz.gstin));
   if (biz.pan && biz.pan.trim()) tax.push('<strong>PAN:</strong> ' + esc(biz.pan));
+  if (biz.udyam && biz.udyam.trim()) tax.push('<strong>Udyam:</strong> ' + esc(biz.udyam)); // <--- ADDED UDYAM HERE
   if (tax.length) lines.push('<div class="biz-line">' + tax.join('<span class="sep">·</span>') + '</div>');
   if (biz.extra && biz.extra.trim()) lines.push('<div class="biz-line">' + esc(biz.extra).replace(/\n/g, '<br>') + '</div>');
   return lines.join('');
@@ -1794,6 +1804,7 @@ function render() {
     s.business.addr = $('bAddr').value || '';
     s.business.gstin = $('bGstin').value || '';
     s.business.pan = $('bPan').value || '';
+    s.business.udyam = $('bUdyam').value || '';
     s.business.email = $('bEmail').value || '';
     s.business.phone = $('bPhone').value || '';
     s.business.extra = $('bExtra').value || '';
@@ -1837,6 +1848,7 @@ function render() {
       (biz.phone ? '<h4>Phone</h4><p>' + esc(biz.phone) + '</p>' : '') +
       (biz.gstin ? '<h4>GSTIN</h4><p>' + esc(biz.gstin) + '</p>' : '') +
       (biz.pan ? '<h4>PAN</h4><p>' + esc(biz.pan) + '</p>' : '') +
+      (biz.udyam ? '<h4>Udyam</h4><p>' + esc(biz.udyam) + '</p>' : '') +
       (biz.extra ? '<h4>Info</h4><p>' + esc(biz.extra).replace(/\n/g, '<br>') + '</p>' : '') +
       (bank.name ? '<h4>Bank</h4><p>' + (bank.holder ? esc(bank.holder) + '<br>' : '') + esc(bank.name) + '<br>' + esc(bank.ac) + '<br>' + esc(bank.ifsc) + (bank.branch ? '<br>' + esc(bank.branch) : '') + '</p>' : '') +
       '</div>' +
@@ -1980,6 +1992,7 @@ function render() {
           (biz.phone ? 'Phone no. ' + esc(biz.phone) + '<br>' : '') +
           (biz.email ? 'Email: ' + esc(biz.email) + '<br>' : '') +
           (biz.gstin ? 'GSTIN: ' + esc(biz.gstin) + '<br>' : '') +
+          (biz.udyam ? 'Udyam Reg. No.: ' + esc(biz.udyam) + '<br>' : '') +
           (bizStateInfo ? 'State: ' + bizStateInfo.code + '-' + bizStateInfo.name : '') +
         '</div>' +
         '<div class="inv-title">' + esc(labels.title) + '</div>' +
@@ -2251,7 +2264,7 @@ function loadSample() {
 
 function clearAll(skipConfirm) {
   if (!skipConfirm && !confirm('Clear everything?')) return;
-  ['bName','bAddr','bGstin','bPan','bEmail','bPhone','bExtra',
+  ['bName','bAddr','bGstin','bPan','bUdyam','bEmail','bPhone','bExtra',
    'cName','cNameManual','cAddr','cGstin','cEmail','cPhone',
    'mNo','mDate','mPlace',
    'bkHolder','bkName','bkAc','bkIfsc','bkBranch','bkType','bkUpi',
@@ -2411,6 +2424,7 @@ window.addEventListener('message', (event) => {
       if (comp.name && document.getElementById('bName')) document.getElementById('bName').value = comp.name;
       if (comp.gstin && document.getElementById('bGstin')) document.getElementById('bGstin').value = comp.gstin;
       if (comp.pan && document.getElementById('bPan')) document.getElementById('bPan').value = comp.pan;
+      if (comp.udyam && document.getElementById('bUdyam')) document.getElementById('bUdyam').value = comp.udyam; // <--- Added Udyam Sync
       if (comp.address && document.getElementById('bAddr')) document.getElementById('bAddr').value = comp.address;
       if (comp.phone && document.getElementById('bPhone')) document.getElementById('bPhone').value = comp.phone;
       if (comp.email && document.getElementById('bEmail')) document.getElementById('bEmail').value = comp.email;
