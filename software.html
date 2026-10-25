@@ -696,7 +696,7 @@ tbody tr:last-child td{border-bottom:0}
                   <div class="field" style="grid-column: span 3;"><label>Branch Name (Auto-fetched from IFSC)</label><input id="companyBranch" placeholder="e.g. Main Branch"></div>
                 </div>
                 <div style="font-size:12px; color:var(--muted); margin-top:10px;">
-                  <i>* Account Holder Name automatically aapke Company Name ({document.getElementById('companyName')?.value || 'Your Company'}) se merge ho jayega.</i>
+                  <i>* Account Holder Name automatically aapke Company Name se merge ho jayega.</i>
                 </div>
               </div>
             </div>
@@ -772,6 +772,22 @@ tbody tr:last-child td{border-bottom:0}
     </div>
   </div>
 
+  <!-- NEW COMPANY MODAL -->
+  <div class="modal" id="newCompanyModal">
+    <div class="modal-box">
+      <h3>Create New Company</h3>
+      <p class="sub">Enter the name of your new company.</p>
+      <div class="field">
+        <label>Company Name *</label>
+        <input id="newCompanyNameInput" placeholder="e.g. Sharma Traders Pvt Ltd">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeNewCompanyModal()">Cancel</button>
+        <button class="btn primary" onclick="createNewCompany()">Create & Switch</button>
+      </div>
+    </div>
+  </div>
+
   <!-- LEDGER MODAL -->
   <div class="modal" id="ledgerModal">
     <div class="modal-box">
@@ -841,7 +857,9 @@ function doLogin(user,remember){
   localStorage.setItem(AUTH_SESSION,JSON.stringify(session));
   document.getElementById('userName').textContent=user.name||'User';
   document.getElementById('userAvatar').textContent=(user.name||'U').charAt(0).toUpperCase();
-  if(user.company){company.name=user.company;persist();applyCompanyUI();}
+  
+  // Company override removed to prevent data mismatch
+  
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('appWrap').classList.add('show');
   initApp();
@@ -867,7 +885,12 @@ let companiesList = load('tp_companies', [{
   address: '', phone: '', email: '', website: '', logo: '', bank: '', account: '', ifsc: '', branch: '',
   invPrefix: 'INV/', defaultTerms: '1. Goods once sold will not be taken back.\n2. Payment due within 15 days.', generatorPath: 'invoice-generator.html'
 }]);
+
 let company = companiesList.find(c => c.id === activeCompanyId) || companiesList[0];
+if (!company) {
+    company = { id: 'c1', name: 'Your Company', gstin: '', pan: '', udyam: '', state: 'Rajasthan', fy: '2026–27', booksStart: '2026-04-01', address: '', phone: '', email: '', website: '', logo: '', bank: '', account: '', ifsc: '', branch: '', invPrefix: 'INV/', defaultTerms: '', generatorPath: 'invoice-generator.html' };
+    companiesList.push(company);
+}
 if (company.id !== activeCompanyId) localStorage.setItem('tp_active_company_id', company.id);
 
 const titles={home:'Dashboard',parties:'Party Master',vouchers:'Voucher Entry',invoices:'Invoices',daybook:'Day Book',masters:'Ledgers',ledger:'Ledger',trial:'Trial Balance',pl:'P&L',bs:'Balance Sheet',gst:'GST',excel:'Excel',backup:'Backup',settings:'Setup'};
@@ -926,6 +949,7 @@ function persist(){
     const idx = companiesList.findIndex(c => c.id === company.id);
     if (idx >= 0) companiesList[idx] = company;
     localStorage.setItem('tp_companies', JSON.stringify(companiesList));
+    localStorage.setItem('tp_active_company_id', company.id);
     
     setSaveState('saved','Saved');
     updateSideInfo();updateInvBadge();
@@ -965,12 +989,19 @@ function renderCompanyDropdown() {
 function promptNewCompany(e) {
   e.stopPropagation();
   closeCompanyMenu();
-  const name = prompt("Enter New Company Name:");
-  if (!name || !name.trim()) return;
+  document.getElementById('newCompanyNameInput').value = '';
+  document.getElementById('newCompanyModal').classList.add('show');
+}
+function closeNewCompanyModal() {
+  document.getElementById('newCompanyModal').classList.remove('show');
+}
+function createNewCompany() {
+  const name = document.getElementById('newCompanyNameInput').value.trim();
+  if (!name) { toast('Company Name required', 'error'); return; }
   
   const newId = 'c_' + Date.now();
   const newComp = {
-    id: newId, name: name.trim(), gstin: '', pan: '', udyam: '', state: 'Rajasthan', fy: '2026–27', booksStart: '2026-04-01',
+    id: newId, name: name, gstin: '', pan: '', udyam: '', state: 'Rajasthan', fy: '2026–27', booksStart: '2026-04-01',
     address: '', phone: '', email: '', website: '', logo: '', bank: '', account: '', ifsc: '', branch: '',
     invPrefix: 'INV/', defaultTerms: '1. Goods once sold will not be taken back.\n2. Payment due within 15 days.', generatorPath: 'invoice-generator.html'
   };
