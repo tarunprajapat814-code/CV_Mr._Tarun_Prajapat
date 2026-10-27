@@ -571,7 +571,7 @@
             </div>
           </div>
         </div>
-        <div class="field"><label>Business Name</label><input id="bName" autocomplete="off" oninput="sync()"></div>
+        <div class="field"><label>Business Name</label><input id="bName" autocomplete="off" oninput="handleBizNameChange(this.value)"></div>
         <div class="field"><label>Reg Address</label><textarea id="bAddr" rows="2" autocomplete="off" oninput="sync()"></textarea></div>
         
         <div class="grid2">
@@ -1011,6 +1011,17 @@ function autoPanFromGstin() {
   else if (gstin.length === 0) panField.value = '';
 }
 
+function handleBizNameChange(val) {
+  const holder = $('bkHolder');
+  if (holder) {
+    const prevBizName = state.business?.name || '';
+    if (!holder.value.trim() || holder.value.trim() === prevBizName) {
+      holder.value = val;
+    }
+  }
+  sync();
+}
+
 function changeDocType() {
   state.docType = $('docTypeSelect').value;
   updateLabels();
@@ -1250,7 +1261,8 @@ function saveBusinessProfile() {
     logo: logo,
     regStatus: $('regStatus').value,
     bank: {
-      holder: $('bkHolder').value, name: $('bkName').value, ac: $('bkAc').value,
+      holder: $('bkHolder').value.trim() || name, // Fallback to business name
+      name: $('bkName').value, ac: $('bkAc').value,
       ifsc: ($('bkIfsc').value || '').trim().toUpperCase(),
       branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value
     }
@@ -1298,7 +1310,7 @@ function loadBusinessProfile(id) {
   state.business.logo = sanitizeLogo(p.logo || '');
   updateLogoPreview();
   if (p.bank) {
-    $('bkHolder').value = p.bank.holder || '';
+    $('bkHolder').value = p.bank.holder || p.name || ''; // Auto-fill from name if holder missing
     $('bkName').value = p.bank.name || '';
     $('bkAc').value = p.bank.ac || '';
     $('bkIfsc').value = p.bank.ifsc || '';
@@ -1427,8 +1439,17 @@ function sync() {
 
   state.client = { name: clientName, addr: $('cAddr').value, gstin: $('cGstin').value, email: $('cEmail').value, phone: $('cPhone').value };
   state.meta = { no: $('mNo').value, date: $('mDate').value, place: $('mPlace').value };
+  
+  const bizName = $('bName').value.trim();
+  let holderName = $('bkHolder').value.trim();
+  if (!holderName && bizName) {
+    $('bkHolder').value = bizName;
+    holderName = bizName;
+  }
+
   state.bank = {
-    holder: $('bkHolder').value, name: $('bkName').value, ac: $('bkAc').value,
+    holder: holderName,
+    name: $('bkName').value, ac: $('bkAc').value,
     ifsc: ($('bkIfsc').value || '').trim().toUpperCase(),
     branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value
   };
@@ -1464,7 +1485,9 @@ function populateForm(s) {
   $('cAddr').value = c.addr || '';
   $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
   $('mNo').value = m.no || ''; $('mDate').value = m.date || ''; $('mPlace').value = m.place || '';
-  $('bkHolder').value = bk.holder || ''; $('bkName').value = bk.name || '';
+  
+  $('bkHolder').value = bk.holder || b.name || ''; // Auto fallback to Business Name
+  $('bkName').value = bk.name || '';
   $('bkAc').value = bk.ac || ''; $('bkIfsc').value = bk.ifsc || '';
   $('bkBranch').value = bk.branch || ''; $('bkType').value = bk.type || ''; $('bkUpi').value = bk.upi || '';
   $('terms').value = s.terms || ''; $('notes').value = s.notes || '';
@@ -1565,11 +1588,18 @@ function buildBizInfoHTML(biz) {
   if (biz.email && biz.email.trim()) contact.push('<span class="icon">📧</span> ' + esc(biz.email));
   if (biz.phone && biz.phone.trim()) contact.push('<span class="icon">📞</span> ' + esc(biz.phone));
   if (contact.length) lines.push('<div class="biz-line">' + contact.join('<span class="sep">·</span>') + '</div>');
-  const tax = [];
-  if (biz.gstin && biz.gstin.trim()) tax.push('<strong>GSTIN:</strong> ' + esc(biz.gstin));
-  if (biz.pan && biz.pan.trim()) tax.push('<strong>PAN:</strong> ' + esc(biz.pan));
-  if (biz.udyam && biz.udyam.trim()) tax.push('<strong>Udyam:</strong> ' + esc(biz.udyam));
-  if (tax.length) lines.push('<div class="biz-line">' + tax.join('<span class="sep">·</span>') + '</div>');
+  
+  // GSTIN and PAN on one line
+  const taxLine1 = [];
+  if (biz.gstin && biz.gstin.trim()) taxLine1.push('<strong>GSTIN:</strong> ' + esc(biz.gstin));
+  if (biz.pan && biz.pan.trim()) taxLine1.push('<strong>PAN:</strong> ' + esc(biz.pan));
+  if (taxLine1.length) lines.push('<div class="biz-line">' + taxLine1.join('<span class="sep">·</span>') + '</div>');
+  
+  // Udyam on a new line below GSTIN/PAN
+  if (biz.udyam && biz.udyam.trim()) {
+      lines.push('<div class="biz-line"><strong>Udyam:</strong> ' + esc(biz.udyam) + '</div>');
+  }
+  
   if (biz.extra && biz.extra.trim()) lines.push('<div class="biz-line">' + esc(biz.extra).replace(/\n/g, '<br>') + '</div>');
   return lines.join('');
 }
@@ -2234,6 +2264,7 @@ function printAndSave() {
 function loadSample() {
   const today = new Date().toISOString().split('T')[0];
   $('bName').value = 'Dinesh Construction Company';
+  $('bkHolder').value = 'Dinesh Construction Company'; // Auto set A/c Holder
   $('bAddr').value = 'Village-Nandera, Tehsil-Baswa, Dausa, Rajasthan-303313';
   $('bGstin').value = '08KGZPS9518C1ZD'; $('bPan').value = 'KGZPS9518C';
   $('bEmail').value = 'dinesh.saini6095@gmail.com'; $('bPhone').value = '+91 97845 06095';
@@ -2242,7 +2273,7 @@ function loadSample() {
   $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur, Meenawala, Jaipur, Rajasthan, Pin Code: 302034';
   $('cGstin').value = '08AHVPG8733E1ZY';
   $('mNo').value = 'BS/26-27/100'; $('mDate').value = today; $('mPlace').value = '08-Rajasthan';
-  $('bkHolder').value = 'Dinesh Saini'; $('bkName').value = 'Bank of Baroda';
+  $('bkName').value = 'Bank of Baroda';
   $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK';
   $('bkType').value = 'Current'; $('bkUpi').value = 'dinesh@barodampay';
   $('terms').value = 'Payment due within 15 days of invoice date.\nPlease mention invoice number in payment reference.\nInterest @18% p.a. will be charged on overdue payments.';
@@ -2452,6 +2483,7 @@ window.addEventListener('message', (event) => {
       if (document.getElementById('bEmail')) document.getElementById('bEmail').value = comp.email || '';
       
       // Bank details
+      if (document.getElementById('bkHolder')) document.getElementById('bkHolder').value = comp.name || ''; // Set A/c Holder
       if (document.getElementById('bkName')) document.getElementById('bkName').value = comp.bank || '';
       if (document.getElementById('bkAc')) document.getElementById('bkAc').value = comp.account || '';
       if (document.getElementById('bkIfsc')) document.getElementById('bkIfsc').value = comp.ifsc || '';
