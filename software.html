@@ -662,8 +662,19 @@ tbody tr:last-child td{border-bottom:0}
           <div class="page-head"><div><h1>Backup</h1></div></div>
           <div class="alert danger"><span class="ic">⚠️</span><div>Regular backups lein!</div></div>
           <div class="grid-2">
-            <div class="card"><div class="card-head"><h2>📥 Download</h2></div><div class="card-body"><button class="btn primary" onclick="downloadBackup()">⬇ Backup JSON</button></div></div>
-            <div class="card"><div class="card-head"><h2>📤 Restore</h2></div><div class="card-body"><input type="file" id="restoreFile" accept=".json" style="margin-bottom:12px"><button class="btn" onclick="restoreBackup()">⬆ Restore</button></div></div>
+            <div class="card">
+              <div class="card-head"><h2>📥 Download</h2></div>
+              <div class="card-body">
+                <button class="btn primary" onclick="downloadBackup()">⬇ Backup JSON</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>📤 Restore</h2></div>
+              <div class="card-body">
+                <button class="btn primary" onclick="restoreFromUSB()" style="margin-bottom:8px">🔌 Restore from Pendrive</button>
+                <div style="font-size:11px;color:var(--muted);margin-top:8px;">Select the backup file from your pendrive.</div>
+              </div>
+            </div>
           </div>
           <div class="card" style="margin-top:16px"><div class="card-head"><h2>Stats</h2></div><div class="card-body" id="dataStats"></div></div>
         </section>
@@ -971,8 +982,6 @@ function load(k,fb){try{const x=localStorage.getItem(k);return x?JSON.parse(x):f
 // Function to save data locally & to USB if linked
 async function persist(){
   if (!isAutoSaveEnabled && usbFileHandle === null) {
-      // If autosave is OFF and no USB is linked, do nothing automatically.
-      // User will rely on manual backup or linking USB.
       setSaveState('warning','AutoSave OFF');
       return; 
   }
@@ -991,20 +1000,40 @@ async function persist(){
     setSaveState('saved','Saved (Local)');
     updateSideInfo();updateInvBadge();
 
-    // Pendrive Auto-Sync
+    // Pendrive Auto-Sync (Multi-Company Support)
     if (usbFileHandle) {
       try {
-        const writable = await usbFileHandle.createWritable();
-        const backupData = {
-          version: 10,
-          exportedAt: new Date().toISOString(),
-          company: company,
-          ledgers: ledgers,
-          vouchers: vouchers,
-          invoices: invoices,
-          parties: parties
+        let usbData = { version: 11, companies: {} };
+        try {
+            const file = await usbFileHandle.getFile();
+            const text = await file.text();
+            if (text) {
+                const parsed = JSON.parse(text);
+                if (parsed.companies) {
+                    usbData = parsed;
+                } else if (parsed.company && parsed.ledgers) {
+                    usbData.companies[parsed.company.id] = {
+                        company: parsed.company,
+                        ledgers: parsed.ledgers,
+                        vouchers: parsed.vouchers,
+                        invoices: parsed.invoices || [],
+                        parties: parsed.parties || []
+                    };
+                }
+            }
+        } catch(e) { console.log('New file or error reading existing USB file'); }
+
+        // Update current company data
+        usbData.companies[company.id] = {
+            company: company,
+            ledgers: ledgers,
+            vouchers: vouchers,
+            invoices: invoices,
+            parties: parties
         };
-        await writable.write(JSON.stringify(backupData, null, 2));
+
+        const writable = await usbFileHandle.createWritable();
+        await writable.write(JSON.stringify(usbData, null, 2));
         await writable.close();
         setSaveState('saved', 'Saved (USB)');
       } catch (err) {
@@ -1032,16 +1061,100 @@ function toggleAutoSave(checked) {
   }
 }
 
-/* ============ USB / PENDRIVE SYNC ============ */
+/* ============ USB / PENDRIVE SYNC (INDEXED DB STORAGE) ============ */
+function getDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('TP_Accounting_DB', 1);
+        request.onupgradeneeded = e => {
+            e.target.result.createObjectStore('handles');
+        };
+        request.onsuccess = e => resolve(e.target.result);
+        request.onerror = e => reject(e.target.error);
+    });
+}
+
+async function saveHandleToDB(handle) {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction('handles', 'readwrite');
+        const store = tx.objectStore('handles');
+        store.put(handle, 'usbFileHandle');
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+}
+
+async function loadHandleFromDB() {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction('handles', 'readonly');
+        const store = tx.objectStore('handles');
+        const request = store.get('usbFileHandle');
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function checkStoredHandle() {
+    try {
+        const handle = await loadHandleFromDB();
+        if (handle) {
+            const options = { mode: 'readwrite' };
+            if (await handle.queryPermission(options) === 'granted') {
+                usbFileHandle = handle;
+                updateUSBBtn(true);
+                toast('Pendrive re-linked automatically!', 'success');
+            } else {
+                usbFileHandle = handle; // Store but needs permission
+                updateUSBBtn(false);
+            }
+        }
+    } catch(e) { console.log(e); }
+}
+
+function updateUSBBtn(isLinked) {
+    const btn = document.getElementById('usbBtn');
+    if (!btn) return;
+    if (isLinked) {
+        btn.classList.add('linked');
+        btn.innerHTML = '<span>✅</span> Pendrive Linked';
+    } else {
+        btn.classList.remove('linked');
+        btn.innerHTML = '<span>🔌</span> Link Pendrive';
+    }
+}
+
 async function linkPendrive() {
   try {
     if (!window.showSaveFilePicker) {
-      toast('Aapka browser Pendrive Sync support nahi karta. Chrome/Edge use karein.', 'error');
+      toast('Browser support missing. Use Chrome/Edge.', 'error');
       return;
     }
-    
-    // Ask user to pick a file on the Pendrive
-    usbFileHandle = await window.showSaveFilePicker({
+
+    // 1. Try stored handle first
+    let storedHandle = usbFileHandle; 
+    if (!storedHandle) {
+         try { storedHandle = await loadHandleFromDB(); } catch(e){}
+    }
+
+    if (storedHandle) {
+        try {
+            const options = { mode: 'readwrite' };
+            const perm = await storedHandle.requestPermission(options);
+            if (perm === 'granted') {
+                usbFileHandle = storedHandle;
+                updateUSBBtn(true);
+                toast('Pendrive re-linked!', 'success');
+                persist();
+                return;
+            }
+        } catch(e) {
+            console.log("Permission request failed", e);
+        }
+    }
+
+    // 2. Ask user to pick file
+    const newHandle = await window.showSaveFilePicker({
       suggestedName: `TP_Backup_${company.name.replace(/\s+/g, '_')}.json`,
       types: [{
         description: 'JSON Backup',
@@ -1049,19 +1162,17 @@ async function linkPendrive() {
       }],
     });
 
-    const btn = document.getElementById('usbBtn');
-    btn.classList.add('linked');
-    btn.innerHTML = '<span>✅</span> Pendrive Linked';
-
-    toast('Pendrive linked successfully! Data will now auto-save to it.', 'success');
-    persist(); // Write current data immediately
+    usbFileHandle = newHandle;
+    await saveHandleToDB(usbFileHandle);
+    updateUSBBtn(true);
+    toast('Pendrive linked successfully! Data will now auto-save.', 'success');
+    persist();
 
   } catch (err) {
     console.log('Pendrive link cancelled or failed', err);
   }
 }
 
-// Function to restore from a previously saved file (for 2nd PC)
 async function restoreFromUSB() {
     if (!window.showOpenFilePicker) {
       toast('Browser support missing. Use Chrome/Edge.', 'error');
@@ -1075,36 +1186,96 @@ async function restoreFromUSB() {
       const text = await file.text();
       const data = JSON.parse(text);
       
-      if (!data.ledgers || !data.vouchers) throw new Error("Invalid backup file");
+      let companiesToRestore = {};
+      
+      if (data.companies) {
+         companiesToRestore = data.companies;
+      } else if (data.company && data.ledgers) {
+         companiesToRestore[data.company.id] = {
+             company: data.company,
+             ledgers: data.ledgers,
+             vouchers: data.vouchers,
+             invoices: data.invoices || [],
+             parties: data.parties || []
+         };
+      } else {
+         throw new Error("Invalid backup file format");
+      }
 
-      if (!confirm(`Data found for company "${data.company?.name || 'Unknown'}".\nDo you want to load and link this file for AutoSave?`)) return;
+      const compCount = Object.keys(companiesToRestore).length;
+      if (!confirm(`Found data for ${compCount} company(ies) in this file.\nDo you want to merge/load this data?`)) return;
 
       // Link file for future saving
       usbFileHandle = fileHandle;
-      document.getElementById('usbBtn').classList.add('linked');
-      document.getElementById('usbBtn').innerHTML = '<span>✅</span> Pendrive Linked';
+      await saveHandleToDB(usbFileHandle);
+      updateUSBBtn(true);
 
-      // Restore Data
-      company = data.company;
-      ledgers = data.ledgers;
-      vouchers = data.vouchers;
-      invoices = data.invoices || [];
-      parties = data.parties || [];
+      // Merge data
+      for (const [compId, compData] of Object.entries(companiesToRestore)) {
+          if (!companiesList.some(c => c.id === compId)) {
+              companiesList.push(compData.company);
+          }
+          localStorage.setItem(`tp_ledgers_${compId}`, JSON.stringify(compData.ledgers));
+          localStorage.setItem(`tp_vouchers_${compId}`, JSON.stringify(compData.vouchers));
+          localStorage.setItem(`tp_invoices_${compId}`, JSON.stringify(compData.invoices));
+          localStorage.setItem(`tp_parties_${compId}`, JSON.stringify(compData.parties));
+      }
+      
+      localStorage.setItem('tp_companies', JSON.stringify(companiesList));
 
-      await persist();
+      // Reload current company data (in case it was updated)
+      ledgers = load(`tp_ledgers_${company.id}`, JSON.parse(JSON.stringify(defaultLedgers)));
+      vouchers = load(`tp_vouchers_${company.id}`, []);
+      invoices = load(`tp_invoices_${company.id}`, []);
+      parties = load(`tp_parties_${company.id}`, []);
+
       applyCompanyUI();
-      renderDashboard(); renderMasters(); renderInvoices(); renderInvoiceStats(); renderParties();
+      showPage('home');
+      
       toast('Data successfully loaded from Pendrive!', 'success');
     } catch (err) {
       console.log('Restore cancelled', err);
-      if (err.name !== 'AbortError') toast('Failed to load file', 'error');
+      if (err.name !== 'AbortError') toast('Failed to load file: ' + err.message, 'error');
     }
 }
 
 /* ============ OTHER LOGIC ============ */
-function switchCompany(id) {
-  localStorage.setItem('tp_active_company_id', id);
-  window.location.reload();
+function switchCompany(newId) {
+  if (newId === company.id) return;
+
+  // 1. Save current company data locally
+  try {
+    localStorage.setItem(`tp_ledgers_${company.id}`, JSON.stringify(ledgers));
+    localStorage.setItem(`tp_vouchers_${company.id}`, JSON.stringify(vouchers));
+    localStorage.setItem(`tp_invoices_${company.id}`, JSON.stringify(invoices));
+    localStorage.setItem(`tp_parties_${company.id}`, JSON.stringify(parties));
+    const idx = companiesList.findIndex(c => c.id === company.id);
+    if (idx >= 0) companiesList[idx] = company;
+    localStorage.setItem('tp_companies', JSON.stringify(companiesList));
+  } catch(e){}
+
+  // 2. Set new active ID
+  localStorage.setItem('tp_active_company_id', newId);
+  
+  // 3. Find new company
+  company = companiesList.find(c => c.id === newId) || companiesList[0];
+
+  // 4. Load new company data
+  ledgers = load(`tp_ledgers_${company.id}`, JSON.parse(JSON.stringify(defaultLedgers)));
+  vouchers = load(`tp_vouchers_${company.id}`, []);
+  invoices = load(`tp_invoices_${company.id}`, []);
+  parties = load(`tp_parties_${company.id}`, []);
+
+  // 5. Update UI
+  applyCompanyUI();
+  renderCompanyDropdown();
+  showPage('home'); 
+  
+  toast('Switched to: ' + company.name, 'success');
+  
+  // 6. Save new company data to USB (merges with existing)
+  persist();
+  closeCompanyMenu();
 }
 
 function toggleCompanyMenu(e) {
@@ -2005,12 +2176,10 @@ function previewCSV(){
   r.readAsText(f);
 }
 function downloadBackup(){
-  const data={version:10,exportedAt:new Date().toISOString(),company,ledgers,vouchers,invoices,parties};
+  const data = { version: 11, companies: {} };
+  data.companies[company.id] = { company, ledgers, vouchers, invoices, parties };
   download(`TP_Backup_${company.name.replace(/\s+/g,'_')}_${todayISO()}.json`,JSON.stringify(data,null,2),'application/json');
   toast('Backup downloaded','success');
-}
-function restoreBackup(){
-  restoreFromUSB(); // Updated to use the new API
 }
 function renderDataStats(){
   const json=JSON.stringify({ledgers,vouchers,invoices,parties});
@@ -2232,6 +2401,8 @@ function initApp(){
   // Set UI for autosave
   const toggle = document.getElementById('autoSaveToggle');
   if(toggle) toggle.checked = isAutoSaveEnabled;
+
+  checkStoredHandle(); // Auto-reconnect Pendrive
 
   applyCompanyUI();renderDashboard();renderLiveChart();renderMasters();
   renderLedgerSelect();renderDaybook();renderInvoices();renderInvoiceStats();
