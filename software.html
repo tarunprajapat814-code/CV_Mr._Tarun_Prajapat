@@ -665,7 +665,7 @@ tbody tr:last-child td{border-bottom:0}
             <div class="card">
               <div class="card-head"><h2>📥 Download</h2></div>
               <div class="card-body">
-                <button class="btn primary" onclick="downloadBackup()">⬇ Backup JSON</button>
+                <button class="btn primary" onclick="downloadBackup()">⬇ Backup JSON (All Companies)</button>
               </div>
             </div>
             <div class="card">
@@ -1145,7 +1145,7 @@ async function linkPendrive() {
                 usbFileHandle = storedHandle;
                 updateUSBBtn(true);
                 toast('Pendrive re-linked!', 'success');
-                persist();
+                await persist();
                 return;
             }
         } catch(e) {
@@ -1165,6 +1165,53 @@ async function linkPendrive() {
     usbFileHandle = newHandle;
     await saveHandleToDB(usbFileHandle);
     updateUSBBtn(true);
+    
+    // 3. Check if file has data and local is empty
+    let fileHasData = false;
+    let parsedData = null;
+    try {
+        const file = await usbFileHandle.getFile();
+        const text = await file.text();
+        if (text) {
+            parsedData = JSON.parse(text);
+            if (parsedData.companies && Object.keys(parsedData.companies).length > 0) {
+                fileHasData = true;
+            }
+        }
+    } catch(e) {}
+
+    const localIsEmpty = vouchers.length === 0 && invoices.length === 0 && parties.length === 0;
+    
+    if (fileHasData && localIsEmpty && parsedData.companies[company.id]) {
+         if (confirm(`Pendrive mein pehle se data mila hai (${parsedData.companies[company.id].vouchers.length} vouchers).\n\nKya aap us data ko load karna chahte hain?\n\n(OK = Load Data, Cancel = Overwrite with empty data)`)) {
+             const compData = parsedData.companies[company.id];
+             company = compData.company;
+             ledgers = compData.ledgers;
+             vouchers = compData.vouchers;
+             invoices = compData.invoices;
+             parties = compData.parties;
+             
+             localStorage.setItem(`tp_ledgers_${company.id}`, JSON.stringify(ledgers));
+             localStorage.setItem(`tp_vouchers_${company.id}`, JSON.stringify(vouchers));
+             localStorage.setItem(`tp_invoices_${company.id}`, JSON.stringify(invoices));
+             localStorage.setItem(`tp_parties_${company.id}`, JSON.stringify(parties));
+             
+             const idx = companiesList.findIndex(c => c.id === company.id);
+             if (idx >= 0) companiesList[idx] = company; else companiesList.push(company);
+             localStorage.setItem('tp_companies', JSON.stringify(companiesList));
+             
+             applyCompanyUI();
+             renderDashboard();
+             renderMasters();
+             renderInvoices();
+             renderInvoiceStats();
+             renderParties();
+             showPage('home');
+             toast('Data successfully loaded from Pendrive!', 'success');
+             return;
+         }
+    }
+
     toast('Pendrive linked successfully! Data will now auto-save.', 'success');
     persist();
 
@@ -1212,8 +1259,11 @@ async function restoreFromUSB() {
 
       // Merge data
       for (const [compId, compData] of Object.entries(companiesToRestore)) {
-          if (!companiesList.some(c => c.id === compId)) {
+          const existingIdx = companiesList.findIndex(c => c.id === compId);
+          if (existingIdx === -1) {
               companiesList.push(compData.company);
+          } else {
+              companiesList[existingIdx] = compData.company;
           }
           localStorage.setItem(`tp_ledgers_${compId}`, JSON.stringify(compData.ledgers));
           localStorage.setItem(`tp_vouchers_${compId}`, JSON.stringify(compData.vouchers));
@@ -1224,12 +1274,22 @@ async function restoreFromUSB() {
       localStorage.setItem('tp_companies', JSON.stringify(companiesList));
 
       // Reload current company data (in case it was updated)
+      company = companiesList.find(c => c.id === localStorage.getItem('tp_active_company_id')) || companiesList[0];
+      localStorage.setItem('tp_active_company_id', company.id);
+      
       ledgers = load(`tp_ledgers_${company.id}`, JSON.parse(JSON.stringify(defaultLedgers)));
       vouchers = load(`tp_vouchers_${company.id}`, []);
       invoices = load(`tp_invoices_${company.id}`, []);
       parties = load(`tp_parties_${company.id}`, []);
 
       applyCompanyUI();
+      renderDashboard();
+      renderMasters();
+      renderDaybook();
+      renderInvoices();
+      renderInvoiceStats();
+      renderParties();
+      updateVoucherPartyDropdown();
       showPage('home');
       
       toast('Data successfully loaded from Pendrive!', 'success');
@@ -2177,7 +2237,16 @@ function previewCSV(){
 }
 function downloadBackup(){
   const data = { version: 11, companies: {} };
-  data.companies[company.id] = { company, ledgers, vouchers, invoices, parties };
+  // Include ALL companies in manual backup
+  companiesList.forEach(c => {
+      data.companies[c.id] = {
+          company: c,
+          ledgers: JSON.parse(localStorage.getItem(`tp_ledgers_${c.id}`) || '[]'),
+          vouchers: JSON.parse(localStorage.getItem(`tp_vouchers_${c.id}`) || '[]'),
+          invoices: JSON.parse(localStorage.getItem(`tp_invoices_${c.id}`) || '[]'),
+          parties: JSON.parse(localStorage.getItem(`tp_parties_${c.id}`) || '[]')
+      };
+  });
   download(`TP_Backup_${company.name.replace(/\s+/g,'_')}_${todayISO()}.json`,JSON.stringify(data,null,2),'application/json');
   toast('Backup downloaded','success');
 }
