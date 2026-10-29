@@ -364,9 +364,9 @@ tbody tr:last-child td{border-bottom:0}
 .top-list { display: flex; flex-direction: column; gap: 12px; }
 .top-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--panel-alt); border-radius: var(--radius); border: 1px solid var(--line-2); transition: all 0.2s;}
 .top-item:hover { border-color: var(--primary); background: var(--primary-light); }
+
 @media(max-width: 1024px) { .dash-layout { grid-template-columns: 1fr; } .dash-cards { grid-template-columns: repeat(2, 1fr); } }
 @media(max-width: 600px) { .dash-cards { grid-template-columns: 1fr; } .welcome-banner { flex-direction: column; align-items: flex-start; gap: 16px; } }
-
 @media(max-width:1000px){.auth-wrap{grid-template-columns:1fr}.auth-left{display:none}.auth-right{padding:24px;min-height:100vh}}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.form-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){.shell{grid-template-columns:1fr}.sidebar{display:none;position:fixed;top:0;left:0;bottom:0;width:260px;z-index:20;height:100vh;transform:translateX(-100%);transition:transform 0.3s;padding-top:70px}.sidebar.open{display:flex;transform:translateX(0)}.mobile-menu-btn{display:grid}.fab{display:flex}.topbar{padding:0 12px;height:56px}.brand-text small{display:none}.save-badge{display:none}.user-name{display:none}.toolbar{padding:0 16px;height:48px}.content{padding:16px}.page-head h1{font-size:20px}.stats{grid-template-columns:repeat(2,1fr);gap:10px}.stat-card{padding:14px}.stat-value{font-size:20px}.form-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.gst-grid{grid-template-columns:1fr}.filter-bar input,.filter-bar select{width:100%}.totals-bar{flex-direction:column;align-items:stretch}.topbar-center{display:none}.invoice-preview{padding:20px}.inv-header{flex-direction:column}.inv-parties{grid-template-columns:1fr}.company-switcher{margin-right:4px}.company-btn{padding:4px 8px;font-size:11px}.autosave-wrap span{display:none}}
@@ -532,9 +532,7 @@ tbody tr:last-child td{border-bottom:0}
           <div class="dash-cards" id="dashStats"></div>
           
           <div class="dash-layout">
-            <!-- Left Side: Chart & Recent -->
             <div>
-              <!-- Modern Chart -->
               <div class="chart-container">
                 <div class="dash-section-title">
                   <span>📊 Financial Overview</span>
@@ -542,7 +540,6 @@ tbody tr:last-child td{border-bottom:0}
                 <div class="modern-chart" id="modernChart"></div>
               </div>
 
-              <!-- Recent Activity -->
               <div class="card" style="margin-bottom: 0;">
                 <div class="card-head" style="padding: 16px 20px;">
                   <h2 style="font-size: 16px;">Recent Transactions</h2>
@@ -557,9 +554,7 @@ tbody tr:last-child td{border-bottom:0}
               </div>
             </div>
 
-            <!-- Right Side: Actions & Top Customers -->
             <div>
-              <!-- Quick Actions -->
               <div class="card" style="margin-bottom: 24px;">
                 <div class="card-head" style="padding: 16px 20px;"><h2 style="font-size: 16px;">⚡ Quick Actions</h2></div>
                 <div class="card-body" style="padding: 16px;">
@@ -580,7 +575,6 @@ tbody tr:last-child td{border-bottom:0}
                 </div>
               </div>
 
-              <!-- Top Receivables -->
               <div class="card">
                 <div class="card-head" style="padding: 16px 20px;"><h2 style="font-size: 16px;">👑 Top Debtors (Receivables)</h2></div>
                 <div class="card-body" style="padding: 16px;">
@@ -603,7 +597,7 @@ tbody tr:last-child td{border-bottom:0}
             </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Party Name</th><th>Phone</th><th>GSTIN</th><th>Address</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Party Name</th><th>Phone</th><th>GSTIN</th><th>State</th><th>Address</th><th>Actions</th></tr></thead>
                 <tbody id="partyRows"></tbody>
               </table>
             </div>
@@ -841,7 +835,41 @@ tbody tr:last-child td{border-bottom:0}
   <!-- MODALS -->
   <div class="modal" id="invoiceModal"><div class="modal-box lg"><div class="no-print" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><h3 style="margin:0">🧾 Invoice Preview</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="printInvoice()">🖨️ Print</button><button class="btn primary" onclick="printInvoice()">📥 Save PDF</button><button class="btn" onclick="closeInvoiceModal()">✕ Close</button></div></div><div id="invoiceContent"></div></div></div>
   <div class="modal" id="successModal"><div class="modal-box"><div style="text-align:center;padding:16px 0"><div style="width:64px;height:64px;background:var(--success-light);color:var(--success);border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;font-size:32px">✓</div><h3 style="margin:0 0 8px;font-size:20px">Invoice Saved!</h3><p class="sub" id="successMsg" style="margin:0 0 20px"></p></div><div class="modal-actions" style="justify-content:center;flex-wrap:wrap"><button class="btn" onclick="closeSuccessModal()">Continue</button><button class="btn primary" onclick="viewLastInvoice()">👁️ View Invoice</button></div></div></div>
-  <div class="modal" id="partyModal"><div class="modal-box"><h3>Add / Edit Party</h3><input type="hidden" id="editPartyId"><div class="field" style="margin-bottom:12px"><label>Party Name *</label><input id="pName" placeholder="e.g. ABC Traders"></div><div class="field" style="margin-bottom:12px"><label>Phone</label><input id="pPhone" placeholder="+91 98765 43210"></div><div class="field" style="margin-bottom:12px"><label>GSTIN</label><input id="pGstin" placeholder="27ABCDE1234F1Z5"></div><div class="field" style="margin-bottom:12px"><label>Email</label><input id="pEmail" placeholder="abc@traders.com"></div><div class="field" style="margin-bottom:12px"><label>Address</label><textarea id="pAddress" rows="2" placeholder="123, Main Street, City"></textarea></div><div class="modal-actions"><button class="btn" onclick="closePartyModal()">Cancel</button><button class="btn primary" onclick="saveParty()">💾 Save Party</button></div></div></div>
+  
+  <!-- UPDATED PARTY MODAL -->
+  <div class="modal" id="partyModal">
+    <div class="modal-box lg" style="max-width: 800px;">
+      <h3>Add / Edit Party</h3>
+      <p class="sub">Manage customer and supplier details.</p>
+      
+      <div class="form-card" style="border: 0; box-shadow: none;">
+        <div class="form-body" style="padding: 0;">
+          <input type="hidden" id="editPartyId">
+          <div class="form-grid">
+            <div class="field"><label>Party Name *</label><input id="pName" placeholder="e.g. ABC Traders" required></div>
+            <div class="field"><label>Phone</label><input id="pPhone" placeholder="+91 98765 43210"></div>
+            <div class="field"><label>Email</label><input id="pEmail" type="email" placeholder="abc@traders.com"></div>
+
+            <div class="field"><label>GSTIN</label><input id="pGstin" maxlength="15" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase(); autoPanFromPartyGstin();"></div>
+            <div class="field"><label>PAN No. (Auto)</label><input id="pPan" maxlength="10" placeholder="ABCDE1234F"></div>
+            <div class="field"><label>Udyam No.</label><input id="pUdyam" placeholder="UDYAM-RJ-XX-XXXXXXX"></div>
+
+            <div class="field"><label>State</label><select id="pState"><option>Rajasthan</option><option>Delhi</option><option>Haryana</option><option>UP</option><option>Gujarat</option><option>Maharashtra</option><option>Other</option></select></div>
+            <div class="field" style="grid-column: span 2;"><label>Address</label><input id="pAddress" placeholder="123, Main Street, City"></div>
+            
+            <div class="field" style="grid-column: span 3;"><label>Website (Optional)</label><input id="pWebsite" placeholder="www.abc.com"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top: 24px;">
+        <button class="btn" onclick="closePartyModal()">Cancel</button>
+        <button class="btn primary" onclick="saveParty()">💾 Save Party</button>
+      </div>
+    </div>
+  </div>
+  <!-- END PARTY MODAL -->
+
   <div class="modal" id="newCompanyModal"><div class="modal-box"><h3>Create New Company</h3><p class="sub">Enter the name of your new company.</p><div class="field"><label>Company Name *</label><input id="newCompanyNameInput" placeholder="e.g. Sharma Traders Pvt Ltd"></div><div class="modal-actions"><button class="btn" onclick="closeNewCompanyModal()">Cancel</button><button class="btn primary" onclick="createNewCompany()">Create & Switch</button></div></div></div>
   <div class="modal" id="ledgerModal"><div class="modal-box"><h3>New Ledger</h3><div class="field" style="margin-bottom:12px"><label>Name</label><input id="mName"></div><div class="field" style="margin-bottom:12px"><label>Group</label><select id="mGroup"><option>Cash-in-Hand</option><option>Bank Accounts</option><option>Current Assets</option><option>Current Liabilities</option><option>Revenue</option><option>Direct Expenses</option><option>Indirect Expenses</option><option>GST Input</option><option>GST Output</option><option>Capital Account</option><option>Fixed Assets</option><option>Loans</option></select></div><div class="field" style="margin-bottom:12px"><label>Nature</label><select id="mNature"><option>Asset</option><option>Liability</option><option>Income</option><option>Expense</option><option>Equity</option></select></div><div class="modal-actions"><button class="btn" onclick="closeLedgerModal()">Cancel</button><button class="btn primary" onclick="saveNewLedger()">Save</button></div></div></div>
   <div class="modal" id="delModal"><div class="modal-box"><h3>Delete?</h3><p class="sub" id="delMsg"></p><div class="modal-actions"><button class="btn" onclick="closeDelModal()">Cancel</button><button class="btn danger" onclick="confirmDelete()">Delete</button></div></div></div>
@@ -1449,6 +1477,7 @@ function renderParties() {
       <td><b>${esc(p.name)}</b></td>
       <td>${esc(p.phone || '—')}</td>
       <td>${esc(p.gstin || '—')}</td>
+      <td>${esc(p.state || '—')}</td>
       <td style="white-space:normal;max-width:250px;font-size:12px;color:var(--muted)">${esc(p.address || '—')}</td>
       <td>
         <div style="display:flex;gap:4px">
@@ -1457,13 +1486,23 @@ function renderParties() {
         </div>
       </td>
     </tr>
-  `).join('') || '<tr><td colspan="5"><div class="empty">No parties found. Add your first party!</div></td></tr>';
+  `).join('') || '<tr><td colspan="6"><div class="empty">No parties found. Add your first party!</div></td></tr>';
+}
+
+function autoPanFromPartyGstin() {
+  const gstin = document.getElementById('pGstin').value.trim().toUpperCase();
+  if (gstin.length === 15) {
+    document.getElementById('pPan').value = gstin.substring(2, 12);
+  } else if (gstin.length === 0) {
+    document.getElementById('pPan').value = '';
+  }
 }
 
 function openPartyModal(id = null) {
   document.getElementById('partyModal').classList.add('show');
   document.getElementById('editPartyId').value = '';
-  ['pName','pPhone','pGstin','pEmail','pAddress'].forEach(x => document.getElementById(x).value = '');
+  ['pName','pPhone','pEmail','pGstin','pPan','pUdyam','pAddress','pWebsite'].forEach(x => document.getElementById(x).value = '');
+  document.getElementById('pState').value = 'Rajasthan';
   
   if (id) {
     const p = parties.find(x => x.id === id);
@@ -1471,9 +1510,13 @@ function openPartyModal(id = null) {
       document.getElementById('editPartyId').value = p.id;
       document.getElementById('pName').value = p.name;
       document.getElementById('pPhone').value = p.phone || '';
-      document.getElementById('pGstin').value = p.gstin || '';
       document.getElementById('pEmail').value = p.email || '';
+      document.getElementById('pGstin').value = p.gstin || '';
+      document.getElementById('pPan').value = p.pan || '';
+      document.getElementById('pUdyam').value = p.udyam || '';
+      document.getElementById('pState').value = p.state || 'Rajasthan';
       document.getElementById('pAddress').value = p.address || '';
+      document.getElementById('pWebsite').value = p.website || '';
     }
   }
 }
@@ -1491,9 +1534,13 @@ function saveParty() {
     id: id || 'party_' + Date.now(),
     name: name,
     phone: document.getElementById('pPhone').value.trim(),
-    gstin: document.getElementById('pGstin').value.trim().toUpperCase(),
     email: document.getElementById('pEmail').value.trim(),
-    address: document.getElementById('pAddress').value.trim()
+    gstin: document.getElementById('pGstin').value.trim().toUpperCase(),
+    pan: document.getElementById('pPan').value.trim().toUpperCase(),
+    udyam: document.getElementById('pUdyam').value.trim(),
+    state: document.getElementById('pState').value,
+    address: document.getElementById('pAddress').value.trim(),
+    website: document.getElementById('pWebsite').value.trim()
   };
 
   if (id) {
@@ -2027,13 +2074,11 @@ function renderDashboard(){
       <div class="label">Net ${netPL>=0?'Profit':'Loss'}</div>
     </div>`;
 
-  // Recent Activity
   document.getElementById('recentRows').innerHTML=vouchers.slice(-6).reverse().map(v=>{
     const inv=invoices.find(i=>i.voucherId===v.id);
     return `<tr><td>${fmtDate(v.date)}</td><td><b>${esc(v.no)}</b></td><td><span class="pill ${v.type.toLowerCase()}">${esc(v.type)}</span></td><td>${esc(v.party||'—')}</td><td class="right num">${money(v.drTotal)}</td><td>${inv?'<span class="pill generator">🎨</span>':''}</td><td><button class="btn sm" onclick="editVoucher('${v.id}')">✎</button></td></tr>`;
   }).join('')||'<tr><td colspan="7"><div class="empty">No recent vouchers</div></td></tr>';
 
-  // Top Debtors Calculation
   let debtorsMap = {};
   vouchers.forEach(v => {
       v.lines.forEach(l => {
@@ -2345,8 +2390,8 @@ function loadDemoData(){
   vouchers=[];invoices=[];parties=[];
   
   parties = [
-    {id:'p1', name:'ABC Traders', phone:'+91 98765 43210', gstin:'27ABCDE1234F1Z5', email:'abc@traders.com', address:'123 Main St, Mumbai'},
-    {id:'p2', name:'Shree Suppliers', phone:'+91 98765 12345', gstin:'08XYZAB5678G2Z6', email:'shree@supp.com', address:'456 Market, Jaipur'}
+    {id:'p1', name:'ABC Traders', phone:'+91 98765 43210', gstin:'27ABCDE1234F1Z5', pan:'ABCDE1234F', state:'Maharashtra', email:'abc@traders.com', address:'123 Main St, Mumbai', udyam:'', website:''},
+    {id:'p2', name:'Shree Suppliers', phone:'+91 98765 12345', gstin:'08XYZAB5678G2Z6', pan:'XYZAB5678G', state:'Rajasthan', email:'shree@supp.com', address:'456 Market, Jaipur', udyam:'', website:''}
   ];
 
   const demo=[
