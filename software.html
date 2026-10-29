@@ -365,8 +365,39 @@ tbody tr:last-child td{border-bottom:0}
 .top-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--panel-alt); border-radius: var(--radius); border: 1px solid var(--line-2); transition: all 0.2s;}
 .top-item:hover { border-color: var(--primary); background: var(--primary-light); }
 
+/* --- MODERN VOUCHER ENTRY CSS --- */
+.voucher-container { background: var(--panel); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--line); overflow: hidden; margin-bottom: 24px; }
+.voucher-header { background: linear-gradient(to right, #f8fafc, #ffffff); padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.voucher-title { font-size: 18px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 8px; margin: 0; }
+.voucher-body { padding: 24px; }
+.modern-form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.modern-form-grid .field input, .modern-form-grid .field select { padding: 12px 14px; font-size: 14px; border-radius: var(--radius-md); background: var(--bg); border: 1px solid var(--line); }
+.modern-form-grid .field input:focus, .modern-form-grid .field select:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.modern-form-grid .field { grid-column: span 1; }
+.modern-form-grid .field.full-width { grid-column: span 2; }
+.modern-form-grid .field.full-row { grid-column: span 4; }
+
+.modern-entry-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 8px; }
+.modern-entry-table th { background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; padding: 0 12px 8px; text-transform: uppercase; border: none; }
+.modern-entry-table td { padding: 0 4px; border: none; vertical-align: middle; }
+.modern-entry-table td:first-child { padding-left: 0; }
+.modern-entry-table td:last-child { padding-right: 0; text-align: center; width: 50px; }
+.modern-entry-table .form-control { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 14px; background: var(--bg); transition: all 0.2s; }
+.modern-entry-table .form-control:focus { background: #fff; border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.modern-entry-table input[type="number"] { text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+.modern-entry-table input[type="number"]:focus { color: var(--primary); }
+.modern-entry-table .remove-row-btn { width: 38px; height: 38px; border-radius: 50%; background: #fee2e2; color: #dc2626; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 16px; }
+.modern-entry-table .remove-row-btn:hover { background: #fca5a5; transform: scale(1.1); }
+
+.modern-totals { display: flex; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 2px dashed var(--line); }
+.totals-box { width: 350px; background: var(--bg); border-radius: var(--radius-lg); padding: 20px; }
+.totals-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; color: var(--ink-2); }
+.totals-row.grand-total { border-top: 2px solid var(--line); margin-top: 8px; padding-top: 12px; font-size: 18px; font-weight: 800; color: var(--primary); }
+.totals-row.grand-total .val { font-family: 'JetBrains Mono', monospace; }
+.totals-row .val { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
 @media(max-width: 1024px) { .dash-layout { grid-template-columns: 1fr; } .dash-cards { grid-template-columns: repeat(2, 1fr); } }
-@media(max-width: 600px) { .dash-cards { grid-template-columns: 1fr; } .welcome-banner { flex-direction: column; align-items: flex-start; gap: 16px; } }
+@media(max-width: 600px) { .dash-cards { grid-template-columns: 1fr; } .welcome-banner { flex-direction: column; align-items: flex-start; gap: 16px; } .modern-form-grid{grid-template-columns:1fr;} .modern-form-grid .field.full-width, .modern-form-grid .field.full-row {grid-column: span 1;} }
 @media(max-width:1000px){.auth-wrap{grid-template-columns:1fr}.auth-left{display:none}.auth-right{padding:24px;min-height:100vh}}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.form-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){.shell{grid-template-columns:1fr}.sidebar{display:none;position:fixed;top:0;left:0;bottom:0;width:260px;z-index:20;height:100vh;transform:translateX(-100%);transition:transform 0.3s;padding-top:70px}.sidebar.open{display:flex;transform:translateX(0)}.mobile-menu-btn{display:grid}.fab{display:flex}.topbar{padding:0 12px;height:56px}.brand-text small{display:none}.save-badge{display:none}.user-name{display:none}.toolbar{padding:0 16px;height:48px}.content{padding:16px}.page-head h1{font-size:20px}.stats{grid-template-columns:repeat(2,1fr);gap:10px}.stat-card{padding:14px}.stat-value{font-size:20px}.form-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.gst-grid{grid-template-columns:1fr}.filter-bar input,.filter-bar select{width:100%}.totals-bar{flex-direction:column;align-items:stretch}.topbar-center{display:none}.invoice-preview{padding:20px}.inv-header{flex-direction:column}.inv-parties{grid-template-columns:1fr}.company-switcher{margin-right:4px}.company-btn{padding:4px 8px;font-size:11px}.autosave-wrap span{display:none}}
@@ -604,47 +635,103 @@ tbody tr:last-child td{border-bottom:0}
           </div>
         </section>
 
-        <!-- VOUCHERS -->
+        <!-- VOUCHERS (MODERN ENTRY) -->
         <section class="section" id="page-vouchers">
-          <div class="page-head"><div><h1>Voucher Entry</h1><p>Manual double-entry posting.</p></div><button class="btn" onclick="showPage('daybook')">📖 Day Book</button></div>
-          <div class="alert info"><span class="ic">💡</span><div><b>Tip:</b> Sales invoices ke liye <b>🎨 Invoice Generator</b> use karein — automatic voucher + invoice save hoga.</div></div>
-          <div class="gst-helper" id="gstHelperPanel">
-            <div class="gst-helper-title">⚡ GST Auto-Calculate</div>
-            <div class="gst-grid">
-              <div class="field"><label>Taxable Amount</label><input type="number" id="gstAmount" min="0" step="0.01" placeholder="35000"></div>
-              <div class="field"><label>GST Rate</label><select id="gstRate"><option value="0">0%</option><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></div>
-              <div class="field"><label>Supply Type</label><select id="gstType"><option value="intra">Intra (CGST+SGST)</option><option value="inter">Inter (IGST)</option></select></div>
+          <div class="page-head">
+            <div>
+              <h1>Manual Voucher Entry</h1>
+              <p>Post double-entry transactions directly into your ledger.</p>
             </div>
-            <button type="button" class="btn primary" onclick="applyGST()">✨ Apply</button>
+            <button class="btn" onclick="showPage('daybook')">📖 View Day Book</button>
           </div>
-          <div class="form-card">
-            <div class="form-head" id="formTitle">📝 New Voucher</div>
-            <div class="form-body">
+
+          <div class="alert info"><span class="ic">💡</span><div><b>Pro Tip:</b> Sales invoices ke liye <b>🎨 Invoice Generator</b> use karein — automatic voucher ban jayega. Yeh form manual adjustments ke liye hai.</div></div>
+          
+          <!-- Modern GST Helper -->
+          <div class="gst-helper" id="gstHelperPanel" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+            <div class="gst-helper-title" style="font-size: 15px;">⚡ Auto-Calculate GST Entries</div>
+            <div class="gst-grid">
+              <div class="field"><label>Taxable Amount (₹)</label><input type="number" id="gstAmount" min="0" step="0.01" placeholder="e.g. 35000" style="padding: 12px; font-size: 14px;"></div>
+              <div class="field"><label>GST Rate (%)</label><select id="gstRate" style="padding: 12px; font-size: 14px;"><option value="0">0%</option><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></div>
+              <div class="field"><label>Supply Type</label><select id="gstType" style="padding: 12px; font-size: 14px;"><option value="intra">Intra-State (CGST + SGST)</option><option value="inter">Inter-State (IGST)</option></select></div>
+            </div>
+            <button type="button" class="btn primary" onclick="applyGST()" style="margin-top: 12px;">✨ Generate GST Entries</button>
+          </div>
+
+          <!-- Main Voucher Form -->
+          <div class="voucher-container">
+            <div class="voucher-header">
+              <h2 class="voucher-title" id="formTitle">📝 New Voucher</h2>
+              <div style="display:flex; gap:8px;">
+                 <button type="button" class="btn sm" onclick="autoBalance()" style="background:#fff; border:1px solid var(--line);">⚖ Auto Balance</button>
+              </div>
+            </div>
+            
+            <div class="voucher-body">
               <form id="voucherForm">
                 <input type="hidden" id="editId">
-                <div class="form-grid">
-                  <div class="field"><label>Type <span class="req">*</span></label><select id="vType"><option>Sales</option><option>Purchase</option><option>Receipt</option><option>Payment</option><option>Journal</option><option>Contra</option></select></div>
-                  <div class="field"><label>Date <span class="req">*</span></label><input type="date" id="vDate" required></div>
-                  <div class="field"><label>Voucher No. <span class="req">*</span></label><input id="vNo"></div>
-                  <div class="field"><label>Party</label><select id="vParty"></select></div>
-                  <div class="field"><label>GSTIN</label><input id="vGstin" maxlength="15"></div>
-                  <div class="field"><label>Narration</label><input id="vNotes"></div>
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin:24px 0 12px;flex-wrap:wrap">
-                  <b style="font-size:13px">Entries</b>
-                  <div style="display:flex;gap:8px"><button type="button" class="btn sm" onclick="addEntryRow()">＋ Line</button><button type="button" class="btn sm" onclick="autoBalance()">⚖ Balance</button></div>
-                </div>
-                <div class="table-wrap" style="border:1px solid var(--line);border-radius:var(--radius);overflow:hidden">
-                  <table class="entry-table"><thead><tr><th>Ledger</th><th class="right">Debit</th><th class="right">Credit</th><th></th></tr></thead><tbody id="entryRows"></tbody></table>
-                </div>
-                <div class="totals-bar">
-                  <div class="totals">
-                    <div class="item"><span class="label">Debit</span><span class="value" id="totalDr">₹0.00</span></div>
-                    <div class="item"><span class="label">Credit</span><span class="value" id="totalCr">₹0.00</span></div>
-                    <div class="item"><span class="label">Diff</span><span class="value" id="difference">₹0.00</span></div>
+                
+                <div class="modern-form-grid">
+                  <div class="field">
+                    <label>Voucher Type <span class="req">*</span></label>
+                    <select id="vType" class="form-control"><option>Sales</option><option>Purchase</option><option>Receipt</option><option>Payment</option><option>Journal</option><option>Contra</option></select>
                   </div>
-                  <div style="display:flex;gap:8px"><button type="reset" class="btn">Clear</button><button type="submit" class="btn primary" id="saveBtn">💾 Save</button></div>
+                  <div class="field">
+                    <label>Date <span class="req">*</span></label>
+                    <input type="date" id="vDate" required>
+                  </div>
+                  <div class="field">
+                    <label>Voucher No. <span class="req">*</span></label>
+                    <input id="vNo" placeholder="Voucher Number">
+                  </div>
+                  <div class="field">
+                    <label>GSTIN (Optional)</label>
+                    <input id="vGstin" maxlength="15" placeholder="Party GSTIN">
+                  </div>
+                  <div class="field full-width">
+                    <label>Party / Account</label>
+                    <select id="vParty"></select>
+                  </div>
+                  <div class="field full-width">
+                    <label>Narration / Notes</label>
+                    <input id="vNotes" placeholder="Being goods sold...">
+                  </div>
                 </div>
+
+                <!-- Entries Table -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; border-top: 1px solid var(--line); padding-top: 24px;">
+                  <h3 style="font-size: 15px; font-weight: 700; margin:0; display:flex; align-items:center; gap:8px;"><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-size:12px;">DR/CR</span> Ledger Entries</h3>
+                  <button type="button" class="btn sm primary" onclick="addEntryRow()" style="border-radius: 99px; padding: 6px 16px;">＋ Add New Line</button>
+                </div>
+
+                <div class="table-wrap">
+                  <table class="modern-entry-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 45%; text-align:left; padding-left:12px;">Select Ledger Account</th>
+                        <th style="width: 22%; text-align:right;">Debit Amount (₹)</th>
+                        <th style="width: 22%; text-align:right;">Credit Amount (₹)</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="entryRows"></tbody>
+                  </table>
+                </div>
+
+                <!-- Totals & Save -->
+                <div class="modern-totals">
+                  <div class="totals-box">
+                    <div class="totals-row"><span>Total Debit</span><span class="val" id="totalDr">₹0.00</span></div>
+                    <div class="totals-row"><span>Total Credit</span><span class="val" id="totalCr">₹0.00</span></div>
+                    <div class="totals-row grand-total"><span>Difference</span><span class="val" id="difference">₹0.00</span></div>
+                    
+                    <div style="display:flex; gap:12px; margin-top: 20px;">
+                      <button type="reset" class="btn" style="flex:1; justify-content:center; background:#fff;">Clear</button>
+                      <button type="submit" class="btn primary" id="saveBtn" style="flex:2; justify-content:center; padding: 12px;">💾 Save Voucher</button>
+                    </div>
+                  </div>
+                </div>
+
               </form>
             </div>
           </div>
@@ -1573,21 +1660,26 @@ function updateVoucherPartyDropdown() {
     parties.map(p => `<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('');
 }
 
-/* ============ VOUCHER ENTRY ============ */
+/* ============ MODERN VOUCHER ENTRY ============ */
 function optionsHtml(selected=''){return '<option value="">— Select —</option>'+ledgers.map(l=>`<option ${l.name===selected?'selected':''} value="${esc(l.name)}">${esc(l.name)} (${esc(l.group)})</option>`).join('');}
 function addEntryRow(ledger='',dr='',cr=''){
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><select class="entry-ledger" required>${optionsHtml(ledger)}</select></td>
-  <td><input class="entry-num debit" type="number" min="0" step="0.01" value="${dr||''}" placeholder="0.00"></td>
-  <td><input class="entry-num credit" type="number" min="0" step="0.01" value="${cr||''}" placeholder="0.00"></td>
-  <td><button type="button" class="remove-line">✕</button></td>`;
+  tr.innerHTML=`
+    <td><select class="entry-ledger form-control" required>${optionsHtml(ledger)}</select></td>
+    <td><input class="entry-num debit form-control" type="number" min="0" step="0.01" value="${dr||''}" placeholder="0.00"></td>
+    <td><input class="entry-num credit form-control" type="number" min="0" step="0.01" value="${cr||''}" placeholder="0.00"></td>
+    <td><button type="button" class="remove-row-btn" title="Delete Row">🗑️</button></td>
+  `;
+  
   tr.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>{
     if(i.classList.contains('debit')&&Number(i.value)>0)tr.querySelector('.credit').value='';
     if(i.classList.contains('credit')&&Number(i.value)>0)tr.querySelector('.debit').value='';
     updateTotals();
   }));
-  tr.querySelector('.remove-line').onclick=()=>{tr.remove();updateTotals();};
-  document.getElementById('entryRows').appendChild(tr);updateTotals();
+  
+  tr.querySelector('.remove-row-btn').onclick=()=>{tr.remove();updateTotals();};
+  document.getElementById('entryRows').appendChild(tr);
+  updateTotals();
 }
 function setSuggestedLines(t){
   const map={
@@ -1610,7 +1702,7 @@ function updateTotals(){
   document.getElementById('totalCr').textContent=moneySimple(cr);
   const dif=document.getElementById('difference');
   dif.textContent=moneySimple(Math.abs(d));
-  dif.className='value '+(Math.abs(d)<0.005?'ok':'bad');
+  dif.className='val '+(Math.abs(d)<0.005?'ok':'bad');
   return {dr,cr,d};
 }
 function autoBalance(){
@@ -1652,7 +1744,7 @@ function nextNo(type){
 function resetVoucherForm(){
   document.getElementById('editId').value='';
   document.getElementById('formTitle').textContent='📝 New Voucher';
-  document.getElementById('saveBtn').textContent='💾 Save';
+  document.getElementById('saveBtn').textContent='💾 Save Voucher';
   document.getElementById('vDate').value=todayISO();
   const vType=document.getElementById('vType').value;
   document.getElementById('vNo').value=nextNo(vType);
