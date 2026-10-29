@@ -979,14 +979,10 @@ let usbFileHandle = null;
 
 function load(k,fb){try{const x=localStorage.getItem(k);return x?JSON.parse(x):fb}catch(e){return fb}}
 
-// Function to save data locally & to USB if linked
+// UPDATED PERSIST FUNCTION (As per image instructions)
 async function persist(){
-  if (!isAutoSaveEnabled && usbFileHandle === null) {
-      setSaveState('warning','AutoSave OFF');
-      return; 
-  }
-
   try{
+    // 1. ALWAYS Save to localStorage (Browser)
     localStorage.setItem(`tp_ledgers_${company.id}`, JSON.stringify(ledgers));
     localStorage.setItem(`tp_vouchers_${company.id}`, JSON.stringify(vouchers));
     localStorage.setItem(`tp_invoices_${company.id}`, JSON.stringify(invoices));
@@ -997,10 +993,10 @@ async function persist(){
     localStorage.setItem('tp_companies', JSON.stringify(companiesList));
     localStorage.setItem('tp_active_company_id', company.id);
     
-    setSaveState('saved','Saved (Local)');
+    setSaveState('saved','Saved (Browser)'); // Text changed as per image
     updateSideInfo();updateInvBadge();
 
-    // Pendrive Auto-Sync (Multi-Company Support)
+    // 2. Save to USB if linked (Regardless of AutoSave toggle, if linked it should try)
     if (usbFileHandle) {
       try {
         let usbData = { version: 11, companies: {} };
@@ -1023,7 +1019,6 @@ async function persist(){
             }
         } catch(e) { console.log('New file or error reading existing USB file'); }
 
-        // Update current company data
         usbData.companies[company.id] = {
             company: company,
             ledgers: ledgers,
@@ -1035,7 +1030,7 @@ async function persist(){
         const writable = await usbFileHandle.createWritable();
         await writable.write(JSON.stringify(usbData, null, 2));
         await writable.close();
-        setSaveState('saved', 'Saved (USB)');
+        setSaveState('saved', 'Saved (Browser + USB)'); // Text changed
       } catch (err) {
         console.error('USB Write Error:', err);
         setSaveState('error', 'USB Error');
@@ -1054,11 +1049,10 @@ function toggleAutoSave(checked) {
   localStorage.setItem('tp_autosave', checked);
   if (checked) {
     toast('AutoSave turned ON', 'success');
-    persist(); // Save immediately
   } else {
-    setSaveState('warning', 'AutoSave OFF');
-    toast('AutoSave turned OFF', 'warning');
+    toast('AutoSave OFF (Data still saved in Browser)', 'warning');
   }
+  persist(); // Always trigger save
 }
 
 /* ============ USB / PENDRIVE SYNC (INDEXED DB STORAGE) ============ */
@@ -1440,8 +1434,43 @@ function fmtDate(d){if(!d)return '—';const p=d.split('-');if(p.length!==3)retu
 function uid(){return 'v'+Date.now()+Math.random().toString(36).slice(2,7)}
 function todayISO(){return new Date().toISOString().slice(0,10)}
 function changeFY(fy){company.fy=fy.replace('FY ','');persist();applyCompanyUI();toast('FY: '+fy,'success');}
-function numberToWords(num){ /* omitted for brevity in thoughts, included in actual output */ }
-function amountInWords(amount){ /* omitted for brevity in thoughts, included in actual output */ }
+
+// FIXED NUMBER TO WORDS
+function numberToWords(n) {
+  n = Math.round(Math.abs(n));
+  if (n === 0) return 'Zero Rupees Only';
+  const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  const two = x => x < 20 ? ones[x] : (tens[Math.floor(x/10)] + (x%10 ? ' ' + ones[x%10] : ''));
+  const three = x => x < 100 ? two(x) : (ones[Math.floor(x/100)] + ' Hundred' + (x%100 ? ' ' + two(x%100) : ''));
+  const convert = (n) => {
+    if (n === 0) return '';
+    if (n < 1000) return three(n);
+    const tiers = [
+      { val: 100000000000, name: 'Kharab' },
+      { val: 1000000000, name: 'Arab' },
+      { val: 10000000, name: 'Crore' },
+      { val: 100000, name: 'Lakh' },
+      { val: 1000, name: 'Thousand' }
+    ];
+    for (const t of tiers) {
+      if (n >= t.val) {
+        const q = Math.floor(n / t.val);
+        const r = n % t.val;
+        return convert(q) + ' ' + t.name + (r ? ' ' + convert(r) : '');
+      }
+    }
+    return three(n);
+  };
+  return (convert(n).trim() + ' Rupees Only').replace(/\s+/g, ' ');
+}
+function amountInWords(amount) {
+  const rupees = Math.floor(amount);
+  const paise = Math.round((amount - rupees) * 100);
+  let words = numberToWords(rupees);
+  if (paise > 0) words = words.replace('Only', 'and ' + numberToWords(paise).replace('Rupees Only', 'Paise') + ' Only');
+  return words;
+}
 
 /* ============ PARTY MASTER ============ */
 function renderParties() {
