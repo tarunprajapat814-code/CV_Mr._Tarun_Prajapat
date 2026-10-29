@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TP Accounting — V10 (Multi-Company)</title>
+<title>TP Accounting — V10</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -106,7 +106,18 @@ a{color:var(--primary);text-decoration:none}
 .user-dropdown button.danger{color:var(--danger)}
 .user-dropdown hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 
-/* NEW COMPANY SWITCHER IN TOPBAR */
+/* AUTOSAVE TOGGLE & USB BUTTON */
+.autosave-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-right: 12px; }
+.switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #2563eb; }
+input:checked + .slider:before { transform: translateX(16px); }
+.usb-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--panel-alt); font-size: 12px; font-weight: 600; color: var(--ink-2); cursor: pointer; transition: var(--transition); }
+.usb-btn:hover { background: var(--bg); border-color: #cbd5e1; }
+.usb-btn.linked { border-color: var(--success); color: var(--success); background: var(--success-light); }
+
 .company-switcher{position:relative;display:flex;align-items:center;margin-right:12px}
 .company-btn{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel-alt);font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition)}
 .company-btn:hover{background:var(--bg);border-color:#cbd5e1}
@@ -120,18 +131,6 @@ a{color:var(--primary);text-decoration:none}
 .company-item.active .check{opacity:1}
 .add-company-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;margin-top:4px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--success);text-align:left;border-top:1px solid var(--line);transition:var(--transition)}
 .add-company-btn:hover{background:var(--success-light)}
-
-/* AUTOSAVE TOGGLE & USB BUTTON */
-.autosave-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-right: 12px; }
-.switch { position: relative; display: inline-block; width: 36px; height: 20px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: #2563eb; }
-input:checked + .slider:before { transform: translateX(16px); }
-.usb-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--panel-alt); font-size: 12px; font-weight: 600; color: var(--ink-2); cursor: pointer; transition: var(--transition); }
-.usb-btn:hover { background: var(--bg); border-color: #cbd5e1; }
-.usb-btn.linked { border-color: var(--success); color: var(--success); background: var(--success-light); }
 
 .save-badge{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;background:var(--success-light);color:var(--success);font-size:11px;font-weight:600}
 .save-badge .pulse{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s ease-in-out infinite}
@@ -346,7 +345,7 @@ tbody tr:last-child td{border-bottom:0}
       <div class="auth-features">
         <div class="auth-feature"><div class="auth-feature-icon">🧾</div><div class="auth-feature-text"><b>Invoice Generator Built-in</b><small>13 templates · Auto-save to books</small></div></div>
         <div class="auth-feature"><div class="auth-feature-icon">📊</div><div class="auth-feature-text"><b>Live Financial Reports</b><small>Trial Balance, P&L, Balance Sheet</small></div></div>
-        <div class="auth-feature"><div class="auth-feature-icon">💾</div><div class="auth-feature-text"><b>Backup & Restore</b><small>Export anytime. Your books, your control.</small></div></div>
+        <div class="auth-feature"><div class="auth-feature-icon">💾</div><div class="auth-feature-text"><b>Local Storage & Pendrive Backup</b><small>Your data is always safe.</small></div></div>
       </div>
     </div>
     <div class="auth-footer">© 2026 TP Accounting · Made for India 🇮🇳</div>
@@ -366,16 +365,15 @@ tbody tr:last-child td{border-bottom:0}
           <div class="auth-demo-cred">Email: <b>demo@tp.com</b><br>Password: <b>demo123</b></div>
           <button type="button" class="auth-demo-fill" onclick="fillDemo()">Click to auto-fill</button>
         </div>
-        <div class="auth-field"><label>Email</label><div class="input-wrap"><span class="input-icon">✉️</span><input type="email" id="loginEmail" placeholder="you@company.com"></div></div>
-        <div class="auth-field"><label>Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="loginPassword" placeholder="Enter password"></div></div>
-        <div class="auth-options"><label class="auth-check"><input type="checkbox" id="rememberMe"> Remember me</label><a href="#" class="auth-forgot">Forgot?</a></div>
+        <div class="auth-field"><label>Email</label><div class="input-wrap"><span class="input-icon">✉️</span><input type="email" id="loginEmail" placeholder="you@company.com" required></div></div>
+        <div class="auth-field"><label>Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="loginPassword" placeholder="Enter password" required></div></div>
         <button type="submit" class="auth-btn"><span>Sign In</span><span>→</span></button>
       </form>
       <form id="signupForm" style="display:none" onsubmit="handleSignup(event)">
-        <div class="auth-field"><label>Full Name</label><div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="signupName" placeholder="Your name"></div></div>
-        <div class="auth-field"><label>Email</label><div class="input-wrap"><span class="input-icon">✉️</span><input type="email" id="signupEmail" placeholder="you@company.com"></div></div>
-        <div class="auth-field"><label>Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="signupPassword" placeholder="Min 6 chars"></div></div>
-        <div class="auth-field"><label>Company</label><div class="input-wrap"><span class="input-icon">🏢</span><input type="text" id="signupCompany" placeholder="Your business"></div></div>
+        <div class="auth-field"><label>Full Name</label><div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="signupName" placeholder="Your name" required></div></div>
+        <div class="auth-field"><label>Email</label><div class="input-wrap"><span class="input-icon">✉️</span><input type="email" id="signupEmail" placeholder="you@company.com" required></div></div>
+        <div class="auth-field"><label>Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="signupPassword" placeholder="Min 6 chars" required></div></div>
+        <div class="auth-field"><label>Company</label><div class="input-wrap"><span class="input-icon">🏢</span><input type="text" id="signupCompany" placeholder="Your business" required></div></div>
         <button type="submit" class="auth-btn"><span>Create Account</span><span>→</span></button>
       </form>
     </div>
@@ -417,9 +415,7 @@ tbody tr:last-child td{border-bottom:0}
         </button>
         <div class="company-dropdown" id="companyDropdown">
           <div style="padding: 8px 12px 4px; font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Your Companies</div>
-          <div id="companyList">
-            <!-- Populated by JS -->
-          </div>
+          <div id="companyList"></div>
           <button class="add-company-btn" onclick="promptNewCompany(event)">
             <span>➕</span> Create New Company
           </button>
@@ -660,7 +656,7 @@ tbody tr:last-child td{border-bottom:0}
         <!-- BACKUP -->
         <section class="section" id="page-backup">
           <div class="page-head"><div><h1>Backup</h1></div></div>
-          <div class="alert danger"><span class="ic">⚠️</span><div>Regular backups lein!</div></div>
+          <div class="alert danger"><span class="ic">⚠️</span><div>Aapka data local browser me safe hai. Backup lena na bhoolein.</div></div>
           <div class="grid-2">
             <div class="card">
               <div class="card-head"><h2>📥 Download</h2></div>
@@ -686,7 +682,6 @@ tbody tr:last-child td{border-bottom:0}
           <div class="alert info"><span class="ic">💡</span><div><b>Invoice Generator Path:</b> Neeche field me apni invoice-generator.html ka path dalein (e.g. <code>invoice-generator.html</code>).</div></div>
           
           <form id="settingsForm">
-            <!-- Company Details -->
             <div class="form-card" style="margin-bottom: 20px;">
               <div class="form-head">🏢 Company Details</div>
               <div class="form-body">
@@ -704,24 +699,19 @@ tbody tr:last-child td{border-bottom:0}
                     </div>
                   </div>
                   <div class="field"><label>Company Name *</label><input id="companyName" required></div>
-                  
                   <div class="field"><label>GSTIN</label><input id="companyGstin" maxlength="15" placeholder="08XXXXXXXXXXXXX"></div>
                   <div class="field"><label>PAN No. (Auto)</label><input id="companyPan" maxlength="10" placeholder="ABCDE1234F"></div>
                   <div class="field"><label>Udyam Registration No.</label><input id="companyUdyam" placeholder="UDYAM-RJ-XX-XXXXXXX"></div>
-
                   <div class="field"><label>State</label><select id="companyState"><option>Rajasthan</option><option>Delhi</option><option>Haryana</option><option>UP</option><option>Gujarat</option><option>Maharashtra</option></select></div>
                   <div class="field"><label>Financial Year</label><select id="companyFY"><option>2026–27</option><option>2025–26</option></select></div>
                   <div class="field"><label>Phone</label><input id="companyPhone"></div>
-                  
                   <div class="field" style="grid-column: span 2;"><label>Full Address</label><input id="companyAddress" placeholder="Shop No, Street, City, Pincode"></div>
                   <div class="field"><label>Email</label><input id="companyEmail" type="email"></div>
-                  
                   <div class="field" style="grid-column: span 3;"><label>Website (Optional)</label><input id="companyWebsite"></div>
                 </div>
               </div>
             </div>
 
-            <!-- Bank Details -->
             <div class="form-card" style="margin-bottom: 20px;">
               <div class="form-head">🏦 Bank Details (Invoice Footer ke liye)</div>
               <div class="form-body">
@@ -729,7 +719,6 @@ tbody tr:last-child td{border-bottom:0}
                   <div class="field"><label>Bank Name</label><input id="companyBank" placeholder="e.g. State Bank of India"></div>
                   <div class="field"><label>Account Number</label><input id="companyAccount"></div>
                   <div class="field"><label>IFSC Code</label><input id="companyIfsc" maxlength="11"></div>
-                  
                   <div class="field" style="grid-column: span 3;"><label>Branch Name (Auto-fetched from IFSC)</label><input id="companyBranch" placeholder="e.g. Main Branch"></div>
                 </div>
                 <div style="font-size:12px; color:var(--muted); margin-top:10px;">
@@ -738,7 +727,6 @@ tbody tr:last-child td{border-bottom:0}
               </div>
             </div>
 
-            <!-- Invoice Settings -->
             <div class="form-card">
               <div class="form-head">⚙️ Invoice & Software Settings</div>
               <div class="form-body">
@@ -762,90 +750,20 @@ tbody tr:last-child td{border-bottom:0}
     </main>
   </div>
 
-  <!-- INVOICE PREVIEW MODAL -->
-  <div class="modal" id="invoiceModal">
-    <div class="modal-box lg">
-      <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-        <h3 style="margin:0">🧾 Invoice Preview</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn" onclick="printInvoice()">🖨️ Print</button>
-          <button class="btn primary" onclick="printInvoice()">📥 Save PDF</button>
-          <button class="btn" onclick="closeInvoiceModal()">✕ Close</button>
-        </div>
-      </div>
-      <div id="invoiceContent"></div>
-    </div>
-  </div>
-
-  <!-- SUCCESS MODAL -->
-  <div class="modal" id="successModal">
-    <div class="modal-box">
-      <div style="text-align:center;padding:16px 0">
-        <div style="width:64px;height:64px;background:var(--success-light);color:var(--success);border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;font-size:32px">✓</div>
-        <h3 style="margin:0 0 8px;font-size:20px">Invoice Saved!</h3>
-        <p class="sub" id="successMsg" style="margin:0 0 20px"></p>
-      </div>
-      <div class="modal-actions" style="justify-content:center;flex-wrap:wrap">
-        <button class="btn" onclick="closeSuccessModal()">Continue</button>
-        <button class="btn primary" onclick="viewLastInvoice()">👁️ View Invoice</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- PARTY MODAL -->
-  <div class="modal" id="partyModal">
-    <div class="modal-box">
-      <h3>Add / Edit Party</h3>
-      <input type="hidden" id="editPartyId">
-      <div class="field" style="margin-bottom:12px"><label>Party Name *</label><input id="pName" placeholder="e.g. ABC Traders"></div>
-      <div class="field" style="margin-bottom:12px"><label>Phone</label><input id="pPhone" placeholder="+91 98765 43210"></div>
-      <div class="field" style="margin-bottom:12px"><label>GSTIN</label><input id="pGstin" placeholder="27ABCDE1234F1Z5"></div>
-      <div class="field" style="margin-bottom:12px"><label>Email</label><input id="pEmail" placeholder="abc@traders.com"></div>
-      <div class="field" style="margin-bottom:12px"><label>Address</label><textarea id="pAddress" rows="2" placeholder="123, Main Street, City"></textarea></div>
-      <div class="modal-actions">
-        <button class="btn" onclick="closePartyModal()">Cancel</button>
-        <button class="btn primary" onclick="saveParty()">💾 Save Party</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- NEW COMPANY MODAL -->
-  <div class="modal" id="newCompanyModal">
-    <div class="modal-box">
-      <h3>Create New Company</h3>
-      <p class="sub">Enter the name of your new company.</p>
-      <div class="field">
-        <label>Company Name *</label>
-        <input id="newCompanyNameInput" placeholder="e.g. Sharma Traders Pvt Ltd">
-      </div>
-      <div class="modal-actions">
-        <button class="btn" onclick="closeNewCompanyModal()">Cancel</button>
-        <button class="btn primary" onclick="createNewCompany()">Create & Switch</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- LEDGER MODAL -->
-  <div class="modal" id="ledgerModal">
-    <div class="modal-box">
-      <h3>New Ledger</h3>
-      <div class="field" style="margin-bottom:12px"><label>Name</label><input id="mName"></div>
-      <div class="field" style="margin-bottom:12px"><label>Group</label><select id="mGroup"><option>Cash-in-Hand</option><option>Bank Accounts</option><option>Current Assets</option><option>Current Liabilities</option><option>Revenue</option><option>Direct Expenses</option><option>Indirect Expenses</option><option>GST Input</option><option>GST Output</option><option>Capital Account</option><option>Fixed Assets</option><option>Loans</option></select></div>
-      <div class="field" style="margin-bottom:12px"><label>Nature</label><select id="mNature"><option>Asset</option><option>Liability</option><option>Income</option><option>Expense</option><option>Equity</option></select></div>
-      <div class="modal-actions"><button class="btn" onclick="closeLedgerModal()">Cancel</button><button class="btn primary" onclick="saveNewLedger()">Save</button></div>
-    </div>
-  </div>
-
-  <div class="modal" id="delModal">
-    <div class="modal-box"><h3>Delete?</h3><p class="sub" id="delMsg"></p><div class="modal-actions"><button class="btn" onclick="closeDelModal()">Cancel</button><button class="btn danger" onclick="confirmDelete()">Delete</button></div></div>
-  </div>
+  <!-- MODALS -->
+  <div class="modal" id="invoiceModal"><div class="modal-box lg"><div class="no-print" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><h3 style="margin:0">🧾 Invoice Preview</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="printInvoice()">🖨️ Print</button><button class="btn primary" onclick="printInvoice()">📥 Save PDF</button><button class="btn" onclick="closeInvoiceModal()">✕ Close</button></div></div><div id="invoiceContent"></div></div></div>
+  <div class="modal" id="successModal"><div class="modal-box"><div style="text-align:center;padding:16px 0"><div style="width:64px;height:64px;background:var(--success-light);color:var(--success);border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;font-size:32px">✓</div><h3 style="margin:0 0 8px;font-size:20px">Invoice Saved!</h3><p class="sub" id="successMsg" style="margin:0 0 20px"></p></div><div class="modal-actions" style="justify-content:center;flex-wrap:wrap"><button class="btn" onclick="closeSuccessModal()">Continue</button><button class="btn primary" onclick="viewLastInvoice()">👁️ View Invoice</button></div></div></div>
+  <div class="modal" id="partyModal"><div class="modal-box"><h3>Add / Edit Party</h3><input type="hidden" id="editPartyId"><div class="field" style="margin-bottom:12px"><label>Party Name *</label><input id="pName" placeholder="e.g. ABC Traders"></div><div class="field" style="margin-bottom:12px"><label>Phone</label><input id="pPhone" placeholder="+91 98765 43210"></div><div class="field" style="margin-bottom:12px"><label>GSTIN</label><input id="pGstin" placeholder="27ABCDE1234F1Z5"></div><div class="field" style="margin-bottom:12px"><label>Email</label><input id="pEmail" placeholder="abc@traders.com"></div><div class="field" style="margin-bottom:12px"><label>Address</label><textarea id="pAddress" rows="2" placeholder="123, Main Street, City"></textarea></div><div class="modal-actions"><button class="btn" onclick="closePartyModal()">Cancel</button><button class="btn primary" onclick="saveParty()">💾 Save Party</button></div></div></div>
+  <div class="modal" id="newCompanyModal"><div class="modal-box"><h3>Create New Company</h3><p class="sub">Enter the name of your new company.</p><div class="field"><label>Company Name *</label><input id="newCompanyNameInput" placeholder="e.g. Sharma Traders Pvt Ltd"></div><div class="modal-actions"><button class="btn" onclick="closeNewCompanyModal()">Cancel</button><button class="btn primary" onclick="createNewCompany()">Create & Switch</button></div></div></div>
+  <div class="modal" id="ledgerModal"><div class="modal-box"><h3>New Ledger</h3><div class="field" style="margin-bottom:12px"><label>Name</label><input id="mName"></div><div class="field" style="margin-bottom:12px"><label>Group</label><select id="mGroup"><option>Cash-in-Hand</option><option>Bank Accounts</option><option>Current Assets</option><option>Current Liabilities</option><option>Revenue</option><option>Direct Expenses</option><option>Indirect Expenses</option><option>GST Input</option><option>GST Output</option><option>Capital Account</option><option>Fixed Assets</option><option>Loans</option></select></div><div class="field" style="margin-bottom:12px"><label>Nature</label><select id="mNature"><option>Asset</option><option>Liability</option><option>Income</option><option>Expense</option><option>Equity</option></select></div><div class="modal-actions"><button class="btn" onclick="closeLedgerModal()">Cancel</button><button class="btn primary" onclick="saveNewLedger()">Save</button></div></div></div>
+  <div class="modal" id="delModal"><div class="modal-box"><h3>Delete?</h3><p class="sub" id="delMsg"></p><div class="modal-actions"><button class="btn" onclick="closeDelModal()">Cancel</button><button class="btn danger" onclick="confirmDelete()">Delete</button></div></div></div>
 
   <button class="fab" onclick="openInvoiceGenerator()">🎨</button>
   <div class="toast-container" id="toastContainer"></div>
 </div>
 
 <script>
-/* ============ AUTH ============ */
+/* ============ LOCAL AUTH ============ */
 const AUTH_KEY='tp_auth_user';
 const AUTH_SESSION='tp_auth_session';
 function getAuthUser(){try{return JSON.parse(localStorage.getItem(AUTH_KEY))}catch(e){return null}}
@@ -856,11 +774,12 @@ function hideAuthBanners(){document.getElementById('authError').classList.remove
 function showAuthError(msg){document.getElementById('authErrorText').textContent=msg;document.getElementById('authError').classList.add('show');document.getElementById('authSuccess').classList.remove('show');}
 function showAuthSuccess(msg){document.getElementById('authSuccessText').textContent=msg;document.getElementById('authSuccess').classList.add('show');document.getElementById('authError').classList.remove('show');}
 function fillDemo(){document.getElementById('loginEmail').value='demo@tp.com';document.getElementById('loginPassword').value='demo123';hideAuthBanners();}
+
 function handleLogin(e){
   e.preventDefault();hideAuthBanners();
   const email=document.getElementById('loginEmail').value.trim().toLowerCase();
   const password=document.getElementById('loginPassword').value;
-  const remember=document.getElementById('rememberMe').checked;
+  const remember=document.getElementById('rememberMe')?document.getElementById('rememberMe').checked:false;
   if(!email||!email.includes('@')){showAuthError('Valid email required');return;}
   if(!password||password.length<4){showAuthError('Password too short');return;}
   const user=getAuthUser();
@@ -930,24 +849,7 @@ if (company.id !== activeCompanyId) localStorage.setItem('tp_active_company_id',
 
 const titles={home:'Dashboard',parties:'Party Master',vouchers:'Voucher Entry',invoices:'Invoices',daybook:'Day Book',masters:'Ledgers',ledger:'Ledger',trial:'Trial Balance',pl:'P&L',bs:'Balance Sheet',gst:'GST',excel:'Excel',backup:'Backup',settings:'Setup'};
 const defaultLedgers=[
-{name:'Cash',group:'Cash-in-Hand',nature:'Asset'},
-{name:'Bank Account',group:'Bank Accounts',nature:'Asset'},
-{name:'Sundry Debtors',group:'Current Assets',nature:'Asset'},
-{name:'Sundry Creditors',group:'Current Liabilities',nature:'Liability'},
-{name:'Sales',group:'Revenue',nature:'Income'},
-{name:'Purchase',group:'Direct Expenses',nature:'Expense'},
-{name:'Input CGST',group:'GST Input',nature:'Asset'},
-{name:'Input SGST',group:'GST Input',nature:'Asset'},
-{name:'Input IGST',group:'GST Input',nature:'Asset'},
-{name:'Output CGST',group:'GST Output',nature:'Liability'},
-{name:'Output SGST',group:'GST Output',nature:'Liability'},
-{name:'Output IGST',group:'GST Output',nature:'Liability'},
-{name:'Capital',group:'Capital Account',nature:'Equity'},
-{name:'Office Expenses',group:'Indirect Expenses',nature:'Expense'},
-{name:'Rent',group:'Indirect Expenses',nature:'Expense'},
-{name:'Salary',group:'Indirect Expenses',nature:'Expense'},
-{name:'Furniture',group:'Fixed Assets',nature:'Asset'},
-{name:'Loan from Bank',group:'Loans',nature:'Liability'}
+{name:'Cash',group:'Cash-in-Hand',nature:'Asset'},{name:'Bank Account',group:'Bank Accounts',nature:'Asset'},{name:'Sundry Debtors',group:'Current Assets',nature:'Asset'},{name:'Sundry Creditors',group:'Current Liabilities',nature:'Liability'},{name:'Sales',group:'Revenue',nature:'Income'},{name:'Purchase',group:'Direct Expenses',nature:'Expense'},{name:'Input CGST',group:'GST Input',nature:'Asset'},{name:'Input SGST',group:'GST Input',nature:'Asset'},{name:'Input IGST',group:'GST Input',nature:'Asset'},{name:'Output CGST',group:'GST Output',nature:'Liability'},{name:'Output SGST',group:'GST Output',nature:'Liability'},{name:'Output IGST',group:'GST Output',nature:'Liability'},{name:'Capital',group:'Capital Account',nature:'Equity'},{name:'Office Expenses',group:'Indirect Expenses',nature:'Expense'},{name:'Rent',group:'Indirect Expenses',nature:'Expense'},{name:'Salary',group:'Indirect Expenses',nature:'Expense'},{name:'Furniture',group:'Fixed Assets',nature:'Asset'},{name:'Loan from Bank',group:'Loans',nature:'Liability'}
 ];
 
 if (localStorage.getItem('tp_ledgers') && !localStorage.getItem(`tp_ledgers_${company.id}`)) {
@@ -979,7 +881,7 @@ let usbFileHandle = null;
 
 function load(k,fb){try{const x=localStorage.getItem(k);return x?JSON.parse(x):fb}catch(e){return fb}}
 
-// UPDATED PERSIST FUNCTION (As per image instructions)
+// UPDATED PERSIST FUNCTION
 async function persist(){
   try{
     // 1. ALWAYS Save to localStorage (Browser)
@@ -993,10 +895,10 @@ async function persist(){
     localStorage.setItem('tp_companies', JSON.stringify(companiesList));
     localStorage.setItem('tp_active_company_id', company.id);
     
-    setSaveState('saved','Saved (Browser)'); // Text changed as per image
+    setSaveState('saved','Saved (Browser)');
     updateSideInfo();updateInvBadge();
 
-    // 2. Save to USB if linked (Regardless of AutoSave toggle, if linked it should try)
+    // 2. Save to USB if linked
     if (usbFileHandle) {
       try {
         let usbData = { version: 11, companies: {} };
@@ -1030,7 +932,7 @@ async function persist(){
         const writable = await usbFileHandle.createWritable();
         await writable.write(JSON.stringify(usbData, null, 2));
         await writable.close();
-        setSaveState('saved', 'Saved (Browser + USB)'); // Text changed
+        setSaveState('saved', 'Saved (Browser + USB)');
       } catch (err) {
         console.error('USB Write Error:', err);
         setSaveState('error', 'USB Error');
@@ -1055,7 +957,7 @@ function toggleAutoSave(checked) {
   persist(); // Always trigger save
 }
 
-/* ============ USB / PENDRIVE SYNC (INDEXED DB STORAGE) ============ */
+/* ============ USB / PENDRIVE SYNC ============ */
 function getDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open('TP_Accounting_DB', 1);
@@ -1435,7 +1337,6 @@ function uid(){return 'v'+Date.now()+Math.random().toString(36).slice(2,7)}
 function todayISO(){return new Date().toISOString().slice(0,10)}
 function changeFY(fy){company.fy=fy.replace('FY ','');persist();applyCompanyUI();toast('FY: '+fy,'success');}
 
-// FIXED NUMBER TO WORDS
 function numberToWords(n) {
   n = Math.round(Math.abs(n));
   if (n === 0) return 'Zero Rupees Only';
@@ -1446,13 +1347,7 @@ function numberToWords(n) {
   const convert = (n) => {
     if (n === 0) return '';
     if (n < 1000) return three(n);
-    const tiers = [
-      { val: 100000000000, name: 'Kharab' },
-      { val: 1000000000, name: 'Arab' },
-      { val: 10000000, name: 'Crore' },
-      { val: 100000, name: 'Lakh' },
-      { val: 1000, name: 'Thousand' }
-    ];
+    const tiers = [ { val: 100000000000, name: 'Kharab' }, { val: 1000000000, name: 'Arab' }, { val: 10000000, name: 'Crore' }, { val: 100000, name: 'Lakh' }, { val: 1000, name: 'Thousand' } ];
     for (const t of tiers) {
       if (n >= t.val) {
         const q = Math.floor(n / t.val);
@@ -2523,6 +2418,7 @@ function initApp(){
     initApp();
   }
 })();
-console.log('%c✨ TP Accounting V10 (Multi-Company + USB Auto-Sync)','color:#4f46e5;font-size:16px;font-weight:bold');
+console.log('%c✨ TP Accounting V10 (Local + USB Sync)','color:#4f46e5;font-size:16px;font-weight:bold');
 </script>
 </body></html>
+<!-- CODE END -->
