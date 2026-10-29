@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TP Accounting — V10</title>
+<title>Smart Accounting Software - V10</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -289,6 +289,7 @@ tbody tr:last-child td{border-bottom:0}
 .report-line.total{font-weight:700;border-top:2px solid var(--ink-2);background:var(--panel-alt);padding:12px 16px;margin-top:8px;border-radius:0 0 var(--radius) var(--radius)}
 .report-line.indent{padding-left:24px}
 .report-section-title{margin:20px 0 8px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);padding-bottom:8px;border-bottom:1px solid var(--line)}
+
 /* INVOICE PREVIEW */
 .invoice-preview{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:32px;max-width:800px;margin:0 auto;font-size:13px;line-height:1.6}
 .inv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #1a202c}
@@ -327,6 +328,45 @@ tbody tr:last-child td{border-bottom:0}
 .fab{display:none;position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#7c3aed);color:#fff;font-size:24px;z-index:25;box-shadow:0 8px 24px -4px rgba(79,70,229,0.5);align-items:center;justify-content:center}
 .section{display:none}
 .section.show{display:block}
+
+/* MODERN DASHBOARD CSS */
+.welcome-banner { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border-radius: var(--radius-lg); padding: 30px; color: #fff; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(79,70,229,0.4); position: relative; overflow: hidden; }
+.welcome-banner::before { content: ""; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+.welcome-banner::after { content: ""; position: absolute; bottom: -80px; right: 100px; width: 150px; height: 150px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+.banner-content h1 { margin: 0 0 8px; font-size: 28px; font-weight: 800; color: #fff; position: relative; z-index: 1;}
+.banner-content p { margin: 0; font-size: 14px; opacity: 0.9; position: relative; z-index: 1;}
+.dash-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+.dash-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;}
+.dash-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.dash-card .icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px; }
+.dash-card .value { font-size: 24px; font-weight: 800; font-family: "JetBrains Mono", monospace; color: var(--ink); margin-bottom: 4px; }
+.dash-card .label { font-size: 13px; color: var(--muted); font-weight: 500; }
+.dash-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.dash-section-title { font-size: 16px; font-weight: 700; margin: 0 0 16px; display: flex; align-items: center; justify-content: space-between;}
+.chart-container { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.modern-chart { display: flex; align-items: flex-end; gap: 20px; height: 180px; margin-top: 30px; padding-bottom: 10px; border-bottom: 2px solid var(--line-2); }
+.bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+.bar { width: 60%; max-width: 60px; border-radius: 6px 6px 0 0; transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1); min-height: 4px; position: relative; }
+.bar.income { background: linear-gradient(to top, #10b981, #34d399); box-shadow: 0 4px 12px rgba(16,185,129,0.2);}
+.bar.expense { background: linear-gradient(to top, #f87171, #fca5a5); box-shadow: 0 4px 12px rgba(248,113,113,0.2);}
+.bar.profit { background: linear-gradient(to top, #6366f1, #a78bfa); box-shadow: 0 4px 12px rgba(99,102,241,0.2);}
+.bar-label { font-size: 12px; font-weight: 600; color: var(--muted); }
+.bar-val { font-size: 12px; font-weight: 800; color: var(--ink); position: absolute; top: -24px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.quick-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.qa-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; border-radius: var(--radius-lg); border: 1px solid transparent; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.qa-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.qa-btn .icon { font-size: 26px; margin-bottom: 10px; }
+.qa-btn .text { font-size: 12px; font-weight: 700; }
+.qa-invoice { background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe; }
+.qa-sales { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+.qa-purchase { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+.qa-payment { background: #fffbeb; color: #d97706; border-color: #fde68a; }
+.top-list { display: flex; flex-direction: column; gap: 12px; }
+.top-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--panel-alt); border-radius: var(--radius); border: 1px solid var(--line-2); transition: all 0.2s;}
+.top-item:hover { border-color: var(--primary); background: var(--primary-light); }
+@media(max-width: 1024px) { .dash-layout { grid-template-columns: 1fr; } .dash-cards { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width: 600px) { .dash-cards { grid-template-columns: 1fr; } .welcome-banner { flex-direction: column; align-items: flex-start; gap: 16px; } }
+
 @media(max-width:1000px){.auth-wrap{grid-template-columns:1fr}.auth-left{display:none}.auth-right{padding:24px;min-height:100vh}}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.form-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){.shell{grid-template-columns:1fr}.sidebar{display:none;position:fixed;top:0;left:0;bottom:0;width:260px;z-index:20;height:100vh;transform:translateX(-100%);transition:transform 0.3s;padding-top:70px}.sidebar.open{display:flex;transform:translateX(0)}.mobile-menu-btn{display:grid}.fab{display:flex}.topbar{padding:0 12px;height:56px}.brand-text small{display:none}.save-badge{display:none}.user-name{display:none}.toolbar{padding:0 16px;height:48px}.content{padding:16px}.page-head h1{font-size:20px}.stats{grid-template-columns:repeat(2,1fr);gap:10px}.stat-card{padding:14px}.stat-value{font-size:20px}.form-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.gst-grid{grid-template-columns:1fr}.filter-bar input,.filter-bar select{width:100%}.totals-bar{flex-direction:column;align-items:stretch}.topbar-center{display:none}.invoice-preview{padding:20px}.inv-header{flex-direction:column}.inv-parties{grid-template-columns:1fr}.company-switcher{margin-right:4px}.company-btn{padding:4px 8px;font-size:11px}.autosave-wrap span{display:none}}
@@ -338,9 +378,15 @@ tbody tr:last-child td{border-bottom:0}
 <!-- LOGIN -->
 <div class="auth-wrap" id="loginScreen">
   <div class="auth-left">
-    <div class="auth-brand"><div class="auth-brand-mark">TP</div><div class="auth-brand-text"><strong>TP Accounting</strong><small>Modern Books for Indian Businesses</small></div></div>
+    <div class="auth-brand">
+      <div class="auth-brand-mark" style="background: rgba(255,255,255,0.2);">SA</div>
+      <div class="auth-brand-text">
+        <strong>Smart Accounting</strong>
+        <small>Modern Books for Indian Businesses</small>
+      </div>
+    </div>
     <div class="auth-hero">
-      <h1>Your books,<br>beautifully organized.</h1>
+      <h1>Aapka Business,<br>Aapka Hisaab.</h1>
       <p>Manage invoices, track expenses, and see your business grow — all from one place. GST-ready, offline-friendly, built for Indian SMEs.</p>
       <div class="auth-features">
         <div class="auth-feature"><div class="auth-feature-icon">🧾</div><div class="auth-feature-text"><b>Invoice Generator Built-in</b><small>13 templates · Auto-save to books</small></div></div>
@@ -348,7 +394,7 @@ tbody tr:last-child td{border-bottom:0}
         <div class="auth-feature"><div class="auth-feature-icon">💾</div><div class="auth-feature-text"><b>Local Storage & Pendrive Backup</b><small>Your data is always safe.</small></div></div>
       </div>
     </div>
-    <div class="auth-footer">© 2026 TP Accounting · Made for India 🇮🇳</div>
+    <div class="auth-footer">© 2026 Smart Accounting Software · Made for India 🇮🇳</div>
   </div>
   <div class="auth-right">
     <div class="auth-form-wrap">
@@ -386,14 +432,13 @@ tbody tr:last-child td{border-bottom:0}
   <header class="topbar">
     <div class="brand">
       <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-      <div class="brand-mark">TP</div>
-      <div class="brand-text"><strong>TP Accounting</strong><small>Modern Books</small></div>
+      <div class="brand-mark">SA</div>
+      <div class="brand-text"><strong>Smart Accounting</strong><small>Modern Books</small></div>
     </div>
     <div class="topbar-center"><div class="search-global"><input placeholder="Search... (Ctrl+K)" id="globalSearch"></div></div>
     
     <div class="topbar-right">
       
-      <!-- AUTOSAVE & USB SYNC -->
       <div class="autosave-wrap">
         <span>AutoSave</span>
         <label class="switch">
@@ -406,7 +451,6 @@ tbody tr:last-child td{border-bottom:0}
         <span>🔌</span> Link Pendrive
       </button>
 
-      <!-- NEW COMPANY SWITCHER IN TOPBAR -->
       <div class="company-switcher" onclick="toggleCompanyMenu(event)">
         <button class="company-btn">
           <span>🏢</span>
@@ -421,12 +465,11 @@ tbody tr:last-child td{border-bottom:0}
           </button>
         </div>
       </div>
-      <!-- END SWITCHER -->
 
       <div class="save-badge" id="saveBadge"><span class="pulse"></span><span id="saveText">Saved</span></div>
       <button class="icon-btn" title="Settings" onclick="showPage('settings')">⚙️</button>
       <div class="user-menu" onclick="toggleUserMenu(event)">
-        <div class="user-avatar" id="userAvatar">TP</div>
+        <div class="user-avatar" id="userAvatar">SA</div>
         <span class="user-name" id="userName">User</span>
         <div class="user-dropdown" id="userDropdown">
           <button onclick="showPage('settings');closeUserMenu()">⚙️ Company Setup</button>
@@ -478,28 +521,73 @@ tbody tr:last-child td{border-bottom:0}
       <div class="content">
         <!-- DASHBOARD -->
         <section class="section show" id="page-home">
-          <div class="page-head"><div><h1 id="welcomeTitle">Dashboard</h1><p>Real-time financial snapshot.</p></div><button class="btn primary lg" onclick="showPage('vouchers')">＋ New Voucher</button></div>
-          <div class="stats" id="dashStats"></div>
-          <div class="grid-2">
-            <div class="card">
-              <div class="card-head"><h2>⚡ Quick Actions</h2></div>
-              <div class="card-body"><div class="quick-grid">
-                <button class="quick-btn invoice" onclick="openInvoiceGenerator()"><div class="ic">🎨</div><div><b>Invoice Generator</b><small>13 templates</small></div></button>
-                <button class="quick-btn sales" onclick="setVoucher('Sales')"><div class="ic">↗</div><div><b>Sales Voucher</b><small>Manual entry</small></div></button>
-                <button class="quick-btn purchase" onclick="setVoucher('Purchase')"><div class="ic">↙</div><div><b>Purchase</b><small>Bill entry</small></div></button>
-                <button class="quick-btn receipt" onclick="setVoucher('Receipt')"><div class="ic">↓</div><div><b>Receipt</b><small>Money in</small></div></button>
-                <button class="quick-btn payment" onclick="setVoucher('Payment')"><div class="ic">↑</div><div><b>Payment</b></div></button>
-                <div class="quick-btn journal" onclick="setVoucher('Journal')"><div class="ic">⇄</div><div><b>Journal</b><small>Adjustment</small></div></div>
-              </div></div>
+          <div class="welcome-banner">
+            <div class="banner-content">
+              <h1 id="welcomeTitle">Dashboard</h1>
+              <p>Welcome back! Here is your business summary.</p>
             </div>
-            <div class="card">
-              <div class="card-head"><h2>📊 Live Report</h2></div>
-              <div class="card-body"><div class="chart-bars" id="liveChart"></div></div>
-            </div>
+            <button class="btn" style="background: #fff; color: var(--primary); font-weight: 700; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1;" onclick="showPage('vouchers')">＋ New Voucher</button>
           </div>
-          <div class="card">
-            <div class="card-head"><h2>Recent Activity <span class="sub">Latest 8</span></h2><button class="btn sm" onclick="showPage('daybook')">View all →</button></div>
-            <div class="table-wrap"><table><thead><tr><th>Date</th><th>Voucher</th><th>Type</th><th>Party</th><th class="right">Amount</th><th>Source</th><th></th></tr></thead><tbody id="recentRows"></tbody></table></div>
+
+          <div class="dash-cards" id="dashStats"></div>
+          
+          <div class="dash-layout">
+            <!-- Left Side: Chart & Recent -->
+            <div>
+              <!-- Modern Chart -->
+              <div class="chart-container">
+                <div class="dash-section-title">
+                  <span>📊 Financial Overview</span>
+                </div>
+                <div class="modern-chart" id="modernChart"></div>
+              </div>
+
+              <!-- Recent Activity -->
+              <div class="card" style="margin-bottom: 0;">
+                <div class="card-head" style="padding: 16px 20px;">
+                  <h2 style="font-size: 16px;">Recent Transactions</h2>
+                  <button class="btn sm" onclick="showPage('daybook')">View All →</button>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Date</th><th>Voucher</th><th>Type</th><th>Party</th><th class="right">Amount</th><th></th></tr></thead>
+                    <tbody id="recentRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Actions & Top Customers -->
+            <div>
+              <!-- Quick Actions -->
+              <div class="card" style="margin-bottom: 24px;">
+                <div class="card-head" style="padding: 16px 20px;"><h2 style="font-size: 16px;">⚡ Quick Actions</h2></div>
+                <div class="card-body" style="padding: 16px;">
+                  <div class="quick-actions-grid">
+                    <button class="qa-btn qa-invoice" onclick="openInvoiceGenerator()">
+                      <div class="icon">🎨</div><div class="text">Invoice</div>
+                    </button>
+                    <button class="qa-btn qa-sales" onclick="setVoucher('Sales')">
+                      <div class="icon">↗</div><div class="text">Sale</div>
+                    </button>
+                    <button class="qa-btn qa-purchase" onclick="setVoucher('Purchase')">
+                      <div class="icon">↙</div><div class="text">Purchase</div>
+                    </button>
+                    <button class="qa-btn qa-payment" onclick="setVoucher('Payment')">
+                      <div class="icon">↑</div><div class="text">Payment</div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Top Receivables -->
+              <div class="card">
+                <div class="card-head" style="padding: 16px 20px;"><h2 style="font-size: 16px;">👑 Top Debtors (Receivables)</h2></div>
+                <div class="card-body" style="padding: 16px;">
+                  <div class="top-list" id="topDebtorsList"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -876,15 +964,13 @@ let lastInvoiceId=null;
 let appInitialized=false;
 
 /* ============ AUTOSAVE & USB SYNC VARIABLES ============ */
-let isAutoSaveEnabled = localStorage.getItem('tp_autosave') !== 'false'; // Defaults to true
+let isAutoSaveEnabled = localStorage.getItem('tp_autosave') !== 'false';
 let usbFileHandle = null;
 
 function load(k,fb){try{const x=localStorage.getItem(k);return x?JSON.parse(x):fb}catch(e){return fb}}
 
-// UPDATED PERSIST FUNCTION
 async function persist(){
   try{
-    // 1. ALWAYS Save to localStorage (Browser)
     localStorage.setItem(`tp_ledgers_${company.id}`, JSON.stringify(ledgers));
     localStorage.setItem(`tp_vouchers_${company.id}`, JSON.stringify(vouchers));
     localStorage.setItem(`tp_invoices_${company.id}`, JSON.stringify(invoices));
@@ -898,7 +984,6 @@ async function persist(){
     setSaveState('saved','Saved (Browser)');
     updateSideInfo();updateInvBadge();
 
-    // 2. Save to USB if linked
     if (usbFileHandle) {
       try {
         let usbData = { version: 11, companies: {} };
@@ -945,7 +1030,6 @@ async function persist(){
   }
 }
 
-/* ============ AUTOSAVE TOGGLE ============ */
 function toggleAutoSave(checked) {
   isAutoSaveEnabled = checked;
   localStorage.setItem('tp_autosave', checked);
@@ -954,10 +1038,9 @@ function toggleAutoSave(checked) {
   } else {
     toast('AutoSave OFF (Data still saved in Browser)', 'warning');
   }
-  persist(); // Always trigger save
+  persist();
 }
 
-/* ============ USB / PENDRIVE SYNC ============ */
 function getDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open('TP_Accounting_DB', 1);
@@ -1001,7 +1084,7 @@ async function checkStoredHandle() {
                 updateUSBBtn(true);
                 toast('Pendrive re-linked automatically!', 'success');
             } else {
-                usbFileHandle = handle; // Store but needs permission
+                usbFileHandle = handle;
                 updateUSBBtn(false);
             }
         }
@@ -1027,7 +1110,6 @@ async function linkPendrive() {
       return;
     }
 
-    // 1. Try stored handle first
     let storedHandle = usbFileHandle; 
     if (!storedHandle) {
          try { storedHandle = await loadHandleFromDB(); } catch(e){}
@@ -1049,7 +1131,6 @@ async function linkPendrive() {
         }
     }
 
-    // 2. Ask user to pick file
     const newHandle = await window.showSaveFilePicker({
       suggestedName: `TP_Backup_${company.name.replace(/\s+/g, '_')}.json`,
       types: [{
@@ -1062,7 +1143,6 @@ async function linkPendrive() {
     await saveHandleToDB(usbFileHandle);
     updateUSBBtn(true);
     
-    // 3. Check if file has data and local is empty
     let fileHasData = false;
     let parsedData = null;
     try {
@@ -1148,12 +1228,10 @@ async function restoreFromUSB() {
       const compCount = Object.keys(companiesToRestore).length;
       if (!confirm(`Found data for ${compCount} company(ies) in this file.\nDo you want to merge/load this data?`)) return;
 
-      // Link file for future saving
       usbFileHandle = fileHandle;
       await saveHandleToDB(usbFileHandle);
       updateUSBBtn(true);
 
-      // Merge data
       for (const [compId, compData] of Object.entries(companiesToRestore)) {
           const existingIdx = companiesList.findIndex(c => c.id === compId);
           if (existingIdx === -1) {
@@ -1169,7 +1247,6 @@ async function restoreFromUSB() {
       
       localStorage.setItem('tp_companies', JSON.stringify(companiesList));
 
-      // Reload current company data (in case it was updated)
       company = companiesList.find(c => c.id === localStorage.getItem('tp_active_company_id')) || companiesList[0];
       localStorage.setItem('tp_active_company_id', company.id);
       
@@ -1195,11 +1272,9 @@ async function restoreFromUSB() {
     }
 }
 
-/* ============ OTHER LOGIC ============ */
 function switchCompany(newId) {
   if (newId === company.id) return;
 
-  // 1. Save current company data locally
   try {
     localStorage.setItem(`tp_ledgers_${company.id}`, JSON.stringify(ledgers));
     localStorage.setItem(`tp_vouchers_${company.id}`, JSON.stringify(vouchers));
@@ -1210,26 +1285,19 @@ function switchCompany(newId) {
     localStorage.setItem('tp_companies', JSON.stringify(companiesList));
   } catch(e){}
 
-  // 2. Set new active ID
   localStorage.setItem('tp_active_company_id', newId);
-  
-  // 3. Find new company
   company = companiesList.find(c => c.id === newId) || companiesList[0];
 
-  // 4. Load new company data
   ledgers = load(`tp_ledgers_${company.id}`, JSON.parse(JSON.stringify(defaultLedgers)));
   vouchers = load(`tp_vouchers_${company.id}`, []);
   invoices = load(`tp_invoices_${company.id}`, []);
   parties = load(`tp_parties_${company.id}`, []);
 
-  // 5. Update UI
   applyCompanyUI();
   renderCompanyDropdown();
   showPage('home'); 
   
   toast('Switched to: ' + company.name, 'success');
-  
-  // 6. Save new company data to USB (merges with existing)
   persist();
   closeCompanyMenu();
 }
@@ -1724,7 +1792,7 @@ function saveExternalInvoiceToTP(inv) {
   renderInvoices();
   renderInvoiceStats();
   lastInvoiceId = invoice.id;
-  toast('✓ Invoice ' + inv.number + ' saved to TP Accounting!', 'success');
+  toast('✓ Invoice ' + inv.number + ' saved to Smart Accounting!', 'success');
   setTimeout(() => { showInvoiceSuccess(invoice); }, 400);
   setTimeout(() => { showPage('invoices'); }, 800);
 }
@@ -1926,7 +1994,7 @@ function calcNetProfit(){
   return income-expense;
 }
 
-/* ============ DASHBOARD ============ */
+/* ============ MODERN DASHBOARD LOGIC ============ */
 function renderDashboard(){
   let sales=0,purchase=0,receivable=0;
   vouchers.forEach(v=>{
@@ -1935,25 +2003,103 @@ function renderDashboard(){
     v.lines.forEach(l=>{if(l.ledger==='Sundry Debtors')receivable+=(Number(l.debit)||0)-(Number(l.credit)||0);});
   });
   const netPL=calcNetProfit();
+  
   document.getElementById('welcomeTitle').textContent=company.name;
   document.getElementById('dashStats').innerHTML=`
-    <div class="stat-card sales"><div class="stat-label"><div class="stat-icon">💰</div>Sales</div><div class="stat-value num">${money(sales)}</div><div class="stat-meta">${vouchers.filter(v=>v.type==='Sales').length} vouchers</div></div>
-    <div class="stat-card purchase"><div class="stat-label"><div class="stat-icon">🛒</div>Purchases</div><div class="stat-value num">${money(purchase)}</div><div class="stat-meta">${vouchers.filter(v=>v.type==='Purchase').length} bills</div></div>
-    <div class="stat-card invoice"><div class="stat-label"><div class="stat-icon">🧾</div>Invoices</div><div class="stat-value num">${invoices.length}</div><div class="stat-meta">Generated</div></div>
-    <div class="stat-card profit"><div class="stat-label"><div class="stat-icon">📈</div>Net ${netPL>=0?'Profit':'Loss'}</div><div class="stat-value num" style="color:${netPL>=0?'var(--success)':'var(--danger)'}">${money(Math.abs(netPL))}</div><div class="stat-meta">Income−Expense</div></div>`;
-  document.getElementById('recentRows').innerHTML=vouchers.slice(-8).reverse().map(v=>{
+    <div class="dash-card">
+      <div class="icon" style="background: #ecfdf5; color: #059669;">💰</div>
+      <div class="value" style="color: #059669;">${money(sales)}</div>
+      <div class="label">Total Sales (${vouchers.filter(v=>v.type==='Sales').length} entries)</div>
+    </div>
+    <div class="dash-card">
+      <div class="icon" style="background: #fef2f2; color: #dc2626;">🛒</div>
+      <div class="value" style="color: #dc2626;">${money(purchase)}</div>
+      <div class="label">Total Purchases (${vouchers.filter(v=>v.type==='Purchase').length} entries)</div>
+    </div>
+    <div class="dash-card">
+      <div class="icon" style="background: #eff6ff; color: #2563eb;">📥</div>
+      <div class="value" style="color: #2563eb;">${money(receivable)}</div>
+      <div class="label">Receivables (To Collect)</div>
+    </div>
+    <div class="dash-card">
+      <div class="icon" style="background: ${netPL>=0?'#fffbeb':'#fef2f2'}; color: ${netPL>=0?'#d97706':'#dc2626'};">📈</div>
+      <div class="value" style="color: ${netPL>=0?'#d97706':'#dc2626'};">${money(Math.abs(netPL))}</div>
+      <div class="label">Net ${netPL>=0?'Profit':'Loss'}</div>
+    </div>`;
+
+  // Recent Activity
+  document.getElementById('recentRows').innerHTML=vouchers.slice(-6).reverse().map(v=>{
     const inv=invoices.find(i=>i.voucherId===v.id);
-    return `<tr><td>${fmtDate(v.date)}</td><td><b>${esc(v.no)}</b></td><td><span class="pill ${v.type.toLowerCase()}">${esc(v.type)}</span></td><td>${esc(v.party||'—')}</td><td class="right num">${money(v.drTotal)}</td><td>${inv?'<span class="pill generator">🎨 Inv</span>':'<span class="pill neutral">Manual</span>'}</td><td><div style="display:flex;gap:4px"><button class="btn sm" onclick="editVoucher('${v.id}')">✎</button><button class="btn sm danger" onclick="askDelete('${v.id}')">✕</button></div></td></tr>`;
-  }).join('')||'<tr><td colspan="7"><div class="empty"><div class="empty-icon">📊</div><div class="empty-title">No vouchers</div></div></td></tr>';
+    return `<tr><td>${fmtDate(v.date)}</td><td><b>${esc(v.no)}</b></td><td><span class="pill ${v.type.toLowerCase()}">${esc(v.type)}</span></td><td>${esc(v.party||'—')}</td><td class="right num">${money(v.drTotal)}</td><td>${inv?'<span class="pill generator">🎨</span>':''}</td><td><button class="btn sm" onclick="editVoucher('${v.id}')">✎</button></td></tr>`;
+  }).join('')||'<tr><td colspan="7"><div class="empty">No recent vouchers</div></td></tr>';
+
+  // Top Debtors Calculation
+  let debtorsMap = {};
+  vouchers.forEach(v => {
+      v.lines.forEach(l => {
+          if(l.ledger === 'Sundry Debtors' && v.party) {
+              if(!debtorsMap[v.party]) debtorsMap[v.party] = 0;
+              debtorsMap[v.party] += (Number(l.debit) || 0) - (Number(l.credit) || 0);
+          }
+      });
+  });
+  
+  const topDebtors = Object.entries(debtorsMap)
+        .filter(([name, bal]) => bal > 0)
+        .sort((a,b) => b[1] - a[1])
+        .slice(0, 5);
+
+  const topList = document.getElementById('topDebtorsList');
+  if(topDebtors.length > 0) {
+      topList.innerHTML = topDebtors.map(([name, bal], index) => `
+        <div class="top-item">
+           <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:24px; height:24px; background:#e0e7ff; color:#4f46e5; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">#${index+1}</div>
+              <div style="font-weight:600; font-size:13px; color:var(--ink);">${esc(name)}</div>
+           </div>
+           <div style="font-family:'JetBrains Mono'; font-weight:700; color:var(--danger); font-size:13px;">${money(bal)}</div>
+        </div>
+      `).join('');
+  } else {
+      topList.innerHTML = '<div class="empty" style="padding:20px 0;"><div class="empty-icon">✨</div><div class="empty-desc">No pending receivables!</div></div>';
+  }
 }
+
 function renderLiveChart(){
   let income=0,expense=0;
-  ledgers.forEach(l=>{const net=getLedgerBalance(l.name).net;if(l.nature==='Income')income+=-net;else if(l.nature==='Expense')expense+=net;});
-  const max=Math.max(income,expense,1);
-  document.getElementById('liveChart').innerHTML=`
-    <div class="chart-row"><div class="chart-row-label"><span>💰 Income</span><b>${moneySimple(income)}</b></div><div class="chart-bar"><div class="chart-bar-fill income" style="width:${(income/max*100).toFixed(1)}%"></div></div></div>
-    <div class="chart-row"><div class="chart-row-label"><span>💸 Expense</span><b>${moneySimple(expense)}</b></div><div class="chart-bar"><div class="chart-bar-fill expense" style="width:${(expense/max*100).toFixed(1)}%"></div></div></div>
-    <div class="chart-row"><div class="chart-row-label"><span>📊 Profit</span><b>${moneySimple(income-expense)}</b></div><div class="chart-bar"><div class="chart-bar-fill profit" style="width:${(Math.abs(income-expense)/max*100).toFixed(1)}%"></div></div></div>`;
+  ledgers.forEach(l=>{
+    const net=getLedgerBalance(l.name).net;
+    if(l.nature==='Income')income+=-net;
+    else if(l.nature==='Expense')expense+=net;
+  });
+  
+  const profit = income - expense;
+  const max = Math.max(income, expense, Math.abs(profit), 100);
+  
+  const incH = (income/max)*100;
+  const expH = (expense/max)*100;
+  const proH = (Math.abs(profit)/max)*100;
+
+  document.getElementById('modernChart').innerHTML=`
+    <div class="bar-wrapper">
+      <div class="bar income" style="height: ${incH}%;">
+        <div class="bar-val" style="color:#059669;">${moneySimple(income)}</div>
+      </div>
+      <div class="bar-label">Income</div>
+    </div>
+    <div class="bar-wrapper">
+      <div class="bar expense" style="height: ${expH}%;">
+        <div class="bar-val" style="color:#dc2626;">${moneySimple(expense)}</div>
+      </div>
+      <div class="bar-label">Expense</div>
+    </div>
+    <div class="bar-wrapper">
+      <div class="bar profit" style="height: ${proH}%;">
+        <div class="bar-val" style="color:${profit>=0?'#6366f1':'#dc2626'};">${moneySimple(Math.abs(profit))}</div>
+      </div>
+      <div class="bar-label">Net ${profit>=0?'Profit':'Loss'}</div>
+    </div>
+  `;
 }
 
 /* ============ VOUCHER EDIT/DELETE ============ */
@@ -2161,7 +2307,6 @@ function previewCSV(){
 }
 function downloadBackup(){
   const data = { version: 11, companies: {} };
-  // Include ALL companies in manual backup
   companiesList.forEach(c => {
       data.companies[c.id] = {
           company: c,
@@ -2391,11 +2536,10 @@ function setVoucher(t){showPage('vouchers');document.getElementById('vType').val
 function initApp(){
   if(appInitialized)return;appInitialized=true;
   
-  // Set UI for autosave
   const toggle = document.getElementById('autoSaveToggle');
   if(toggle) toggle.checked = isAutoSaveEnabled;
 
-  checkStoredHandle(); // Auto-reconnect Pendrive
+  checkStoredHandle();
 
   applyCompanyUI();renderDashboard();renderLiveChart();renderMasters();
   renderLedgerSelect();renderDaybook();renderInvoices();renderInvoiceStats();
@@ -2418,7 +2562,6 @@ function initApp(){
     initApp();
   }
 })();
-console.log('%c✨ TP Accounting V10 (Local + USB Sync)','color:#4f46e5;font-size:16px;font-weight:bold');
+console.log('%c✨ Smart Accounting Software V10','color:#4f46e5;font-size:16px;font-weight:bold');
 </script>
 </body></html>
-<!-- CODE END -->
