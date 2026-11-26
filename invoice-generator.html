@@ -82,10 +82,6 @@
   .history-item .hi-actions { display: flex; gap: 4px; }
   .history-item .hi-actions button { width: 26px; height: 26px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
   .history-item .hi-del { background: #fee2e2; color: #dc2626; }
-  .history-item .hi-doctype { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 1px 6px; border-radius: 999px; background: #e0e7ff; color: #3730a3; display: inline-block; margin-left: 4px; }
-  .history-item .hi-doctype.credit { background: #fee2e2; color: #991b1b; }
-  .history-item .hi-doctype.debit { background: #fef3c7; color: #92400e; }
-  .history-item .hi-doctype.proforma { background: #dbeafe; color: #1e40af; }
   .history-empty { text-align: center; padding: 24px 12px; color: #94a3b8; font-size: 12px; }
   .history-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
 
@@ -579,7 +575,6 @@
           <div class="field"><label>PAN</label><input id="bPan" autocomplete="off" oninput="sync()"></div>
         </div>
         
-        <!-- UDYAM FIELD -->
         <div class="field"><label>Udyam Registration No.</label><input id="bUdyam" autocomplete="off" oninput="sync()" placeholder="UDYAM-RJ-XX-XXXXXXX"></div>
 
         <div class="grid2">
@@ -796,7 +791,6 @@ const STATE_NAMES = {
   '32':'Kerala','33':'TN','34':'Puducherry','35':'A&N','36':'Telangana','37':'AP','38':'Ladakh'
 };
 
-/* ═══ GSTIN → STATE UTILITIES ═══ */
 function getStateFromGSTIN(gstin) {
   if (!gstin || typeof gstin !== 'string') return null;
   const clean = gstin.trim().toUpperCase();
@@ -870,7 +864,6 @@ function onClientGstinInput(value) {
   sync();
 }
 
-/* ═══ COLOR UTILITIES ═══ */
 function lightenColor(hex, percent) {
   if (!hex || hex.length < 7) return '#dbeafe';
   const r = parseInt(hex.slice(1,3), 16);
@@ -896,7 +889,6 @@ function getColorName(hex) {
   return 'Custom Color';
 }
 
-/* ═══ THEME COLOR PICKER ═══ */
 function buildColorGrids() {
   const themeGrid = $('themeColorsGrid');
   const stdGrid = $('standardColorsGrid');
@@ -1133,11 +1125,6 @@ function handleRegStatus() {
     taxType.style.color = '#0f172a';
     cGstin.disabled = false;
     cGstin.style.background = '#fff';
-    if (taxType.value === 'none') taxType.value = 'cgst-sgst';
-    hint.innerHTML = '🚫 <strong>Unregistered client</strong> — Client ka GSTIN nahi hai, <strong>par GST phir bhi lagegi</strong>. Client ITC claim nahi kar payega.';
-    hint.style.background = '#fef2f2';
-    hint.style.borderLeftColor = '#dc2626';
-    hint.style.color = '#991b1b';
     autoTaxFromState();
   } else {
     taxType.disabled = false;
@@ -1145,11 +1132,6 @@ function handleRegStatus() {
     taxType.style.color = '#0f172a';
     cGstin.disabled = false;
     cGstin.style.background = '#fff';
-    if (taxType.value === 'none') taxType.value = 'cgst-sgst';
-    hint.innerHTML = '✅ <strong>Registered client</strong> — GSTIN daalte hi tax type auto-select ho jayega.';
-    hint.style.background = '#ecfdf5';
-    hint.style.borderLeftColor = '#10b981';
-    hint.style.color = '#065f46';
     autoTaxFromState();
   }
   sync();
@@ -1211,7 +1193,7 @@ function autoTaxFromState() {
   if (status === 'registered' && cliGstin.length >= 2) {
     cliState = cliGstin.substring(0, 2);
     source = 'Client GSTIN';
-  } else if (status === 'unregistered' || cliGstin.length < 2) {
+  } else if (place.length >= 2) {
     cliState = extractStateFromPlace(place);
     if (cliState) source = 'Place of Supply';
   }
@@ -1219,7 +1201,7 @@ function autoTaxFromState() {
   // CASH BILL LOGIC: If client state is not found (no GSTIN, no place of supply), default to CGST+SGST
   if (!cliState) {
     taxType.value = 'cgst-sgst';
-    hint.innerHTML = '📍 <strong>Cash Bill / No Client GSTIN</strong> — Defaulting to <strong>CGST + SGST</strong> (Intra-state).';
+    hint.innerHTML = '📍 <strong>Cash Bill / Local</strong> — Defaulting to <strong>CGST + SGST</strong>.';
     hint.style.background = '#ecfdf5';
     hint.style.borderLeftColor = '#10b981';
     hint.style.color = '#065f46';
@@ -1611,65 +1593,29 @@ function buildCustomText(s) {
 function buildCommonBlocks(s, t) {
   const isIGST = s.taxType === 'igst';
   const isNone = s.taxType === 'none';
-  const itemRows = s.items.map((it, i) => {
+  
+  let itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
     const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
-    return '<tr><td class="c" style="font-weight:600;">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td><td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
+    return '<tr><td class="c">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td><td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
   }).join('');
   
   let taxRows = '';
   if (s.taxType === 'cgst-sgst') taxRows = '<div class="totals-row"><span class="lbl">CGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div><div class="totals-row"><span class="lbl">SGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div>';
   else if (s.taxType === 'igst') taxRows = '<div class="totals-row"><span class="lbl">IGST</span><span class="amt">' + fmt(t.totalTax) + '</span></div>';
   
-  const hsnHead = isIGST
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>IGST</th><th>Total</th>'
-    : isNone
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>Total</th>'
-    : '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>Total</th>';
-  
+  const hsnHead = isIGST ? '<th>HSN/SAC</th><th class="r">Taxable</th><th class="r">Rate</th><th class="r">IGST</th><th class="r">Total</th>'
+    : isNone ? '<th>HSN/SAC</th><th class="r">Taxable</th><th class="r">Total</th>'
+    : '<th>HSN/SAC</th><th class="r">Taxable</th><th class="r">Rate</th><th class="r">CGST</th><th class="r">SGST</th><th class="r">Total</th>';
+    
   const hsnRows = Object.values(t.hsnSummary).map(d => {
-    const base = '<td>' + esc(d.hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td>';
-    if (isIGST) return '<tr>' + base + '<td>' + fmt(d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-    if (isNone) return '<tr>' + base + '<td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-    return '<tr>' + base + '<td>' + fmt(d.cgst) + '</td><td>' + fmt(d.sgst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    const base = '<td>' + esc(d.hsn) + '</td><td class="r">' + fmt(d.taxable) + '</td>' + (isNone ? '' : '<td class="r">' + d.rate + '%</td>');
+    if (isIGST) return '<tr>' + base + '<td class="r">' + fmt(d.igst) + '</td><td class="r" style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    if (isNone) return '<tr>' + base + '<td class="r" style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
+    return '<tr>' + base + '<td class="r">' + fmt(d.cgst) + '</td><td class="r">' + fmt(d.sgst) + '</td><td class="r" style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
   }).join('');
 
-  const totalsBox = `
-    <div class="totals-wrap">
-      <div class="totals-box">
-        <div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
-        ${taxRows}
-        <div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${fmt(t.roundOff)}</span></div>
-        <div class="totals-row grand"><span class="lbl">Grand Total</span><span class="amt">${fmt(t.rounded)}</span></div>
-      </div>
-    </div>
-  `;
-
-  const wordsBox = '<div class="words-box"><strong>Amount in words:</strong> ' + numToWords(t.rounded) + '</div>';
-
-  const footer = `
-    <div class="footer-grid">
-      <div>
-        <h4>Bank Details</h4>
-        ${s.bank?.name ? `<div class="kv"><strong>Bank:</strong> ${esc(s.bank.name)}</div>` : ''}
-        ${s.bank?.ac ? `<div class="kv"><strong>Ac No:</strong> ${esc(s.bank.ac)}</div>` : ''}
-        ${s.bank?.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(s.bank.ifsc)}</div>` : ''}
-        ${s.bank?.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(s.bank.branch)}</div>` : ''}
-        ${s.bank?.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(s.bank.upi)}</div>` : ''}
-      </div>
-      <div>
-        <h4>Terms & Conditions</h4>
-        <p>${esc(s.terms).replace(/\n/g, '<br>') || '—'}</p>
-      </div>
-    </div>
-    <div class="sign-area">
-      <div style="font-size:10px;color:var(--muted);">For ${esc(s.business.name || '')}</div>
-      <div style="height:40px;"></div>
-      <div class="sign-line">Authorized Signatory</div>
-    </div>
-  `;
-
-  return { itemRows, taxRows, hsnHead, hsnRows, totalsBox, wordsBox, footer };
+  return { itemRows, taxRows, hsnHead, hsnRows };
 }
 
 function render() {
@@ -1677,83 +1623,107 @@ function render() {
   if (!preview) return;
   
   preview.className = 'invoice-a4 tpl tpl-' + state.template;
-  if (state.accentColor) {
-    const soft = lightenColor(state.accentColor, 85);
-    const txt = isLightColor(state.accentColor) ? '#0f172a' : '#fff';
-    preview.style.setProperty('--accent', state.accentColor);
-    preview.style.setProperty('--accent-soft', soft);
-    preview.style.setProperty('--accent-text', txt);
-  } else {
-    preview.style.removeProperty('--accent');
-    preview.style.removeProperty('--accent-soft');
-    preview.style.removeProperty('--accent-text');
-  }
+  applyAccentToPreview(preview);
   
   const t = calcTotals();
   const labels = getLabels(state.docType);
-  const customText = buildCustomText(state);
-  const c = buildCommonBlocks(state, t);
+  const cText = buildCustomText(state);
+  const common = buildCommonBlocks(state, t);
   
+  const bizInfoHTML = buildBizInfoHTML(state.business);
+  const logoHTML = getLogoHTML('normal');
+  const logoSideHTML = getLogoHTML('side');
+  
+  let bankHTML = '';
+  if (state.bank?.name || state.bank?.ac || state.bank?.ifsc) {
+    bankHTML = `<h4>Bank Details</h4>
+    ${state.bank.name ? `<div class="kv"><strong>Bank:</strong> ${esc(state.bank.name)}</div>` : ''}
+    ${state.bank.ac ? `<div class="kv"><strong>Ac No:</strong> ${esc(state.bank.ac)}</div>` : ''}
+    ${state.bank.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(state.bank.ifsc)}</div>` : ''}
+    ${state.bank.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(state.bank.branch)}</div>` : ''}
+    ${state.bank.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(state.bank.upi)}</div>` : ''}`;
+  }
+
+  const footerHTML = `
+    <div class="footer-grid">
+      <div>${bankHTML}</div>
+      <div>
+        <h4>Terms & Conditions</h4>
+        <p>${esc(state.terms).replace(/\n/g, '<br>') || '—'}</p>
+        ${state.notes ? `<p style="margin-top:4px;"><strong>Notes:</strong> ${esc(state.notes)}</p>` : ''}
+      </div>
+    </div>
+    <div class="sign-area">
+      <div style="font-size:10px;color:var(--muted);">For ${esc(state.business.name || '')}</div>
+      <div style="height:40px;"></div>
+      <div class="sign-line">Authorized Signatory</div>
+    </div>
+  `;
+
+  const totalsBox = `
+    <div class="totals-wrap">
+      <div class="totals-box">
+        <div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
+        ${common.taxRows}
+        ${t.roundOff !== 0 ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff > 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}
+        <div class="totals-row grand"><span class="lbl">Grand Total</span><span class="amt">${fmt(t.rounded)}</span></div>
+      </div>
+    </div>
+  `;
+
+  const wordsBox = `<div class="words-box"><strong>Amount in words:</strong> ${numToWords(t.rounded)}</div>`;
+  const detailsHTML = state.details.filter(d => d.trim()).map(d => `<div style="font-size:10px;color:var(--muted);margin-top:2px;">${esc(d)}</div>`).join('');
+
   let html = '';
-  
+
   if (state.template === 'classic') {
     html = `
-      ${customText.top}
+      ${cText.top}
       <div class="inv-header">
         <div style="display:flex;gap:14px;align-items:center;">
-          ${getLogoHTML('normal')}
+          ${logoHTML}
           <div>
             <div class="inv-biz-name">${esc(state.business.name) || 'Business Name'}</div>
-            <div class="inv-biz-info">${buildBizInfoHTML(state.business)}</div>
+            <div class="inv-biz-info">${bizInfoHTML}</div>
           </div>
         </div>
-        <div class="inv-title-box">
-          <div class="inv-h1">${labels.title.toUpperCase()}</div>
-        </div>
+        <div class="inv-title-box"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:60%;">
+        <div style="width:55%;">
           <div class="inv-party-label">BILL TO</div>
           <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
-          <div class="inv-party-info">
-            ${esc(state.client.addr) || ''}<br>
-            ${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}
-          </div>
+          <div class="inv-party-info">${esc(state.client.addr) || ''}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
         </div>
-        <div style="width:35%;" class="inv-details-box">
+        <div style="width:40%;" class="inv-details-box">
           <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no) || '—'}</span></div>
           <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
           ${state.meta.place ? `<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place)}</span></div>` : ''}
         </div>
       </div>
-      ${customText.middle}
+      ${cText.middle}
       <table class="inv-table">
         <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
-        <tbody>${c.itemRows}</tbody>
+        <tbody>${common.itemRows}</tbody>
       </table>
-      ${c.wordsBox}
-      ${c.totalsBox}
-      ${c.footer}
+      ${wordsBox}
+      ${totalsBox}
+      ${footerHTML}
     `;
   } else if (state.template === 'modern') {
     html = `
       <div class="inv-wrap">
         <div class="inv-side">
-          ${getLogoHTML('side')}
+          ${logoSideHTML}
           <div class="inv-biz-name">${esc(state.business.name) || 'Business Name'}</div>
           <p>${esc(state.business.addr).replace(/\n/g, '<br>')}</p>
-          <h4>Contact</h4>
-          <p>${esc(state.business.email)}<br>${esc(state.business.phone)}</p>
-          <h4>Tax Info</h4>
-          <p>GSTIN: ${esc(state.business.gstin) || '—'}</p>
+          <h4>Contact</h4><p>${esc(state.business.email)}<br>${esc(state.business.phone)}</p>
+          <h4>Tax Info</h4><p>GSTIN: ${esc(state.business.gstin) || '—'}</p>
         </div>
         <div class="inv-main">
-          ${customText.top}
+          ${cText.top}
           <div class="inv-header">
-            <div>
-              <div class="inv-h1">${labels.title.toUpperCase()}</div>
-              <div style="font-size:10px;color:#64748b;margin-top:4px;">#${esc(state.meta.no) || '—'}</div>
-            </div>
+            <div><div class="inv-h1">${labels.title.toUpperCase()}</div><div style="font-size:10px;color:#64748b;margin-top:4px;">#${esc(state.meta.no) || '—'}</div></div>
             <div style="text-align:right;font-size:10px;">
               <div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
               ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
@@ -1762,55 +1732,316 @@ function render() {
           <div style="margin-bottom:12px;">
             <div class="inv-party-label">BILL TO</div>
             <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
-            <div class="inv-party-info">${esc(state.client.addr) || ''}</div>
+            <div class="inv-party-info">${esc(state.client.addr) || ''}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
           </div>
-          ${customText.middle}
+          ${cText.middle}
           <table class="inv-table">
             <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
-            <tbody>${c.itemRows}</tbody>
+            <tbody>${common.itemRows}</tbody>
           </table>
-          ${c.wordsBox}
-          ${c.totalsBox}
-          ${c.footer}
+          ${wordsBox}${totalsBox}${footerHTML}
         </div>
       </div>
     `;
-  } else {
-    // Fallback generic layout for other templates to prevent breaking
+  } else if (state.template === 'minimal') {
     html = `
-      ${customText.top}
-      <div class="inv-header" style="display:flex;justify-content:space-between;border-bottom:2px solid var(--accent);padding-bottom:10px;margin-bottom:12px;">
-        <div>
-          <div class="inv-biz-name">${esc(state.business.name) || 'Business Name'}</div>
-          <div class="inv-biz-info">${buildBizInfoHTML(state.business)}</div>
-        </div>
-        <div style="text-align:right;">
-          <div class="inv-h1" style="color:var(--accent);font-size:22px;">${labels.title.toUpperCase()}</div>
-        </div>
+      ${cText.top}
+      <div class="inv-header">
+        <div><div class="inv-h1">${labels.title.toUpperCase()}</div><div class="inv-biz-name" style="margin-top:6px;">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div style="text-align:right;font-size:10px;"><div><strong>#${esc(state.meta.no)}</strong></div><div>${fmtDate(state.meta.date)}</div>${state.meta.place ? `<div>${esc(state.meta.place)}</div>` : ''}</div>
+      </div>
+      <div class="bill-to-wrap">
+        <div><div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div><div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div></div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'gst') {
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div style="display:flex;gap:14px;align-items:center;">${logoHTML}<div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div></div>
+        <div class="inv-title-box"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:60%;">
-          <div class="inv-party-label">BILL TO</div>
-          <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
-          <div class="inv-party-info">${esc(state.client.addr) || ''}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}</div>
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
         </div>
-        <div style="width:35%;text-align:right;">
-          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no) || '—'}</div>
+        <div style="width:40%;" class="inv-details-box">
+          <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no)}</span></div>
+          <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
+          ${state.meta.place ? `<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place)}</span></div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      <table class="hsn-table"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table>
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'corporate') {
+    html = `
+      <div class="inv-header">
+        <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div class="inv-title-box"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+      </div>
+      ${cText.top}
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+        <div style="width:40%;" class="inv-details-box">
+          <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no)}</span></div>
+          <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
+          ${state.meta.place ? `<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place)}</span></div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'compact') {
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div><div style="font-size:10px;margin-top:2px;">#${esc(state.meta.no)}</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+        <div style="width:40%;text-align:right;">
           <div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
           ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
         </div>
       </div>
-      ${customText.middle}
+      ${cText.middle}
       <table class="inv-table">
         <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
-        <tbody>${c.itemRows}</tbody>
+        <tbody>${common.itemRows}</tbody>
       </table>
-      ${c.wordsBox}
-      ${c.totalsBox}
-      ${c.footer}
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'rounded') {
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div style="display:flex;gap:14px;align-items:center;">${logoHTML}<div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div></div>
+        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+        <div style="width:40%;text-align:right;">
+          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
+          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'gst-detailed') {
+    const rateCards = Object.values(t.rateSummary).map(r => `
+      <div class="rate-card"><div class="r-label">GST ${r.rate}%</div><div class="r-value">${fmt(r.taxable)}</div><div class="r-tax">Tax: ${fmt(r.cgst + r.sgst + r.igst)}</div></div>
+    `).join('');
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+      </div>
+      <div class="gst-info-bar">
+        <div class="item"><span class="lbl">Invoice No:</span><span class="val">${esc(state.meta.no)}</span></div>
+        <div class="item"><span class="lbl">Date:</span><span class="val">${fmtDate(state.meta.date)}</span></div>
+        ${state.meta.place ? `<div class="item"><span class="lbl">Place:</span><span class="val">${esc(state.meta.place)}</span></div>` : ''}
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      <div class="rate-summary-title">Tax Rate Summary</div>
+      <div class="rate-summary-grid">${rateCards}</div>
+      <table class="gst-detail-hsn"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table>
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'gst-lite') {
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+        <div style="width:40%;text-align:right;">
+          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
+          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      <div class="gst-lite-summary">
+        <div><table class="gst-lite-hsn-table"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table></div>
+        <div>${totalsBox}</div>
+      </div>
+      ${wordsBox}${footerHTML}
+    `;
+  } else if (state.template === 'standard') {
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+      </div>
+      <div class="inv-boxes">
+        <div class="inv-box">
+          <div class="inv-box-label">BILL TO</div>
+          <div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+        <div class="inv-box">
+          <div class="inv-box-label">INVOICE DETAILS</div>
+          <div class="inv-box-detail-row"><span class="lbl">${labels.noLabel}:</span><span class="val">${esc(state.meta.no)}</span></div>
+          <div class="inv-box-detail-row"><span class="lbl">Date:</span><span class="val">${fmtDate(state.meta.date)}</span></div>
+          ${state.meta.place ? `<div class="inv-box-detail-row"><span class="lbl">Place of Supply:</span><span class="val">${esc(state.meta.place)}</span></div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'freelancer') {
+    const avatarText = (state.business.name || 'F').charAt(0).toUpperCase();
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div class="inv-avatar">${logoHTML ? logoHTML : avatarText}</div>
+        <div style="flex:1;"><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+        <div style="width:40%;text-align:right;">
+          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
+          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      ${wordsBox}${totalsBox}${footerHTML}
+    `;
+  } else if (state.template === 'premium-hsn') {
+    html = `
+      ${cText.top}
+      <div class="inv-header">
+        <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
+        <div style="width:55%;">
+          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+        </div>
+        <div style="width:40%;text-align:right;">
+          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
+          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      <div class="hsn-summary-wrap">
+        <div><table class="hsn-table"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table></div>
+        <div>${totalsBox}</div>
+      </div>
+      ${wordsBox}${footerHTML}
+    `;
+  } else if (state.template === 'structured') {
+    html = `
+      ${cText.top}
+      <div class="header">
+        <div class="biz-details" style="flex:1;"><div class="biz-name">${esc(state.business.name)}</div>${bizInfoHTML}</div>
+        <div class="inv-title">${labels.title.toUpperCase()}</div>
+        <div style="flex:1;"></div>
+      </div>
+      <div class="bill-section">
+        <div class="bill-left">
+          <strong>BILL TO:</strong><div>${esc(state.client.name)}</div><div>${esc(state.client.addr).replace(/\n/g, '<br>')}</div>
+          ${state.client.gstin ? `<div>GSTIN: ${esc(state.client.gstin)}</div>` : ''}${detailsHTML}
+        </div>
+        <div class="bill-right">
+          <div class="inv-details-title">DETAILS</div>
+          <div class="meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no)}</span></div>
+          <div class="meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
+          ${state.meta.place ? `<div class="meta-row"><span>Place:</span><span>${esc(state.meta.place)}</span></div>` : ''}
+        </div>
+      </div>
+      ${cText.middle}
+      <table class="items-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${common.itemRows}</tbody>
+      </table>
+      <div class="bottom-grid">
+        <div class="bottom-left">
+          <div class="sec-title">Terms & Conditions</div><div>${esc(state.terms).replace(/\n/g, '<br>') || '—'}</div>
+          ${state.notes ? `<div class="sec-title">Notes</div><div>${esc(state.notes).replace(/\n/g, '<br>')}</div>` : ''}
+        </div>
+        <div class="bottom-mid">
+          <div class="tot-row"><span>Subtotal</span><span>${fmt(t.subtotal)}</span></div>
+          ${common.taxRows.replace(/class="totals-row"/g, 'class="tot-row"').replace(/class="lbl"/g, '').replace(/class="amt"/g, '')}
+          ${t.roundOff !== 0 ? `<div class="tot-row"><span>Round Off</span><span>${t.roundOff > 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}
+          <div class="tot-row total"><span>Grand Total</span><span>${fmt(t.rounded)}</span></div>
+        </div>
+        <div class="bottom-right"><div class="sign-space"></div><div class="sign-line">Authorized Signatory</div></div>
+      </div>
+      <div style="margin-top:15px;font-size:9.5px;"><strong>Amount in words:</strong> ${numToWords(t.rounded)}</div>
+      <div style="margin-top:15px;font-size:9.5px;display:flex;justify-content:space-between;"><div>${bankHTML}</div></div>
     `;
   }
-  
+
   preview.innerHTML = html;
 }
 
@@ -1822,170 +2053,86 @@ function changeTemplate() {
 }
 
 function loadSample() {
-  $('bName').value = 'Shree Shyam Traders';
-  $('bAddr').value = '123, Main Market, Jaipur, Rajasthan';
-  $('bGstin').value = '08ABCDE1234F1Z5';
-  $('bPan').value = 'ABCDE1234F';
-  $('bUdyam').value = 'UDYAM-RJ-01-0001234';
-  $('bEmail').value = 'contact@shreeshyam.com';
-  $('bPhone').value = '9876543210';
-  
-  $('cNameManual').value = 'Delhi Electronics';
-  $('cAddr').value = '45, Nehru Place, New Delhi';
-  $('cGstin').value = '07XYZAB5678C1Z9';
-  
-  $('mNo').value = 'INV-2024-001';
-  $('mDate').value = new Date().toISOString().split('T')[0];
-  
-  state.items = [
-    { desc: 'Wireless Mouse', hsn: '8471', qty: 2, rate: 500, gst: 18 },
-    { desc: 'Keyboard', hsn: '8471', qty: 2, rate: 800, gst: 18 }
-  ];
+  $('bName').value = 'Shree Shyam Traders'; $('bAddr').value = '123, Main Market, Jaipur, Rajasthan';
+  $('bGstin').value = '08ABCDE1234F1Z5'; $('bPan').value = 'ABCDE1234F'; $('bUdyam').value = 'UDYAM-RJ-01-0001234';
+  $('bEmail').value = 'contact@shreeshyam.com'; $('bPhone').value = '9876543210';
+  $('cNameManual').value = 'Delhi Electronics'; $('cAddr').value = '45, Nehru Place, New Delhi'; $('cGstin').value = '07XYZAB5678C1Z9';
+  $('mNo').value = 'INV-2024-001'; $('mDate').value = new Date().toISOString().split('T')[0];
+  state.items = [{ desc: 'Wireless Mouse', hsn: '8471', qty: 2, rate: 500, gst: 18 }, { desc: 'Keyboard', hsn: '8471', qty: 2, rate: 800, gst: 18 }];
   renderItems();
-  
-  $('bkName').value = 'HDFC Bank';
-  $('bkAc').value = '1234567890123';
-  $('bkIfsc').value = 'HDFC0001234';
-  $('bkBranch').value = 'Jaipur Main';
-  $('bkHolder').value = 'Shree Shyam Traders';
-  
+  $('bkName').value = 'HDFC Bank'; $('bkAc').value = '1234567890123'; $('bkIfsc').value = 'HDFC0001234';
+  $('bkBranch').value = 'Jaipur Main'; $('bkHolder').value = 'Shree Shyam Traders';
   $('terms').value = '1. Goods once sold will not be taken back.\n2. Payment due within 15 days.';
-  
-  onClientGstinInput($('cGstin').value);
-  sync();
-  showToast('⚡ Sample loaded', 'blue');
+  onClientGstinInput($('cGstin').value); sync(); showToast('⚡ Sample loaded', 'blue');
 }
 
 function clearAll() {
   if (!confirm('Clear all form data?')) return;
-  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = '';
-  $('bUdyam').value = ''; $('bEmail').value = ''; $('bPhone').value = ''; $('bExtra').value = '';
+  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = ''; $('bUdyam').value = ''; $('bEmail').value = ''; $('bPhone').value = ''; $('bExtra').value = '';
   state.business.logo = ''; updateLogoPreview();
-  
   $('cNameManual').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
   $('mNo').value = ''; $('mDate').value = ''; $('mPlace').value = '';
-  
-  $('bkHolder').value = ''; $('bkName').value = ''; $('bkAc').value = '';
-  $('bkIfsc').value = ''; $('bkBranch').value = ''; $('bkUpi').value = '';
+  $('bkHolder').value = ''; $('bkName').value = ''; $('bkAc').value = ''; $('bkIfsc').value = ''; $('bkBranch').value = ''; $('bkUpi').value = '';
   $('terms').value = ''; $('notes').value = '';
-  
-  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
-  state.details = [''];
-  renderItems(); renderDetails();
-  
-  sync();
-  showToast('🗑️ Form cleared');
+  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
+  renderItems(); renderDetails(); sync(); showToast('🗑️ Form cleared');
 }
 
 function nukeEverything() {
   if (!confirm('Reset everything including history and profiles? This cannot be undone.')) return;
-  localStorage.clear();
-  location.reload();
+  localStorage.clear(); location.reload();
 }
 
-function printAndSave() {
-  window.print();
-}
+function printAndSave() { window.print(); }
 
 function saveJSON() {
   const data = { state, profiles, history };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'invoice_backup_' + new Date().toISOString().split('T')[0] + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('💾 Backup downloaded', 'blue');
+  a.href = url; a.download = 'invoice_backup_' + new Date().toISOString().split('T')[0] + '.json'; a.click();
+  URL.revokeObjectURL(url); showToast('💾 Backup downloaded', 'blue');
 }
 
 function loadJSON(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = function(ev) {
     try {
       const data = JSON.parse(ev.target.result);
-      if (data.state) {
-        Object.assign(state, data.state);
-        populateForm(state);
-        renderItems(); renderDetails(); render();
-      }
-      if (data.profiles) {
-        profiles = data.profiles;
-        renderProfiles();
-      }
-      if (data.history) {
-        history = data.history;
-        // renderHistory();
-      }
+      if (data.state) { Object.assign(state, data.state); populateForm(state); renderItems(); renderDetails(); render(); }
+      if (data.profiles) { profiles = data.profiles; renderProfiles(); }
+      if (data.history) { history = data.history; }
       showToast('✓ Backup restored', 'purple');
-    } catch (err) {
-      showToast('⚠️ Invalid backup file', 'red');
-    }
+    } catch (err) { showToast('⚠️ Invalid backup file', 'red'); }
   };
-  reader.readAsText(file);
-  e.target.value = '';
+  reader.readAsText(file); e.target.value = '';
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  buildColorGrids();
-  updateLabels();
-  updateCustomBadge();
-  
+  buildColorGrids(); updateLabels(); updateCustomBadge();
   const saved = localStorage.getItem('invoiceState');
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      Object.assign(state, parsed);
-      populateForm(state);
-    } catch(e) {}
-  } else {
-    // Defaults
-    $('ctText').value = state.customText;
-    $('ctPosition').value = state.customTextPosition;
-    $('ctColor').value = state.customTextColor;
-    $('ctSize').value = state.customTextSize;
-  }
+  if (saved) { try { Object.assign(state, JSON.parse(saved)); populateForm(state); } catch(e) {} }
+  else { $('ctText').value = state.customText; $('ctPosition').value = state.customTextPosition; $('ctColor').value = state.customTextColor; $('ctSize').value = state.customTextSize; }
   
   const savedProfiles = localStorage.getItem('businessProfiles');
-  if (savedProfiles) {
-    try { profiles = JSON.parse(savedProfiles); } catch(e) {}
-  }
+  if (savedProfiles) { try { profiles = JSON.parse(savedProfiles); } catch(e) {} }
   
-  renderItems();
-  renderDetails();
-  renderProfiles();
-  updateLogoPreview();
-  updateColorPickerUI();
-  sync();
-  
-  setTimeout(() => {
-    disableAutofill();
-  }, 1000);
+  renderItems(); renderDetails(); renderProfiles(); updateLogoPreview(); updateColorPickerUI(); sync();
+  setTimeout(() => { disableAutofill(); }, 1000);
 });
 
 function onClientSelect(val) {
   if (!val) return;
   const p = profiles.find(x => x.id === val);
   if (p) {
-    $('cNameManual').value = p.name || '';
-    $('cAddr').value = p.addr || '';
-    $('cGstin').value = p.gstin || '';
-    $('cEmail').value = p.email || '';
-    $('cPhone').value = p.phone || '';
-    onClientGstinInput(p.gstin || '');
-    sync();
+    $('cNameManual').value = p.name || ''; $('cAddr').value = p.addr || ''; $('cGstin').value = p.gstin || '';
+    $('cEmail').value = p.email || ''; $('cPhone').value = p.phone || '';
+    onClientGstinInput(p.gstin || ''); sync();
   }
 }
 
-function onManualClientType(val) {
-  if (val) {
-    $('cName').value = '';
-  }
-  sync();
-}
+function onManualClientType(val) { if (val) $('cName').value = ''; sync(); }
 </script>
 </body>
 </html>
