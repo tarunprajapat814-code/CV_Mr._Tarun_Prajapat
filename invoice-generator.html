@@ -1189,6 +1189,7 @@ function autoTaxFromState() {
   const status = $('regStatus').value;
   const hint = $('taxHint');
   const taxType = $('taxType');
+  
   if (status === 'nogst') return;
 
   const bizGstin = ($('bGstin').value || '').trim().toUpperCase();
@@ -1209,23 +1210,19 @@ function autoTaxFromState() {
 
   if (status === 'registered' && cliGstin.length >= 2) {
     cliState = cliGstin.substring(0, 2);
-    source = 'GSTIN';
-  } else if (status === 'unregistered') {
+    source = 'Client GSTIN';
+  } else if (status === 'unregistered' || cliGstin.length < 2) {
     cliState = extractStateFromPlace(place);
-    source = 'Place of Supply';
-  } else if (status === 'registered' && cliGstin.length < 2) {
-    hint.innerHTML = '✅ <strong>Registered client</strong> — Client ka GSTIN daalo ya Place of Supply select karo.';
+    if (cliState) source = 'Place of Supply';
+  }
+
+  // CASH BILL LOGIC: If client state is not found (no GSTIN, no place of supply), default to CGST+SGST
+  if (!cliState) {
+    taxType.value = 'cgst-sgst';
+    hint.innerHTML = '📍 <strong>Cash Bill / No Client GSTIN</strong> — Defaulting to <strong>CGST + SGST</strong> (Intra-state).';
     hint.style.background = '#ecfdf5';
     hint.style.borderLeftColor = '#10b981';
     hint.style.color = '#065f46';
-    return;
-  }
-
-  if (!cliState) {
-    hint.innerHTML = '💡 Client ka state daalo — ' + (status === 'unregistered' ? 'Place of Supply field me' : 'Client GSTIN me') + '.';
-    hint.style.background = '#fef3c7';
-    hint.style.borderLeftColor = '#f59e0b';
-    hint.style.color = '#92400e';
     return;
   }
 
@@ -1261,7 +1258,7 @@ function saveBusinessProfile() {
     logo: logo,
     regStatus: $('regStatus').value,
     bank: {
-      holder: $('bkHolder').value.trim() || name, // Fallback to business name
+      holder: $('bkHolder').value.trim() || name,
       name: $('bkName').value, ac: $('bkAc').value,
       ifsc: ($('bkIfsc').value || '').trim().toUpperCase(),
       branch: $('bkBranch').value, type: $('bkType').value, upi: $('bkUpi').value
@@ -1310,7 +1307,7 @@ function loadBusinessProfile(id) {
   state.business.logo = sanitizeLogo(p.logo || '');
   updateLogoPreview();
   if (p.bank) {
-    $('bkHolder').value = p.bank.holder || p.name || ''; // Auto-fill from name if holder missing
+    $('bkHolder').value = p.bank.holder || p.name || '';
     $('bkName').value = p.bank.name || '';
     $('bkAc').value = p.bank.ac || '';
     $('bkIfsc').value = p.bank.ifsc || '';
@@ -1486,7 +1483,7 @@ function populateForm(s) {
   $('cGstin').value = c.gstin || ''; $('cEmail').value = c.email || ''; $('cPhone').value = c.phone || '';
   $('mNo').value = m.no || ''; $('mDate').value = m.date || ''; $('mPlace').value = m.place || '';
   
-  $('bkHolder').value = bk.holder || b.name || ''; // Auto fallback to Business Name
+  $('bkHolder').value = bk.holder || b.name || ''; 
   $('bkName').value = bk.name || '';
   $('bkAc').value = bk.ac || ''; $('bkIfsc').value = bk.ifsc || '';
   $('bkBranch').value = bk.branch || ''; $('bkType').value = bk.type || ''; $('bkUpi').value = bk.upi || '';
@@ -1589,13 +1586,11 @@ function buildBizInfoHTML(biz) {
   if (biz.phone && biz.phone.trim()) contact.push('<span class="icon">📞</span> ' + esc(biz.phone));
   if (contact.length) lines.push('<div class="biz-line">' + contact.join('<span class="sep">·</span>') + '</div>');
   
-  // GSTIN and PAN on one line
   const taxLine1 = [];
   if (biz.gstin && biz.gstin.trim()) taxLine1.push('<strong>GSTIN:</strong> ' + esc(biz.gstin));
   if (biz.pan && biz.pan.trim()) taxLine1.push('<strong>PAN:</strong> ' + esc(biz.pan));
   if (taxLine1.length) lines.push('<div class="biz-line">' + taxLine1.join('<span class="sep">·</span>') + '</div>');
   
-  // Udyam on a new line below GSTIN/PAN
   if (biz.udyam && biz.udyam.trim()) {
       lines.push('<div class="biz-line"><strong>Udyam:</strong> ' + esc(biz.udyam) + '</div>');
   }
@@ -1621,462 +1616,201 @@ function buildCommonBlocks(s, t) {
     const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
     return '<tr><td class="c" style="font-weight:600;">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td><td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
   }).join('');
+  
   let taxRows = '';
   if (s.taxType === 'cgst-sgst') taxRows = '<div class="totals-row"><span class="lbl">CGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div><div class="totals-row"><span class="lbl">SGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div>';
   else if (s.taxType === 'igst') taxRows = '<div class="totals-row"><span class="lbl">IGST</span><span class="amt">' + fmt(t.totalTax) + '</span></div>';
+  
   const hsnHead = isIGST
     ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>IGST</th><th>Total</th>'
     : isNone
     ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>Total</th>'
     : '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>Total</th>';
+  
   const hsnRows = Object.values(t.hsnSummary).map(d => {
     const base = '<td>' + esc(d.hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td>';
     if (isIGST) return '<tr>' + base + '<td>' + fmt(d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
     if (isNone) return '<tr>' + base + '<td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
     return '<tr>' + base + '<td>' + fmt(d.cgst) + '</td><td>' + fmt(d.sgst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
   }).join('');
-  const hsnTable = '<table class="hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + hsnRows + '</tbody></table>';
-  const tableBlock = '<table class="inv-table"><thead><tr><th class="c" style="width:6%;">Sr. No.</th><th style="width:25%;">Description of Goods/Service</th><th class="c" style="width:10%;">HSN/SAC Code</th><th class="c" style="width:7%;">Quantity</th><th class="r" style="width:10%;">Rate</th><th class="c" style="width:6%;">GST%</th><th class="r" style="width:12%;">Taxable Amount</th><th class="r" style="width:12%;">Total Tax</th><th class="r" style="width:12%;">Total Amount</th></tr></thead><tbody>' + itemRows + '</tbody></table>';
-  const roundOffHTML = t.roundOff ? '<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">' + (t.roundOff >= 0 ? '+' : '-') + fmt(Math.abs(t.roundOff)) + '</span></div>' : '';
-  const totalsBlock = '<div class="totals-wrap"><div class="totals-box"><div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">' + fmt(t.subtotal) + '</span></div><div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">' + fmt(t.taxable) + '</span></div>' + taxRows + roundOffHTML + '<div class="totals-row grand"><span class="lbl">Grand Total</span><span>' + fmt(t.rounded) + '</span></div></div></div>';
-  const wordsBlock = '<div class="words-box"><strong>Amount in Words:</strong> ' + numToWords(t.rounded) + '</div>';
-  return { itemRows, taxRows, hsnTable, tableBlock, totalsBlock, wordsBlock };
-}
 
-function buildBillToBlock(cli, cliName, cliInfo) {
-  const gstin = (cli.gstin || '').trim();
-  const hasGstin = gstin.length > 0;
-  const stateInfo = hasGstin ? getStateFromGSTIN(gstin) : null;
+  const totalsBox = `
+    <div class="totals-wrap">
+      <div class="totals-box">
+        <div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
+        ${taxRows}
+        <div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${fmt(t.roundOff)}</span></div>
+        <div class="totals-row grand"><span class="lbl">Grand Total</span><span class="amt">${fmt(t.rounded)}</span></div>
+      </div>
+    </div>
+  `;
 
-  let gstinCol = '';
-  if (hasGstin) {
-    gstinCol = '<div>' +
-      '<div class="bill-to-gstin-label">GSTIN</div>' +
-      '<div class="bill-to-gstin-value">' + esc(gstin) + '</div>' +
-      (stateInfo ?
-        '<div class="bill-to-gstin-state"><strong>State:</strong> ' + esc(stateInfo.name) + '</div>' +
-        '<div class="bill-to-gstin-state"><strong>State Code:</strong> ' + stateInfo.code + '</div>'
-      : '') +
-    '</div>';
-  }
+  const wordsBox = '<div class="words-box"><strong>Amount in words:</strong> ' + numToWords(t.rounded) + '</div>';
 
-  return '<div>' +
-    '<div class="inv-party-label">Bill To</div>' +
-    '<div class="bill-to-wrap' + (hasGstin ? ' has-gstin' : '') + '">' +
-      '<div>' +
-        '<div class="inv-party-name">' + esc(cliName) + '</div>' +
-        (cliInfo ? '<div class="inv-party-info">' + esc(cliInfo) + '</div>' : '') +
-      '</div>' +
-      gstinCol +
-    '</div>' +
-  '</div>';
-}
+  const footer = `
+    <div class="footer-grid">
+      <div>
+        <h4>Bank Details</h4>
+        ${s.bank?.name ? `<div class="kv"><strong>Bank:</strong> ${esc(s.bank.name)}</div>` : ''}
+        ${s.bank?.ac ? `<div class="kv"><strong>Ac No:</strong> ${esc(s.bank.ac)}</div>` : ''}
+        ${s.bank?.ifsc ? `<div class="kv"><strong>IFSC:</strong> ${esc(s.bank.ifsc)}</div>` : ''}
+        ${s.bank?.branch ? `<div class="kv"><strong>Branch:</strong> ${esc(s.bank.branch)}</div>` : ''}
+        ${s.bank?.upi ? `<div class="kv"><strong>UPI:</strong> ${esc(s.bank.upi)}</div>` : ''}
+      </div>
+      <div>
+        <h4>Terms & Conditions</h4>
+        <p>${esc(s.terms).replace(/\n/g, '<br>') || '—'}</p>
+      </div>
+    </div>
+    <div class="sign-area">
+      <div style="font-size:10px;color:var(--muted);">For ${esc(s.business.name || '')}</div>
+      <div style="height:40px;"></div>
+      <div class="sign-line">Authorized Signatory</div>
+    </div>
+  `;
 
-function buildBillToAndDetails(s, cli, cliName, cliInfo, detailsBoxHTML) {
-  return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;">' +
-    buildBillToBlock(cli, cliName, cliInfo) +
-    '<div>' + detailsBoxHTML + '</div>' +
-  '</div>';
-}
-
-function buildDetailsBox(s, detailsTitle, noLabel, dateLabel) {
-  const meta = s.meta || {};
-  const validDetails = (s.details || []).filter(d => d && d.trim());
-  const rowsHTML = validDetails.map(d => {
-    const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
-    if (m) return '<div class="inv-detail-row"><span class="lbl">' + esc(m[1].trim()) + ':</span> <span class="val">' + esc(m[2].trim()) + '</span></div>';
-    return '<div class="inv-detail-row"><span class="val">' + esc(d) + '</span></div>';
-  }).join('');
-  return '<div class="inv-details-box">' +
-    '<div class="inv-details-title">' + esc(detailsTitle) + '</div>' +
-    '<div class="inv-meta-row"><span>' + esc(noLabel) + ':</span><span>' + (esc(meta.no) || '—') + '</span></div>' +
-    '<div class="inv-meta-row"><span>' + esc(dateLabel) + ':</span><span>' + fmtDate(meta.date) + '</span></div>' +
-    (validDetails.length ? '<div class="inv-gap"></div>' + rowsHTML + '<div class="inv-gap"></div>' : '') +
-    '<div class="inv-meta-row"><span>Place of Supply:</span><span>' + (esc(meta.place) || '—') + '</span></div>' +
-  '</div>';
-}
-
-function buildFooterBlock(s, bizName) {
-  const bank = s.bank || {}; const hasBank = bank.name || bank.ac || bank.ifsc;
-  return '<div class="footer-grid"><div>' +
-    (hasBank ? '<h4>Payment Details</h4>' +
-      (bank.holder ? '<div class="kv"><strong>A/C Holder:</strong> ' + esc(bank.holder) + '</div>' : '') +
-      (bank.name ? '<div class="kv"><strong>Bank:</strong> ' + esc(bank.name) + '</div>' : '') +
-      (bank.ac ? '<div class="kv"><strong>A/C No.:</strong> ' + esc(bank.ac) + '</div>' : '') +
-      (bank.ifsc ? '<div class="kv"><strong>IFSC:</strong> ' + esc(bank.ifsc) + '</div>' : '') +
-      (bank.branch ? '<div class="kv"><strong>Branch:</strong> ' + esc(bank.branch) + '</div>' : '') +
-      (bank.type ? '<div class="kv"><strong>Type:</strong> ' + esc(bank.type) + '</div>' : '') +
-      (bank.upi ? '<div class="kv"><strong>UPI:</strong> ' + esc(bank.upi) + '</div>' : '') : '') +
-    (s.terms ? '<h4 style="margin-top:10px;">Terms & Conditions</h4><p>' + esc(s.terms).replace(/\n/g, '<br>') + '</p>' : '') +
-    (s.notes ? '<h4 style="margin-top:8px;">Notes</h4><p>' + esc(s.notes).replace(/\n/g, '<br>') + '</p>' : '') +
-    '</div><div><div class="sign-area"><div class="sign-line">For ' + esc(bizName) + '</div><div class="sign-auth">Authorized Signatory</div></div></div></div>';
-}
-
-const GEN_DOC = '';
-
-function buildGstDetailedBlocks(t, s) {
-  const isIGST = s.taxType === 'igst';
-  const isNone = s.taxType === 'none';
-  
-  const rates = Object.keys(t.rateSummary).map(Number).sort((a, b) => a - b);
-  const cards = rates.map(r => {
-    const d = t.rateSummary[r]; if (!d) return '';
-    return '<div class="rate-card"><div class="r-label">' + r + '% GST</div><div class="r-value">' + fmt(d.taxable) + '</div><div class="r-tax">Tax: ' + fmt(d.total) + '</div></div>';
-  }).filter(Boolean).join('');
-  
-  const infoBar = '<div class="gst-info-bar">' +
-    '<div class="item"><span class="lbl">Tax:</span><span class="val">' + (isIGST ? 'IGST' : isNone ? 'None' : 'CGST+SGST') + '</span></div>' +
-    '<div class="item"><span class="lbl">Place:</span><span class="val">' + esc((s.meta && s.meta.place) || '—') + '</span></div>' +
-    '<div class="item"><span class="lbl">HSN:</span><span class="val">' + Object.keys(t.hsnSummary).length + '</span></div>' +
-    '<div class="item"><span class="lbl">Items:</span><span class="val">' + s.items.length + '</span></div>' +
-  '</div>';
-  const hsnHead = isIGST
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>IGST</th><th>Tax</th><th>Total</th>'
-    : isNone
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>Total</th>'
-    : '<th>HSN/SAC</th><th>Taxable</th><th>Rate</th><th>CGST</th><th>SGST</th><th>Tax</th><th>Total</th>';
-  const rows = Object.values(t.hsnSummary).map(d => {
-    const base = '<td>' + esc(d.hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td>';
-    const taxSum = d.cgst + d.sgst + d.igst;
-    if (isIGST) return '<tr>' + base + '<td>' + fmt(d.igst) + '</td><td>' + fmt(taxSum) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-    if (isNone) return '<tr>' + base + '<td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-    return '<tr>' + base + '<td>' + fmt(d.cgst) + '</td><td>' + fmt(d.sgst) + '</td><td>' + fmt(taxSum) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-  }).join('');
-  const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
-  const tc = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst, 0);
-  const ts = Object.values(t.hsnSummary).reduce((a, d) => a + d.sgst, 0);
-  const ti = Object.values(t.hsnSummary).reduce((a, d) => a + d.igst, 0);
-  const ttx = tc + ts + ti;
-  let totalRow;
-  if (isIGST) totalRow = '<tr class="total-row"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(ti) + '</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr>';
-  else if (isNone) totalRow = '<tr class="total-row"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(tt) + '</td></tr>';
-  else totalRow = '<tr class="total-row"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(tc) + '</td><td>' + fmt(ts) + '</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr>';
-  const table = '<table class="gst-detail-hsn"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table>';
-  return { rateCards: cards, infoBar, hsnDetailTable: table };
-}
-
-function buildGstLiteBlocks(t, s) {
-  const isIGST = s.taxType === 'igst';
-  const isNone = s.taxType === 'none';
-  const hsnHead = isIGST
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>IGST</th><th>Total</th>'
-    : isNone
-    ? '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Total</th>'
-    : '<th>HSN/SAC</th><th>Taxable</th><th>GST%</th><th>Tax</th><th>Total</th>';
-  const rows = Object.values(t.hsnSummary).map(d => {
-    const base = '<td>' + esc(d.hsn) + '</td><td>' + fmt(d.taxable) + '</td><td>' + d.rate + '%</td>';
-    const taxSum = d.cgst + d.sgst + d.igst;
-    if (isIGST) return '<tr>' + base + '<td>' + fmt(d.igst) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-    if (isNone) return '<tr>' + base + '<td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-    return '<tr>' + base + '<td>' + fmt(taxSum) + '</td><td style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
-  }).join('');
-  const tt = Object.values(t.hsnSummary).reduce((a, d) => a + d.taxable, 0);
-  const ttx = Object.values(t.hsnSummary).reduce((a, d) => a + d.cgst + d.sgst + d.igst, 0);
-  const totalRow = isNone
-    ? '<tr style="background:var(--accent-soft);font-weight:800;"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(tt) + '</td></tr>'
-    : '<tr style="background:var(--accent-soft);font-weight:800;"><td>TOTAL</td><td>' + fmt(tt) + '</td><td>—</td><td>' + fmt(ttx) + '</td><td>' + fmt(tt + ttx) + '</td></tr>';
-  return '<table class="gst-lite-hsn-table"><thead><tr>' + hsnHead + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table>';
-}
-
-function buildStandardBlocks(s, labels, cliName, cliInfo, cli) {
-  const meta = s.meta || {};
-  const validDetails = (s.details || []).filter(d => d && d.trim());
-  const detailRows = validDetails.map(d => {
-    const m = d.match(/^(.+?)\s*[-:]\s*(.+)$/);
-    if (m) return '<div class="inv-box-detail-row"><span class="lbl">' + esc(m[1].trim()) + ':</span><span class="val">' + esc(m[2].trim()) + '</span></div>';
-    return '<div class="inv-box-detail-row"><span class="val">' + esc(d) + '</span></div>';
-  }).join('');
-
-  const gstin = (cli.gstin || '').trim();
-  const stateInfo = gstin ? getStateFromGSTIN(gstin) : null;
-
-  const billToBox = '<div class="inv-box"><div class="inv-box-label">Bill To</div>' +
-    '<div style="display:grid;grid-template-columns:' + (gstin ? '1.35fr 1fr' : '1fr') + ';gap:12px;align-items:flex-start;">' +
-      '<div>' +
-        '<div style="font-weight:800;font-size:11px;margin-bottom:3px;">' + esc(cliName) + '</div>' +
-        (cliInfo ? '<div style="font-size:9.5px;color:#475569;line-height:1.4;">' + esc(cliInfo) + '</div>' : '') +
-      '</div>' +
-      (gstin ?
-        '<div>' +
-          '<div class="bill-to-gstin-label">GSTIN</div>' +
-          '<div class="bill-to-gstin-value">' + esc(gstin) + '</div>' +
-          (stateInfo ?
-            '<div class="bill-to-gstin-state"><strong>State:</strong> ' + esc(stateInfo.name) + '</div>' +
-            '<div class="bill-to-gstin-state"><strong>State Code:</strong> ' + stateInfo.code + '</div>'
-          : '') +
-        '</div>' : '') +
-    '</div>' +
-  '</div>';
-
-  const invInfoBox = '<div class="inv-box"><div class="inv-box-label">' + esc(labels.detailsTitle) + '</div>' +
-    '<div class="inv-box-detail-row"><span class="lbl">' + esc(labels.noLabel) + ':</span><span class="val">' + (esc(meta.no) || '—') + '</span></div>' +
-    '<div class="inv-box-detail-row"><span class="lbl">Date:</span><span class="val">' + fmtDate(meta.date) + '</span></div>' +
-    '<div class="inv-box-detail-row"><span class="lbl">Place of Supply:</span><span class="val">' + (esc(meta.place) || '—') + '</span></div>' +
-    detailRows +
-  '</div>';
-  return { billToBox, invInfoBox };
+  return { itemRows, taxRows, hsnHead, hsnRows, totalsBox, wordsBox, footer };
 }
 
 function render() {
-  const s = state;
   const preview = $('invoicePreview');
+  if (!preview) return;
   
-  if (!VALID_TEMPLATES.includes(s.template)) s.template = 'classic';
+  preview.className = 'invoice-a4 tpl tpl-' + state.template;
+  if (state.accentColor) {
+    const soft = lightenColor(state.accentColor, 85);
+    const txt = isLightColor(state.accentColor) ? '#0f172a' : '#fff';
+    preview.style.setProperty('--accent', state.accentColor);
+    preview.style.setProperty('--accent-soft', soft);
+    preview.style.setProperty('--accent-text', txt);
+  } else {
+    preview.style.removeProperty('--accent');
+    preview.style.removeProperty('--accent-soft');
+    preview.style.removeProperty('--accent-text');
+  }
   
-  preview.className = 'invoice-a4 tpl tpl-' + s.template;
-  applyAccentToPreview(preview);
-
   const t = calcTotals();
+  const labels = getLabels(state.docType);
+  const customText = buildCustomText(state);
+  const c = buildCommonBlocks(state, t);
   
-  // SAFETY FALLBACK: Direct read from DOM if state is empty
-  if (!s.business || !s.business.name) {
-    s.business = s.business || {};
-    s.business.name = $('bName').value || 'Your Business Name';
-    s.business.addr = $('bAddr').value || '';
-    s.business.gstin = $('bGstin').value || '';
-    s.business.pan = $('bPan').value || '';
-    s.business.udyam = $('bUdyam').value || '';
-    s.business.email = $('bEmail').value || '';
-    s.business.phone = $('bPhone').value || '';
-    s.business.extra = $('bExtra').value || '';
-  }
-
-  const biz = s.business || {}, cli = s.client || {}, meta = s.meta || {}, bank = s.bank || {};
-  const bizName = biz.name || 'Your Business Name';
-  const bizInfoHTML = buildBizInfoHTML(biz);
-  const cliName = cli.name || 'Client Name';
-  const cliInfo = [cli.addr, cli.email, cli.phone].filter(Boolean).join(' · ');
-
-  const logoInline = getLogoHTML('default');
-  const logoSide = getLogoHTML('side');
-  const logoCorporate = getLogoHTML('corporate');
-
-  const labels = getLabels(s.docType);
-  const custom = buildCustomText(s);
-  const common = buildCommonBlocks(s, t);
-  const detailsBoxHTML = buildDetailsBox(s, labels.detailsTitle, labels.noLabel, labels.dateLabel);
-  const billToAndDetails = buildBillToAndDetails(s, cli, cliName, cliInfo, detailsBoxHTML);
-  const footerBlock = buildFooterBlock(s, bizName);
-
-  const firstLetter = (bizName || 'Y').trim().charAt(0).toUpperCase();
-
   let html = '';
-
-  if (s.template === 'classic' || s.template === 'gst') {
-    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
-      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock +
-      (s.template === 'gst' ? '<div style="margin-top:8px;"><h4 style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800;margin-bottom:3px;">HSN Summary</h4>' + common.hsnTable + '</div>' : '') +
-      footerBlock + GEN_DOC;
+  
+  if (state.template === 'classic') {
+    html = `
+      ${customText.top}
+      <div class="inv-header">
+        <div style="display:flex;gap:14px;align-items:center;">
+          ${getLogoHTML('normal')}
+          <div>
+            <div class="inv-biz-name">${esc(state.business.name) || 'Business Name'}</div>
+            <div class="inv-biz-info">${buildBizInfoHTML(state.business)}</div>
+          </div>
+        </div>
+        <div class="inv-title-box">
+          <div class="inv-h1">${labels.title.toUpperCase()}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="width:60%;">
+          <div class="inv-party-label">BILL TO</div>
+          <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
+          <div class="inv-party-info">
+            ${esc(state.client.addr) || ''}<br>
+            ${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}
+          </div>
+        </div>
+        <div style="width:35%;" class="inv-details-box">
+          <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no) || '—'}</span></div>
+          <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
+          ${state.meta.place ? `<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place)}</span></div>` : ''}
+        </div>
+      </div>
+      ${customText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${c.itemRows}</tbody>
+      </table>
+      ${c.wordsBox}
+      ${c.totalsBox}
+      ${c.footer}
+    `;
+  } else if (state.template === 'modern') {
+    html = `
+      <div class="inv-wrap">
+        <div class="inv-side">
+          ${getLogoHTML('side')}
+          <div class="inv-biz-name">${esc(state.business.name) || 'Business Name'}</div>
+          <p>${esc(state.business.addr).replace(/\n/g, '<br>')}</p>
+          <h4>Contact</h4>
+          <p>${esc(state.business.email)}<br>${esc(state.business.phone)}</p>
+          <h4>Tax Info</h4>
+          <p>GSTIN: ${esc(state.business.gstin) || '—'}</p>
+        </div>
+        <div class="inv-main">
+          ${customText.top}
+          <div class="inv-header">
+            <div>
+              <div class="inv-h1">${labels.title.toUpperCase()}</div>
+              <div style="font-size:10px;color:#64748b;margin-top:4px;">#${esc(state.meta.no) || '—'}</div>
+            </div>
+            <div style="text-align:right;font-size:10px;">
+              <div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
+              ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div class="inv-party-label">BILL TO</div>
+            <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
+            <div class="inv-party-info">${esc(state.client.addr) || ''}</div>
+          </div>
+          ${customText.middle}
+          <table class="inv-table">
+            <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+            <tbody>${c.itemRows}</tbody>
+          </table>
+          ${c.wordsBox}
+          ${c.totalsBox}
+          ${c.footer}
+        </div>
+      </div>
+    `;
+  } else {
+    // Fallback generic layout for other templates to prevent breaking
+    html = `
+      ${customText.top}
+      <div class="inv-header" style="display:flex;justify-content:space-between;border-bottom:2px solid var(--accent);padding-bottom:10px;margin-bottom:12px;">
+        <div>
+          <div class="inv-biz-name">${esc(state.business.name) || 'Business Name'}</div>
+          <div class="inv-biz-info">${buildBizInfoHTML(state.business)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="inv-h1" style="color:var(--accent);font-size:22px;">${labels.title.toUpperCase()}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="width:60%;">
+          <div class="inv-party-label">BILL TO</div>
+          <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
+          <div class="inv-party-info">${esc(state.client.addr) || ''}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}</div>
+        </div>
+        <div style="width:35%;text-align:right;">
+          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no) || '—'}</div>
+          <div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
+          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
+        </div>
+      </div>
+      ${customText.middle}
+      <table class="inv-table">
+        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <tbody>${c.itemRows}</tbody>
+      </table>
+      ${c.wordsBox}
+      ${c.totalsBox}
+      ${c.footer}
+    `;
   }
-  else if (s.template === 'modern') {
-    html = '<div class="inv-wrap"><div class="inv-side">' +
-      (logoSide ? '<div style="text-align:center;">' + logoSide + '</div>' : '') +
-      '<div class="inv-biz-name">' + esc(bizName) + '</div>' +
-      (biz.addr ? '<p>' + esc(biz.addr).replace(/\n/g, '<br>') + '</p>' : '') +
-      (biz.email ? '<h4>Email</h4><p>' + esc(biz.email) + '</p>' : '') +
-      (biz.phone ? '<h4>Phone</h4><p>' + esc(biz.phone) + '</p>' : '') +
-      (biz.gstin ? '<h4>GSTIN</h4><p>' + esc(biz.gstin) + '</p>' : '') +
-      (biz.pan ? '<h4>PAN</h4><p>' + esc(biz.pan) + '</p>' : '') +
-      (biz.udyam ? '<h4>Udyam</h4><p>' + esc(biz.udyam) + '</p>' : '') +
-      (biz.extra ? '<h4>Info</h4><p>' + esc(biz.extra).replace(/\n/g, '<br>') + '</p>' : '') +
-      (bank.name ? '<h4>Bank</h4><p>' + (bank.holder ? esc(bank.holder) + '<br>' : '') + esc(bank.name) + '<br>' + esc(bank.ac) + '<br>' + esc(bank.ifsc) + (bank.branch ? '<br>' + esc(bank.branch) : '') + '</p>' : '') +
-      '</div>' +
-      '<div class="inv-main">' + custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
-      '<div class="inv-header"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC + '</div></div>';
-  }
-  else if (s.template === 'minimal') {
-    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
-      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'corporate') {
-    html = custom.top + '<div class="inv-header"><div class="inv-logo-wrap">' + (logoCorporate ? '<div style="flex-shrink:0;">' + logoCorporate + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div><div class="inv-sub">Original for Recipient</div></div></div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'compact') {
-    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
-      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'rounded') {
-    html = custom.top + '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:600;">Original for Recipient</div></div></div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'gst-detailed') {
-    const gd = buildGstDetailedBlocks(t, s);
-    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
-      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">Tax Detailed</div></div></div>' +
-      billToAndDetails +
-      gd.infoBar + common.tableBlock + custom.middle +
-      '<div class="rate-summary-title">📊 Rate-Wise Summary</div>' +
-      '<div class="rate-summary-grid">' + (gd.rateCards || '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:10px;">No data</div>') + '</div>' +
-      '<div class="rate-summary-title">📋 HSN-Wise Breakdown</div>' +
-      gd.hsnDetailTable + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'gst-lite') {
-    const liteHsn = buildGstLiteBlocks(t, s);
-    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
-      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;"><div class="inv-h1">' + esc(labels.title) + '</div><div style="font-size:8.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-top:3px;">GST Summary Enclosed</div></div></div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle +
-      '<div class="gst-lite-summary"><div><div class="rate-summary-title">📋 HSN Summary</div>' + liteHsn + '</div><div>' + common.totalsBlock + '</div></div>' +
-      common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'standard') {
-    const sb = buildStandardBlocks(s, labels, cliName, cliInfo, cli);
-    html = custom.top +
-      '<div class="inv-header"><div style="display:flex;align-items:center;gap:14px;">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      '<div class="inv-boxes">' + sb.billToBox + sb.invInfoBox + '</div>' +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'freelancer') {
-    html = custom.top +
-      '<div class="inv-header">' +
-        '<div class="inv-avatar">' + (logoInline ? '<img src="' + sanitizeLogo((s.business && s.business.logo) || '') + '" alt="Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' : esc(firstLetter)) + '</div>' +
-        '<div style="flex:1;"><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div>' +
-        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
-      '</div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'premium-hsn') {
-    html = custom.top +
-      '<div class="inv-header">' +
-        '<div style="display:flex;align-items:center;gap:20px;">' + (logoInline ? '<div style="flex-shrink:0;background:#fff;padding:8px;border-radius:8px;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info" style="margin-top:8px;">' + bizInfoHTML + '</div></div></div>' +
-        '<div style="text-align:right;flex-shrink:0;"><div class="inv-h1">' + esc(labels.title) + '</div></div>' +
-      '</div>' +
-      billToAndDetails +
-      common.tableBlock + custom.middle +
-      '<div class="hsn-summary-wrap">' +
-        '<div><div class="rate-summary-title">📋 HSN Summary</div>' + common.hsnTable + '</div>' +
-        '<div>' + common.totalsBlock + '</div>' +
-      '</div>' +
-      common.wordsBlock + footerBlock + GEN_DOC;
-  }
-  else if (s.template === 'structured') {
-    const isIGST = s.taxType === 'igst';
-    const isNone = s.taxType === 'none';
-    
-    const itemRows = s.items.map((it, i) => {
-      const amt = num(it.qty) * num(it.rate);
-      const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
-      return '<tr>' +
-        '<td class="c">' + (i + 1) + '</td>' +
-        '<td>' + (esc(it.desc) || '—') + '</td>' +
-        '<td class="c">' + (esc(it.hsn) || '—') + '</td>' +
-        '<td class="c">' + num(it.qty) + '</td>' +
-        '<td class="c">Nos</td>' +
-        '<td class="r">' + fmt(it.rate) + '</td>' +
-        '<td class="r">' + fmt(gstAmt) + '<br>(' + num(it.gst).toFixed(1) + '%)</td>' +
-        '<td class="r">' + fmt(amt + gstAmt) + '</td>' +
-      '</tr>';
-    }).join('');
-
-    let midRows = '<div class="tot-row"><span>Sub Total</span><span>' + fmt(t.subtotal) + '</span></div>';
-    if (s.taxType === 'cgst-sgst') {
-      midRows += '<div class="tot-row"><span>SGST</span><span>' + fmt(t.totalTax/2) + '</span></div>';
-      midRows += '<div class="tot-row"><span>CGST</span><span>' + fmt(t.totalTax/2) + '</span></div>';
-    } else if (s.taxType === 'igst') {
-      midRows += '<div class="tot-row"><span>IGST</span><span>' + fmt(t.totalTax) + '</span></div>';
-    }
-    if (t.roundOff) midRows += '<div class="tot-row"><span>Round off</span><span>' + (t.roundOff >= 0 ? '+' : '-') + fmt(Math.abs(t.roundOff)) + '</span></div>';
-    midRows += '<div class="tot-row total"><span>Total</span><span>' + fmt(t.rounded) + '</span></div>';
-
-    const totalRowTable = '<tr>' +
-      '<td colspan="5" class="r">Total</td>' +
-      '<td></td>' +
-      '<td class="r">' + fmt(t.totalTax) + '</td>' +
-      '<td class="r">' + fmt(t.rounded) + '</td>' +
-    '</tr>';
-
-    const cliGstin = (cli.gstin || '').trim();
-    const cliStateInfo = cliGstin ? getStateFromGSTIN(cliGstin) : null;
-    const bizGstin = (biz.gstin || '').trim();
-    const bizStateInfo = bizGstin ? getStateFromGSTIN(bizGstin) : null;
-
-    let payToHTML = '';
-    if (bank.name || bank.ac) {
-      payToHTML = '<div class="sec-title">Pay To:</div>' +
-        (bank.name ? 'Bank Name: ' + esc(bank.name) + '<br>' : '') +
-        (bank.ac ? 'Account No.: ' + esc(bank.ac) + '<br>' : '') +
-        (bank.ifsc ? 'Bank IFSC code: ' + esc(bank.ifsc) + '<br>' : '') +
-        (bank.holder ? "Account Holder's Name: " + esc(bank.holder) : '');
-    }
-
-    const validDetails = (s.details || []).filter(d => d && d.trim());
-    let detailsHTML = '<div class="sec-title">Details of Sites</div>' + 
-      (validDetails.length ? validDetails.map(d => esc(d)).join('<br>') : 'As Per Annexure');
-
-    html = '<div class="header">' +
-        '<div class="biz-details">' +
-          (logoInline ? '<div style="margin-bottom:8px;">' + logoInline + '</div>' : '') +
-          '<div class="biz-name">' + esc(bizName) + '</div>' +
-          (biz.addr ? esc(biz.addr).replace(/\n/g, ', ') + '<br>' : '') +
-          (biz.phone ? 'Phone no. ' + esc(biz.phone) + '<br>' : '') +
-          (biz.email ? 'Email: ' + esc(biz.email) + '<br>' : '') +
-          (biz.gstin ? 'GSTIN: ' + esc(biz.gstin) + '<br>' : '') +
-          (biz.udyam ? 'Udyam Reg. No.: ' + esc(biz.udyam) + '<br>' : '') +
-          (bizStateInfo ? 'State: ' + bizStateInfo.code + '-' + bizStateInfo.name : '') +
-        '</div>' +
-        '<div class="inv-title">' + esc(labels.title) + '</div>' +
-        '<div style="flex:1; max-width:180px;"></div>' +
-      '</div>' +
-
-      '<div class="bill-section">' +
-        '<div class="bill-left">' +
-          '<strong>Bill To</strong>' +
-          esc(cliName) + '<br>' +
-          (cli.addr ? esc(cli.addr).replace(/\n/g, ', ') + '<br>' : '') +
-          (cli.gstin ? 'GSTIN Number: ' + esc(cli.gstin) + '<br>' : '') +
-          (cliStateInfo ? 'State: ' + cliStateInfo.code + '-' + cliStateInfo.name : '') +
-        '</div>' +
-        '<div class="bill-right">' +
-          '<div class="inv-details-title">Invoice Details</div>' +
-          '<div class="meta-row"><span>Invoice No.</span><span>' + (esc(meta.no) || '—') + '</span></div>' +
-          '<div class="meta-row"><span>Date</span><span>' + fmtDate(meta.date) + '</span></div>' +
-          '<div class="meta-row"><span>Place of Supply</span><span>' + (esc(meta.place) || '—') + '</span></div>' +
-        '</div>' +
-      '</div>' +
-
-      '<table class="items-table">' +
-        '<thead><tr>' +
-          '<th class="c">#</th><th>Item Name</th><th>HSN/ SAC</th><th class="c">Quantity</th><th class="c">Unit</th><th class="r">Price/ Unit</th><th class="r">GST</th><th class="r">Amount</th>' +
-        '</tr></thead>' +
-        '<tbody>' + itemRows + '</tbody>' +
-        '<tfoot>' + totalRowTable + '</tfoot>' +
-      '</table>' +
-
-      '<div class="bottom-grid">' +
-        '<div class="bottom-left">' +
-          '<div class="sec-title">Invoice Amount In Words</div>' +
-          '<div>' + numToWords(t.rounded) + '</div>' +
-          (s.terms ? '<div class="sec-title">Terms And Conditions</div><div>' + esc(s.terms).replace(/\n/g, '<br>') + '</div>' : '') +
-          detailsHTML +
-          payToHTML +
-        '</div>' +
-        '<div class="bottom-mid">' + midRows + '</div>' +
-        '<div class="bottom-right">' +
-          '<div>For ' + esc(bizName) + '</div>' +
-          '<div class="sign-space"></div>' +
-          '<div class="sign-line">Authorized Signatory</div>' +
-        '</div>' +
-      '</div>' +
-      GEN_DOC;
-  }
-  else {
-    html = custom.top + '<div class="inv-top-right">Original for Recipient</div>' +
-      '<div class="inv-header"><div class="inv-logo-wrap">' + (logoInline ? '<div style="flex-shrink:0;">' + logoInline + '</div>' : '') + '<div><div class="inv-biz-name">' + esc(bizName) + '</div><div class="inv-biz-info">' + bizInfoHTML + '</div></div></div><div class="inv-title-box"><div class="inv-h1">' + esc(labels.title) + '</div></div></div>' +
-      billToAndDetails + common.tableBlock + custom.middle + common.totalsBlock + common.wordsBlock + footerBlock + GEN_DOC;
-  }
-
+  
   preview.innerHTML = html;
 }
 
@@ -2084,468 +1818,173 @@ function changeTemplate() {
   state.template = $('templateSelect').value;
   try { localStorage.setItem('invoiceState', JSON.stringify(state)); } catch(e) {}
   render();
-  showToast('✓ ' + $('templateSelect').selectedOptions[0].text, 'blue');
-}
-
-function saveHistoryToLS() {
-  try {
-    localStorage.setItem('invoiceHistory', JSON.stringify(history));
-  } catch (e) {
-    if (history.length > 20) {
-      history = history.slice(0, 20);
-      try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); } catch (e2) {
-        while (history.length > 1) {
-          history = history.slice(0, Math.floor(history.length / 2));
-          try { localStorage.setItem('invoiceHistory', JSON.stringify(history)); return; } catch (e3) {}
-        }
-      }
-    }
-  }
-}
-
-function saveToHistory() {
-  if (!state.client.name && !state.meta.no && !state.items.some(i => i.desc)) return false;
-  const totals = calcTotals();
-  const bizForHistory = Object.assign({}, state.business);
-  delete bizForHistory.logo;
-  const entry = {
-    id: editingHistoryId || ('inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
-    savedAt: new Date().toISOString(), docType: state.docType,
-    business: JSON.parse(JSON.stringify(bizForHistory)),
-    client: JSON.parse(JSON.stringify(state.client)),
-    meta: JSON.parse(JSON.stringify(state.meta)),
-    items: JSON.parse(JSON.stringify(state.items)),
-    details: JSON.parse(JSON.stringify(state.details || [])),
-    bank: JSON.parse(JSON.stringify(state.bank)),
-    terms: state.terms, notes: state.notes, taxType: state.taxType, template: state.template,
-    regStatus: state.regStatus, accentColor: state.accentColor,
-    customText: state.customText, customTextPosition: state.customTextPosition,
-    customTextColor: state.customTextColor, customTextSize: state.customTextSize,
-    total: totals.rounded, invoiceNo: state.meta.no || '(no number)',
-    clientName: state.client.name || '(no client)',
-    invoiceDate: state.meta.date || new Date().toISOString().split('T')[0]
-  };
-  if (editingHistoryId) {
-    const idx = history.findIndex(h => h.id === editingHistoryId);
-    if (idx >= 0) history[idx] = entry; else history.unshift(entry);
-    editingHistoryId = null;
-  } else history.unshift(entry);
-  if (history.length > 50) history = history.slice(0, 50);
-  saveHistoryToLS(); renderHistory();
-  return true;
-}
-
-function getDocTypeBadge(docType) {
-  if (docType === 'Credit Note') return '<span class="hi-doctype credit">Credit</span>';
-  if (docType === 'Debit Note') return '<span class="hi-doctype debit">Debit</span>';
-  if (docType === 'Proforma Invoice') return '<span class="hi-doctype proforma">Proforma</span>';
-  if (docType === 'Estimate') return '<span class="hi-doctype proforma">Estimate</span>';
-  if (docType === 'Quotation') return '<span class="hi-doctype proforma">Quote</span>';
-  return '';
-}
-
-function renderHistory() {
-  const list = $('historyList'), count = $('historyCount'); count.textContent = history.length;
-  if (!history.length) { list.innerHTML = '<div class="history-empty"><div class="history-empty-icon">📭</div><div>No saved invoices</div></div>'; return; }
-  list.innerHTML = history.map(h => {
-    const dateStr = h.invoiceDate ? fmtDate(h.invoiceDate) : fmtDate(h.savedAt);
-    const hid = String(h.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
-    return '<div class="history-item ' + (h.id === editingHistoryId ? 'selected' : '') + '" role="button" tabindex="0" onclick="loadFromHistory(\'' + hid + '\')" onkeydown="if(event.key===\'Enter\')loadFromHistory(\'' + hid + '\')">' +
-      '<div class="hi-top"><div class="hi-no">' + esc(h.invoiceNo) + getDocTypeBadge(h.docType) + '</div><div class="hi-date">' + dateStr + '</div></div>' +
-      '<div class="hi-client">' + esc(h.clientName) + '</div>' +
-      '<div class="hi-bottom"><div class="hi-amount">' + fmt(h.total) + '</div>' +
-        '<div class="hi-actions" onclick="event.stopPropagation()"><button class="hi-del" onclick="deleteFromHistory(\'' + hid + '\')">🗑️</button></div>' +
-      '</div></div>';
-  }).join('');
-}
-
-function loadFromHistory(id) {
-  const entry = history.find(h => h.id === id); if (!entry) return;
-  const hasCurrentData = state.client.name || state.items.some(i => i.desc);
-  if (hasCurrentData && editingHistoryId !== id && !confirm('Load this invoice? Current data will be replaced.')) return;
-
-  const currentLogo = sanitizeLogo((state.business && state.business.logo) || '');
-
-  state.docType = entry.docType || 'Tax Invoice';
-  state.business = JSON.parse(JSON.stringify(entry.business));
-  state.business.logo = currentLogo;
-
-  state.client = JSON.parse(JSON.stringify(entry.client));
-  state.meta = JSON.parse(JSON.stringify(entry.meta));
-  state.items = JSON.parse(JSON.stringify(entry.items));
-  state.details = JSON.parse(JSON.stringify(entry.details || ['']));
-  state.bank = JSON.parse(JSON.stringify(entry.bank));
-  state.terms = entry.terms; state.notes = entry.notes;
-  state.taxType = entry.taxType; state.template = entry.template;
-  if (!VALID_TEMPLATES.includes(state.template)) state.template = 'classic';
-  state.accentColor = entry.accentColor || '';
-  if (entry.regStatus) state.regStatus = entry.regStatus;
-  if (entry.customText !== undefined) state.customText = entry.customText;
-  if (entry.customTextPosition) state.customTextPosition = entry.customTextPosition;
-  if (entry.customTextColor) state.customTextColor = entry.customTextColor;
-  if (entry.customTextSize) state.customTextSize = entry.customTextSize;
-  editingHistoryId = id;
-  populateForm(state); renderItems(); renderDetails(); render(); renderHistory();
-  showToast('✓ Loaded', 'blue'); window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function deleteFromHistory(id) {
-  const entry = history.find(h => h.id === id); if (!entry) return;
-  if (!confirm('Delete "' + entry.invoiceNo + '"?')) return;
-  history = history.filter(h => h.id !== id);
-  if (editingHistoryId === id) editingHistoryId = null;
-  saveHistoryToLS(); renderHistory(); showToast('🗑️ Deleted');
-}
-
-function getNextInvoiceNo() {
-  if (history.length > 0) {
-    const last = history[0].invoiceNo || '';
-    const match = last.match(/(.*?)(\d+)$/);
-    if (match) return match[1] + String(parseInt(match[2]) + 1).padStart(match[2].length, '0');
-  }
-  return 'INV-' + new Date().getFullYear() + '-001';
-}
-
-function resetForNextInvoice() {
-  const today = new Date().toISOString().split('T')[0];
-  $('cName').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
-  $('mNo').value = getNextInvoiceNo(); $('mDate').value = today;
-  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
-  editingHistoryId = null;
-  updateClientStateHint();
-  renderItems(); renderDetails(); sync(); renderHistory();
-}
-
-function prepareForPrint() {
-  const invNo = (state.meta.no || 'Invoice').replace(/[\\/:*?"<>|]/g, '-').trim();
-  const tplName = TEMPLATE_NAMES[state.template] || 'Classic';
-  const docType = (state.docType || 'Invoice').replace(/[\\/:*?"<>|]/g, '-');
-  const safeInvNo = invNo || 'Invoice';
-  document.title = safeInvNo + '_' + docType.replace(/\s+/g, '') + '_' + tplName;
-
-  const el = $('invoicePreview'); if (!el) return;
-  el.style.zoom = '';
-  const warning = $('printWarning'); if (warning) warning.classList.remove('show');
-  void el.offsetHeight;
-  const naturalHeight = el.scrollHeight;
-  const pageHeight = 1122;
-  const overflowRatio = naturalHeight / pageHeight;
-  if (naturalHeight > pageHeight && overflowRatio < 1.15) {
-    const scale = Math.min(pageHeight / naturalHeight, 1) * 0.98;
-    el.style.zoom = scale.toFixed(4);
-    if (warning) warning.classList.add('show');
-  }
-}
-
-function resetAfterPrint() {
-  document.title = ORIGINAL_TITLE;
-  const el = $('invoicePreview'); if (el) el.style.zoom = '';
-  const warning = $('printWarning'); if (warning) warning.classList.remove('show');
-}
-
-let pendingReset = false;
-
-window.addEventListener('beforeprint', prepareForPrint);
-window.addEventListener('afterprint', () => {
-  resetAfterPrint();
-  if (!pendingReset) return;
-  pendingReset = false;
-  setTimeout(() => { resetForNextInvoice(); showToast('✓ Ready for next'); }, 200);
-});
-
-function printAndSave() {
-  if (!saveToHistory()) { showToast('⚠️ Fill the form first', 'red'); return; }
-  showToast('✓ Saved — opening print');
-  pendingReset = true;
-  prepareForPrint();
-  setTimeout(() => window.print(), 200);
+  showToast('✓ Template changed', 'blue');
 }
 
 function loadSample() {
-  const today = new Date().toISOString().split('T')[0];
-  $('bName').value = 'Dinesh Construction Company';
-  $('bkHolder').value = 'Dinesh Construction Company'; // Auto set A/c Holder
-  $('bAddr').value = 'Village-Nandera, Tehsil-Baswa, Dausa, Rajasthan-303313';
-  $('bGstin').value = '08KGZPS9518C1ZD'; $('bPan').value = 'KGZPS9518C';
-  $('bEmail').value = 'dinesh.saini6095@gmail.com'; $('bPhone').value = '+91 97845 06095';
-  $('bExtra').value = 'Alt Phone: +91 90790 12345 · Website: dineshconstruction.in';
-  $('cNameManual').value = 'SURGYAN KANWAR';
-  $('cAddr').value = 'P No B-26 Shree Ram Vihar-B Jaipur, Meenawala, Jaipur, Rajasthan, Pin Code: 302034';
-  $('cGstin').value = '08AHVPG8733E1ZY';
-  $('mNo').value = 'BS/26-27/100'; $('mDate').value = today; $('mPlace').value = '08-Rajasthan';
-  $('bkName').value = 'Bank of Baroda';
-  $('bkAc').value = '33930200000505'; $('bkIfsc').value = 'BARB0BANDIK';
-  $('bkType').value = 'Current'; $('bkUpi').value = 'dinesh@barodampay';
-  $('terms').value = 'Payment due within 15 days of invoice date.\nPlease mention invoice number in payment reference.\nInterest @18% p.a. will be charged on overdue payments.';
-  $('notes').value = 'Thank you for your business!';
-
+  $('bName').value = 'Shree Shyam Traders';
+  $('bAddr').value = '123, Main Market, Jaipur, Rajasthan';
+  $('bGstin').value = '08ABCDE1234F1Z5';
+  $('bPan').value = 'ABCDE1234F';
+  $('bUdyam').value = 'UDYAM-RJ-01-0001234';
+  $('bEmail').value = 'contact@shreeshyam.com';
+  $('bPhone').value = '9876543210';
+  
+  $('cNameManual').value = 'Delhi Electronics';
+  $('cAddr').value = '45, Nehru Place, New Delhi';
+  $('cGstin').value = '07XYZAB5678C1Z9';
+  
+  $('mNo').value = 'INV-2024-001';
+  $('mDate').value = new Date().toISOString().split('T')[0];
+  
   state.items = [
-    { desc:'MIS Reporting & Dashboard Setup', hsn:'998313', qty:1, rate:25000, gst:18 },
-    { desc:'GST Filing — GSTR-1 & GSTR-3B (Monthly)', hsn:'998221', qty:3, rate:3500, gst:18 },
-    { desc:'TDS Return Filing (Quarterly)', hsn:'998221', qty:1, rate:5000, gst:18 },
-    { desc:'ERP Data Entry & Reconciliation', hsn:'998313', qty:10, rate:800, gst:18 },
-    { desc:'Business Advisory Services', hsn:'998311', qty:1, rate:10000, gst:12 }
+    { desc: 'Wireless Mouse', hsn: '8471', qty: 2, rate: 500, gst: 18 },
+    { desc: 'Keyboard', hsn: '8471', qty: 2, rate: 800, gst: 18 }
   ];
-  state.details = ['Site name: Namma', 'Site Id: IN-12521251', 'Site Ref No.: R/fd/231413'];
-  editingHistoryId = null;
-  updateClientStateHint();
-  updatePlaceOfSupplyHint();
-  renderItems(); renderDetails(); sync();
-  setTimeout(() => onIfscInput('BARB0BANDIK'), 200);
+  renderItems();
+  
+  $('bkName').value = 'HDFC Bank';
+  $('bkAc').value = '1234567890123';
+  $('bkIfsc').value = 'HDFC0001234';
+  $('bkBranch').value = 'Jaipur Main';
+  $('bkHolder').value = 'Shree Shyam Traders';
+  
+  $('terms').value = '1. Goods once sold will not be taken back.\n2. Payment due within 15 days.';
+  
+  onClientGstinInput($('cGstin').value);
+  sync();
+  showToast('⚡ Sample loaded', 'blue');
 }
 
-function clearAll(skipConfirm) {
-  if (!skipConfirm && !confirm('Clear everything?')) return;
-  ['bName','bAddr','bGstin','bPan','bUdyam','bEmail','bPhone','bExtra',
-   'cName','cNameManual','cAddr','cGstin','cEmail','cPhone',
-   'mNo','mDate','mPlace',
-   'bkHolder','bkName','bkAc','bkIfsc','bkBranch','bkType','bkUpi',
-   'terms','notes'].forEach(id => { const el = $(id); if (el) el.value = ''; });
-  $('taxType').value = 'cgst-sgst'; $('docTypeSelect').value = 'Tax Invoice';
-  $('regStatus').value = 'registered';
-  state.docType = 'Tax Invoice';
-  state.regStatus = 'registered';
-  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; state.details = [''];
-  editingHistoryId = null;
-  setIfscStatus('idle', '');
-  $('bankPreview').classList.remove('show'); ifscLastFetched = '';
-  $('bkBranch').readOnly = true;
-  state.business = {}; state.client = {}; state.meta = {}; state.bank = {};
-  state.terms = ''; state.notes = '';
-  try { localStorage.removeItem('invoiceState'); } catch (e) {}
-  updateLabels(); updateCustomBadge();
-  updateLogoPreview();
-  updateClientStateHint();
-  updatePlaceOfSupplyHint();
-  handleRegStatus();
-  renderItems(); renderDetails(); render(); renderHistory();
-  showToast('🗑️ Cleared');
+function clearAll() {
+  if (!confirm('Clear all form data?')) return;
+  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = '';
+  $('bUdyam').value = ''; $('bEmail').value = ''; $('bPhone').value = ''; $('bExtra').value = '';
+  state.business.logo = ''; updateLogoPreview();
+  
+  $('cNameManual').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
+  $('mNo').value = ''; $('mDate').value = ''; $('mPlace').value = '';
+  
+  $('bkHolder').value = ''; $('bkName').value = ''; $('bkAc').value = '';
+  $('bkIfsc').value = ''; $('bkBranch').value = ''; $('bkUpi').value = '';
+  $('terms').value = ''; $('notes').value = '';
+  
+  state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
+  state.details = [''];
+  renderItems(); renderDetails();
+  
+  sync();
+  showToast('🗑️ Form cleared');
 }
 
 function nukeEverything() {
-  if (!confirm('💥 Reset EVERYTHING? This will delete form + saved invoices + saved business details.')) return;
-  if (!confirm('Pakka?')) return;
-  try { localStorage.clear(); } catch (e) {}
-  history = []; profiles = []; editingHistoryId = null;
-  clearAll(true);
-  renderProfiles();
-  showToast('💥 Everything reset', 'red');
+  if (!confirm('Reset everything including history and profiles? This cannot be undone.')) return;
+  localStorage.clear();
+  location.reload();
+}
+
+function printAndSave() {
+  window.print();
 }
 
 function saveJSON() {
-  const payload = {
-    _meta: {
-      version: 2,
-      app: 'InvoiceGenerator',
-      savedAt: new Date().toISOString(),
-      profileCount: profiles.length,
-      historyCount: history.length
-    },
-    state: state,
-    profiles: profiles,
-    history: history
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const data = { state, profiles, history };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  const safeNo = (state.meta.no || 'backup').replace(/[\\/:*?"<>|]/g, '-');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'invoice-backup-' + safeNo + '.json';
+  a.href = url;
+  a.download = 'invoice_backup_' + new Date().toISOString().split('T')[0] + '.json';
   a.click();
-  showToast('✓ Full backup — ' + profiles.length + ' profiles, ' + history.length + ' invoices', 'purple');
+  URL.revokeObjectURL(url);
+  showToast('💾 Backup downloaded', 'blue');
 }
 
 function loadJSON(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const r = new FileReader();
-  r.onload = ev => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
     try {
       const data = JSON.parse(ev.target.result);
-
-      if (data.state && typeof data.state === 'object' && !data.business && !data.items) {
-        const nProf = Array.isArray(data.profiles) ? data.profiles.length : 0;
-        const nHist = Array.isArray(data.history) ? data.history.length : 0;
-        const summary = 'Import full backup?\n\n' +
-          '• Form state (current)\n' +
-          '• ' + nProf + ' business profiles (with logo + bank)\n' +
-          '• ' + nHist + ' saved invoices\n\n' +
-          ((nProf || nHist) ? 'Existing profiles & history will be replaced.' : '');
-        if ((nProf || nHist) && !confirm(summary)) return;
-        if (Array.isArray(data.profiles)) profiles = data.profiles;
-        if (Array.isArray(data.history)) history = data.history;
-        saveProfilesToLS();
-        saveHistoryToLS();
-        renderProfiles();
-        renderHistory();
+      if (data.state) {
         Object.assign(state, data.state);
-      } else {
-        Object.assign(state, data);
+        populateForm(state);
+        renderItems(); renderDetails(); render();
       }
-
-      if (!state.details) state.details = [''];
-      if (!state.docType) state.docType = 'Tax Invoice';
-      if (!state.template) state.template = 'classic';
-      if (!VALID_TEMPLATES.includes(state.template)) state.template = 'classic';
-      if (!state.regStatus) state.regStatus = 'registered';
-      if (state.customText === undefined) state.customText = '।। जय श्री श्याम ।।';
-      if (!state.customTextPosition) state.customTextPosition = 'top';
-      if (!state.customTextColor) state.customTextColor = '#d97706';
-      if (!state.customTextSize) state.customTextSize = '18px';
-      if (!state.accentColor) state.accentColor = '';
-      if (state.business && state.business.logo) state.business.logo = sanitizeLogo(state.business.logo);
-      editingHistoryId = null;
-      populateForm(state); renderItems(); renderDetails(); sync();
-      showToast('✓ Backup loaded — Profiles + Logo + History restored', 'purple');
-    } catch (err) { alert('Invalid JSON: ' + err.message); }
+      if (data.profiles) {
+        profiles = data.profiles;
+        renderProfiles();
+      }
+      if (data.history) {
+        history = data.history;
+        // renderHistory();
+      }
+      showToast('✓ Backup restored', 'purple');
+    } catch (err) {
+      showToast('⚠️ Invalid backup file', 'red');
+    }
   };
-  r.readAsText(file); e.target.value = '';
+  reader.readAsText(file);
+  e.target.value = '';
 }
 
-(function init() {
-  disableAutofill();
-  try { const s = localStorage.getItem('invoiceHistory'); if (s) history = JSON.parse(s); } catch (e) {}
-  try { const s = localStorage.getItem('businessProfiles'); if (s) profiles = JSON.parse(s); } catch (e) {}
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  buildColorGrids();
+  updateLabels();
+  updateCustomBadge();
+  
   const saved = localStorage.getItem('invoiceState');
   if (saved) {
     try {
-      const data = JSON.parse(saved);
-      Object.assign(state, data);
-      if (!state.details) state.details = [''];
-      if (!state.docType) state.docType = 'Tax Invoice';
-      if (!state.template) state.template = 'classic';
-      if (!VALID_TEMPLATES.includes(state.template)) state.template = 'classic';
-      if (!state.regStatus) state.regStatus = 'registered';
-      if (state.customText === undefined) state.customText = '।। जय श्री श्याम ।।';
-      if (!state.customTextPosition) state.customTextPosition = 'top';
-      if (!state.customTextColor) state.customTextColor = '#d97706';
-      if (!state.customTextSize) state.customTextSize = '18px';
-      if (!state.accentColor) state.accentColor = '';
-      if (state.business && state.business.logo) state.business.logo = sanitizeLogo(state.business.logo);
+      const parsed = JSON.parse(saved);
+      Object.assign(state, parsed);
       populateForm(state);
-      const bk = state.bank || {};
-      if (bk.ifsc && bk.ifsc.length === 11 && !bk.branch) setTimeout(() => onIfscInput(bk.ifsc), 400);
-    } catch (err) {}
+    } catch(e) {}
   } else {
-    state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }];
-    state.details = [''];
+    // Defaults
+    $('ctText').value = state.customText;
+    $('ctPosition').value = state.customTextPosition;
+    $('ctColor').value = state.customTextColor;
+    $('ctSize').value = state.customTextSize;
   }
-  if (!state.details || !state.details.length) state.details = [''];
-  updateLabels(); updateCustomBadge();
-  handleRegStatus();
-  renderItems(); renderDetails(); render(); renderHistory(); renderProfiles();
-  buildColorGrids();
+  
+  const savedProfiles = localStorage.getItem('businessProfiles');
+  if (savedProfiles) {
+    try { profiles = JSON.parse(savedProfiles); } catch(e) {}
+  }
+  
+  renderItems();
+  renderDetails();
+  renderProfiles();
+  updateLogoPreview();
   updateColorPickerUI();
-  updateClientStateHint();
-  updatePlaceOfSupplyHint();
-})();
-
-/* ==========================================
-   SYNC DATA FROM TP ACCOUNTING
-   ========================================== */
-let syncedParties = [];
-
-window.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SYNC_DATA') {
-    
-    const comp = event.data.company;
-    
-    // AGAR COMPANY CHANGE HUI HAI TOH PURANA DATA CLEAR KAREIN
-    if (comp && lastSyncedCompanyId && lastSyncedCompanyId !== comp.id) {
-        $('cName').value = ''; 
-        $('cNameManual').value = ''; 
-        $('cAddr').value = ''; 
-        $('cGstin').value = ''; 
-        $('cEmail').value = ''; 
-        $('cPhone').value = '';
-        $('mNo').value = getNextInvoiceNo(); 
-        $('mDate').value = new Date().toISOString().split('T')[0];
-        state.items = [{ desc:'', hsn:'', qty:1, rate:0, gst:18 }]; 
-        state.details = [''];
-        editingHistoryId = null;
-        renderItems(); 
-        renderDetails();
-        showToast('✓ Switched to ' + comp.name, 'blue');
-    }
-    if (comp) lastSyncedCompanyId = comp.id;
-
-    // 1. Sync Parties
-    syncedParties = event.data.parties || [];
-    populatePartyDropdown();
-    
-    // 2. Sync Company Details
-    if (comp) {
-      // FORCE OVERWRITE: Agar nayi company me data nahi hai, to purana data clear ho jaye
-      if (document.getElementById('bName')) document.getElementById('bName').value = comp.name || '';
-      if (document.getElementById('bGstin')) document.getElementById('bGstin').value = comp.gstin || '';
-      if (document.getElementById('bPan')) document.getElementById('bPan').value = comp.pan || '';
-      if (document.getElementById('bUdyam')) document.getElementById('bUdyam').value = comp.udyam || '';
-      if (document.getElementById('bAddr')) document.getElementById('bAddr').value = comp.address || '';
-      if (document.getElementById('bPhone')) document.getElementById('bPhone').value = comp.phone || '';
-      if (document.getElementById('bEmail')) document.getElementById('bEmail').value = comp.email || '';
-      
-      // Bank details
-      if (document.getElementById('bkHolder')) document.getElementById('bkHolder').value = comp.name || ''; // Set A/c Holder
-      if (document.getElementById('bkName')) document.getElementById('bkName').value = comp.bank || '';
-      if (document.getElementById('bkAc')) document.getElementById('bkAc').value = comp.account || '';
-      if (document.getElementById('bkIfsc')) document.getElementById('bkIfsc').value = comp.ifsc || '';
-      if (document.getElementById('bkBranch')) document.getElementById('bkBranch').value = comp.branch || '';
-      
-      // Terms
-      if (document.getElementById('terms')) document.getElementById('terms').value = comp.defaultTerms || '';
-
-      // LOGO LOGIC: Agar nayi company me logo nahi hai, to state se logo clear kar dein
-      state.business.logo = comp.logo || ''; 
-      if (typeof updateLogoPreview === 'function') updateLogoPreview();
-      
-      if (typeof sync === 'function') sync();
-    }
-  }
+  sync();
+  
+  setTimeout(() => {
+    disableAutofill();
+  }, 1000);
 });
 
-function populatePartyDropdown() {
-  const select = document.getElementById('cName');
-  if (!select) return;
-  
-  select.innerHTML = '<option value="">-- Select Party (Or Type Below) --</option>';
-  syncedParties.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.name + (p.phone ? ` (${p.phone})` : '');
-    select.appendChild(opt);
-  });
-}
-
-function onClientSelect(partyId) {
-  if (!partyId) {
-    document.getElementById('cGstin').value = '';
-    document.getElementById('cAddr').value = '';
-    document.getElementById('cPhone').value = '';
-    document.getElementById('cEmail').value = '';
-    return;
-  }
-
-  const p = syncedParties.find(x => x.id === partyId);
+function onClientSelect(val) {
+  if (!val) return;
+  const p = profiles.find(x => x.id === val);
   if (p) {
-    document.getElementById('cGstin').value = p.gstin || '';
-    document.getElementById('cAddr').value = p.address || '';
-    document.getElementById('cPhone').value = p.phone || '';
-    document.getElementById('cEmail').value = p.email || '';
-    document.getElementById('cNameManual').value = p.name;
-    
-    if (typeof onClientGstinInput === 'function') onClientGstinInput(p.gstin || '');
-    if (typeof sync === 'function') sync();
-    if (typeof showToast === 'function') showToast('✓ Party details auto-filled!', 'blue');
+    $('cNameManual').value = p.name || '';
+    $('cAddr').value = p.addr || '';
+    $('cGstin').value = p.gstin || '';
+    $('cEmail').value = p.email || '';
+    $('cPhone').value = p.phone || '';
+    onClientGstinInput(p.gstin || '');
+    sync();
   }
 }
 
 function onManualClientType(val) {
   if (val) {
-    document.getElementById('cName').value = '';
-    if (typeof sync === 'function') sync();
+    $('cName').value = '';
   }
-}
-
-if (window.opener) {
-  window.opener.postMessage({ type: 'GENERATOR_READY' }, '*');
+  sync();
 }
 </script>
 </body>
