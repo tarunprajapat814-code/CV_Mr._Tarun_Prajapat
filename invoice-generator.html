@@ -581,6 +581,12 @@
           <div class="field"><label>Email</label><input id="bEmail" autocomplete="off" oninput="sync()"></div>
           <div class="field"><label>Phone</label><input id="bPhone" autocomplete="off" oninput="sync()"></div>
         </div>
+        
+        <div class="field">
+          <label>Website</label>
+          <input id="bWebsite" autocomplete="off" oninput="sync()" placeholder="e.g. www.bostonservices.in">
+        </div>
+
         <div class="field"><label>Additional Info</label><textarea id="bExtra" rows="2" placeholder="Extra line — e.g. Website, alt phone" autocomplete="off" oninput="sync()"></textarea></div>
         <button class="btn btn-warning btn-sm" style="width:100%;justify-content:center;margin-top:6px;" onclick="saveBusinessProfile()">💾 Save Business + Bank + Logo</button>
       </div>
@@ -1236,7 +1242,7 @@ function saveBusinessProfile() {
     savedAt: new Date().toISOString(),
     name, addr: $('bAddr').value, gstin, pan: $('bPan').value.trim(),
     udyam: $('bUdyam').value.trim(),
-    email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(), extra: $('bExtra').value,
+    email: $('bEmail').value.trim(), phone: $('bPhone').value.trim(), website: $('bWebsite').value.trim(), extra: $('bExtra').value,
     logo: logo,
     regStatus: $('regStatus').value,
     bank: {
@@ -1285,6 +1291,7 @@ function loadBusinessProfile(id) {
   $('bGstin').value = p.gstin || ''; $('bPan').value = p.pan || '';
   $('bUdyam').value = p.udyam || '';
   $('bEmail').value = p.email || ''; $('bPhone').value = p.phone || '';
+  $('bWebsite').value = p.website || '';
   $('bExtra').value = p.extra || '';
   state.business.logo = sanitizeLogo(p.logo || '');
   updateLogoPreview();
@@ -1388,7 +1395,8 @@ function renderDetails() {
   if (!state.details || !state.details.length) state.details = [''];
   c.innerHTML = state.details.map((d, i) =>
     '<div class="detail-row">' +
-      '<input placeholder="e.g. Site name: Namma" value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
+      '<input
+      '<input placeholder="e.g. Site name: Name" value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
       '<button class="btn btn-ghost btn-sm" onclick="removeDetail(' + i + ')">✖</button>' +
     '</div>'
   ).join('');
