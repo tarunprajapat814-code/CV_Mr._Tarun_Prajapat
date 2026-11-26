@@ -1395,8 +1395,7 @@ function renderDetails() {
   if (!state.details || !state.details.length) state.details = [''];
   c.innerHTML = state.details.map((d, i) =>
     '<div class="detail-row">' +
-      '<input
-      '<input placeholder="e.g. Site name: Name" value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
+      '<input placeholder="e.g. Site name: Namma" value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
       '<button class="btn btn-ghost btn-sm" onclick="removeDetail(' + i + ')">✖</button>' +
     '</div>'
   ).join('');
@@ -1413,7 +1412,7 @@ function sync() {
   state.business = {
     name: $('bName').value, addr: $('bAddr').value, gstin: $('bGstin').value, pan: $('bPan').value,
     udyam: $('bUdyam').value,
-    email: $('bEmail').value, phone: $('bPhone').value, extra: $('bExtra').value,
+    email: $('bEmail').value, phone: $('bPhone').value, website: $('bWebsite').value, extra: $('bExtra').value,
     logo: existingLogo
   };
   
@@ -1458,6 +1457,7 @@ function populateForm(s) {
   $('bGstin').value = b.gstin || ''; $('bPan').value = b.pan || '';
   $('bUdyam').value = b.udyam || '';
   $('bEmail').value = b.email || ''; $('bPhone').value = b.phone || '';
+  $('bWebsite').value = b.website || '';
   $('bExtra').value = b.extra || '';
   state.business.logo = sanitizeLogo(b.logo || '');
   updateLogoPreview();
@@ -1574,6 +1574,7 @@ function buildBizInfoHTML(biz) {
   const contact = [];
   if (biz.email && biz.email.trim()) contact.push('<span class="icon">📧</span> ' + esc(biz.email));
   if (biz.phone && biz.phone.trim()) contact.push('<span class="icon">📞</span> ' + esc(biz.phone));
+  if (biz.website && biz.website.trim()) contact.push('<span class="icon">🌐</span> ' + esc(biz.website));
   if (contact.length) lines.push('<div class="biz-line">' + contact.join('<span class="sep">·</span>') + '</div>');
   
   const taxLine1 = [];
@@ -1725,7 +1726,7 @@ function render() {
           ${logoSideHTML}
           <div class="inv-biz-name">${esc(state.business.name) || 'Business Name'}</div>
           <p>${esc(state.business.addr).replace(/\n/g, '<br>')}</p>
-          <h4>Contact</h4><p>${esc(state.business.email)}<br>${esc(state.business.phone)}</p>
+          <h4>Contact</h4><p>${esc(state.business.email)}<br>${esc(state.business.phone)}<br>${esc(state.business.website || '')}</p>
           <h4>Tax Info</h4><p>GSTIN: ${esc(state.business.gstin) || '—'}</p>
         </div>
         <div class="inv-main">
@@ -2063,7 +2064,7 @@ function changeTemplate() {
 function loadSample() {
   $('bName').value = 'Shree Shyam Traders'; $('bAddr').value = '123, Main Market, Jaipur, Rajasthan';
   $('bGstin').value = '08ABCDE1234F1Z5'; $('bPan').value = 'ABCDE1234F'; $('bUdyam').value = 'UDYAM-RJ-01-0001234';
-  $('bEmail').value = 'contact@shreeshyam.com'; $('bPhone').value = '9876543210';
+  $('bEmail').value = 'contact@shreeshyam.com'; $('bPhone').value = '9876543210'; $('bWebsite').value = 'www.shreeshyam.com';
   $('cNameManual').value = 'Delhi Electronics'; $('cAddr').value = '45, Nehru Place, New Delhi'; $('cGstin').value = '07XYZAB5678C1Z9';
   $('mNo').value = 'INV-2024-001'; $('mDate').value = new Date().toISOString().split('T')[0];
   state.items = [{ desc: 'Wireless Mouse', hsn: '8471', qty: 2, rate: 500, gst: 18 }, { desc: 'Keyboard', hsn: '8471', qty: 2, rate: 800, gst: 18 }];
@@ -2076,7 +2077,7 @@ function loadSample() {
 
 function clearAll() {
   if (!confirm('Clear all form data?')) return;
-  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = ''; $('bUdyam').value = ''; $('bEmail').value = ''; $('bPhone').value = ''; $('bExtra').value = '';
+  $('bName').value = ''; $('bAddr').value = ''; $('bGstin').value = ''; $('bPan').value = ''; $('bUdyam').value = ''; $('bEmail').value = ''; $('bPhone').value = ''; $('bWebsite').value = ''; $('bExtra').value = '';
   state.business.logo = ''; updateLogoPreview();
   $('cNameManual').value = ''; $('cAddr').value = ''; $('cGstin').value = ''; $('cEmail').value = ''; $('cPhone').value = '';
   $('mNo').value = ''; $('mDate').value = ''; $('mPlace').value = '';
