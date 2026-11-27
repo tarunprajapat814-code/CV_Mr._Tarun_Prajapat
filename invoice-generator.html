@@ -1636,6 +1636,9 @@ function render() {
   
   const t = calcTotals();
   const labels = getLabels(state.docType);
+  const isOriginal = ['Tax Invoice', 'Credit Note', 'Debit Note'].includes(state.docType);
+  const originalLabel = isOriginal ? `<div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.75;margin-bottom:2px;">ORIGINAL FOR RECIPIENT</div>` : '';
+  
   const cText = buildCustomText(state);
   const common = buildCommonBlocks(state, t);
   
@@ -1696,7 +1699,7 @@ function render() {
             <div class="inv-biz-info">${bizInfoHTML}</div>
           </div>
         </div>
-        <div class="inv-title-box"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div class="inv-title-box"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
         <div style="width:55%;">
@@ -1732,7 +1735,7 @@ function render() {
         <div class="inv-main">
           ${cText.top}
           <div class="inv-header">
-            <div><div class="inv-h1">${labels.title.toUpperCase()}</div><div style="font-size:10px;color:#64748b;margin-top:4px;">#${esc(state.meta.no) || '—'}</div></div>
+            <div><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div><div style="font-size:10px;color:#64748b;margin-top:4px;">#${esc(state.meta.no) || '—'}</div></div>
             <div style="text-align:right;font-size:10px;">
               <div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
               ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
@@ -1756,7 +1759,7 @@ function render() {
     html = `
       ${cText.top}
       <div class="inv-header">
-        <div><div class="inv-h1">${labels.title.toUpperCase()}</div><div class="inv-biz-name" style="margin-top:6px;">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
+        <div><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div><div class="inv-biz-name" style="margin-top:6px;">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
         <div style="text-align:right;font-size:10px;"><div><strong>#${esc(state.meta.no)}</strong></div><div>${fmtDate(state.meta.date)}</div>${state.meta.place ? `<div>${esc(state.meta.place)}</div>` : ''}</div>
       </div>
       <div class="bill-to-wrap">
@@ -1774,7 +1777,7 @@ function render() {
       ${cText.top}
       <div class="inv-header">
         <div style="display:flex;gap:14px;align-items:center;">${logoHTML}<div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div></div>
-        <div class="inv-title-box"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div class="inv-title-box"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
         <div style="width:55%;">
@@ -1799,7 +1802,7 @@ function render() {
     html = `
       <div class="inv-header">
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
-        <div class="inv-title-box"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div class="inv-title-box"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       ${cText.top}
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
@@ -1825,7 +1828,7 @@ function render() {
       ${cText.top}
       <div class="inv-header">
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
-        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div><div style="font-size:10px;margin-top:2px;">#${esc(state.meta.no)}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div><div style="font-size:10px;margin-top:2px;">#${esc(state.meta.no)}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
         <div style="width:55%;">
@@ -1849,7 +1852,7 @@ function render() {
       ${cText.top}
       <div class="inv-header">
         <div style="display:flex;gap:14px;align-items:center;">${logoHTML}<div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div></div>
-        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
         <div style="width:55%;">
@@ -1876,7 +1879,7 @@ function render() {
       ${cText.top}
       <div class="inv-header">
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
-        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div class="gst-info-bar">
         <div class="item"><span class="lbl">Invoice No:</span><span class="val">${esc(state.meta.no)}</span></div>
@@ -1904,7 +1907,7 @@ function render() {
       ${cText.top}
       <div class="inv-header">
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
-        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
         <div style="width:55%;">
@@ -1932,7 +1935,7 @@ function render() {
       ${cText.top}
       <div class="inv-header">
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
-        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div class="inv-boxes">
         <div class="inv-box">
@@ -1961,7 +1964,7 @@ function render() {
       <div class="inv-header">
         <div class="inv-avatar">${logoHTML ? logoHTML : avatarText}</div>
         <div style="flex:1;"><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
-        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
         <div style="width:55%;">
@@ -1985,7 +1988,7 @@ function render() {
       ${cText.top}
       <div class="inv-header">
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
-        <div style="text-align:right;"><div class="inv-h1">${labels.title.toUpperCase()}</div></div>
+        <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
         <div style="width:55%;">
@@ -2013,7 +2016,7 @@ function render() {
       ${cText.top}
       <div class="header">
         <div class="biz-details" style="flex:1;"><div class="biz-name">${esc(state.business.name)}</div>${bizInfoHTML}</div>
-        <div class="inv-title">${labels.title.toUpperCase()}</div>
+        <div class="inv-title">${originalLabel}${labels.title.toUpperCase()}</div>
         <div style="flex:1;"></div>
       </div>
       <div class="bill-section">
