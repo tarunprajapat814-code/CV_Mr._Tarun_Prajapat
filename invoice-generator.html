@@ -160,7 +160,7 @@
   .totals-row.subtotal .amt { font-weight: 700; }
   .totals-row.grand { border-top: 2px solid var(--accent); border-bottom: none; margin-top: 4px; padding-top: 6px; font-weight: 800; color: var(--accent); font-size: 13px; }
   .totals-row.grand .lbl { color: var(--accent); }
-  .totals-row.grand .amt { font-weight: 800; color: var(--accent); }
+  .tpl-gst .totals-row.grand .amt { font-weight: 800; color: var(--accent); }
   
   .words-box { background: var(--accent-soft); padding: 8px 12px; border-radius: 4px; font-size: 10px; margin: 10px 0; }
   .words-box strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.3px; font-size: 9.5px; }
@@ -1622,7 +1622,7 @@ function buildCommonBlocks(s, t) {
   let itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
     const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
-    return '<tr><td class="c">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td><td class="c">' + esc(it.umo) + '</td><td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
+    return '<tr><td class="c">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td>' + (s.template === 'gst' ? '<td class="c">' + esc(it.umo) + '</td>' : '') + '<td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
   }).join('');
   
   let taxRows = '';
@@ -1650,7 +1650,7 @@ function buildCommonBlocks(s, t) {
     : '<td>TOTAL</td><td class="r">' + fmt(sum('taxable')) + '</td><td></td><td class="r">' + fmt(sum('cgst')) + '</td><td class="r">' + fmt(sum('sgst')) + '</td><td class="r">' + fmt(sum('total')) + '</td>';
   const hsnTotalRow = '<tr style="' + tStyle + '">' + totCells + '</tr>';
 
-  return { itemRows, taxRows, hsnHead, hsnRows: hsnRows + hsnTotalRow };
+  return { itemRows, taxRows, hsnHead, hsnRows: s.template === 'gst' ? hsnRows + hsnTotalRow : hsnRows };
 }
 
 function render() {
@@ -1713,8 +1713,10 @@ function render() {
   const wordsBox = `<div class="words-box"><strong>AMOUNT IN WORDS:</strong> ${numToWords(t.rounded)}</div>`;
   
   // Details box: sirf non-empty lines dikhengi, aur box tabhi bane jab kuch ho
+  const isGst = state.template === 'gst';
   const detailLines = (state.details || []).filter(d => d && d.trim());
-  const extraBoxHTML = detailLines.length
+  const detailsHTML = detailLines.map(d => `<div style="font-size:10.5px; font-weight:700; color:var(--text); text-align:right; margin-top:2px;">${esc(d)}</div>`).join('');
+  const extraBoxHTML = (isGst && detailLines.length)
     ? `<div class="inv-extra-box">${detailLines.map(d => `<div class="inv-extra-line">${esc(d)}</div>`).join('')}</div>`
     : '';
 
@@ -1722,7 +1724,7 @@ function render() {
   
   // Layout: Left = Bill To, Middle = GSTIN, Right = Invoice No / Date / Place of Supply
   // Niche full-width details box
-  const clientHTML = `
+  const clientHTMLGst = `
     <div style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; margin-bottom: 12px; gap: 15px;">
       <!-- Left Column: Address -->
       <div style="flex: 1.2;">
@@ -1752,7 +1754,35 @@ function render() {
     ${extraBoxHTML}
   `;
 
-  const tableHeadersHTML = `
+  const clientHTMLOrig = `
+    <div style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; margin-bottom: 12px; gap: 15px;">
+      <div style="flex: 1.2;">
+        <div class="inv-party-label">BILL TO</div>
+        <div class="inv-party-name" style="font-size: 14px; margin-bottom: 4px;">${esc(state.client.name) || 'Client Name'}</div>
+        <div class="inv-party-info">
+          ${state.client.addr ? `<div>${esc(state.client.addr).replace(/\n/g, '<br>')}</div>` : ''}
+        </div>
+      </div>
+      <div style="width: 25%; padding-top: 15px;">
+        <div class="bill-to-gstin-label" style="font-size: 8.5px;">GSTIN</div>
+        <div class="bill-to-gstin-value" style="font-size: 11px; font-weight: 700;">${state.client.gstin ? esc(state.client.gstin) : 'NULL'}</div>
+        ${gstInfo ? `
+          <div class="bill-to-gstin-state" style="font-size: 9.5px; margin-top: 2px;">State: <strong>${gstInfo.name}</strong></div>
+          <div class="bill-to-gstin-state" style="font-size: 9.5px;">State Code: <strong>${gstInfo.code}</strong></div>
+        ` : ''}
+      </div>
+      <div style="width: 35%;" class="inv-details-box">
+        <div class="inv-details-title" style="font-size: 13px; font-weight: 800; margin-bottom: 6px; text-align: right;">Invoice Details</div>
+        <div class="inv-meta-row"><span style="color:var(--muted);">${labels.noLabel}:</span><span style="font-weight:700;">${esc(state.meta.no) || '—'}</span></div>
+        <div class="inv-meta-row"><span style="color:var(--muted);">Date:</span><span style="font-weight:700;">${fmtDate(state.meta.date)}</span></div>
+        ${detailsHTML}
+        ${state.meta.place ? `<div class="inv-meta-row" style="margin-top:4px;"><span style="color:var(--muted);">Place of Supply:</span><span style="font-weight:700;">${esc(state.meta.place)}</span></div>` : ''}
+      </div>
+    </div>
+  `;
+  const clientHTML = isGst ? clientHTMLGst : clientHTMLOrig;
+
+  const tableHeadersGst = `
     <tr>
       <th class="c" style="width: 5%;">SR. NO.</th>
       <th style="width: 24%;">DESCRIPTION OF GOODS/SERVICE</th>
@@ -1767,6 +1797,21 @@ function render() {
     </tr>
   `;
 
+  const tableHeadersOrig = `
+    <tr>
+      <th class="c" style="width: 5%;">SR. NO.</th>
+      <th style="width: 30%;">DESCRIPTION OF GOODS/SERVICE</th>
+      <th class="c" style="width: 12%;">HSN/SAC CODE</th>
+      <th class="c" style="width: 10%;">QUANTITY</th>
+      <th class="r" style="width: 12%;">RATE</th>
+      <th class="c" style="width: 8%;">GST%</th>
+      <th class="r" style="width: 12%;">TAXABLE AMOUNT</th>
+      <th class="r" style="width: 11%;">TOTAL TAX</th>
+      <th class="r" style="width: 12%;">TOTAL AMOUNT</th>
+    </tr>
+  `;
+  const tableHeadersHTML = isGst ? tableHeadersGst : tableHeadersOrig;
+
   const hsnSummaryHTML = `
     <div class="rate-summary-title" style="margin-top:15px; margin-bottom: 6px;">HSN SUMMARY</div>
     <table class="gst-lite-hsn-table">
@@ -1774,6 +1819,10 @@ function render() {
       <tbody>${common.hsnRows}</tbody>
     </table>
   `;
+
+  const summaryBlock = isGst
+    ? totalsBox + wordsBox + hsnSummaryHTML
+    : wordsBox + totalsBox + hsnSummaryHTML;
 
   let html = '';
 
@@ -1796,9 +1845,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}
-      ${wordsBox}
-      ${hsnSummaryHTML}
+      ${summaryBlock}
       ${footerHTML}
     `;
   } else if (state.template === 'modern') {
@@ -1826,7 +1873,7 @@ function render() {
             <thead>${tableHeadersHTML}</thead>
             <tbody>${common.itemRows}</tbody>
           </table>
-          ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+          ${summaryBlock}${footerHTML}
         </div>
       </div>
     `;
@@ -1843,7 +1890,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'gst') {
     html = `
@@ -1858,7 +1905,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'corporate') {
     html = `
@@ -1873,7 +1920,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'compact') {
     html = `
@@ -1888,7 +1935,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'rounded') {
     html = `
@@ -1903,7 +1950,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'gst-detailed') {
     const rateCards = Object.values(t.rateSummary).map(r => `
@@ -1928,7 +1975,7 @@ function render() {
       </table>
       <div class="rate-summary-title">Tax Rate Summary</div>
       <div class="rate-summary-grid">${rateCards}</div>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'gst-lite') {
     html = `
@@ -1943,7 +1990,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'standard') {
     html = `
@@ -1971,7 +2018,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'freelancer') {
     const avatarText = (state.business.name || 'F').charAt(0).toUpperCase();
@@ -1988,7 +2035,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'premium-hsn') {
     html = `
@@ -2003,7 +2050,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
+      ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'structured') {
     html = `
