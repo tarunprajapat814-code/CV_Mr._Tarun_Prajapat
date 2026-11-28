@@ -258,6 +258,14 @@
   .cp-sign { text-align: right; font-size: 8.5px; color: #0f172a; font-weight: 700; min-width: 180px; }
   .cp-sign-space { height: 30px; }
   .cp-sign-line { border-top: 1px solid #0f172a; padding-top: 3px; }
+  .cp-client { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; border: 1px solid var(--accent); padding: 6px 8px; min-height: 72px; }
+  .cp-client-main { flex: 1.3; }
+  .cp-client-gst { flex: 1; }
+  .cp-party-label { font-size: 7.5px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 700; margin-bottom: 3px; }
+  .cp-client .cp-box-name { font-size: 11px; margin-bottom: 3px; }
+  .cp-client-addr { font-size: 8.5px; color: #64748b; line-height: 1.5; }
+  .cp-gstin { font-size: 9.5px; font-weight: 800; color: #0f172a; word-break: break-all; margin-bottom: 2px; }
+  .cp-state { font-size: 8.5px; font-weight: 700; color: var(--accent); line-height: 1.5; }
   .tpl-compact { padding: 8mm 10mm; font-size: 10px; }
   .tpl-compact .inv-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--accent); margin-bottom: 8px; }
   .tpl-compact .inv-h1 { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
@@ -1737,12 +1745,17 @@ function buildCompactHTML() {
       <div class="cp-title">${originalLabel}${labels.title.toUpperCase()}</div>
     </div>
     <div class="cp-boxes">
-      <div class="cp-box">
-        <div class="cp-box-label">Bill To</div>
-        <div class="cp-box-name">${esc(cli.name) || 'Client Name'}</div>
-        ${cli.addr ? `<div class="cp-line">${esc(cli.addr).replace(/\n/g, '<br>')}</div>` : ''}
-        ${cli.gstin ? `<div class="cp-line">GSTIN: ${esc(cli.gstin)}</div>` : ''}
-        ${gstInfo ? `<div class="cp-line">State: ${gstInfo.name} (${gstInfo.code})</div>` : ''}
+      <div class="cp-client">
+        <div class="cp-client-main">
+          <div class="cp-party-label">BILL TO</div>
+          <div class="cp-box-name">${esc(cli.name) || 'Client Name'}</div>
+          ${cli.addr ? `<div class="cp-client-addr">${esc(cli.addr).replace(/\n/g, '<br>')}</div>` : ''}
+        </div>
+        <div class="cp-client-gst">
+          <div class="cp-party-label">GSTIN</div>
+          ${cli.gstin ? `<div class="cp-gstin">${esc(cli.gstin)}</div>` : '<div class="cp-client-addr">—</div>'}
+          ${gstInfo ? `<div class="cp-state">State: ${gstInfo.name}</div><div class="cp-state">State Code: ${gstInfo.code}</div>` : ''}
+        </div>
       </div>
       <div class="cp-box">
         <div class="cp-box-label">Invoice Details</div>
