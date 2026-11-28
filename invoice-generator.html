@@ -223,6 +223,41 @@
   .tpl-corporate .totals-row.grand { background: var(--accent-soft); padding: 8px 10px; margin-top: 6px; border: none; border-radius: 4px; }
   .tpl-corporate .inv-details-title { text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px; }
   
+  .tpl-compact { --accent: #d62828; --accent-soft: #fdecec; --accent-text: #fff; --line: #e2e8f0; }
+  .cp-head { display: flex; justify-content: space-between; align-items: flex-start; border: 1.5px solid var(--accent); padding: 8px 10px; margin-bottom: 8px; }
+  .cp-head-left { display: flex; gap: 10px; align-items: flex-start; }
+  .cp-head .inv-logo-img { max-height: 50px; max-width: 110px; }
+  .cp-biz { font-size: 15px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; }
+  .cp-line { font-size: 8.5px; color: #334155; line-height: 1.55; }
+  .cp-line strong { color: #0f172a; font-weight: 700; }
+  .cp-title { font-size: 16px; font-weight: 800; color: #0f172a; text-align: right; letter-spacing: 0.4px; white-space: nowrap; }
+  .cp-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .cp-box { border: 1px solid var(--accent); padding: 6px 8px; min-height: 72px; }
+  .cp-box-label { font-size: 8px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .cp-box-name { font-size: 10px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+  .cp-kv { display: flex; justify-content: space-between; gap: 8px; font-size: 8.5px; color: #334155; padding: 1px 0; }
+  .cp-kv b { color: #0f172a; font-weight: 700; }
+  .cp-table { width: 100%; border-collapse: collapse; font-size: 8.5px; }
+  .cp-table th { background: var(--accent); color: var(--accent-text); padding: 5px 4px; font-size: 7.5px; font-weight: 700; text-transform: uppercase; text-align: left; line-height: 1.25; }
+  .cp-table td { padding: 5px 4px; border-bottom: 1px solid var(--line); vertical-align: top; color: #0f172a; }
+  .cp-table .r { text-align: right; }
+  .cp-table .c { text-align: center; }
+  .cp-bottom { display: flex; justify-content: flex-end; margin-top: 8px; }
+  .cp-totals { width: 240px; border: 1px solid var(--line); }
+  .cp-totals .totals-row { padding: 4px 8px; font-size: 8.5px; border-bottom: 1px solid var(--line); }
+  .cp-totals .totals-row .lbl { color: #475569; }
+  .cp-totals .totals-row .amt { font-weight: 700; color: #0f172a; }
+  .cp-grand { background: var(--accent); color: var(--accent-text); display: flex; justify-content: space-between; padding: 6px 8px; font-size: 10.5px; font-weight: 800; }
+  .cp-words { border: 1px solid var(--accent); padding: 5px 8px; font-size: 8.5px; margin-top: 8px; color: #0f172a; }
+  .cp-words strong { color: var(--accent); }
+  .cp-hsn { margin-top: 8px; }
+  .cp-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; font-size: 8px; color: #334155; gap: 12px; }
+  .cp-bank-title { color: var(--accent); font-weight: 800; font-size: 8.5px; text-transform: uppercase; margin-bottom: 3px; }
+  .cp-bank div { line-height: 1.6; }
+  .cp-bank strong { color: #0f172a; }
+  .cp-sign { text-align: right; font-size: 8.5px; color: #0f172a; font-weight: 700; min-width: 180px; }
+  .cp-sign-space { height: 30px; }
+  .cp-sign-line { border-top: 1px solid #0f172a; padding-top: 3px; }
   .tpl-compact { padding: 8mm 10mm; font-size: 10px; }
   .tpl-compact .inv-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--accent); margin-bottom: 8px; }
   .tpl-compact .inv-h1 { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
@@ -1653,6 +1688,116 @@ function buildCommonBlocks(s, t) {
   return { itemRows, taxRows, hsnHead, hsnRows: s.template === 'gst' ? hsnRows + hsnTotalRow : hsnRows };
 }
 
+function buildCompactHTML() {
+  const s = state;
+  const t = calcTotals();
+  const labels = getLabels(s.docType);
+  const isOriginal = ['Tax Invoice', 'Credit Note', 'Debit Note'].includes(s.docType);
+  const originalLabel = isOriginal ? '<div style="font-size:7.5px;font-weight:700;letter-spacing:0.8px;color:#64748b;">ORIGINAL FOR RECIPIENT</div>' : '';
+  const cText = buildCustomText(s);
+  const common = buildCommonBlocks(s, t);
+  const biz = s.business || {};
+  const cli = s.client || {};
+  const bk = s.bank || {};
+  const gstInfo = getStateFromGSTIN(cli.gstin);
+  const detailLines = (s.details || []).filter(d => d && d.trim());
+
+  const contact = [];
+  if (biz.email && biz.email.trim()) contact.push('📧 ' + esc(biz.email));
+  if (biz.phone && biz.phone.trim()) contact.push('📞 ' + esc(biz.phone));
+  if (biz.website && biz.website.trim()) contact.push('🌐 ' + esc(biz.website));
+
+  const taxParts = [];
+  if (biz.gstin && biz.gstin.trim()) taxParts.push('<strong>GSTIN:</strong> ' + esc(biz.gstin));
+  if (biz.pan && biz.pan.trim()) taxParts.push('<strong>PAN:</strong> ' + esc(biz.pan));
+
+  const bankRows = [
+    ['A/C Holder', bk.holder], ['Bank', bk.name], ['A/C No.', bk.ac], ['IFSC', bk.ifsc],
+    ['Branch', bk.branch], ['Type', bk.type], ['UPI', bk.upi]
+  ].filter(r => r[1]).map(r => `<div><strong>${r[0]}:</strong> ${esc(r[1])}</div>`).join('');
+
+  const roundRow = t.roundOff !== 0
+    ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff > 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>`
+    : '';
+
+  return `
+    ${cText.top}
+    <div class="cp-head">
+      <div class="cp-head-left">
+        ${getLogoHTML('normal')}
+        <div>
+          <div class="cp-biz">${esc(biz.name) || 'Business Name'}</div>
+          ${biz.addr && biz.addr.trim() ? `<div class="cp-line"><strong>Reg Address:</strong> ${esc(biz.addr).replace(/\n/g, ', ')}</div>` : ''}
+          ${contact.length ? `<div class="cp-line">${contact.join(' &nbsp;·&nbsp; ')}</div>` : ''}
+          ${taxParts.length ? `<div class="cp-line">${taxParts.join(' &nbsp; ')}</div>` : ''}
+          ${biz.udyam && biz.udyam.trim() ? `<div class="cp-line"><strong>Udyam Reg.:</strong> ${esc(biz.udyam)}</div>` : ''}
+          ${biz.extra && biz.extra.trim() ? `<div class="cp-line">${esc(biz.extra).replace(/\n/g, '<br>')}</div>` : ''}
+        </div>
+      </div>
+      <div class="cp-title">${originalLabel}${labels.title.toUpperCase()}</div>
+    </div>
+    <div class="cp-boxes">
+      <div class="cp-box">
+        <div class="cp-box-label">Bill To</div>
+        <div class="cp-box-name">${esc(cli.name) || 'Client Name'}</div>
+        ${cli.addr ? `<div class="cp-line">${esc(cli.addr).replace(/\n/g, '<br>')}</div>` : ''}
+        ${cli.gstin ? `<div class="cp-line">GSTIN: ${esc(cli.gstin)}</div>` : ''}
+        ${gstInfo ? `<div class="cp-line">State: ${gstInfo.name} (${gstInfo.code})</div>` : ''}
+      </div>
+      <div class="cp-box">
+        <div class="cp-box-label">Invoice Details</div>
+        <div class="cp-kv"><span>${labels.noLabel}:</span><b>${esc(s.meta.no) || '—'}</b></div>
+        <div class="cp-kv"><span>Date:</span><b>${fmtDate(s.meta.date)}</b></div>
+        ${s.meta.place ? `<div class="cp-kv"><span>Place of Supply:</span><b>${esc(s.meta.place)}</b></div>` : ''}
+        ${detailLines.map(d => `<div class="cp-kv"><span></span><b>${esc(d)}</b></div>`).join('')}
+      </div>
+    </div>
+    ${cText.middle}
+    <table class="cp-table">
+      <thead>
+        <tr>
+          <th class="c" style="width: 5%;">SR. NO.</th>
+          <th style="width: 28%;">DESCRIPTION OF GOODS/SERVICE</th>
+          <th class="c" style="width: 11%;">HSN/SAC CODE</th>
+          <th class="c" style="width: 9%;">QUANTITY</th>
+          <th class="r" style="width: 10%;">RATE</th>
+          <th class="c" style="width: 6%;">GST%</th>
+          <th class="r" style="width: 11%;">TAXABLE AMOUNT</th>
+          <th class="r" style="width: 9%;">TOTAL TAX</th>
+          <th class="r" style="width: 11%;">TOTAL AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>${common.itemRows}</tbody>
+    </table>
+    <div class="cp-bottom">
+      <div class="cp-totals">
+        <div class="totals-row"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
+        <div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">${fmt(t.taxable)}</span></div>
+        ${common.taxRows}
+        ${roundRow}
+        <div class="cp-grand"><span>Grand Total</span><span>${fmt(t.rounded)}</span></div>
+      </div>
+    </div>
+    <div class="cp-words"><strong>AMOUNT IN WORDS:</strong> ${numToWords(t.rounded)}</div>
+    <table class="cp-table cp-hsn">
+      <thead><tr>${common.hsnHead}</tr></thead>
+      <tbody>${common.hsnRows}</tbody>
+    </table>
+    <div class="cp-footer">
+      <div class="cp-bank">
+        ${bankRows ? `<div class="cp-bank-title">Payment Details</div>${bankRows}` : ''}
+        ${s.terms ? `<div style="margin-top:6px;"><strong>Terms:</strong> ${esc(s.terms).replace(/\n/g, '<br>')}</div>` : ''}
+        ${s.notes ? `<div><strong>Notes:</strong> ${esc(s.notes)}</div>` : ''}
+      </div>
+      <div class="cp-sign">
+        <div>For ${esc(biz.name || '')}</div>
+        <div class="cp-sign-space"></div>
+        <div class="cp-sign-line">Authorized Signatory</div>
+      </div>
+    </div>
+  `;
+}
+
 function render() {
   const preview = $('invoicePreview');
   if (!preview) return;
@@ -1923,6 +2068,8 @@ function render() {
       ${summaryBlock}${footerHTML}
     `;
   } else if (state.template === 'compact') {
+    html = buildCompactHTML();
+  } else if (state.template === 'compact-legacy') {
     html = `
       ${cText.top}
       <div class="inv-header">
