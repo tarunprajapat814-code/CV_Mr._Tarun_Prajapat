@@ -147,7 +147,7 @@
   .inv-party-name { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
   .inv-party-info { font-size: 10px; color: var(--muted); line-height: 1.4; }
   .inv-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-  .inv-table th { background: var(--accent); color: var(--accent-text); padding: 6px 5px; font-size: 8px; text-align: left; text-transform: uppercase; letter-spacing: 0.2px; font-weight: 700; line-height: 1.25; }
+  .inv-table th { background: var(--accent); color: var(--accent-text); padding: 8px 5px; font-size: 8px; text-align: left; text-transform: uppercase; letter-spacing: 0.2px; font-weight: 700; line-height: 1.25; word-break: break-word; }
   .inv-table td { padding: 5px 6px; border-bottom: 1px solid var(--line); font-size: 10px; vertical-align: top; line-height: 1.35; }
   .inv-table .r, .inv-table th.r { text-align: right; }
   .inv-table .c, .inv-table th.c { text-align: center; }
@@ -161,8 +161,9 @@
   .totals-row.grand { border-top: 2px solid var(--accent); border-bottom: none; margin-top: 4px; padding-top: 6px; font-weight: 800; color: var(--accent); font-size: 13px; }
   .totals-row.grand .lbl { color: var(--accent); }
   
-  .words-box { background: var(--accent-soft); padding: 6px 10px; border-radius: 6px; font-size: 10px; margin: 8px 0; }
-  .words-box strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.3px; font-size: 9px; }
+  .words-box { background: var(--accent-soft); padding: 8px 12px; border-radius: 4px; font-size: 10px; margin: 10px 0; }
+  .words-box strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.3px; font-size: 9.5px; }
+  
   .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); font-size: 10px; }
   .footer-grid h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent); font-weight: 800; margin-bottom: 4px; }
   .footer-grid p { color: var(--muted); line-height: 1.4; margin-bottom: 2px; font-size: 9.5px; }
@@ -178,6 +179,7 @@
   .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
   .tpl-classic .inv-title-box { text-align: right; }
   .tpl-classic .inv-title-box .inv-h1 { font-size: 26px; color: var(--accent); }
+  
   .tpl-modern .inv-wrap { display: grid; grid-template-columns: 180px 1fr; gap: 0; margin: -10mm -12mm; min-height: 297mm; flex: 1; }
   .tpl-modern .inv-side { background: var(--accent); color: #fff; padding: 10mm 14px; }
   .tpl-modern .inv-side .inv-biz-name { color: #fff; font-size: 15px; }
@@ -187,6 +189,7 @@
   .tpl-modern .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 12px; }
   .tpl-modern .inv-h1 { font-size: 24px; color: var(--accent); }
   @media (max-width: 1024px) { .tpl-modern .inv-wrap { margin: 0; display: block; } .tpl-modern .inv-side { padding: 16px; } .tpl-modern .inv-main { padding: 16px; } }
+  
   .tpl-minimal { padding: 14mm 14mm; }
   .tpl-minimal .inv-header { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
   .tpl-minimal .inv-h1 { font-size: 18px; color: var(--text); letter-spacing: 4px; font-weight: 500; }
@@ -194,13 +197,15 @@
   .tpl-minimal .inv-table td { padding: 6px 4px; border-bottom: 1px solid var(--line); }
   .tpl-minimal .words-box { background: transparent; border: 1px solid var(--line); }
   .tpl-minimal .inv-details-title { font-size: 11.5px; letter-spacing: 2px; text-transform: uppercase; }
+  
   .tpl-gst .inv-header { display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 10px; }
   .tpl-gst .inv-h1 { font-size: 22px; color: var(--accent); }
   .tpl-gst .hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 6px; }
-  .tpl-gst .hsn-table th { background: var(--accent-soft); color: var(--accent); padding: 4px 6px; text-align: right; font-weight: 700; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .tpl-gst .hsn-table th { background: var(--accent-soft); color: var(--accent); padding: 4px 6px; text-align: right; font-weight: 700; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--accent); }
   .tpl-gst .hsn-table th:first-child { text-align: left; }
   .tpl-gst .hsn-table td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
   .tpl-gst .hsn-table td:first-child { text-align: left; font-weight: 600; }
+  
   .tpl-corporate .inv-header { background: var(--accent); color: #fff; padding: 14px 16px; margin: -10mm -12mm 14px -12mm; display: flex; justify-content: space-between; align-items: center; }
   .tpl-corporate .inv-header .inv-biz-name { color: #fff; font-size: 20px; }
   .tpl-corporate .inv-header .inv-biz-info { color: rgba(255,255,255,0.85); }
@@ -212,6 +217,7 @@
   .tpl-corporate .inv-table td { padding: 7px 8px; }
   .tpl-corporate .totals-row.grand { background: var(--accent-soft); padding: 8px 10px; margin-top: 6px; border: none; border-radius: 4px; }
   .tpl-corporate .inv-details-title { text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px; }
+  
   .tpl-compact { padding: 8mm 10mm; font-size: 10px; }
   .tpl-compact .inv-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--accent); margin-bottom: 8px; }
   .tpl-compact .inv-h1 { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
@@ -232,6 +238,7 @@
   .tpl-compact .inv-party-name { font-size: 11px; }
   .tpl-compact .inv-party-info { font-size: 9px; }
   .tpl-compact .inv-details-title { font-size: 11px; margin-bottom: 3px; }
+  
   .tpl-rounded { padding: 12mm 12mm; }
   .tpl-rounded .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; background: var(--accent-soft); border-radius: 14px; margin-bottom: 14px; }
   .tpl-rounded .inv-h1 { font-size: 24px; color: var(--accent); letter-spacing: 1.5px; }
@@ -246,6 +253,7 @@
   .tpl-rounded .footer-grid { background: var(--accent-soft); padding: 12px 14px; border-radius: 10px; border-top: none; margin-top: 14px; }
   .tpl-rounded .footer-grid h4 { color: var(--accent); }
   .tpl-rounded .sign-line { border-top: 1.5px solid var(--accent); }
+  
   .tpl-gst-detailed .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 12px; border-bottom: 3px double var(--accent); margin-bottom: 12px; }
   .tpl-gst-detailed .inv-h1 { font-size: 24px; color: var(--accent); letter-spacing: 2px; }
   .tpl-gst-detailed .inv-biz-name { font-size: 18px; }
@@ -255,7 +263,7 @@
   .gst-info-bar .item { display: flex; align-items: center; gap: 5px; }
   .gst-info-bar .item .lbl { color: var(--accent); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; }
   .gst-info-bar .item .val { color: var(--text); font-weight: 800; font-size: 11px; }
-  .rate-summary-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); margin: 12px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+  .rate-summary-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text); margin: 15px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
   .rate-summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; }
   .rate-card { background: var(--accent-soft); border: 1.5px solid var(--accent); border-radius: 8px; padding: 8px 10px; text-align: center; }
   .rate-card .r-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 3px; }
@@ -268,6 +276,7 @@
   .gst-detail-hsn td:first-child { text-align: left; font-weight: 700; color: var(--accent); }
   .gst-detail-hsn tr:last-child td { border-bottom: none; }
   .gst-detail-hsn tr.total-row { background: var(--accent-soft); font-weight: 800; }
+  
   .tpl-gst-lite { padding: 12mm 14mm; }
   .tpl-gst-lite .inv-header { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-start; }
   .tpl-gst-lite .inv-h1 { font-size: 26px; color: var(--accent); letter-spacing: 3px; font-weight: 700; }
@@ -278,10 +287,10 @@
   .tpl-gst-lite .inv-table tr:nth-child(even) td { background: #f8fafc; }
   .gst-lite-summary { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 12px; align-items: start; }
   .gst-lite-summary .totals-box { width: 100%; }
-  .gst-lite-hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
-  .gst-lite-hsn-table th { background: var(--accent-soft); color: var(--accent); padding: 5px 8px; text-align: right; font-weight: 800; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--accent); }
+  .gst-lite-hsn-table { width: 100%; border-collapse: collapse; font-size: 9.5px; border: 1px solid var(--line); margin-top: 4px; }
+  .gst-lite-hsn-table th { background: var(--accent-soft); color: var(--accent); padding: 6px 8px; text-align: right; font-weight: 800; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--accent); }
   .gst-lite-hsn-table th:first-child { text-align: left; }
-  .gst-lite-hsn-table td { padding: 5px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 9.5px; }
+  .gst-lite-hsn-table td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 9.5px; }
   .gst-lite-hsn-table td:first-child { text-align: left; font-weight: 700; color: var(--accent); }
   .gst-lite-hsn-table tr:last-child td { border-bottom: none; }
 
@@ -1613,9 +1622,9 @@ function buildCommonBlocks(s, t) {
   if (s.taxType === 'cgst-sgst') taxRows = '<div class="totals-row"><span class="lbl">CGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div><div class="totals-row"><span class="lbl">SGST</span><span class="amt">' + fmt(t.totalTax/2) + '</span></div>';
   else if (s.taxType === 'igst') taxRows = '<div class="totals-row"><span class="lbl">IGST</span><span class="amt">' + fmt(t.totalTax) + '</span></div>';
   
-  const hsnHead = isIGST ? '<th>HSN/SAC</th><th class="r">Taxable</th><th class="r">Rate</th><th class="r">IGST</th><th class="r">Total</th>'
-    : isNone ? '<th>HSN/SAC</th><th class="r">Taxable</th><th class="r">Total</th>'
-    : '<th>HSN/SAC</th><th class="r">Taxable</th><th class="r">Rate</th><th class="r">CGST</th><th class="r">SGST</th><th class="r">Total</th>';
+  const hsnHead = isIGST ? '<th>HSN/SAC</th><th class="r">TAXABLE</th><th class="r">RATE</th><th class="r">IGST</th><th class="r">TOTAL</th>'
+    : isNone ? '<th>HSN/SAC</th><th class="r">TAXABLE</th><th class="r">TOTAL</th>'
+    : '<th>HSN/SAC</th><th class="r">TAXABLE</th><th class="r">RATE</th><th class="r">CGST</th><th class="r">SGST</th><th class="r">TOTAL</th>';
     
   const hsnRows = Object.values(t.hsnSummary).map(d => {
     const base = '<td>' + esc(d.hsn) + '</td><td class="r">' + fmt(d.taxable) + '</td>' + (isNone ? '' : '<td class="r">' + d.rate + '%</td>');
@@ -1676,6 +1685,7 @@ function render() {
     <div class="totals-wrap">
       <div class="totals-box">
         <div class="totals-row subtotal"><span class="lbl">Subtotal</span><span class="amt">${fmt(t.subtotal)}</span></div>
+        <div class="totals-row"><span class="lbl">Taxable Value</span><span class="amt">${fmt(t.taxable)}</span></div>
         ${common.taxRows}
         ${t.roundOff !== 0 ? `<div class="totals-row"><span class="lbl">Round Off</span><span class="amt">${t.roundOff > 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}
         <div class="totals-row grand"><span class="lbl">Grand Total</span><span class="amt">${fmt(t.rounded)}</span></div>
@@ -1683,8 +1693,65 @@ function render() {
     </div>
   `;
 
-  const wordsBox = `<div class="words-box"><strong>Amount in words:</strong> ${numToWords(t.rounded)}</div>`;
-  const detailsHTML = state.details.filter(d => d.trim()).map(d => `<div style="font-size:10px;color:var(--muted);margin-top:2px;">${esc(d)}</div>`).join('');
+  const wordsBox = `<div class="words-box"><strong>AMOUNT IN WORDS:</strong> ${numToWords(t.rounded)}</div>`;
+  
+  // Updated detailsHTML to sit in the right column
+  const detailsHTML = state.details.filter(d => d.trim()).map(d => `<div style="font-size:10.5px; font-weight:700; color:var(--text); text-align:right; margin-top:2px;">${esc(d)}</div>`).join('');
+
+  const gstInfo = getStateFromGSTIN(state.client.gstin);
+  
+  // Layout to exactly match the user's image
+  const clientHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; margin-bottom: 12px; gap: 15px;">
+      <!-- Left Column: Address -->
+      <div style="flex: 1.2;">
+        <div class="inv-party-label">BILL TO</div>
+        <div class="inv-party-name" style="font-size: 14px; margin-bottom: 4px;">${esc(state.client.name) || 'Client Name'}</div>
+        <div class="inv-party-info">
+          ${state.client.addr ? `<div>${esc(state.client.addr).replace(/\n/g, '<br>')}</div>` : ''}
+        </div>
+      </div>
+      <!-- Middle Column: GSTIN -->
+      <div style="width: 25%; padding-top: 15px;">
+        <div class="bill-to-gstin-label" style="font-size: 8.5px;">GSTIN</div>
+        <div class="bill-to-gstin-value" style="font-size: 11px; font-weight: 700;">${state.client.gstin ? esc(state.client.gstin) : 'NULL'}</div>
+        ${gstInfo ? `
+          <div class="bill-to-gstin-state" style="font-size: 9.5px; margin-top: 2px;">State: <strong>${gstInfo.name}</strong></div>
+          <div class="bill-to-gstin-state" style="font-size: 9.5px;">State Code: <strong>${gstInfo.code}</strong></div>
+        ` : ''}
+      </div>
+      <!-- Right Column: Invoice Details -->
+      <div style="width: 35%;" class="inv-details-box">
+        <div class="inv-details-title" style="font-size: 13px; font-weight: 800; margin-bottom: 6px; text-align: right;">Invoice Details</div>
+        <div class="inv-meta-row"><span style="color:var(--muted);">${labels.noLabel}:</span><span style="font-weight:700;">${esc(state.meta.no) || '—'}</span></div>
+        <div class="inv-meta-row"><span style="color:var(--muted);">Date:</span><span style="font-weight:700;">${fmtDate(state.meta.date)}</span></div>
+        ${detailsHTML}
+        ${state.meta.place ? `<div class="inv-meta-row" style="margin-top:4px;"><span style="color:var(--muted);">Place of Supply:</span><span style="font-weight:700;">${esc(state.meta.place)}</span></div>` : ''}
+      </div>
+    </div>
+  `;
+
+  const tableHeadersHTML = `
+    <tr>
+      <th class="c" style="width: 5%;">SR. NO.</th>
+      <th style="width: 30%;">DESCRIPTION OF GOODS/SERVICE</th>
+      <th class="c" style="width: 12%;">HSN/SAC CODE</th>
+      <th class="c" style="width: 10%;">QUANTITY</th>
+      <th class="r" style="width: 12%;">RATE</th>
+      <th class="c" style="width: 8%;">GST%</th>
+      <th class="r" style="width: 12%;">TAXABLE AMOUNT</th>
+      <th class="r" style="width: 11%;">TOTAL TAX</th>
+      <th class="r" style="width: 12%;">TOTAL AMOUNT</th>
+    </tr>
+  `;
+
+  const hsnSummaryHTML = `
+    <div class="rate-summary-title" style="margin-top:15px; margin-bottom: 6px;">HSN SUMMARY</div>
+    <table class="gst-lite-hsn-table">
+      <thead><tr>${common.hsnHead}</tr></thead>
+      <tbody>${common.hsnRows}</tbody>
+    </table>
+  `;
 
   let html = '';
 
@@ -1701,25 +1768,15 @@ function render() {
         </div>
         <div class="inv-title-box"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div>
-          <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
-          <div class="inv-party-info">${esc(state.client.addr) || ''}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;" class="inv-details-box">
-          <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no) || '—'}</span></div>
-          <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
-          ${state.meta.place ? `<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place)}</span></div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
       ${wordsBox}
       ${totalsBox}
+      ${hsnSummaryHTML}
       ${footerHTML}
     `;
   } else if (state.template === 'modern') {
@@ -1741,17 +1798,13 @@ function render() {
               ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
             </div>
           </div>
-          <div style="margin-bottom:12px;">
-            <div class="inv-party-label">BILL TO</div>
-            <div class="inv-party-name">${esc(state.client.name) || 'Client Name'}</div>
-            <div class="inv-party-info">${esc(state.client.addr) || ''}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-          </div>
+          ${clientHTML}
           ${cText.middle}
           <table class="inv-table">
-            <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+            <thead>${tableHeadersHTML}</thead>
             <tbody>${common.itemRows}</tbody>
           </table>
-          ${wordsBox}${totalsBox}${footerHTML}
+          ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
         </div>
       </div>
     `;
@@ -1762,15 +1815,13 @@ function render() {
         <div><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div><div class="inv-biz-name" style="margin-top:6px;">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
         <div style="text-align:right;font-size:10px;"><div><strong>#${esc(state.meta.no)}</strong></div><div>${fmtDate(state.meta.date)}</div>${state.meta.place ? `<div>${esc(state.meta.place)}</div>` : ''}</div>
       </div>
-      <div class="bill-to-wrap">
-        <div><div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div><div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div></div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'gst') {
     html = `
@@ -1779,24 +1830,13 @@ function render() {
         <div style="display:flex;gap:14px;align-items:center;">${logoHTML}<div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div></div>
         <div class="inv-title-box"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;" class="inv-details-box">
-          <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no)}</span></div>
-          <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
-          ${state.meta.place ? `<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place)}</span></div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      <table class="hsn-table"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'corporate') {
     html = `
@@ -1805,23 +1845,13 @@ function render() {
         <div class="inv-title-box"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
       ${cText.top}
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;" class="inv-details-box">
-          <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no)}</span></div>
-          <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
-          ${state.meta.place ? `<div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place)}</span></div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'compact') {
     html = `
@@ -1830,22 +1860,13 @@ function render() {
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
         <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div><div style="font-size:10px;margin-top:2px;">#${esc(state.meta.no)}</div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;text-align:right;">
-          <div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
-          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'rounded') {
     html = `
@@ -1854,22 +1875,13 @@ function render() {
         <div style="display:flex;gap:14px;align-items:center;">${logoHTML}<div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div></div>
         <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;text-align:right;">
-          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
-          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'gst-detailed') {
     const rateCards = Object.values(t.rateSummary).map(r => `
@@ -1886,21 +1898,15 @@ function render() {
         <div class="item"><span class="lbl">Date:</span><span class="val">${fmtDate(state.meta.date)}</span></div>
         ${state.meta.place ? `<div class="item"><span class="lbl">Place:</span><span class="val">${esc(state.meta.place)}</span></div>` : ''}
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
       <div class="rate-summary-title">Tax Rate Summary</div>
       <div class="rate-summary-grid">${rateCards}</div>
-      <table class="gst-detail-hsn"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'gst-lite') {
     html = `
@@ -1909,26 +1915,13 @@ function render() {
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
         <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;text-align:right;">
-          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
-          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      <div class="gst-lite-summary">
-        <div><table class="gst-lite-hsn-table"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table></div>
-        <div>${totalsBox}</div>
-      </div>
-      ${wordsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'standard') {
     html = `
@@ -1941,7 +1934,7 @@ function render() {
         <div class="inv-box">
           <div class="inv-box-label">BILL TO</div>
           <div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
+          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}</div>
         </div>
         <div class="inv-box">
           <div class="inv-box-label">INVOICE DETAILS</div>
@@ -1952,10 +1945,10 @@ function render() {
       </div>
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'freelancer') {
     const avatarText = (state.business.name || 'F').charAt(0).toUpperCase();
@@ -1966,22 +1959,13 @@ function render() {
         <div style="flex:1;"><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
         <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;text-align:right;">
-          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
-          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'premium-hsn') {
     html = `
@@ -1990,26 +1974,13 @@ function render() {
         <div><div class="inv-biz-name">${esc(state.business.name)}</div><div class="inv-biz-info">${bizInfoHTML}</div></div>
         <div style="text-align:right;"><div class="inv-h1">${originalLabel}${labels.title.toUpperCase()}</div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
-        <div style="width:55%;">
-          <div class="inv-party-label">BILL TO</div><div class="inv-party-name">${esc(state.client.name)}</div>
-          <div class="inv-party-info">${esc(state.client.addr)}<br>${state.client.gstin ? 'GSTIN: ' + esc(state.client.gstin) : ''}${detailsHTML}</div>
-        </div>
-        <div style="width:40%;text-align:right;">
-          <div><strong>${labels.noLabel}:</strong> ${esc(state.meta.no)}</div><div><strong>Date:</strong> ${fmtDate(state.meta.date)}</div>
-          ${state.meta.place ? `<div><strong>Place:</strong> ${esc(state.meta.place)}</div>` : ''}
-        </div>
-      </div>
+      ${clientHTML}
       ${cText.middle}
       <table class="inv-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      <div class="hsn-summary-wrap">
-        <div><table class="hsn-table"><thead><tr>${common.hsnHead}</tr></thead><tbody>${common.hsnRows}</tbody></table></div>
-        <div>${totalsBox}</div>
-      </div>
-      ${wordsBox}${footerHTML}
+      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'structured') {
     html = `
@@ -2022,7 +1993,7 @@ function render() {
       <div class="bill-section">
         <div class="bill-left">
           <strong>BILL TO:</strong><div>${esc(state.client.name)}</div><div>${esc(state.client.addr).replace(/\n/g, '<br>')}</div>
-          ${state.client.gstin ? `<div>GSTIN: ${esc(state.client.gstin)}</div>` : ''}${detailsHTML}
+          ${state.client.gstin ? `<div>GSTIN: ${esc(state.client.gstin)}</div>` : ''}
         </div>
         <div class="bill-right">
           <div class="inv-details-title">DETAILS</div>
@@ -2033,7 +2004,7 @@ function render() {
       </div>
       ${cText.middle}
       <table class="items-table">
-        <thead><tr><th class="c">#</th><th>Description</th><th class="c">HSN</th><th class="c">Qty</th><th class="r">Rate</th><th class="c">GST%</th><th class="r">Taxable</th><th class="r">Tax</th><th class="r">Total</th></tr></thead>
+        <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
       <div class="bottom-grid">
@@ -2043,13 +2014,14 @@ function render() {
         </div>
         <div class="bottom-mid">
           <div class="tot-row"><span>Subtotal</span><span>${fmt(t.subtotal)}</span></div>
+          <div class="tot-row"><span>Taxable Value</span><span>${fmt(t.taxable)}</span></div>
           ${common.taxRows.replace(/class="totals-row"/g, 'class="tot-row"').replace(/class="lbl"/g, '').replace(/class="amt"/g, '')}
           ${t.roundOff !== 0 ? `<div class="tot-row"><span>Round Off</span><span>${t.roundOff > 0 ? '+' : ''}${fmt(t.roundOff)}</span></div>` : ''}
           <div class="tot-row total"><span>Grand Total</span><span>${fmt(t.rounded)}</span></div>
         </div>
         <div class="bottom-right"><div class="sign-space"></div><div class="sign-line">Authorized Signatory</div></div>
       </div>
-      <div style="margin-top:15px;font-size:9.5px;"><strong>Amount in words:</strong> ${numToWords(t.rounded)}</div>
+      <div style="margin-top:15px;font-size:9.5px;"><strong>AMOUNT IN WORDS:</strong> ${numToWords(t.rounded)}</div>
       <div style="margin-top:15px;font-size:9.5px;display:flex;justify-content:space-between;"><div>${bankHTML}</div></div>
     `;
   }
