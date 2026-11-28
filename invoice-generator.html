@@ -1404,7 +1404,7 @@ function renderDetails() {
   if (!state.details || !state.details.length) state.details = [''];
   c.innerHTML = state.details.map((d, i) =>
     '<div class="detail-row">' +
-      '<input placeholder="e.g. Site name: Namma" value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
+      '<input placeholder="e.g. Site name: " value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
       '<button class="btn btn-ghost btn-sm" onclick="removeDetail(' + i + ')">✖</button>' +
     '</div>'
   ).join('');
