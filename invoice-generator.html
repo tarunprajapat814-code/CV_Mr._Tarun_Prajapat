@@ -40,7 +40,7 @@
   .field input.auto-filled { background: #ecfdf5; border-color: #10b981; }
   .field input[type="color"] { padding: 2px; height: 38px; cursor: pointer; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .item-row { display: grid; grid-template-columns: 1.8fr 0.9fr 0.6fr 0.9fr 0.7fr auto; gap: 5px; padding: 5px 0; align-items: center; min-width: 480px; }
+  .item-row { display: grid; grid-template-columns: 1.8fr 0.9fr 0.6fr 0.6fr 0.9fr 0.7fr auto; gap: 5px; padding: 5px 0; align-items: center; min-width: 560px; }
   .item-row input { padding: 6px 8px; font-size: 12px; border: 1.5px solid #e2e8f0; border-radius: 6px; width: 100%; }
   .item-row input:focus { outline: none; border-color: #3b82f6; }
   .item-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3px; }
@@ -49,7 +49,7 @@
   .items-scroll::-webkit-scrollbar { height: 8px; }
   .items-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
   .items-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
-  .items-inner { min-width: 480px; }
+  .items-inner { min-width: 560px; }
   .details-section { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #e2e8f0; }
   .details-heading { display: flex; align-items: center; justify-content: space-between; font-size: 10.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
   .detail-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; padding: 4px 0; align-items: center; }
@@ -160,6 +160,7 @@
   .totals-row.subtotal .amt { font-weight: 700; }
   .totals-row.grand { border-top: 2px solid var(--accent); border-bottom: none; margin-top: 4px; padding-top: 6px; font-weight: 800; color: var(--accent); font-size: 13px; }
   .totals-row.grand .lbl { color: var(--accent); }
+  .totals-row.grand .amt { font-weight: 800; color: var(--accent); }
   
   .words-box { background: var(--accent-soft); padding: 8px 12px; border-radius: 4px; font-size: 10px; margin: 10px 0; }
   .words-box strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.3px; font-size: 9.5px; }
@@ -175,6 +176,10 @@
   
   .custom-text-top { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 4px 0 10px 0; margin-bottom: 10px; border-bottom: 1px dashed currentColor; line-height: 1.3; }
   .custom-text-middle { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; padding: 10px 0 4px 0; margin-top: 10px; margin-bottom: 8px; border-top: 1px dashed currentColor; line-height: 1.3; }
+
+  /* Extra details box (Application Ref etc.) */
+  .inv-extra-box { margin-top: 10px; padding: 0; text-align: right; }
+  .inv-extra-line { font-size: 10.5px; font-weight: 700; color: var(--text); padding: 2px 0; line-height: 1.5; text-align: right; }
 
   .tpl-classic .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 3px solid var(--accent); margin-bottom: 12px; }
   .tpl-classic .inv-title-box { text-align: right; }
@@ -421,7 +426,7 @@
     #invoicePreview.tpl-modern .inv-wrap { margin: 0 !important; height: 100% !important; min-height: calc(297mm - 20mm) !important; }
     .inv-table tr, .gst-detail-hsn tr, .gst-lite-hsn-table tr,
     .words-box, .totals-wrap, .footer-grid, .sign-area,
-    .rate-summary-title { page-break-inside: avoid; break-inside: avoid; }
+    .rate-summary-title, .inv-extra-box { page-break-inside: avoid; break-inside: avoid; }
     .custom-text-top, .custom-text-middle { page-break-after: avoid; break-after: avoid; }
   }
   .print-warning { position: fixed; top: 70px; right: 20px; background: #fef3c7; color: #92400e; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #fcd34d; z-index: 100; display: none; }
@@ -635,7 +640,7 @@
           <div id="mPlaceHint" class="client-state-hint empty"></div>
         </div>
         <div class="details-section">
-          <div class="details-heading"><span>Details</span></div>
+          <div class="details-heading"><span>Details (box mein dikhenge)</span></div>
           <div id="detailsContainer"></div>
           <button class="btn btn-success btn-sm" style="margin-top:6px;width:100%;justify-content:center;" onclick="addDetail()">➕ Add Line</button>
         </div>
@@ -650,6 +655,7 @@
             <div class="item-label">Description</div>
             <div class="item-label">HSN</div>
             <div class="item-label">Qty</div>
+            <div class="item-label">UMO</div>
             <div class="item-label">Rate</div>
             <div class="item-label">GST%</div>
             <div></div>
@@ -1388,6 +1394,7 @@ function renderItems() {
       '<input placeholder="Item description" value="' + esc(it.desc) + '" autocomplete="off" oninput="updateItem(' + i + ',\'desc\',this.value)">' +
       '<input placeholder="HSN" value="' + esc(it.hsn) + '" autocomplete="off" oninput="updateItem(' + i + ',\'hsn\',this.value)">' +
       '<input type="number" placeholder="1" value="' + it.qty + '" min="0" step="0.01" autocomplete="off" oninput="updateItem(' + i + ',\'qty\',this.value)">' +
+      '<input placeholder="Nos" value="' + esc(it.umo) + '" autocomplete="off" oninput="updateItem(' + i + ',\'umo\',this.value)">' +
       '<input type="number" placeholder="0" value="' + it.rate + '" min="0" step="0.01" autocomplete="off" oninput="updateItem(' + i + ',\'rate\',this.value)">' +
       '<input type="number" placeholder="18" value="' + it.gst + '" min="0" max="28" step="0.01" autocomplete="off" oninput="updateItem(' + i + ',\'gst\',this.value)">' +
       '<button class="btn btn-ghost btn-sm" onclick="removeItem(' + i + ')">✖</button>' +
@@ -1395,7 +1402,7 @@ function renderItems() {
   ).join('');
   disableAutofill();
 }
-function updateItem(i, k, v) { state.items[i][k] = (k === 'desc' || k === 'hsn') ? v : Number(v) || 0; sync(); }
+function updateItem(i, k, v) { state.items[i][k] = (k === 'desc' || k === 'hsn' || k === 'umo') ? v : Number(v) || 0; sync(); }
 function addItem() { state.items.push({ desc:'', hsn:'', qty:1, rate:0, gst:18 }); renderItems(); sync(); }
 function removeItem(i) { if (state.items.length === 1) state.items[0] = { desc:'', hsn:'', qty:1, rate:0, gst:18 }; else state.items.splice(i, 1); renderItems(); sync(); }
 
@@ -1404,7 +1411,7 @@ function renderDetails() {
   if (!state.details || !state.details.length) state.details = [''];
   c.innerHTML = state.details.map((d, i) =>
     '<div class="detail-row">' +
-      '<input placeholder="e.g. Site name: " value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
+      '<input placeholder="e.g. Application Reference Number: NP-XXXX" value="' + esc(d) + '" autocomplete="off" oninput="updateDetail(' + i + ', this.value)">' +
       '<button class="btn btn-ghost btn-sm" onclick="removeDetail(' + i + ')">✖</button>' +
     '</div>'
   ).join('');
@@ -1615,7 +1622,7 @@ function buildCommonBlocks(s, t) {
   let itemRows = s.items.map((it, i) => {
     const amt = num(it.qty) * num(it.rate);
     const gstAmt = isNone ? 0 : amt * num(it.gst) / 100;
-    return '<tr><td class="c">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td><td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
+    return '<tr><td class="c">' + (i + 1) + '</td><td>' + (esc(it.desc) || '—') + '</td><td class="c">' + (esc(it.hsn) || '—') + '</td><td class="c">' + num(it.qty) + '</td><td class="c">' + esc(it.umo) + '</td><td class="r">' + fmt(it.rate) + '</td><td class="c">' + num(it.gst) + '%</td><td class="r">' + fmt(amt) + '</td><td class="r">' + fmt(gstAmt) + '</td><td class="r" style="font-weight:700;">' + fmt(amt + gstAmt) + '</td></tr>';
   }).join('');
   
   let taxRows = '';
@@ -1633,7 +1640,17 @@ function buildCommonBlocks(s, t) {
     return '<tr>' + base + '<td class="r">' + fmt(d.cgst) + '</td><td class="r">' + fmt(d.sgst) + '</td><td class="r" style="font-weight:700;">' + fmt(d.total) + '</td></tr>';
   }).join('');
 
-  return { itemRows, taxRows, hsnHead, hsnRows };
+  const hsnVals = Object.values(t.hsnSummary);
+  const sum = k => hsnVals.reduce((a, d) => a + (d[k] || 0), 0);
+  const tStyle = 'font-weight:800;border-top:1.5px solid var(--accent);background:var(--accent-soft);';
+  const totCells = isIGST
+    ? '<td>TOTAL</td><td class="r">' + fmt(sum('taxable')) + '</td><td></td><td class="r">' + fmt(sum('igst')) + '</td><td class="r">' + fmt(sum('total')) + '</td>'
+    : isNone
+    ? '<td>TOTAL</td><td class="r">' + fmt(sum('taxable')) + '</td><td class="r">' + fmt(sum('total')) + '</td>'
+    : '<td>TOTAL</td><td class="r">' + fmt(sum('taxable')) + '</td><td></td><td class="r">' + fmt(sum('cgst')) + '</td><td class="r">' + fmt(sum('sgst')) + '</td><td class="r">' + fmt(sum('total')) + '</td>';
+  const hsnTotalRow = '<tr style="' + tStyle + '">' + totCells + '</tr>';
+
+  return { itemRows, taxRows, hsnHead, hsnRows: hsnRows + hsnTotalRow };
 }
 
 function render() {
@@ -1695,12 +1712,16 @@ function render() {
 
   const wordsBox = `<div class="words-box"><strong>AMOUNT IN WORDS:</strong> ${numToWords(t.rounded)}</div>`;
   
-  // Updated detailsHTML to sit in the right column
-  const detailsHTML = state.details.filter(d => d.trim()).map(d => `<div style="font-size:10.5px; font-weight:700; color:var(--text); text-align:right; margin-top:2px;">${esc(d)}</div>`).join('');
+  // Details box: sirf non-empty lines dikhengi, aur box tabhi bane jab kuch ho
+  const detailLines = (state.details || []).filter(d => d && d.trim());
+  const extraBoxHTML = detailLines.length
+    ? `<div class="inv-extra-box">${detailLines.map(d => `<div class="inv-extra-line">${esc(d)}</div>`).join('')}</div>`
+    : '';
 
   const gstInfo = getStateFromGSTIN(state.client.gstin);
   
-  // Layout to exactly match the user's image
+  // Layout: Left = Bill To, Middle = GSTIN, Right = Invoice No / Date / Place of Supply
+  // Niche full-width details box
   const clientHTML = `
     <div style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; margin-bottom: 12px; gap: 15px;">
       <!-- Left Column: Address -->
@@ -1723,25 +1744,26 @@ function render() {
       <!-- Right Column: Invoice Details -->
       <div style="width: 35%;" class="inv-details-box">
         <div class="inv-details-title" style="font-size: 13px; font-weight: 800; margin-bottom: 6px; text-align: right;">Invoice Details</div>
-        <div class="inv-meta-row"><span style="color:var(--muted);">${labels.noLabel}:</span><span style="font-weight:700;">${esc(state.meta.no) || '—'}</span></div>
-        <div class="inv-meta-row"><span style="color:var(--muted);">Date:</span><span style="font-weight:700;">${fmtDate(state.meta.date)}</span></div>
-        ${detailsHTML}
-        ${state.meta.place ? `<div class="inv-meta-row" style="margin-top:4px;"><span style="color:var(--muted);">Place of Supply:</span><span style="font-weight:700;">${esc(state.meta.place)}</span></div>` : ''}
+        <div class="inv-meta-row"><span>${labels.noLabel}:</span><span>${esc(state.meta.no) || '—'}</span></div>
+        <div class="inv-meta-row"><span>Date:</span><span>${fmtDate(state.meta.date)}</span></div>
+        <div class="inv-meta-row"><span>Place of Supply:</span><span>${esc(state.meta.place) || '—'}</span></div>
       </div>
     </div>
+    ${extraBoxHTML}
   `;
 
   const tableHeadersHTML = `
     <tr>
       <th class="c" style="width: 5%;">SR. NO.</th>
-      <th style="width: 30%;">DESCRIPTION OF GOODS/SERVICE</th>
-      <th class="c" style="width: 12%;">HSN/SAC CODE</th>
-      <th class="c" style="width: 10%;">QUANTITY</th>
-      <th class="r" style="width: 12%;">RATE</th>
-      <th class="c" style="width: 8%;">GST%</th>
-      <th class="r" style="width: 12%;">TAXABLE AMOUNT</th>
-      <th class="r" style="width: 11%;">TOTAL TAX</th>
-      <th class="r" style="width: 12%;">TOTAL AMOUNT</th>
+      <th style="width: 24%;">DESCRIPTION OF GOODS/SERVICE</th>
+      <th class="c" style="width: 11%;">HSN/SAC CODE</th>
+      <th class="c" style="width: 10%; white-space: nowrap;">QUANTITY</th>
+      <th class="c" style="width: 6%;">UMO</th>
+      <th class="r" style="width: 9%;">RATE</th>
+      <th class="c" style="width: 6%;">GST%</th>
+      <th class="r" style="width: 10%;">TAXABLE AMOUNT</th>
+      <th class="r" style="width: 9%;">TOTAL TAX</th>
+      <th class="r" style="width: 10%;">TOTAL AMOUNT</th>
     </tr>
   `;
 
@@ -1774,8 +1796,8 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}
       ${totalsBox}
+      ${wordsBox}
       ${hsnSummaryHTML}
       ${footerHTML}
     `;
@@ -1804,7 +1826,7 @@ function render() {
             <thead>${tableHeadersHTML}</thead>
             <tbody>${common.itemRows}</tbody>
           </table>
-          ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+          ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
         </div>
       </div>
     `;
@@ -1821,7 +1843,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'gst') {
     html = `
@@ -1836,7 +1858,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'corporate') {
     html = `
@@ -1851,7 +1873,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'compact') {
     html = `
@@ -1866,7 +1888,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'rounded') {
     html = `
@@ -1881,7 +1903,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'gst-detailed') {
     const rateCards = Object.values(t.rateSummary).map(r => `
@@ -1906,7 +1928,7 @@ function render() {
       </table>
       <div class="rate-summary-title">Tax Rate Summary</div>
       <div class="rate-summary-grid">${rateCards}</div>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'gst-lite') {
     html = `
@@ -1921,7 +1943,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'standard') {
     html = `
@@ -1943,12 +1965,13 @@ function render() {
           ${state.meta.place ? `<div class="inv-box-detail-row"><span class="lbl">Place of Supply:</span><span class="val">${esc(state.meta.place)}</span></div>` : ''}
         </div>
       </div>
+      ${extraBoxHTML}
       ${cText.middle}
       <table class="inv-table">
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'freelancer') {
     const avatarText = (state.business.name || 'F').charAt(0).toUpperCase();
@@ -1965,7 +1988,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'premium-hsn') {
     html = `
@@ -1980,7 +2003,7 @@ function render() {
         <thead>${tableHeadersHTML}</thead>
         <tbody>${common.itemRows}</tbody>
       </table>
-      ${wordsBox}${totalsBox}${hsnSummaryHTML}${footerHTML}
+      ${totalsBox}${wordsBox}${hsnSummaryHTML}${footerHTML}
     `;
   } else if (state.template === 'structured') {
     html = `
@@ -2002,6 +2025,7 @@ function render() {
           ${state.meta.place ? `<div class="meta-row"><span>Place:</span><span>${esc(state.meta.place)}</span></div>` : ''}
         </div>
       </div>
+      ${extraBoxHTML}
       ${cText.middle}
       <table class="items-table">
         <thead>${tableHeadersHTML}</thead>
@@ -2042,8 +2066,9 @@ function loadSample() {
   $('bEmail').value = 'contact@shreeshyam.com'; $('bPhone').value = '9876543210'; $('bWebsite').value = 'www.shreeshyam.com';
   $('cNameManual').value = 'Delhi Electronics'; $('cAddr').value = '45, Nehru Place, New Delhi'; $('cGstin').value = '07XYZAB5678C1Z9';
   $('mNo').value = 'INV-2024-001'; $('mDate').value = new Date().toISOString().split('T')[0];
-  state.items = [{ desc: 'Wireless Mouse', hsn: '8471', qty: 2, rate: 500, gst: 18 }, { desc: 'Keyboard', hsn: '8471', qty: 2, rate: 800, gst: 18 }];
-  renderItems();
+  state.items = [{ desc: 'Wireless Mouse', hsn: '8471', umo: 'Nos', qty: 2, rate: 500, gst: 18 }, { desc: 'Keyboard', hsn: '8471', umo: 'Nos', qty: 2, rate: 800, gst: 18 }];
+  state.details = ['Application Reference Number: NP-RJJAY26-16128002', 'Application Date: 23-10-2026', 'Applied Roof Top Solar Capacity (in kWp): 3KWP'];
+  renderItems(); renderDetails();
   $('bkName').value = 'HDFC Bank'; $('bkAc').value = '1234567890123'; $('bkIfsc').value = 'HDFC0001234';
   $('bkBranch').value = 'Jaipur Main'; $('bkHolder').value = 'Shree Shyam Traders';
   $('terms').value = '1. Goods once sold will not be taken back.\n2. Payment due within 15 days.';
